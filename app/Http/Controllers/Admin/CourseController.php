@@ -10,7 +10,7 @@ use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Models\Order;
 use App\Models\OrderProduct;
-
+use App\Services\AcquistiService;
 
 class CourseController extends Controller
 {
@@ -115,5 +115,61 @@ class CourseController extends Controller
         Course::findOrFail($id)->delete();
 
         return back()->with('success', 'Corso eliminato');
+    }
+
+    public function show($id)
+    {
+        $course = Course::with(['lessons', 'exercises'])->findOrFail($id);
+
+        $user = auth()->user();
+
+        $studentId = $user?->student?->id;
+        $isAdmin = $user?->role === 'admin';
+
+        $lessons = $course->lessons->map(function ($lesson) use ($studentId, $isAdmin) {
+
+            $purchased = false;
+
+            if ($studentId) {
+                $purchased = AcquistiService::prodotto_acquistato(
+                    $studentId,
+                    $lesson->id,
+                    0
+                );
+            }
+
+            $lesson->can_show =
+                $lesson->price == 0 ||
+                $purchased ||
+                $isAdmin;
+
+            return $lesson;
+        });
+
+        $exercises = $course->exercises->map(function ($exercise) use ($studentId, $isAdmin) {
+
+            $purchased = false;
+
+            if ($studentId) {
+                $purchased = AcquistiService::prodotto_acquistato(
+                    $studentId,
+                    $exercise->id,
+                    2
+                );
+            }
+
+            $exercise->can_show =
+                $exercise->price == 0 ||
+                $purchased ||
+                $isAdmin;
+
+            return $exercise;
+        });
+
+        return view('public.corso', compact(
+            'course',
+            'lessons',
+            'exercises'
+        ));
     }
 }

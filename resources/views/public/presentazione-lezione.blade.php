@@ -1,46 +1,67 @@
-@extends('layouts.layout-bootstrap')
+@extends('layouts.theme-areas-layout')
 
-@section('content')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Aree Tematiche</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="insegnamento">Materie</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="elenco-corsi">Corsi</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/corso/{{ request('id_corso') }}">Corso</a>
-        </li>
-    </ul>
-    <div class="container" style="text-align: center;width:100%">
-        @php
-            use App\Models\Course;
-            use App\Models\Lesson;
+@section('page-title')
+    <div class="container py-4">
+        <h3 class="fw-bold">
+            Anteprima Lezione
+        </h3>
 
-            $id_corso = request('id_corso');
-            $id_lezione = request('id_lezione');
-            $corso = Course::where('id', '=', $id_corso)->first();
-            $lezione = Lesson::where('id', '=', $id_lezione)->first();
+    </div>
+@endsection
 
-        @endphp
-        <h2>Anteprima Lezione Corso di</h2>
-        <h2>"{{ $corso->name }}"</h2>
-        <h3>Titolo Lezione</h3>
-        <h3>"{{ $lezione->title }}"</h3>
-        <br>
+@section('inner')
+    <div class="container py-4">
 
-        <br>
-        <h4>Presentazione</h4>
+        <div class="mx-auto" style="max-width: 1200px;">
 
-        <iframe width="90%" src="/protected_file/{{ $lezione->presentation }}#view=FitH" height="800px">
-        </iframe>
-        <br>
+            <div class="bg-white shadow rounded-4 p-4 p-lg-5 border">
 
-        <br>
-        <br>
-        <br>
+                <div class="text-center mb-5">
+
+                    <span class="badge bg-primary px-3 py-2 mb-3">
+                        Anteprima Lezione
+                    </span>
+
+                    <h3 class="mb-2">
+                        <strong>Corso:</strong> {{ $corso->name }}
+                    </h3>
+
+                    <p class="text-muted mb-0">
+                        Visualizzazione introduttiva della lezione
+                    </p>
+                </div>
+
+                <div class="bg-light rounded-4 p-4 mb-4 border">
+
+                    <h5 class="text-uppercase text-muted mb-2" style="letter-spacing: 1px;">
+                        Titolo Lezione
+                    </h5>
+
+                    <h4 class="fw-semibold mb-0">
+                        {{ $lezione->title }}
+                    </h4>
+
+                </div>
+
+                <div class="mb-4">
+
+                    <h4 class="fw-bold mb-3">
+                        Presentazione
+                    </h4>
+
+                    <div class="rounded-4 overflow-hidden shadow-sm border bg-dark">
+
+                        <iframe width="100%" height="800px" src="/protected_file/{{ $lezione->presentation }}#view=FitH"
+                            style="border: none;">
+                        </iframe>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
 @endsection

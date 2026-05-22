@@ -10,6 +10,15 @@ use App\Models\Course;
 
 class LessonController extends Controller
 {
+
+    public function viewPresentation($id_lezione, $id_corso)
+    {
+        $corso = Course::where('id', '=', $id_corso)->first();
+        $lezione = Lesson::where('id', '=', $id_lezione)->first();
+
+        return view('public.presentazione-lezione', compact('corso', 'lezione'));
+    }
+
     public function create(int $id)
     {
         $corso = Course::where('id', '=', $id)->first();

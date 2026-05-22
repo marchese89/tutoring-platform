@@ -1,202 +1,164 @@
 @extends('layouts.theme-areas-layout')
-@php
-    use App\Models\ThemeArea;
-    use App\Models\Matter;
-    use App\Models\Course;
-    use App\Models\Lesson;
-    use App\Models\Exercise;
-    use App\Services\AcquistiService;
 
-    $corso = Course::where('id', '=', request('id'))->first();
-
-@endphp
 @section('page-title')
-    <div class="container py-4">
-        <h2 class="fw-bold mb-0">Corso di {{ $corso->name }}</h2>
+    <div class="container py-5">
+        <h2 class="fw-bold display-6">
+            Corso di {{ $course->name }}
+        </h2>
+
+        <p class="text-muted mb-0">
+            Lezioni ed esercizi disponibili
+        </p>
     </div>
 @endsection
 
 @section('inner')
+    <div class="container pb-5">
 
-    <div class="container" style="text-align: center;width:35%">
+        @guest
+            <div class="alert alert-warning rounded-4 border-0 shadow-sm">
+                Devi effettuare l'accesso come studente per acquistare contenuti.
+            </div>
+        @endguest
 
+        {{-- LEZIONI --}}
+        <div class="mb-5">
 
-        @if (!Auth::check())
-            <strong style="color: red">Devi essere autenticato come studente per poter fare aquisti!</strong>
-        @endif
-    </div>
-    <br>
-    <div class="container" style="text-align: center;width:80%">
-        <br>
-        <h3>Lezioni</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Numero</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Prezzo</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $lezioni = Lesson::where('course_id', '=', request('id'))->get();
-            @endphp
-            <tbody>
-                @foreach ($lezioni as $item)
-                    @if (
-                        (auth()->user()->student && !AcquistiService::prodotto_acquistato(auth()->user()->student?->id, $item->id, 0)) ||
-                            auth()->user()->role === 'admin')
-                        <tr>
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="fw-bold mb-0">Lezioni</h3>
+                <span class="text-muted">{{ $lessons->count() }} contenuti</span>
+            </div>
 
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
-                                {{ $item->number }}
-                            </td>
-                            <td>
-                                {{ $item->title }}
-                            </td>
-                            <td>
-                                @if ($item->price !== 0)
-                                    {{ $item->price }} <strong>&euro;</strong>
-                                @else
-                                    <strong style="color: green">Gratis</strong>
-                                @endif
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    onclick=location.href="presentazione-lezione-{{ $item->id }}-{{ $item->course_id }}">Anteprima</button>
-                                @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
-                                    <button type="submit" class="btn btn-primary"
-                                        onclick=location.href="/carrello/add/{{ $item->id }}/0">Acquista</button>
-                                @endif
-                                @if ($item->price === 0)
-                                    <button type="submit" class="btn btn-primary"
-                                        onclick=location.href="visualizza-lezione-{{ $item->id }}-{{ $item->course_id }}">Contenuto</button>
-                                @endif
-                            </td>
-                        </tr>
-                    @else
-                        @if (auth()->user() == null)
-                            <tr>
+            <div class="row g-4">
 
-                                <th scope="row">{{ $item->id }}</th>
-                                <td>
-                                    {{ $item->number }}
-                                </td>
-                                <td>
+                @foreach ($lessons as $item)
+                    <div class="col-xl-4 col-md-6">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            <div class="card-body d-flex flex-column p-4">
+
+                                <div class="mb-3">
+                                    <span class="badge bg-dark">
+                                        Lezione {{ $item->number }}
+                                    </span>
+                                </div>
+
+                                <h5 class="fw-bold">
                                     {{ $item->title }}
-                                </td>
-                                <td>
-                                    @if ($item->price !== 0)
-                                        {{ $item->price }} <strong>&euro;</strong>
+                                </h5>
+
+                                <div class="mt-3 mb-4">
+
+                                    @if ($item->price > 0)
+                                        <span class="fs-5 fw-semibold">
+                                            {{ $item->price }} €
+                                        </span>
                                     @else
-                                        <strong style="color: green">Gratis</strong>
+                                        <span class="badge bg-success">
+                                            Gratis
+                                        </span>
                                     @endif
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                        onclick=location.href="presentazione-lezione-{{ $item->id }}-{{ $item->course_id }}">Anteprima</button>
-                                    @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
-                                        <button type="submit" class="btn btn-primary"
-                                            onclick=location.href="/carrello/add/{{ $item->id }}/0">Acquista</button>
+
+                                </div>
+
+                                <div class="mt-auto d-grid gap-2">
+
+                                    <a href="{{ url('presentazione-lezione/' . $item->id . '/' . $item->course_id) }}"
+                                        class="btn btn-outline-primary rounded-3">
+                                        Anteprima
+                                    </a>
+
+                                    @if ($item->price == 0 || $item->can_show)
+                                        <a href="{{ url('visualizza-lezione/' . $item->id . '/' . $item->course_id) }}"
+                                            class="btn btn-primary rounded-3">
+                                            Contenuto
+                                        </a>
+                                    @elseif(auth()->check() && auth()->user()->role === 'student')
+                                        <a href="{{ url('/carrello/add/' . $item->id . '/0') }}"
+                                            class="btn btn-primary rounded-3">
+                                            Acquista
+                                        </a>
                                     @endif
-                                    @if ($item->price === 0)
-                                        <button type="submit" class="btn btn-primary"
-                                            onclick=location.href="visualizza-lezione-{{ $item->id }}-{{ $item->course_id }}">Contenuto</button>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endif
-                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
                 @endforeach
-            </tbody>
-        </table>
-        <br>
-        <br>
-        <h3>Esercizi</h3>
 
-        <br>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Prezzo</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $esercizi = Exercise::where('course_id', '=', request('id'))->get();
-            @endphp
-            <tbody>
-                @foreach ($esercizi as $item)
-                    @if (
-                        (auth()->user() != null &&
-                            auth()->user()->student &&
-                            !AcquistiService::prodotto_acquistato(auth()->user()->student->id, $item->id, 2)) ||
-                            auth()->user()->role === 'admin')
-                        <tr>
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
+            </div>
 
-                            </td>
-                            <td>
-                                {{ $item->title }}
-                            </td>
-                            <td>
-                                @if ($item->price !== 0)
-                                    {{ $item->price }} <strong>&euro;</strong>
-                                @else
-                                    <strong style="color: green">Gratis</strong>
-                                @endif
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    onclick=location.href="/traccia-esercizio/{{ $item->id }}/{{ request('id') }}">Anteprima</button>
-                                @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
-                                    <button type="submit" class="btn btn-primary"
-                                        onclick=location.href="/carrello/add/{{ $item->id }}/2">Acquista</button>
-                                @endif
-                                @if ($item->price === 0)
-                                    <button type="submit" class="btn btn-primary">Contenuto</button>
-                                @endif
-                            </td>
-                        </tr>
-                    @else
-                        @if (auth()->user() == null)
-                            <tr>
-                                <th scope="row">{{ $item->id }}</th>
-                                <td>
+        </div>
 
-                                </td>
-                                <td>
+        {{-- ESERCIZI --}}
+        <div>
+
+            <div class="d-flex align-items-center justify-content-between mb-4">
+                <h3 class="fw-bold mb-0">Esercizi</h3>
+                <span class="text-muted">{{ $exercises->count() }} contenuti</span>
+            </div>
+
+            <div class="row g-4">
+
+                @foreach ($exercises as $item)
+                    <div class="col-xl-4 col-md-6">
+
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+
+                            <div class="card-body d-flex flex-column p-4">
+
+                                <h5 class="fw-bold mb-3">
                                     {{ $item->title }}
-                                </td>
-                                <td>
-                                    @if ($item->price !== 0)
-                                        {{ $item->price }} <strong>&euro;</strong>
+                                </h5>
+
+                                <div class="mb-4">
+
+                                    @if ($item->price > 0)
+                                        <span class="fs-5 fw-semibold">
+                                            {{ $item->price }} €
+                                        </span>
                                     @else
-                                        <strong style="color: green">Gratis</strong>
+                                        <span class="badge bg-success">
+                                            Gratis
+                                        </span>
                                     @endif
-                                </td>
-                                <td>
-                                    <button class="btn btn-primary"
-                                        onclick=location.href="/traccia-esercizio/{{ $item->id }}/{{ request('id') }}">Anteprima</button>
-                                    @if (Auth::check() && auth()->user()->role === 'student' && $item->price !== 0)
-                                        <button type="submit" class="btn btn-primary"
-                                            onclick=location.href="/carrello/add/{{ $item->id }}/2">Acquista</button>
+
+                                </div>
+
+                                <div class="mt-auto d-grid gap-2">
+
+                                    <a href="{{ url('/traccia-esercizio/' . $item->id . '/' . $course->id) }}"
+                                        class="btn btn-outline-primary rounded-3">
+                                        Anteprima
+                                    </a>
+
+                                    @if ($item->price == 0 || $item->can_show)
+                                        <button class="btn btn-primary rounded-3">
+                                            Contenuto
+                                        </button>
+                                    @elseif(auth()->check() && auth()->user()->role === 'student')
+                                        <a href="{{ url('/carrello/add/' . $item->id . '/2') }}"
+                                            class="btn btn-primary rounded-3">
+                                            Acquista
+                                        </a>
                                     @endif
-                                    @if ($item->price === 0)
-                                        <button type="submit" class="btn btn-primary">Contenuto</button>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endif
-                    @endif
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
                 @endforeach
-            </tbody>
-        </table>
+
+            </div>
+
+        </div>
+
     </div>
 @endsection

@@ -5,10 +5,20 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Exercise;
+use App\Models\Course;
 use Illuminate\Support\Facades\Storage;
 
 class ExerciseController extends Controller
 {
+
+    public function viewTrace($id_esercizio, $id_corso)
+    {
+        $corso = Course::where('id', '=', $id_corso)->first();
+        $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
+
+        return view('public.traccia-esercizio', compact('esercizio', 'corso'));
+    }
+
     // =========================
     // UPLOAD TRACE (temporaneo)
     // =========================

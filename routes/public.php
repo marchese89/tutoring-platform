@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Http\Controllers\Public\LessonOnRequestController;
 use App\Http\Controllers\Admin\ThemeAreaController;
 use App\Http\Controllers\Admin\MatterController;
+use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\ExerciseController;
 
 Route::get('/', [HomeController::class, 'index']);
 
@@ -25,11 +27,11 @@ Route::get('materie/{id_at}', [MatterController::class, 'publicIndex'])->name('m
 
 Route::get('corsi/{id_materia}', [CourseController::class, 'publicIndex'])->name('corsi');
 
-Route::view('corso/{id}', 'public.corso')->name('corso');
+Route::get('corso/{id}', [CourseController::class, 'show'])->name('corso');
 
-Route::view('presentazione-lezione/{id_lezione}/{id_corso}', 'public.presentazione-lezione');
+Route::get('presentazione-lezione/{id_lezione}/{id_corso}', [LessonController::class, 'viewPresentation'])->name('presentazione-lezione');
 Route::view('visualizza-lezione/{id_lezione}/{id_corso}', 'public.contenuto-lezione');
-Route::view('traccia-esercizio/{id_esercizio}/{id_corso}', 'public.traccia-esercizio');
+Route::get('traccia-esercizio/{id_esercizio}/{id_corso}', [ExerciseController::class, 'viewTrace'])->name('traccia-esercizio');
 
 Route::view('lezione-su-richiesta', 'public.lezione-su-richiesta');
 Route::view('esito-lez-rich', 'public.esito-lez-rich');

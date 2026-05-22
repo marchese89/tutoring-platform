@@ -20,11 +20,11 @@ class Course extends Model
     }
     public function lessons(): HasMany
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Lesson::class);
     }
 
     public function exercises(): HasMany
     {
-        return $this->hasMany(Course::class);
+        return $this->hasMany(Exercise::class);
     }
 }
