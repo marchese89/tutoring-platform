@@ -74,8 +74,8 @@ class CourseController extends Controller
     {
         $corso = Course::findOrFail($id);
 
-        $lezioni = Lesson::where('course_id', $id)->get();
-        $esercizi = Exercise::where('course_id', $id)->get();
+        $lezioni = Lesson::where('course_id', $id)->orderBy('number')->get();
+        $esercizi = Exercise::where('course_id', $id)->orderBy('id')->get();
 
         return view('admin.modifica-corso', compact('corso', 'lezioni', 'esercizi'));
     }

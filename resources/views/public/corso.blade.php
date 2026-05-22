@@ -1,15 +1,9 @@
 @extends('layouts.theme-areas-layout')
 
 @section('page-title')
-    <div class="container py-5">
-        <h2 class="fw-bold display-6">
-            Corso di {{ $course->name }}
-        </h2>
-
-        <p class="text-muted mb-0">
-            Lezioni ed esercizi disponibili
-        </p>
-    </div>
+    <x-ui.page-header>
+        {{ $course->name }}
+    </x-ui.page-header>
 @endsection
 
 @section('inner')

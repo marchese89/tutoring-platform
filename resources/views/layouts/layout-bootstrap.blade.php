@@ -8,6 +8,8 @@
 
     <title>Lezioni Informatica</title>
 
+
+
     {{-- Bootstrap 5 --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
@@ -32,7 +34,48 @@
         main {
             flex: 1;
         }
+
+        :root {
+            /* 1. Definisci qui i tuoi colori personalizzati una sola volta */
+            --my-primary: #22c4ff;
+            --my-primary-rgb: 255, 87, 34;
+            --my-primary-hover: #19e3e6;
+            /* Tono più scuro per l'effetto hover */
+            --my-primary-active: #15d8c8;
+            /* Tono ancora più scuro per il click */
+
+            /* 2. Mappa le variabili globali di Bootstrap */
+            --bs-primary: var(--my-primary);
+            --bs-primary-rgb: var(--my-primary-rgb);
+            --bs-link-color: var(--my-primary);
+            --bs-link-hover-color: var(--my-primary-hover);
+        }
+
+        /* 3. Aggiorna il bottone pieno (.btn-primary) */
+        .btn-primary {
+            --bs-btn-bg: var(--my-primary);
+            --bs-btn-border-color: var(--my-primary);
+            --bs-btn-hover-bg: var(--my-primary-hover);
+            --bs-btn-hover-border-color: var(--my-primary-hover);
+            --bs-btn-active-bg: var(--my-primary-active);
+            --bs-btn-active-border-color: var(--my-primary-active);
+            --bs-btn-focus-shadow-rgb: var(--my-primary-rgb);
+            --bs-btn-disabled-bg: var(--my-primary);
+            --bs-btn-disabled-border-color: var(--my-primary);
+        }
+
+        /* 4. Aggiorna il bottone outline (.btn-outline-primary) */
+        .btn-outline-primary {
+            --bs-btn-color: var(--my-primary);
+            --bs-btn-border-color: var(--my-primary);
+            --bs-btn-hover-bg: var(--my-primary);
+            --bs-btn-hover-border-color: var(--my-primary);
+            --bs-btn-active-bg: var(--my-primary);
+            --bs-btn-active-border-color: var(--my-primary);
+            --bs-btn-focus-shadow-rgb: var(--my-primary-rgb);
+        }
     </style>
+
 </head>
 
 <body>

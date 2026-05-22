@@ -1,9 +1,9 @@
 @extends('layouts.theme-areas-layout')
 
 @section('page-title')
-    <div class="container py-4">
-        <h2 class="fw-bold">Materie</h2>
-    </div>
+    <x-ui.page-header>
+        Materie
+    </x-ui.page-header>
 @endsection
 
 @section('inner')

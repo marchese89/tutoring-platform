@@ -33,7 +33,6 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Numero</th>
                         <th>Titolo</th>
                         <th>Prezzo</th>
                         <th>Operazioni</th>
@@ -44,7 +43,6 @@
                     @foreach ($lezioni as $item)
                         <tr>
 
-                            <td>{{ $item->id }}</td>
                             <td>{{ $item->number }}</td>
                             <td>{{ $item->title }}</td>
                             <td>{{ $item->price }} €</td>

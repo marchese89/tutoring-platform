@@ -185,3 +185,13 @@ Breadcrumbs::for('traccia-esercizio', function (BreadcrumbTrail $trail, $id_eser
     $trail->parent('corso', $id_corso);
     $trail->push('Traccia esercizio', route('traccia-esercizio', ['id_esercizio' => $id_esercizio, 'id_corso' => $id_corso]));
 });
+
+Breadcrumbs::for('modifica-lezione', function (BreadcrumbTrail $trail, $id_corso, $id_lezione) {
+    $trail->parent('modifica-dettagli-corso', $id_corso);
+    $trail->push('Modifica lezione', route('modifica-lezione', ['id_corso' => $id_corso, 'id_lezione' => $id_lezione]));
+});
+
+Breadcrumbs::for('visualizza-lezione', function (BreadcrumbTrail $trail, $id_lezione, $id_corso) {
+    $trail->parent('corso', $id_corso);
+    $trail->push('Visualizza lezione', route('visualizza-lezione', ['id_lezione' => $id_lezione, 'id_corso' => $id_corso,]));
+});

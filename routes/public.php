@@ -30,7 +30,7 @@ Route::get('corsi/{id_materia}', [CourseController::class, 'publicIndex'])->name
 Route::get('corso/{id}', [CourseController::class, 'show'])->name('corso');
 
 Route::get('presentazione-lezione/{id_lezione}/{id_corso}', [LessonController::class, 'viewPresentation'])->name('presentazione-lezione');
-Route::view('visualizza-lezione/{id_lezione}/{id_corso}', 'public.contenuto-lezione');
+Route::get('visualizza-lezione/{id_lezione}/{id_corso}', [LessonController::class, 'view'])->name('visualizza-lezione');
 Route::get('traccia-esercizio/{id_esercizio}/{id_corso}', [ExerciseController::class, 'viewTrace'])->name('traccia-esercizio');
 
 Route::view('lezione-su-richiesta', 'public.lezione-su-richiesta');

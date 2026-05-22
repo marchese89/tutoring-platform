@@ -11,12 +11,20 @@ use App\Models\Course;
 class LessonController extends Controller
 {
 
-    public function viewPresentation($id_lezione, $id_corso)
+    public function viewPresentation(int $id_lezione, int $id_corso)
     {
         $corso = Course::where('id', '=', $id_corso)->first();
         $lezione = Lesson::where('id', '=', $id_lezione)->first();
 
         return view('public.presentazione-lezione', compact('corso', 'lezione'));
+    }
+
+    public function view(int $id_lezione, int $id_corso)
+    {
+        $corso = Course::where('id', '=', $id_corso)->first();
+        $lezione = Lesson::where('id', '=', $id_lezione)->first();
+
+        return view('public.contenuto-lezione', compact('corso', 'lezione'));
     }
 
     public function create(int $id)
@@ -117,7 +125,7 @@ class LessonController extends Controller
     // ===============================
     // ❌ Delete
     // ===============================
-    public function destroy(Request $request, $id)
+    public function destroy(Request $request, int $id)
     {
         $lesson = Lesson::findOrFail($id);
 
@@ -136,7 +144,7 @@ class LessonController extends Controller
     // ===============================
     // 🔄 Update file presentazione
     // ===============================
-    public function updatePresentation(Request $request, $id)
+    public function updatePresentation(Request $request, int $id)
     {
         $request->validate([
             'file-pres-lez' => 'required|file',
@@ -158,7 +166,7 @@ class LessonController extends Controller
     // ===============================
     // 🔄 Update file lezione
     // ===============================
-    public function updateLessonFile(Request $request, $id)
+    public function updateLessonFile(Request $request, int $id)
     {
         $request->validate([
             'file-lesson' => 'required|file',
@@ -180,7 +188,7 @@ class LessonController extends Controller
     // ===============================
     // ✏️ Update dati
     // ===============================
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $request->validate([
             'numero' => 'required|integer',
