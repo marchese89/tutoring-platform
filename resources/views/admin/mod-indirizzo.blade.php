@@ -1,11 +1,7 @@
 @extends('admin.dashboard-admin')
 
 @section('page-title')
-    <div class="container mb-3">
-        <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
-            Modifica Indirizzo
-        </h2>
-    </div>
+    <x-ui.section-header :title="'Modifica Indirizzo'" />
 @endsection
 
 @section('inner')

@@ -1,9 +1,7 @@
 @extends('admin.dashboard-admin')
 
 @section('page-title')
-    <div class="container mb-4">
-        <h3 class="text-center">Modifica Dati Personali</h3>
-    </div>
+    <x-ui.section-header :title="'Modifica Dati Personali'" />
 @endsection
 
 @section('inner')

@@ -2,7 +2,7 @@
 
 @props(['title', 'description' => null])
 
-<div class="mb-5 text-center">
+<div class="my-3 text-center">
     <h2 class="fw-bold mb-3 bg-secondary bg-gradient text-white p-3 rounded shadow-sm">
         {{ $title }}
     </h2>

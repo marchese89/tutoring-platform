@@ -1,11 +1,7 @@
 @extends('admin.dashboard-admin')
 
 @section('page-title')
-    <div class="container mb-4">
-        <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
-            Modifica Credenziali
-        </h2>
-    </div>
+    <x-ui.section-header :title="'Modifica Credenziali'" />
 @endsection
 
 @section('inner')

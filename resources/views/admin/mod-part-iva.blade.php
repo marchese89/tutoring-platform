@@ -1,9 +1,7 @@
 @extends('admin.dashboard-admin')
 
 @section('page-title')
-    <div class="container mb-4">
-        <h2 class="text-start">Modifica Partita IVA</h2>
-    </div>
+    <x-ui.section-header :title="'Modifica Partita IVA'" />
 @endsection
 
 @section('inner')

@@ -1,21 +1,7 @@
 @extends('admin.dashboard-admin')
 
 @section('page-title')
-    <div class="container">
-        {{-- HEADER --}}
-        <div class="d-flex justify-content-between align-items-center mb-3">
-
-            <div>
-                <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
-                    Impostazioni Account
-                </h2>
-
-                <p class="text-muted mb-0">
-                    Gestisci dati personali e credenziali amministratore.
-                </p>
-            </div>
-        </div>
-    </div>
+    <x-ui.section-header :title="'Impostazioni Account'" />
 @endsection
 
 @section('inner')
