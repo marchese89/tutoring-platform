@@ -1,18 +1,14 @@
 @extends('layouts.dashboard-admin')
 
 @section('page-title')
-    <div class="container">
-        <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
-            Nuovo Corso
-        </h2>
-    </div>
+    <x-ui.section-header :title="'Nuovo Corso'" />
 @endsection
 
 @section('inner')
     <div class="container">
 
         {{-- FORM --}}
-        <div class="row justify-content-center mb-5">
+        <div class="row justify-content-center mb-3">
             <div class="col-lg-6">
 
                 <div class="card border-0 shadow-sm rounded-4">

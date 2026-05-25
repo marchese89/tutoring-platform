@@ -1,11 +1,7 @@
 @extends('layouts.dashboard-admin')
 
 @section('page-title')
-    <div class="container">
-        <h2 class="fw-bold mb-1" style="font-size: 2.5rem;">
-            Modifica Corso
-        </h2>
-    </div>
+    <x-ui.section-header :title="'Modifica Corso'" />
 @endsection
 
 @section('inner')

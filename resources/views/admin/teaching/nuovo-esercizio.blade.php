@@ -1,20 +1,10 @@
 @extends('layouts.dashboard-admin')
 
+@section('page-title')
+    <x-ui.section-header :title="'Nuovo Esercizio'" />
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="insegnamento">Insegnamento</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="elenco-corsi">Elenco Corsi</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/modifica-dettagli-corso-{{ request('course') }}">Corso</a>
-        </li>
-    </ul>
     <div class="container" style="text-align: center;width:35%">
         @php
             use App\Models\Course;

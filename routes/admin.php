@@ -25,12 +25,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('mod-indirizzo-admin', fn() => view('admin.settings.mod-indirizzo'))->name('mod-indirizzo-admin');
     Route::get('mod-certif', fn() => view('admin.settings.mod-certif'))->name('mod-certif');
     Route::get('aggiungi-certif', fn() => view('admin.add-certif'))->name('aggiungi-certif');
-    Route::get('insegnamento', fn() => view('admin.insegnamento'))->name('insegnamento');
+    Route::get('insegnamento', fn() => view('admin.teaching.insegnamento'))->name('insegnamento');
     Route::get('nuovo-corso', [CourseController::class, 'index'])->name('nuovo-corso');
     Route::get('aree-tem', [ThemeAreaController::class, 'index'])
         ->name('aree-tem');
     Route::get('materie', [MatterController::class, 'index'])
-        ->name('admin.materie');
+        ->name('admin.teaching.materie');
     Route::get('elenco-corsi', [CourseController::class, 'list'])
         ->name('elenco-corsi');
 
@@ -74,7 +74,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // UI
     Route::get('nuova-lezione/{id}', [LessonController::class, 'create'])->name('nuova-lezione');
     Route::post('carica-lezione', [LessonController::class, 'store']);
-    Route::get('modifica-lezione/{id_corso}/{id_lezione}', [fn($id_corso, $id_lezione) => view('admin.modifica-lezione', compact('id_corso', 'id_lezione'))])->name('modifica-lezione');
+    Route::get('modifica-lezione/{id_corso}/{id_lezione}', [fn($id_corso, $id_lezione) => view('admin.teaching.modifica-lezione', compact('id_corso', 'id_lezione'))])->name('modifica-lezione');
 
     // Upload temporanei (sessione)
     Route::post('lessons/upload-presentation', [LessonController::class, 'uploadPresentation']);
@@ -98,9 +98,9 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // =====================================================
 
     // view
-    Route::get('exercises/create/{course}', fn() => view('admin.nuovo-esercizio'));
+    Route::get('exercises/create/{course}', fn() => view('admin.teaching.nuovo-esercizio'))->name('nuovo-esercizio');
 
-    Route::get('exercises/{course}/edit/{exercise}', fn() => view('admin.modifica-esercizio'));
+    Route::get('exercises/{course}/edit/{exercise}', fn() => view('admin.teaching.modifica-esercizio'))->name('modifica-esercizio');
 
 
     // =========================

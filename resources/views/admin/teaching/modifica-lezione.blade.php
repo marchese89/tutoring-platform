@@ -1,22 +1,11 @@
 @extends('layouts.dashboard-admin')
 
+@section('page-title')
+    <x-ui.section-header :title="'Modifica Lezione'" />
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="insegnamento">Insegnamento</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="elenco-corsi">Elenco Corsi</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page"
-                href="modifica-dettagli-corso-{{ request('id_corso') }}">Corso</a>
-        </li>
-    </ul>
-    <div class="container" style="text-align: center;width:100%">
+    <div class="container" style="text-align: center;">
         @php
             use App\Models\Course;
             use App\Models\Lesson;
@@ -122,8 +111,8 @@
                 </div>
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control" id="prezzo" name="prezzo"
-                        value="{{ $lezione->price }}" maxlength="5" style="display: inline">
+                    <input type="text" class="form-control" id="prezzo" name="prezzo" value="{{ $lezione->price }}"
+                        maxlength="5" style="display: inline">
                     <script type="text/javascript">
                         var prezzo_ = new LiveValidation('prezzo', {
                             onlyOnSubmit: true

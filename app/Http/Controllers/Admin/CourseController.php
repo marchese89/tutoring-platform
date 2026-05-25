@@ -18,7 +18,7 @@ class CourseController extends Controller
     {
         $materie = Matter::with('theme_area')->get();
         $corsi = Course::with('matter.theme_area')->get();
-        return view('admin.nuovo-corso', compact('materie', 'corsi'));
+        return view('admin.teaching.nuovo-corso', compact('materie', 'corsi'));
     }
 
     public function publicIndex(int $id_materia)
@@ -32,7 +32,7 @@ class CourseController extends Controller
     {
         $corsi = Course::with('matter.theme_area')->get();
 
-        return view('admin.elenco-corsi', compact('corsi'));
+        return view('admin.teaching.elenco-corsi', compact('corsi'));
     }
 
     public function mieiCorsi(Request $request)
@@ -77,19 +77,18 @@ class CourseController extends Controller
         $lezioni = Lesson::where('course_id', $id)->orderBy('number')->get();
         $esercizi = Exercise::where('course_id', $id)->orderBy('id')->get();
 
-        return view('admin.modifica-corso', compact('corso', 'lezioni', 'esercizi'));
+        return view('admin.teaching.modifica-corso', compact('corso', 'lezioni', 'esercizi'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'materia' => 'required|exists:matters,id',
-            'corso' => 'required|string|max:255',
+            'matter_id' => 'required|exists:matters,id',
+            'name' => 'required|string|max:255',
         ]);
-
         Course::create([
-            'name' => $data['corso'],
-            'matter_id' => $data['materia'],
+            'name' => $data['name'],
+            'matter_id' => $data['matter_id'],
         ]);
 
         return back()->with('success', 'Corso creato');
@@ -98,26 +97,26 @@ class CourseController extends Controller
     public function update(Request $request, $id)
     {
         $data = $request->validate([
-            'nome' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         $course = Course::findOrFail($id);
 
         $course->update([
-            'name' => $data['nome'],
+            'name' => $data['name'],
         ]);
 
         return back()->with('success', 'Corso aggiornato');
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         Course::findOrFail($id)->delete();
 
         return back()->with('success', 'Corso eliminato');
     }
 
-    public function show($id)
+    public function show(int $id)
     {
         $course = Course::with(['lessons', 'exercises'])->findOrFail($id);
 

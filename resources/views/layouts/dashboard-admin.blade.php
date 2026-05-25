@@ -10,10 +10,9 @@
 
         @yield('inner')
     @else
+        {{-- HEADER --}}
+        <x-ui.section-header :title="'Dashboard Admin'" />
         <div class="container">
-
-            {{-- HEADER --}}
-            <x-ui.section-header :title="'Dashboard Admin'" />
 
             {{-- CARDS --}}
             <div class="row g-4">

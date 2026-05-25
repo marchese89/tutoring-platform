@@ -20,6 +20,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 
     <style>
+        html {
+            overflow-y: scroll;
+            /* scrollbar-gutter: stable; */
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f6f7fb;

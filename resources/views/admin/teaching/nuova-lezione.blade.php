@@ -1,10 +1,7 @@
 @extends('layouts.dashboard-admin')
 
 @section('page-title')
-    <div class="container mb-4">
-        <h2 class="text-center">Nuova Lezione Corso di</h2>
-        <h4 class="text-center">"{{ $corso->name }}"</h4>
-    </div>
+    <x-ui.section-header :title="'Nuova Lezione'" />
 @endsection
 
 @section('inner')
@@ -21,8 +18,7 @@
             src="{{ session()->has('uploaded_pres_lez') ? url('/protected_file/' . session('uploaded_pres_lez') . '#view=FitH') : '' }}">
         </iframe>
 
-        <form method="POST" action="{{ url('lessons/upload-presentation') }}" enctype="multipart/form-data"
-            id="upload-pres">
+        <form method="POST" action="{{ url('lessons/upload-presentation') }}" enctype="multipart/form-data" id="upload-pres">
             @csrf
             <input type="hidden" name="id" value="{{ $id }}">
 

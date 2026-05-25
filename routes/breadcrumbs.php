@@ -74,9 +74,9 @@ Breadcrumbs::for('aree-tem', function (BreadcrumbTrail $trail) {
     $trail->push('Aree tematiche', route('aree-tem'));
 });
 
-Breadcrumbs::for('admin.materie', function (BreadcrumbTrail $trail) {
+Breadcrumbs::for('admin.teaching.materie', function (BreadcrumbTrail $trail) {
     $trail->parent('insegnamento');
-    $trail->push('Materie', route('admin.materie'));
+    $trail->push('Materie', route('admin.teaching.materie'));
 });
 Breadcrumbs::for('elenco-corsi', function (BreadcrumbTrail $trail) {
     $trail->parent('insegnamento');
@@ -194,4 +194,14 @@ Breadcrumbs::for('modifica-lezione', function (BreadcrumbTrail $trail, $id_corso
 Breadcrumbs::for('visualizza-lezione', function (BreadcrumbTrail $trail, $id_lezione, $id_corso) {
     $trail->parent('corso', $id_corso);
     $trail->push('Visualizza lezione', route('visualizza-lezione', ['id_lezione' => $id_lezione, 'id_corso' => $id_corso,]));
+});
+
+Breadcrumbs::for('nuovo-esercizio', function (BreadcrumbTrail $trail, $id_corso) {
+    $trail->parent('modifica-dettagli-corso', $id_corso);
+    $trail->push('Nuovo esercizio', route('nuovo-esercizio', $id_corso));
+});
+
+Breadcrumbs::for('modifica-esercizio', function (BreadcrumbTrail $trail, $course, $exercise) {
+    $trail->parent('modifica-dettagli-corso', $course);
+    $trail->push('Modifica esercizio', route('modifica-esercizio', ['course' => $course, 'exercise' => $exercise]));
 });
