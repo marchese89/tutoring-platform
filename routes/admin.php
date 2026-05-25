@@ -17,13 +17,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // =====================================================
     // 🧩 UI / PAGINE ADMIN (SOLO VIEW)
     // =====================================================
-    Route::get('dashboard-admin', fn() => view('admin.dashboard-admin'))->name('dashboard-admin');
-    Route::get('imp-account', fn() => view('admin.imp-account'))->name('imp-account');
-    Route::get('mod-dati-pers', fn() => view('admin.mod-dati-pers'))->name('mod-dati-pers');
-    Route::get('mod-cred', fn() => view('admin.mod-cred'))->name('mod-cred');
-    Route::get('mod-foto-admin', fn() => view('admin.mod-foto'))->name('mod-foto-admin');
-    Route::get('mod-indirizzo-admin', fn() => view('admin.mod-indirizzo'))->name('mod-indirizzo-admin');
-    Route::get('mod-certif', fn() => view('admin.mod-certif'))->name('mod-certif');
+    Route::get('dashboard-admin', fn() => view('layouts.dashboard-admin'))->name('dashboard-admin');
+    Route::get('imp-account', fn() => view('admin.settings.imp-account'))->name('imp-account');
+    Route::get('mod-dati-pers', fn() => view('admin.settings.mod-dati-pers'))->name('mod-dati-pers');
+    Route::get('mod-cred', fn() => view('admin.settings.mod-cred'))->name('mod-cred');
+    Route::get('mod-foto-admin', fn() => view('admin.settings.mod-foto'))->name('mod-foto-admin');
+    Route::get('mod-indirizzo-admin', fn() => view('admin.settings.mod-indirizzo'))->name('mod-indirizzo-admin');
+    Route::get('mod-certif', fn() => view('admin.settings.mod-certif'))->name('mod-certif');
     Route::get('aggiungi-certif', fn() => view('admin.add-certif'))->name('aggiungi-certif');
     Route::get('insegnamento', fn() => view('admin.insegnamento'))->name('insegnamento');
     Route::get('nuovo-corso', [CourseController::class, 'index'])->name('nuovo-corso');
@@ -48,7 +48,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('mod-email-admin', [ModDatiAdminController::class, 'mod_email_admin']);
     Route::post('mod-pass-admin', [ModDatiAdminController::class, 'mod_pass_admin']);
     Route::post('mod-piva', [ModDatiAdminController::class, 'mod_piva']);
-    Route::get('mod-part-iva', fn() => view('admin.mod-part-iva'))->name('mod-part-iva');
+    Route::get('mod-part-iva', fn() => view('admin.settings.mod-part-iva'))->name('mod-part-iva');
 
     // =====================================================
     // 📚 CORSI / MATERIE / AREE TEMATICHE

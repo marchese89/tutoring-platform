@@ -1,4 +1,4 @@
-@extends('admin.dashboard-admin')
+@extends('layouts.dashboard-admin')
 
 @section('page-title')
     <x-ui.section-header :title="'Modifica Dati Personali'" />

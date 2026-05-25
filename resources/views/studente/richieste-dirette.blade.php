@@ -1,4 +1,4 @@
-@extends('admin.dashboard-admin')
+@extends('layouts.dashboard-admin')
 
 @section('inner')
     <style>
