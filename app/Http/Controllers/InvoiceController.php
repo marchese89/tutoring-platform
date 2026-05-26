@@ -12,7 +12,7 @@ class InvoiceController extends Controller
     {
         $fatture = Invoice::all();
 
-        return view('admin.fatture', compact('fatture'));
+        return view('admin.billing.fatture', compact('fatture'));
     }
 
     public function show($number)

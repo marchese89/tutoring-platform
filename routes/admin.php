@@ -24,7 +24,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('mod-foto-admin', fn() => view('admin.settings.mod-foto'))->name('mod-foto-admin');
     Route::get('mod-indirizzo-admin', fn() => view('admin.settings.mod-indirizzo'))->name('mod-indirizzo-admin');
     Route::get('mod-certif', fn() => view('admin.settings.mod-certif'))->name('mod-certif');
-    Route::get('aggiungi-certif', fn() => view('admin.add-certif'))->name('aggiungi-certif');
+    Route::get('aggiungi-certif', fn() => view('admin.settings.add-certif'))->name('aggiungi-certif');
     Route::get('insegnamento', fn() => view('admin.teaching.insegnamento'))->name('insegnamento');
     Route::get('nuovo-corso', [CourseController::class, 'index'])->name('nuovo-corso');
     Route::get('aree-tem', [ThemeAreaController::class, 'index'])
@@ -137,12 +137,12 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec'])->name('lez-rich-rem-exec');
     Route::post('carica-prezzo-lez-rich', [LessonOnRequestController::class, 'carica_prezzo_lez_rich']);
 
-    Route::get('vendite', fn() => view('admin.vendite'))->name('vendite');
+    Route::get('vendite', fn() => view('admin.billing.vendite'))->name('vendite');
     Route::get('admin-ordine-{id}', fn() => view('admin.ordine'))->name('admin-ordine');
     Route::get('admin-fattura-{id}', fn() => view('admin.fattura'))->name('admin-fattura');
 
     Route::post('crea_fattura_extra', [AcquistiController::class, 'crea_fattura']);
-    Route::get('extra-fattura', fn() => view('admin.fattura-extra'))->name('extra-fattura');
+    Route::get('extra-fattura', fn() => view('admin.billing.fattura-extra'))->name('extra-fattura');
     Route::get('fattura-creata', fn() => view('admin.fattura-creata'))->name('fattura-creata');
     Route::get('fatture', [InvoiceController::class, 'showAll'])->name('fatture');
     Route::get('visualizza-fattura/{id}', [InvoiceController::class, 'show'])->name('visualizza-fattura');

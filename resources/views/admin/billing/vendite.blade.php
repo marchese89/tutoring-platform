@@ -1,15 +1,7 @@
 @extends('layouts.dashboard-admin')
 
 @section('page-title')
-    <div class="container my-4">
-        <h1 class="fw-bold mb-1" style="font-size: 2.5rem;">
-            Vendite
-        </h1>
-
-        <p class="text-muted mb-0">
-            Monitoraggio ordini e riepilogo vendite mensili.
-        </p>
-    </div>
+    <x-ui.section-header :title="'Vendite'" />
 @endsection
 
 @section('inner')

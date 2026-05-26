@@ -32,7 +32,9 @@ Breadcrumbs::for('mod-certif', function (BreadcrumbTrail $trail) {
     $trail->parent('mod-dati-pers');
     $trail->push('Modifica certificati', route('mod-certif'));
 });
+
 Breadcrumbs::for('aggiungi-certif', function (BreadcrumbTrail $trail) {
+    $trail->parent('mod-certif');
     $trail->push('Aggiungi certificato', route('aggiungi-certif'));
 });
 

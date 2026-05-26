@@ -27,7 +27,7 @@ class LessonOnRequestController extends Controller
     public function visualizzaRichiesta(int $id)
     {
         $richiesta = LessonOnRequest::where('id', '=', $id)->first();
-        return view('admin.visualizza-richiesta-lezione', compact('richiesta'));
+        return view('admin.students.visualizza-richiesta-lezione', compact('richiesta'));
     }
 
     public function chatStudenti()
@@ -152,7 +152,7 @@ class LessonOnRequestController extends Controller
 
         $utente = $studente?->user;
 
-        return view('admin.visualizza-chat', compact(
+        return view('admin.students.visualizza-chat', compact(
             'chat',
             'pres',
             'exec',

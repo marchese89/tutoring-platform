@@ -1,20 +1,10 @@
 @extends('layouts.dashboard-admin')
 
+@section('page-title')
+    <x-ui.section-header :title="'Aggiungi Certificato'" />
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="imp-account">Impostazioni Account</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="mod-dati-pers">Modifica Dati Personali</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="mod-certif">Modifica Certificati</a>
-        </li>
-    </ul>
     <div class="container" style="text-align: center;width:60%">
         <h2>Aggiungi Certificato</h2>
 

@@ -1,13 +1,7 @@
 @extends('layouts.dashboard-admin')
 
 @section('page-title')
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <h2>Visualizza Richiesta Lezione</h2>
-            </div>
-        </div>
-    </div>
+    <x-ui.section-header :title="'Visualizza Richiesta Lezione'" />
 @endsection
 
 @section('inner')
