@@ -21,10 +21,10 @@ class LessonOnRequestController extends Controller
     public function index()
     {
         $lezioni_su_richiesta = LessonOnRequest::with('student.user')->get();
-        return view('admin.richieste-studenti', compact('lezioni_su_richiesta'));
+        return view('admin.students.richieste-studenti', compact('lezioni_su_richiesta'));
     }
 
-    public function visualizzaRichiesta($id)
+    public function visualizzaRichiesta(int $id)
     {
         $richiesta = LessonOnRequest::where('id', '=', $id)->first();
         return view('admin.visualizza-richiesta-lezione', compact('richiesta'));
@@ -85,7 +85,7 @@ class LessonOnRequestController extends Controller
                 $ultimoMessaggio && $ultimoMessaggio->author == 0;
         }
 
-        return view('admin.chat-studenti', compact('chat'));
+        return view('admin.students.chat-studenti', compact('chat'));
     }
 
     public function visualizzaChat($id)

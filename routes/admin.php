@@ -130,7 +130,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // =====================================================
     // 👥 STUDENTI / RICHIESTE / VENDITE
     // =====================================================
-    Route::get('studenti', fn() => view('admin.studenti'))->name('studenti');
+    Route::get('studenti', fn() => view('admin.students.studenti'))->name('studenti');
     Route::get('richieste-studenti', [LessonOnRequestController::class, 'index'])->name('richieste-studenti');
     Route::get('visualizza-richiesta/{id}', [LessonOnRequestController::class, 'visualizzaRichiesta'])->name('visualizza-richiesta');
     Route::post('sol-rich-upload', [LessonOnRequestController::class, 'sol_rich_upload']);

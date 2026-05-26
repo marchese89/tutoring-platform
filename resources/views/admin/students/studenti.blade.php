@@ -1,9 +1,7 @@
 @extends('layouts.dashboard-admin')
 
 @section('page-title')
-    <div class="container">
-        <h2>Richieste Studenti</h2>
-    </div>
+    <x-ui.section-header :title="'Richieste Studenti'" />
 @endsection
 
 @section('inner')
