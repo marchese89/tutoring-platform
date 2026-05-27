@@ -98,6 +98,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./custom_javascript/utility.js"></script>
 
     {{-- Echo (solo se serve) --}}
     @if (isset($enableEcho) && $enableEcho)

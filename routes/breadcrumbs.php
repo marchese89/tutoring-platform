@@ -207,3 +207,13 @@ Breadcrumbs::for('modifica-esercizio', function (BreadcrumbTrail $trail, $course
     $trail->parent('modifica-dettagli-corso', $course);
     $trail->push('Modifica esercizio', route('modifica-esercizio', ['course' => $course, 'exercise' => $exercise]));
 });
+
+Breadcrumbs::for('admin-ordine', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('vendite');
+    $trail->push('Ordine', route('admin-ordine', ['id' => $id]));
+});
+
+Breadcrumbs::for('admin-fattura', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('admin-ordine', $id);
+    $trail->push('Fattura', route('admin-fattura', ['id' => $id]));
+});

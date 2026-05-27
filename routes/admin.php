@@ -9,6 +9,7 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\AcquistiController;
+use App\Http\Controllers\admin\BillingController;
 use App\Http\Controllers\Public\LessonOnRequestController;
 use App\Http\Controllers\InvoiceController;
 
@@ -137,13 +138,14 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::delete('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec'])->name('lez-rich-rem-exec');
     Route::post('carica-prezzo-lez-rich', [LessonOnRequestController::class, 'carica_prezzo_lez_rich']);
 
-    Route::get('vendite', fn() => view('admin.billing.vendite'))->name('vendite');
-    Route::get('admin-ordine-{id}', fn() => view('admin.ordine'))->name('admin-ordine');
-    Route::get('admin-fattura-{id}', fn() => view('admin.fattura'))->name('admin-fattura');
+    Route::get('vendite', [BillingController::class, 'vendite'])->name('vendite');
+    Route::get('/cambia_tabella_ordini', [BillingController::class, 'cambiaTabellaOrdini']);
+    Route::get('admin-ordine-{id}', [BillingController::class, 'showOrder'])->name('admin-ordine');
+    Route::get('admin-fattura-{id}', [BillingController::class, 'showInvoice'])->name('admin-fattura');
 
     Route::post('crea_fattura_extra', [AcquistiController::class, 'crea_fattura']);
     Route::get('extra-fattura', fn() => view('admin.billing.fattura-extra'))->name('extra-fattura');
-    Route::get('fattura-creata', fn() => view('admin.fattura-creata'))->name('fattura-creata');
+    Route::get('fattura-creata', fn() => view('admin.billing.fattura-creata'))->name('fattura-creata');
     Route::get('fatture', [InvoiceController::class, 'showAll'])->name('fatture');
     Route::get('visualizza-fattura/{id}', [InvoiceController::class, 'show'])->name('visualizza-fattura');
 

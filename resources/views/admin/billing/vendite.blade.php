@@ -7,98 +7,27 @@
 @section('inner')
 
     <script>
-        function aggiorna_tabella(anno, mese) {
+        async function aggiorna_tabella(anno, mese) {
+            const response = await fetch(`/cambia_tabella_ordini?anno=${anno}&mese=${mese}`);
+            const data = await response.json();
 
-            fetch(`/cambia_tabella_ordini?anno=${anno}&mese=${mese}`)
-                .then(res => res.json())
-                .then(data => {
-
-                    let html = '';
-
-                    data.ordini.forEach(o => {
-
-                        html += `
-                            <tr>
-                                <td class="fw-semibold">${o.id}</td>
-
-                                <td>${o.studente}</td>
-
-                                <td>${o.data}</td>
-
-                                <td class="fw-semibold text-success">
-                                    ${o.totale}€
-                                </td>
-
-                                <td>
-                                    <button class="btn btn-primary btn-sm rounded-pill px-3"
-                                        onclick="location.href='admin-ordine-${o.id}'">
-
-                                        Visualizza
-
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-
-                    document.getElementById('tabella-body').innerHTML = html;
-
-                    document.getElementById('totale').innerHTML =
-                        `
-                            <div class="fw-bold fs-5">
-                                Totale Vendite: ${data.totale}€
-                            </div>
-                        `;
-                });
+            document.getElementById('tabella-body').innerHTML = data.html;
+            document.getElementById('totale').textContent = `Totale Vendite: ${data.totale}€`;
         }
 
         window.onload = function() {
-
             aggiorna_tabella(
                 document.getElementById('floatingSelect1').value,
                 document.getElementById('floatingSelect2').value
             );
-
         }
     </script>
 
-    @php
-        use App\Models\Order;
-        use App\Models\OrderProduct;
-        use App\Services\AcquistiService;
-        use App\Helpers\DateHelper;
-        use App\Models\User;
-        use App\Models\Student;
-        use Illuminate\Support\Facades\DB;
-
-        $primo_ordine = DB::table('orders')->orderBy(DB::raw('date'), 'desc')->first();
-
-        if ($primo_ordine != null) {
-            $data_primo = DateHelper::parse($primo_ordine->date);
-
-            $ordine = DB::table('orders')
-                ->whereMonth('date', $data_primo['mese'])
-                ->whereYear('date', $data_primo['anno'])
-                ->orderBy(DB::raw('date'), 'desc')
-                ->get();
-
-            $years = DB::table('orders')
-                ->select(DB::raw('YEAR(date) as year'))
-                ->groupBy('year')
-                ->orderBy('year', 'asc')
-                ->get();
-
-            $months = DB::table('orders')
-                ->select(DB::raw('MONTH(date) as month'))
-                ->groupBy('month')
-                ->orderBy('month', 'asc')
-                ->get();
-        }
-    @endphp
     <div class="container">
+
         <div class="container-fluid">
 
-            @if ($primo_ordine != null)
+            @if ($hasOrders)
                 {{-- FILTRI --}}
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
 
@@ -113,10 +42,15 @@
                                 </label>
 
                                 <select class="form-select rounded-3" id="floatingSelect1"
-                                    onchange="aggiorna_tabella(_('floatingSelect1').value,_('floatingSelect2').value)">
+                                    onchange="aggiorna_tabella(
+                                        document.getElementById('floatingSelect1').value,
+                                        document.getElementById('floatingSelect2').value
+                                    )">
 
-                                    <option selected value="{{ $data_primo['anno'] }}">
-                                        {{ $data_primo['anno'] }}
+                                    <option selected value="{{ $dataPrimo['anno'] }}">
+
+                                        {{ $dataPrimo['anno'] }}
+
                                     </option>
 
                                     @foreach ($years as $item)
@@ -136,15 +70,22 @@
                                 </label>
 
                                 <select class="form-select rounded-3" id="floatingSelect2"
-                                    onchange="aggiorna_tabella(_('floatingSelect1').value,_('floatingSelect2').value)">
+                                    onchange="aggiorna_tabella(
+                                        document.getElementById('floatingSelect1').value,
+                                        document.getElementById('floatingSelect2').value
+                                    )">
 
-                                    <option selected value="{{ $data_primo['mese'] }}">
-                                        {{ AcquistiService::stringa_mese(intval($data_primo['mese'])) }}
+                                    <option selected value="{{ $dataPrimo['mese'] }}">
+
+                                        {{ App\Services\AcquistiService::stringa_mese(intval($dataPrimo['mese'])) }}
+
                                     </option>
 
                                     @foreach ($months as $item)
                                         <option value="{{ $item->month }}">
-                                            {{ AcquistiService::stringa_mese(intval($item->month)) }}
+
+                                            {{ App\Services\AcquistiService::stringa_mese(intval($item->month)) }}
+
                                         </option>
                                     @endforeach
 
@@ -170,11 +111,17 @@
                                 <thead class="table-light">
 
                                     <tr>
+
                                         <th>#</th>
+
                                         <th>Studente</th>
+
                                         <th>Data</th>
+
                                         <th>Totale</th>
+
                                         <th>Dettagli</th>
+
                                     </tr>
 
                                 </thead>
@@ -185,8 +132,10 @@
                                 <tfoot>
 
                                     <tr>
-                                        <td colspan="5" class="text-end pt-4" id="totale">
+
+                                        <td colspan="5" class="text-end pt-4 fw-bold" id="totale">
                                         </td>
+
                                     </tr>
 
                                 </tfoot>
@@ -219,5 +168,7 @@
             @endif
 
         </div>
+
     </div>
+
 @endsection

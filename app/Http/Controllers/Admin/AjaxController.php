@@ -51,9 +51,15 @@ class AjaxController extends Controller
             ];
         });
 
+        // return response()->json([
+        //     'ordini' => $ordiniMapped,
+        //     'totale' => $ordiniMapped->sum('totale'),
+        // ]);
         return response()->json([
-            'ordini' => $ordiniMapped,
-            'totale' => $ordiniMapped->sum('totale'),
+            'html' => view('admin.partials.righe-ordini', [
+                'ordini' => $ordiniMapped
+            ])->render(),
+            'totale' => $ordiniMapped->sum('totale')
         ]);
     }
 

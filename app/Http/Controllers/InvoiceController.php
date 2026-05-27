@@ -19,6 +19,6 @@ class InvoiceController extends Controller
     {
         $fattura = Invoice::where('number', $number)->firstOrFail();
 
-        return view('admin.visualizza-fattura', compact('fattura'));
+        return view('admin.billing.visualizza-fattura', compact('fattura'));
     }
 }
