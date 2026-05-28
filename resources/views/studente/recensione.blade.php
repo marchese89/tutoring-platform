@@ -1,5 +1,9 @@
 @extends('layouts.dashboard-studente')
 
+@section('page-title')
+    <x-ui.section-header title="Recensione" />
+@endsection
+
 @section('inner')
     <style>
         .stars a {
@@ -57,11 +61,6 @@
         }
     </script>
     </script>
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
-        </li>
-    </ul>
 
     @php
         use App\Models\Feedback;

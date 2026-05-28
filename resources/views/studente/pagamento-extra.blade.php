@@ -1,15 +1,11 @@
 @extends('layouts.dashboard-studente')
 
+@section('page-title')
+    <x-ui.section-header title="Pagamento Lezioni Private" />
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
-        </li>
-    </ul>
     <div class="container" style="width: 60%;text-align:center">
-        <h2>Pagamento Lezioni Private</h2>
-        <br>
-        <br>
         @if (session()->has('error'))
             <div class="alert alert-danger">
                 {{ session()->get('error') }}

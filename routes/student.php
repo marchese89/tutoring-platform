@@ -30,7 +30,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // CORSI
     // =========================
     Route::get('corsi', [CourseController::class, 'mieiCorsi'])->name('studente.corsi');
-    // 'studente.elenco-corsi'  [CourseController::class, 'mieiCorsi']
     Route::view('course/{id}', 'studente.corso')->name('course');
 
     Route::view('studente/corso/{id}', 'studente.corso')->name('studente.corso');
@@ -71,7 +70,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         return view('studente.pagamento-ok');
     });
 
-    Route::view('payment/extra', 'studente.pagamento-extra');
+    Route::view('payment/extra', 'studente.pagamento-extra')->name('extra-payment');
 
     // =========================
     // ORDINI / FATTURE (VECCHIE RIPRISTINATE)
@@ -79,10 +78,10 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::view('ordini', 'studente.ordini')->name('ordini');
     Route::view('ordine-{id}', 'studente.ordine');
 
-    Route::view('fatture-studente', 'studente.fatture-studente');
+    Route::view('fatture-studente', 'studente.fatture-studente')->name('fatture-studente');
     Route::view('fattura-{id}', 'studente.fattura');
 
-    Route::view('fattura0-studente-{id}', 'studente.fattura-studente');
+    Route::view('fattura0-studente-{id}', 'studente.fattura-studente')->name('fattura0-studente');
 
     // =========================
     // RICHIESTE DIRETTE
@@ -102,7 +101,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // FEEDBACK / RECENSIONI
     // =========================
-    Route::view('recensione', 'studente.recensione');
+    Route::view('recensione', 'studente.recensione')->name('recensione');
 
     Route::get('invia-feedback-{punteggio}', [AjaxController::class, 'invia_feedback']);
     Route::get('invia-recensione-{testo}', [AjaxController::class, 'invia_recensione']);

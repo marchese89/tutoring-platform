@@ -1,14 +1,10 @@
 @extends('layouts.dashboard-studente')
 
+@section('page-title')
+    <x-ui.section-header title="Fattura" />
+@endsection
+
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="fatture-studente">Fatture</a>
-        </li>
-    </ul>
     <div class="container">
         @php
             use App\Models\InvoiceSheet;

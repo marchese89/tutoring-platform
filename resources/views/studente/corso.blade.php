@@ -9,9 +9,7 @@
 
 @endphp
 @section('page-title')
-    <div class="container my-5">
-        <h2>Visualizza Corso </h2>
-    </div>
+    <x-ui.section-header :title="'Visualizza Corso'" />
 @endsection
 
 @section('inner')

@@ -1,13 +1,11 @@
-@extends('layouts.dashboard-admin')
+@extends('layouts.dashboard-studente')
 
 @section('page-title')
-    <div class="container my-4">
-        <h2>Elenco Corsi</h2>
-    </div>
+    <x-ui.section-header :title="'Elenco Corsi'" />
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align:center; width:80%">
+    <div class="container" style="text-align:center;">
 
         <table class="table">
             <thead>

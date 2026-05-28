@@ -129,6 +129,26 @@ Breadcrumbs::for('imp-account-studente', function (BreadcrumbTrail $trail) {
     $trail->push('Impostazioni account', route('imp-account-studente'));
 });
 
+Breadcrumbs::for('recensione', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-studente');
+    $trail->push('Recensione', route('recensione'));
+});
+
+Breadcrumbs::for('extra-payment', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-studente');
+    $trail->push('Pagamento Extra', route('extra-payment'));
+});
+
+Breadcrumbs::for('fatture-studente', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-studente');
+    $trail->push('Fatture', route('fatture-studente'));
+});
+
+Breadcrumbs::for('fattura0-studente', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('fatture-studente', $id);
+    $trail->push('Fattura', route('fattura0-studente', $id));
+});
+
 Breadcrumbs::for('mod-dati-pers-stud', function (BreadcrumbTrail $trail) {
     $trail->parent('imp-account-studente');
     $trail->push('Modifica dati personali', route('mod-dati-pers-stud'));
@@ -145,7 +165,7 @@ Breadcrumbs::for('studente.corsi', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('course', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('corsi');
+    $trail->parent('corsi', $id);
     $trail->push('Corso', route('course', $id));
 });
 

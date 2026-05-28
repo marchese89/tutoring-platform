@@ -25,8 +25,7 @@
 
                     {{-- CORSI --}}
 
-                    <x-ui.card-item title="Corsi Acquistati" text="Lezioni ed esercizi dei corsi acquistati."
-                        url="studente.corsi" />
+                    <x-ui.card-item title="Corsi Acquistati" text="Lezioni ed esercizi dei corsi acquistati." url="corsi" />
 
                     {{-- RICHIESTE DIRETTE --}}
 
@@ -44,79 +43,16 @@
                     <x-ui.card-item title="Ordini" text="Storico e stato degli ordini effettuati." url="ordini" />
 
                     {{-- RECENSIONI --}}
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
-                            <div class="card-body p-4">
-
-                                <div class="mb-4">
-                                    <i class="fa-solid fa-star fa-2x text-primary"></i>
-                                </div>
-
-                                <h4 class="fw-bold mb-3">
-                                    Recensione
-                                </h4>
-
-                                <p class="text-muted mb-4">
-                                    Valutazione del servizio e feedback.
-                                </p>
-
-                                <a href="{{ url('recensione') }}" class="btn btn-primary rounded-pill px-4">
-                                    Accedi
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
+                    <x-ui.card-item title="Recensione" text="Valutazione del servizio e feedback." url="recensione" />
 
                     {{-- PAGAMENTI --}}
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
-                            <div class="card-body p-4">
 
-                                <div class="mb-4">
-                                    <i class="fa-solid fa-credit-card fa-2x text-primary"></i>
-                                </div>
-
-                                <h4 class="fw-bold mb-3">
-                                    Pagamento Extra
-                                </h4>
-
-                                <p class="text-muted mb-4">
-                                    Pagamento lezioni private e servizi aggiuntivi.
-                                </p>
-
-                                <a href="{{ url('/payment/extra') }}" class="btn btn-primary rounded-pill px-4">
-                                    Accedi
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
+                    <x-ui.card-item title="Pagamento Extra" text="Pagamento lezioni private e servizi aggiuntivi."
+                        url="payment/extra" />
 
                     {{-- FATTURE --}}
-                    <div class="col-xl-4 col-md-6">
-                        <div class="card border-0 shadow-sm h-100 rounded-4">
-                            <div class="card-body p-4">
 
-                                <div class="mb-4">
-                                    <i class="fa-solid fa-file-invoice fa-2x text-primary"></i>
-                                </div>
-
-                                <h4 class="fw-bold mb-3">
-                                    Fatture
-                                </h4>
-
-                                <p class="text-muted mb-4">
-                                    Storico fatture dei pagamenti extra.
-                                </p>
-
-                                <a href="{{ url('fatture-studente') }}" class="btn btn-primary rounded-pill px-4">
-                                    Accedi
-                                </a>
-
-                            </div>
-                        </div>
-                    </div>
+                    <x-ui.card-item title="Fatture" text="Storico fatture dei pagamenti extra." url="fatture-studente" />
 
                 </div>
 

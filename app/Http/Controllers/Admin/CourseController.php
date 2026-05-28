@@ -94,7 +94,7 @@ class CourseController extends Controller
         return back()->with('success', 'Corso creato');
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $data = $request->validate([
             'name' => 'required|string|max:255',
