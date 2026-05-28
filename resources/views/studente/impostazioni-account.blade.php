@@ -1,18 +1,13 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('page-title')
-    <div class="container my-4">
-        <h2>
-            Impostazioni Account
-        </h2>
-    </div>
+    <x-ui.section-header :title="'Impostazioni Account'" />
 @endsection
 
 @section('inner')
     <div class="container py-4">
 
-        {{-- CARDS --}}
-        <div class="row g-4">
+        {{-- CARDS --}} <div class="row g-4">
 
             {{-- DATI PERSONALI --}}
             <div class="col-xl-4 col-md-6">

@@ -1,4 +1,4 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 @php
     use App\Models\Course;
     use App\Models\Lesson;

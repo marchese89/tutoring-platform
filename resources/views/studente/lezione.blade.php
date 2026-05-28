@@ -1,4 +1,4 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('page-title')
     <div class="container my-3">

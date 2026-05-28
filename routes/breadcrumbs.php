@@ -217,3 +217,13 @@ Breadcrumbs::for('admin-fattura', function (BreadcrumbTrail $trail, $id) {
     $trail->parent('admin-ordine', $id);
     $trail->push('Fattura', route('admin-fattura', ['id' => $id]));
 });
+
+Breadcrumbs::for('richieste-dirette', function (BreadcrumbTrail $trail) {
+    $trail->parent('dashboard-studente');
+    $trail->push('Richieste Dirette', route('richieste-dirette'));
+});
+
+Breadcrumbs::for('visualizza-richiesta-studente', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('richieste-dirette', $id);
+    $trail->push('Visualizza Richiesta', route('visualizza-richiesta-studente', ['id' => $id]));
+});

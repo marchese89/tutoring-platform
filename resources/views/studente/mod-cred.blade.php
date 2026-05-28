@@ -1,11 +1,7 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('page-title')
-    <div class="container my-4">
-        <h2>
-            Modifica Credenziali
-        </h2>
-    </div>
+    <x-ui.section-header :title="'Modifica Credenziali'" />
 @endsection
 
 @section('inner')
@@ -118,7 +114,6 @@
                                         {{ $errors->first('pass0') }}
                                     </div>
                                 @endif
-
                             </div>
 
                             {{-- NUOVA PASSWORD --}}

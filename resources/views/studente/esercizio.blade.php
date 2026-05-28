@@ -1,4 +1,4 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('inner')
     @php $enableEcho = true; @endphp

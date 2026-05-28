@@ -1,14 +1,7 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('page-title')
-    <div class="container my-4">
-        <h2>
-            Modifica Dati Personali
-        </h2>
-        <p class="text-muted mb-0">
-            Aggiorna le informazioni relative al tuo indirizzo di residenza.
-        </p>
-    </div>
+    <x-ui.section-header :title="'Modifica Dati Personali'" />
 @endsection
 
 @section('inner')

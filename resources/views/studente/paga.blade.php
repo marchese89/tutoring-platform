@@ -1,4 +1,4 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('inner')
     <script src="https://js.stripe.com/v3/"></script>

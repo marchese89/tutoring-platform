@@ -11,7 +11,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // DASHBOARD
     // =========================
-    Route::view('dashboard-studente', 'studente.dashboard-studente')->name('dashboard-studente');
+    Route::view('dashboard-studente', 'layouts.dashboard-studente')->name('dashboard-studente');
 
     // =========================
     // ACCOUNT (MANCAVA LA COMPATIBILITÀ VECCHIA)
@@ -29,7 +29,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // CORSI
     // =========================
-    Route::view('corsi', [CourseController::class, 'mieiCorsi'])->name('studente.corsi');
+    Route::get('corsi', [CourseController::class, 'mieiCorsi'])->name('studente.corsi');
     // 'studente.elenco-corsi'  [CourseController::class, 'mieiCorsi']
     Route::view('course/{id}', 'studente.corso')->name('course');
 
@@ -76,7 +76,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // =========================
     // ORDINI / FATTURE (VECCHIE RIPRISTINATE)
     // =========================
-    Route::view('ordini', 'studente.ordini');
+    Route::view('ordini', 'studente.ordini')->name('ordini');
     Route::view('ordine-{id}', 'studente.ordine');
 
     Route::view('fatture-studente', 'studente.fatture-studente');
@@ -88,7 +88,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // RICHIESTE DIRETTE
     // =========================
     Route::view('richieste-dirette', 'studente.richieste-dirette')->name('richieste-dirette');
-    Route::view('richieste-dirette-acquistate', 'studente.richieste-dirette-acquistate');
+    Route::view('richieste-dirette-acquistate', 'studente.richieste-dirette-acquistate')->name('richieste-dirette-aquistate');
     Route::get('visualizza-richiesta-studente/{id}', function ($id) {
         return view('studente.visualizza-richiesta-lezione', compact('id'));
     })->name('visualizza-richiesta-studente');

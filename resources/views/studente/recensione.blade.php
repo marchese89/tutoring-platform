@@ -1,4 +1,4 @@
-@extends('studente.dashboard-studente')
+@extends('layouts.dashboard-studente')
 
 @section('inner')
     <style>
@@ -28,7 +28,7 @@
                     _("stars").innerHTML = this.responseText;
                 }
             };
-            xmlhttp.open("GET", "invia-feedback-"+ punteggio, true);
+            xmlhttp.open("GET", "invia-feedback-" + punteggio, true);
             xmlhttp.send();
 
         }
@@ -77,16 +77,11 @@
     <div class="container" style="width: 70%;text-align:center">
         <h2>Valutazione</h2>
         <div class="stars" id="stars">
-            <a <?php if($f > 0){?> style="opacity: 100%;" <?php }?>
-                onclick="invia_feefback(1)">⭐</a>
-            <a <?php if($f > 1){?> style="opacity: 100%;" <?php }?>
-                onclick="invia_feefback(2)">⭐</a>
-            <a <?php if($f > 2){?> style="opacity: 100%;" <?php }?>
-                onclick="invia_feefback(3)">⭐</a>
-            <a <?php if($f > 3){?> style="opacity: 100%;" <?php }?>
-                onclick="invia_feefback(4)">⭐</a>
-            <a <?php if($f > 4){?> style="opacity: 100%;" <?php }?>
-                onclick="invia_feefback(5)">⭐</a>
+            <a <?php if($f > 0){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(1)">⭐</a>
+            <a <?php if($f > 1){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(2)">⭐</a>
+            <a <?php if($f > 2){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(3)">⭐</a>
+            <a <?php if($f > 3){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(4)">⭐</a>
+            <a <?php if($f > 4){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(5)">⭐</a>
         </div>
         <h2>Recensione</h2>
 
@@ -110,8 +105,7 @@
             });
         </script> <br>
 
-        <button id="invia_recensione" class="btn btn-primary"
-            onclick=invia_recensione(_("recensione").value)>Invia</button>
+        <button id="invia_recensione" class="btn btn-primary" onclick=invia_recensione(_("recensione").value)>Invia</button>
         <br>
     </div>
 @endsection
