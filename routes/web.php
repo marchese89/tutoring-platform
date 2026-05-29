@@ -10,24 +10,16 @@ use App\Http\Controllers\Files\FileAccessController;
 */
 
 // =========================
-// ROUTE MODULARI
+// Modular routes
 // =========================
 
 require __DIR__ . '/public.php';
 require __DIR__ . '/auth.php';
 require __DIR__ . '/student.php';
+require __DIR__ . '/admin.php';
 
 // =========================
-// ADMIN (protetto)
-// =========================
-
-Route::middleware(['auth', 'role:admin'])
-    ->group(function () {
-        require __DIR__ . '/admin.php';
-    });
-
-// =========================
-// FILE PROTETTI
+// Protected files
 // =========================
 
 Route::get('/protected_file/{path}', FileAccessController::class)
