@@ -17,11 +17,8 @@ use Illuminate\Support\Facades\Mail;
 
 class AcquistiController extends Controller
 {
-    public function aggiungi_al_carrello(Request $request)
+    public function aggiungi_al_carrello(Request $request, int $id, int $type)
     {
-        $id = (int) $request->input('id');
-        $type = (int) $request->input('type');
-
         $carrello = $request->session()->get('carrello', new \App\Http\Utility\Carrello());
 
         $elemento = new ElementoC($id, $type);
@@ -30,16 +27,16 @@ class AcquistiController extends Controller
         $request->session()->put('carrello', $carrello);
 
         return match ($type) {
-            ElementoC::LEZIONE => redirect('/corso/' . Lesson::find($id)->course_id),
-            ElementoC::ESERCIZIO => redirect('/corso/' . Exercise::find($id)->course_id),
+            ElementoC::LEZIONE => redirect()->route('courses.show', Lesson::find($id)->course_id),
+            ElementoC::ESERCIZIO => redirect()->route('courses.show', Exercise::find($id)->course_id),
             ElementoC::LEZIONI_CORSO,
-            ElementoC::CORSO_COMPLETO => redirect('/corso/' . $id),
-            ElementoC::LEZIONE_RICHIESTA => redirect('/visualizza-richiesta-studente/' . $id),
-            default => redirect('/carrello')
+            ElementoC::CORSO_COMPLETO => redirect()->route('courses.show', $id),
+            ElementoC::LEZIONE_RICHIESTA => redirect()->route('student.direct-requests.show', $id),
+            default => redirect()->route('cart.show')
         };
     }
 
-    public function rimuovi_dal_carrello(Request $request)
+    public function rimuovi_dal_carrello(Request $request, int $id, int $type)
     {
         $carrello = $request->session()->get('carrello');
 
@@ -47,9 +44,9 @@ class AcquistiController extends Controller
             return response()->json(['error' => 'Carrello vuoto'], 400);
         }
 
-        $carrello->rimuovi(request('id'), request('type'));
+        $carrello->rimuovi($id, $type);
 
-        return redirect('carrello');
+        return redirect()->route('cart.show');
     }
 
     public function process_payment(Request $request)
@@ -118,7 +115,7 @@ class AcquistiController extends Controller
 
             DB::commit();
 
-            return redirect('acquisto-a-buon-fine');
+            return redirect()->route('payment.complete');
         } catch (\Exception $e) {
             DB::rollBack();
             throw $e;
@@ -138,7 +135,7 @@ class AcquistiController extends Controller
             return back()->withError('Importo superiore a 77.47 € (max consentito)');
         }
 
-        return redirect('paga');
+        return redirect()->route('payment.pay');
     }
 
     public function processa_pagamento_individuale(Request $request)

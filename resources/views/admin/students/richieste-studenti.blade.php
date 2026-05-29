@@ -67,7 +67,7 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ route('visualizza-richiesta', ['id' => $item->id]) }}"
+                                        <a href="{{ route('admin.lesson-requests.show', ['id' => $item->id]) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>

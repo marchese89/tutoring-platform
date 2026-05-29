@@ -50,6 +50,6 @@ class RegistrazioneController extends Controller
             ]);
         });
 
-        return redirect()->route('registrazione_ok');
+        return redirect()->route('registration.success');
     }
 }

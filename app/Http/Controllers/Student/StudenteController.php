@@ -33,7 +33,7 @@ class StudenteController extends Controller
 
         $student->save();
 
-        return redirect('mod-dati-pers-stud');
+        return redirect()->route('student.account.profile');
     }
 
     function mod_email_stud(Request $request)
@@ -48,7 +48,7 @@ class StudenteController extends Controller
             $usr = User::where('email', '=', auth()->user()->email)->first();
             $usr->email = $email;
             $usr->save();
-            return redirect('mod-cred-stud');
+            return redirect()->route('student.account.credentials');
         }
     }
 
@@ -71,7 +71,7 @@ class StudenteController extends Controller
 
         $usr->save();
 
-        return redirect('mod-cred-stud')->withSuccess('Password Modificata con successo');
+        return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
     }
 
     public function lezione($id_corso, $id_lezione)
@@ -129,5 +129,10 @@ class StudenteController extends Controller
         }
 
         return view('studente.esercizio', compact('corso', 'esercizio'));
+    }
+
+    public function showDirectRequest(int $id)
+    {
+        return view('studente.visualizza-richiesta-lezione', compact('id'));
     }
 }

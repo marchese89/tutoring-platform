@@ -10,19 +10,19 @@
         <h3 style="color: blue">{{ $richiesta->title }}</h3>
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $richiesta->trace }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $richiesta->trace }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         @if ($richiesta->execution != null)
             <h4>Soluzione</h4>
-            <iframe width="90%" src="/protected_file/{{ $richiesta->execution }}#view=FitH" height="800px">
+            <iframe width="90%" src="/protected-files/{{ $richiesta->execution }}#view=FitH" height="800px">
             </iframe>
             <br>
             <br>
             @if ($richiesta->escaped == 0)
                 <div class="col-12">
-                    <form action="{{ route('lez-rich-rem-exec', $richiesta->id) }}" method="POST">
+                    <form action="{{ route('admin.lesson-requests.solution.destroy', $richiesta->id) }}" method="POST">
                         @csrf
                         @method('DELETE')
 
@@ -35,7 +35,7 @@
             @endif
         @endif
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="/sol-rich-upload" enctype="multipart/form-data" id="upload">
+            <form method="POST" action="{{ route('admin.lesson-requests.solution.store', $richiesta->id) }}" enctype="multipart/form-data" id="upload">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />
@@ -48,7 +48,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file','sol-rich-upload',1)">Upload</button>
+                        onclick="upload('upload','file','{{ route('admin.lesson-requests.solution.store', $richiesta->id) }}',1)">Upload</button>
                 </div>
 
                 <br>
@@ -56,7 +56,7 @@
             </form>
             <br>
             <br>
-            <form action="/carica-prezzo-lez-rich" method="POST">
+            <form action="{{ route('admin.lesson-requests.price.store', $richiesta->id) }}" method="POST">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />

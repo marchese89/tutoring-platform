@@ -24,7 +24,7 @@
                         </p>
 
                         <div class="mt-auto">
-                            <a href="richieste-studenti" class="btn btn-primary rounded-pill px-4">
+                            <a href="{{ route('admin.lesson-requests.index') }}" class="btn btn-primary rounded-pill px-4">
                                 Accedi
                             </a>
                         </div>
@@ -49,7 +49,7 @@
                         </p>
 
                         <div class="mt-auto">
-                            <a href="chat-studenti" class="btn btn-primary rounded-pill px-4">
+                            <a href="{{ route('admin.chats.index') }}" class="btn btn-primary rounded-pill px-4">
                                 Accedi
                             </a>
                         </div>

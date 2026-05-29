@@ -22,13 +22,13 @@
         <h4>Traccia</h4>
 
         <iframe width="90%"
-            @if (Session::exists('uploaded_trace_ex')) src="/protected_file/{{ session()->get('uploaded_trace_ex') }}#view=FitH"
+            @if (Session::exists('uploaded_trace_ex')) src="/protected-files/{{ session()->get('uploaded_trace_ex') }}#view=FitH"
                 @else
                     src="" @endif
             height="400px">
         </iframe>
 
-        <form method="POST" action="/exercises/trace/upload" enctype="multipart/form-data" id="upload">
+        <form method="POST" action="{{ route('admin.exercises.trace.upload.store') }}" enctype="multipart/form-data" id="upload">
             @csrf
             @method('POST')
             <input type="hidden" name="id" value="{{ $id }}" />
@@ -41,7 +41,7 @@
 
             <div class="col-12">
                 <button type="submit" class="btn btn-primary"
-                    onclick="upload('upload','file-trace-ex','exercises/trace/upload',1)">Upload</button>
+                    onclick="upload('upload','file-trace-ex','{{ route('admin.exercises.trace.upload.store') }}',1)">Upload</button>
             </div>
 
             <br>
@@ -49,7 +49,7 @@
         </form>
         @if (Session::exists('uploaded_trace_ex'))
             <div class="col-12">
-                <form action="/exercises/trace/session" method="POST">
+                <form action="{{ route('admin.exercises.trace.session.destroy') }}" method="POST">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="btn btn-primary">Cancella File</button>
@@ -63,13 +63,13 @@
             <h4>Svolgimento</h4>
 
             <iframe width="90%"
-                @if (Session::exists('uploaded_ex')) src="/protected_file/{{ session()->get('uploaded_ex') }}#view=FitH"
+                @if (Session::exists('uploaded_ex')) src="/protected-files/{{ session()->get('uploaded_ex') }}#view=FitH"
                     @else
                         src="" @endif
                 height="400px">
             </iframe>
 
-            <form method="POST" action="/exercises/execution/upload" enctype="multipart/form-data" id="upload2">
+            <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2">
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control" id="file-ex" name="file-ex" />
@@ -81,7 +81,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload2','file-ex','upload-ex',2)">Upload</button>
+                        onclick="upload('upload2','file-ex','{{ route('admin.exercises.execution.upload.store') }}',2)">Upload</button>
                 </div>
 
                 <br>
@@ -89,7 +89,7 @@
             </form>
             @if (Session::exists('uploaded_ex'))
                 <div class="col-12">
-                    <form action="/exercises/execution/session" method="POST">
+                    <form action="{{ route('admin.exercises.execution.session.destroy') }}" method="POST">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-primary">Cancella File</button>
@@ -99,7 +99,7 @@
         @endif
 
         @if (Session::exists('uploaded_trace_ex') && Session::exists('uploaded_ex'))
-            <form method="POST" action="/exercises">
+            <form method="POST" action="{{ route('admin.exercises.store') }}">
                 @csrf
                 @method('POST')
                 <input type="hidden" name="id" value="{{ $id }}" />

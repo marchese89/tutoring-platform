@@ -48,7 +48,7 @@
                                         </td>
 
                                         <td>
-                                            <a href="{{ route('visualizza-fattura', $item->number) }}"
+                                            <a href="{{ route('admin.invoices.show', $item->number) }}"
                                                 class="btn btn-primary btn-sm rounded-pill px-3">
                                                 Visualizza
                                             </a>

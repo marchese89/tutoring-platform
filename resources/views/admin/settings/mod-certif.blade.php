@@ -8,7 +8,7 @@
     <div class="container py-4" style="max-width: 1000px;">
 
         <div class="text-center mb-4">
-            <button class="btn btn-primary" onclick="location.href='aggiungi-certif'">
+            <button class="btn btn-primary" onclick="location.href='{{ route('admin.account.certificates.create') }}'">
                 Aggiungi certificato
             </button>
         </div>
@@ -23,8 +23,9 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <strong>Certificato #{{ $item->id }}</strong>
 
-                    <form method="POST" action="elimina_certificato">
+                    <form method="POST" action="{{ route('admin.account.certificates.destroy') }}">
                         @csrf
+                        @method('DELETE')
                         <input type="hidden" name="id" value="{{ $item->id }}">
                         <button type="submit" class="btn btn-sm btn-danger">
                             Elimina
@@ -35,7 +36,7 @@
                 <div class="card-body">
 
                     {{-- NOME CERTIFICATO --}}
-                    <form method="POST" action="mod-nome-cert-admin" class="mb-4">
+                    <form method="POST" action="{{ route('admin.account.certificates.name.update') }}" class="mb-4">
                         @csrf
                         <input type="hidden" name="id" value="{{ $item->id }}">
 
@@ -69,7 +70,7 @@
                     </div>
 
                     {{-- UPLOAD --}}
-                    <form method="POST" action="mod-foto-cert-admin" enctype="multipart/form-data"
+                    <form method="POST" action="{{ route('admin.account.certificates.photo.update') }}" enctype="multipart/form-data"
                         id="upload_{{ $item->id }}">
 
                         @csrf
@@ -89,7 +90,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-primary"
-                            onclick="upload('upload_{{ $item->id }}','file_{{ $item->id }}','mod-foto-cert-admin',1)">
+                            onclick="upload('upload_{{ $item->id }}','file_{{ $item->id }}','{{ route('admin.account.certificates.photo.update') }}',1)">
                             Upload file
                         </button>
                     </form>

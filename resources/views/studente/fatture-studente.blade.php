@@ -30,7 +30,7 @@
                             <th scope="row">{{ $item->id }}</th>
                             <td>
                                 <button class="btn btn-primary"
-                                    onclick=location.href="fattura0-studente-{{ $item->invoice_sheet_id }}">Visualizza</button>
+                                    onclick="location.href='{{ route('student.invoice-sheets.show', $item->invoice_sheet_id) }}'">Visualizza</button>
                             </td>
                         </tr>
                     @endforeach

@@ -67,7 +67,7 @@
                                     </td>
 
                                     <td class="text-end">
-                                        <a href="{{ url('/lezione/' . $corso->id . '/' . $lezione->id) }}"
+                                        <a href="{{ route('student.lessons.show', ['id_corso' => $corso->id, 'id_lezione' => $lezione->id]) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>
@@ -120,7 +120,7 @@
                                     </td>
 
                                     <td class="text-end">
-                                        <a href="{{ url('/esercizio/' . $corso->id . '/' . $esercizio->id) }}"
+                                        <a href="{{ route('student.exercises.show', ['id_corso' => $corso->id, 'id_esercizio' => $esercizio->id]) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>

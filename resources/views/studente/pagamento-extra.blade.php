@@ -11,7 +11,7 @@
                 {{ session()->get('error') }}
             </div>
         @endif
-        <form class="row g-3" method="POST" action="/payment/prepare" onsubmit="modifica_pass()">
+        <form class="row g-3" method="POST" action="{{ route('checkout.payment.prepare') }}" onsubmit="modifica_pass()">
             @csrf
             <div class="col-md-8">
                 <label class="form-label">Descrizione</label>

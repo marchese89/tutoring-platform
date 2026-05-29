@@ -8,7 +8,7 @@
 
     <script>
         async function aggiorna_tabella(anno, mese) {
-            const response = await fetch(`/cambia_tabella_ordini?anno=${anno}&mese=${mese}`);
+            const response = await fetch(`{{ route('admin.orders.table') }}?anno=${anno}&mese=${mese}`);
             const data = await response.json();
 
             document.getElementById('tabella-body').innerHTML = data.html;

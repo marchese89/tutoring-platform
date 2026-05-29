@@ -39,7 +39,7 @@
                             <td>
                                 <form id="form-remove-{{ $item->getId() }}-{{ $item->getTipoElemento() }}" method="POST"
                                     style="display: inline"
-                                    action="/carrello/remove/{{ $item->getId() }}/{{ $item->getTipoElemento() }}"
+                                    action="{{ route('cart.items.destroy', ['id' => $item->getId(), 'type' => $item->getTipoElemento()]) }}"
                                     style="display: none;">
                                     @csrf
                                     @method('DELETE')
@@ -64,7 +64,7 @@
             <br>
             <br>
             <div>
-                <button class="btn btn-primary" onclick=location.href="/checkout">Acquista</button>
+                <button class="btn btn-primary" onclick="location.href='{{ route('checkout.show') }}'">Acquista</button>
             </div>
             <br>
             <br>

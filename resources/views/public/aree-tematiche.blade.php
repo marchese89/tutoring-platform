@@ -20,7 +20,7 @@
 
                 @foreach ($themeAreas as $item)
                     <x-ui.card-item :title="$item->name" text="Scopri tutti i contenuti disponibili per questa area tematica"
-                        :url="url('/materie/' . $item->id)" button="Esplora area" />
+                        :url="route('subjects.index', $item->id)" button="Esplora area" />
                 @endforeach
 
             </div>

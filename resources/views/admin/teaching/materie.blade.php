@@ -17,7 +17,7 @@
 
                         <h4 class="fw-bold mb-3">Nuova Materia</h4>
 
-                        <form method="POST" action="/matter">
+                        <form method="POST" action="{{ route('admin.subjects.store') }}">
                             @csrf
 
                             <label class="form-label">Area Tematica</label>
@@ -73,7 +73,7 @@
 
                                     {{-- UPDATE --}}
                                     <td>
-                                        <form method="POST" action="/matter/{{ $item->id }}" class="d-flex gap-2">
+                                        <form method="POST" action="{{ route('admin.subjects.update', $item->id) }}" class="d-flex gap-2">
                                             @csrf
                                             @method('PUT')
 
@@ -90,7 +90,7 @@
                                     {{-- DELETE --}}
                                     <td>
                                         @if ($item->courses->count() == 0)
-                                            <form method="POST" action="/matter/{{ $item->id }}">
+                                            <form method="POST" action="{{ route('admin.subjects.destroy', $item->id) }}">
                                                 @csrf
                                                 @method('DELETE')
 

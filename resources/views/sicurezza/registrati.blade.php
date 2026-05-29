@@ -10,7 +10,7 @@
 
                         <h4 class="mb-4 text-center">Registrazione</h4>
 
-                        <form method="POST" action="registrati">
+                        <form method="POST" action="{{ route('register.store') }}">
                             @csrf
 
                             <div class="row g-3">

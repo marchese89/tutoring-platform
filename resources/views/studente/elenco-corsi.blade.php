@@ -30,7 +30,8 @@
                         <td>{{ $course->name }}</td>
 
                         <td>
-                            <button class="btn btn-primary" onclick="location.href='/course/{{ $course->id }}'">
+                            <button class="btn btn-primary"
+                                onclick="location.href='{{ route('student.courses.show', $course->id) }}'">
                                 Visualizza
                             </button>
                         </td>

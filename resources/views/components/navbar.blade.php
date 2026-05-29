@@ -2,7 +2,7 @@
     <div class="container">
 
         {{-- Brand --}}
-        <a class="navbar-brand fw-bold" href="/">
+        <a class="navbar-brand fw-bold" href="{{ route('home') }}">
             Lezioni Informatica
         </a>
 
@@ -15,16 +15,16 @@
             {{-- Center links --}}
             <ul class="navbar-nav mx-auto gap-2">
                 <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
+                    <a class="nav-link" href="{{ route('home') }}">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/aree-tematiche">Aree Tematiche</a>
+                    <a class="nav-link" href="{{ route('theme-areas.index') }}">Aree Tematiche</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/lezione-su-richiesta">Materiale su richiesta</a>
+                    <a class="nav-link" href="{{ route('lesson-requests.create') }}">Materiale su richiesta</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/informazioni">Informazioni</a>
+                    <a class="nav-link" href="{{ route('about') }}">Informazioni</a>
                 </li>
             </ul>
 
@@ -33,10 +33,10 @@
 
                 @guest
                     <li class="nav-item">
-                        <a class="nav-link" href="/login">Login</a>
+                        <a class="nav-link" href="{{ route('login') }}">Login</a>
                     </li>
                     <li class="nav-item">
-                        <a class="btn btn-primary btn-sm" href="/registrati">
+                        <a class="btn btn-primary btn-sm" href="{{ route('register') }}">
                             Registrati
                         </a>
                     </li>
@@ -46,7 +46,7 @@
 
                     @if (auth()->user()->role === 'student')
                         <li class="nav-item">
-                            <a class="nav-link position-relative" href="/carrello">
+                            <a class="nav-link position-relative" href="{{ route('cart.show') }}">
                                 <i class="bi bi-cart3 fs-5"></i>
 
                                 @php $count = session()->get('carrello')?->nElementi() ?? 0; @endphp
@@ -69,7 +69,7 @@
 
                             <li>
                                 <a class="dropdown-item"
-                                    href="{{ auth()->user()->role === 'admin' ? '/dashboard-admin' : '/dashboard-studente' }}">
+                                    href="{{ auth()->user()->role === 'admin' ? route('admin.dashboard') : route('student.dashboard') }}">
                                     Area personale
                                 </a>
                             </li>
@@ -79,7 +79,7 @@
                             </li>
 
                             <li>
-                                <a class="dropdown-item text-danger" href="/logout">
+                                <a class="dropdown-item text-danger" href="{{ route('logout') }}">
                                     Logout
                                 </a>
                             </li>

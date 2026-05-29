@@ -3,7 +3,7 @@
 @section('inner')
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-admin">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('admin.dashboard') }}">Dashboard</a>
         </li>
     </ul>
 

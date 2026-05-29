@@ -25,12 +25,12 @@
         <br>
         <h4>Presentazione</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $lezione->presentation }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $lezione->presentation }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="lessons/{{ $id_lezione }}/presentation" enctype="multipart/form-data"
+            <form method="POST" action="{{ route('admin.lessons.presentation.update', $id_lezione) }}" enctype="multipart/form-data"
                 id="upload">
                 @csrf
                 @method('POST')
@@ -43,7 +43,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file-pres-lez','lessons/{{ $id_lezione }}/presentation',1)">Upload</button>
+                        onclick="upload('upload','file-pres-lez','{{ route('admin.lessons.presentation.update', $id_lezione) }}',1)">Upload</button>
                 </div>
 
                 <br>
@@ -55,12 +55,12 @@
         <br>
         <h4>Svolgimento</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $lezione->lesson }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $lezione->lesson }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="lessons/{{ $id_lezione }}/file" enctype="multipart/form-data" id="upload2">
+            <form method="POST" action="{{ route('admin.lessons.file.update', $id_lezione) }}" enctype="multipart/form-data" id="upload2">
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control" id="file-lesson" name="file-lesson" />
@@ -72,7 +72,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload2','file-lesson','lessons/{{ $id_lezione }}/file',2)">Upload</button>
+                        onclick="upload('upload2','file-lesson','{{ route('admin.lessons.file.update', $id_lezione) }}',2)">Upload</button>
                 </div>
 
                 <br>
@@ -80,7 +80,7 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="/lessons/{{ $id_lezione }}" id="modifica-lezione">
+            <form method="POST" action="{{ route('admin.lessons.update', $id_lezione) }}" id="modifica-lezione">
                 @csrf
                 @method('PUT')
                 <input type="hidden" name="id_lezione" value="{{ $id_lezione }}" />

@@ -58,18 +58,18 @@
 
                                 <div class="mt-auto d-grid gap-2">
 
-                                    <a href="{{ url('presentazione-lezione/' . $item->id . '/' . $item->course_id) }}"
+                                    <a href="{{ route('lessons.presentation', ['id_corso' => $item->course_id, 'id_lezione' => $item->id]) }}"
                                         class="btn btn-outline-primary rounded-3">
                                         Anteprima
                                     </a>
 
                                     @if ($item->price == 0 || $item->can_show)
-                                        <a href="{{ url('visualizza-lezione/' . $item->id . '/' . $item->course_id) }}"
+                                        <a href="{{ route('lessons.show', ['id_corso' => $item->course_id, 'id_lezione' => $item->id]) }}"
                                             class="btn btn-primary rounded-3">
                                             Contenuto
                                         </a>
                                     @elseif(auth()->check() && auth()->user()->role === 'student')
-                                        <a href="{{ url('/carrello/add/' . $item->id . '/0') }}"
+                                        <a href="{{ route('cart.items.store', ['id' => $item->id, 'type' => 0]) }}"
                                             class="btn btn-primary rounded-3">
                                             Acquista
                                         </a>
@@ -125,7 +125,7 @@
 
                                 <div class="mt-auto d-grid gap-2">
 
-                                    <a href="{{ url('/traccia-esercizio/' . $item->id . '/' . $course->id) }}"
+                                    <a href="{{ route('exercises.trace', ['id_corso' => $course->id, 'id_esercizio' => $item->id]) }}"
                                         class="btn btn-outline-primary rounded-3">
                                         Anteprima
                                     </a>
@@ -135,7 +135,7 @@
                                             Contenuto
                                         </button>
                                     @elseif(auth()->check() && auth()->user()->role === 'student')
-                                        <a href="{{ url('/carrello/add/' . $item->id . '/2') }}"
+                                        <a href="{{ route('cart.items.store', ['id' => $item->id, 'type' => 2]) }}"
                                             class="btn btn-primary rounded-3">
                                             Acquista
                                         </a>

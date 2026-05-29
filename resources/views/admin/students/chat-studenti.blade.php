@@ -70,7 +70,7 @@
                                     </td>
 
                                     <td>
-                                        <a href="visualizza-chat-{{ $item->id }}"
+                                        <a href="{{ route('admin.chats.show', $item->id) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza Chat
                                         </a>

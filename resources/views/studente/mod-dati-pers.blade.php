@@ -42,7 +42,7 @@
         <div class="card border-0 shadow-sm rounded-4">
             <div class="card-body p-4">
 
-                <form class="row g-4" method="POST" action="mod-indirizzo-stud">
+                <form class="row g-4" method="POST" action="{{ route('student.account.address.update') }}">
                     @csrf
 
                     <div class="col-md-5">

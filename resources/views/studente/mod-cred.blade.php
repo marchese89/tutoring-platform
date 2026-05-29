@@ -22,7 +22,7 @@
                             Modifica Email
                         </h4>
 
-                        <form method="POST" action="mod-email-stud">
+                        <form method="POST" action="{{ route('student.account.email.update') }}">
                             @csrf
 
                             <div class="mb-3">
@@ -78,7 +78,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="mod-pass-stud" onsubmit="modifica_pass()">
+                        <form method="POST" action="{{ route('student.account.password.update') }}" onsubmit="modifica_pass()">
 
                             @csrf
 

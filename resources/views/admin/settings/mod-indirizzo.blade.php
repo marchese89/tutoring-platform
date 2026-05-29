@@ -15,7 +15,7 @@
 
             <div class="card-body">
 
-                <form method="POST" action="mod-indirizzo-admin" class="row g-3">
+                <form method="POST" action="{{ route('admin.account.address.update') }}" class="row g-3">
                     @csrf
 
                     {{-- VIA --}}

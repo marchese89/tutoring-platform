@@ -23,7 +23,7 @@
                             Gestione e aggiornamento dell’immagine profilo o contenuti fotografici.
                         </p>
 
-                        <a href="{{ url('mod-foto-admin') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.account.photo') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -45,7 +45,7 @@
                             Aggiornamento dati di residenza o contatti geografici.
                         </p>
 
-                        <a href="{{ url('mod-indirizzo-admin') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.account.address') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -67,7 +67,7 @@
                             Gestione dei certificati e documenti allegati.
                         </p>
 
-                        <a href="{{ url('mod-certif') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.account.certificates.index') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -89,7 +89,7 @@
                             Aggiornamento dati fiscali e partita IVA.
                         </p>
 
-                        <a href="{{ url('mod-part-iva') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.account.vat-number') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 

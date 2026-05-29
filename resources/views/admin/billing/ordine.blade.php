@@ -21,7 +21,8 @@
                     </div>
 
                     <div class="mt-3 mt-md-0">
-                        <button class="btn btn-primary px-4" onclick="location.href='admin-fattura-{{ request('id') }}'">
+                        <button class="btn btn-primary px-4"
+                            onclick="location.href='{{ route('admin.orders.invoice', request('id')) }}'">
                             Visualizza Fattura
                         </button>
                     </div>

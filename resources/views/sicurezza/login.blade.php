@@ -31,7 +31,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ url('/login') }}">
+                        <form method="POST" action="{{ route('login') }}">
 
                             @csrf
 
@@ -84,7 +84,7 @@
                             {{-- RECUPERO PASSWORD --}}
                             <div class="text-end mb-4">
 
-                                <a href="{{ url('/recupera-password') }}" class="text-decoration-none small">
+                                <a href="{{ route('password.request') }}" class="text-decoration-none small">
                                     Recupera password
                                 </a>
 

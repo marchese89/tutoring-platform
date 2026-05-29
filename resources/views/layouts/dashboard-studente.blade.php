@@ -2,62 +2,42 @@
 
 @section('content')
     <main>
-
-        @if (!Request::is('dashboard-studente'))
+        @if (!Request::is('student/dashboard'))
             @yield('page-title')
             <div class="container">
                 {{ Breadcrumbs::render() }}
             </div>
             @yield('inner')
         @else
-            {{-- HEADER --}}
             <x-ui.section-header :title="'Dashboard Studente'" />
 
-
             <div class="container">
-
-                {{-- CARDS --}}
                 <div class="row g-4">
+                    <x-ui.card-item title="Impostazioni Account" text="Modifica dati personali e password dell'account."
+                        :url="route('student.account')" />
 
-                    {{-- ACCOUNT --}}
-                    <x-ui.card-item title="Impostazioni Account" text="Modifica dati personali e password dell’account."
-                        url="imp-account-studente" />
-
-                    {{-- CORSI --}}
-
-                    <x-ui.card-item title="Corsi Acquistati" text="Lezioni ed esercizi dei corsi acquistati." url="corsi" />
-
-                    {{-- RICHIESTE DIRETTE --}}
-
+                    <x-ui.card-item title="Corsi Acquistati" text="Lezioni ed esercizi dei corsi acquistati."
+                        :url="route('student.courses.index')" />
 
                     <x-ui.card-item title="Richieste Dirette" text="Storico richieste e relative informazioni economiche."
-                        url="richieste-dirette" />
-
-                    {{-- LEZIONI SU RICHIESTA --}}
+                        :url="route('student.direct-requests.index')" />
 
                     <x-ui.card-item title="Lezioni su Richiesta" text="Materiali e contenuti acquistati su richiesta."
-                        url="richieste-dirette-acquistate" />
+                        :url="route('student.direct-requests.purchased')" />
 
-                    {{-- ORDINI --}}
+                    <x-ui.card-item title="Ordini" text="Storico e stato degli ordini effettuati."
+                        :url="route('student.orders.index')" />
 
-                    <x-ui.card-item title="Ordini" text="Storico e stato degli ordini effettuati." url="ordini" />
-
-                    {{-- RECENSIONI --}}
-                    <x-ui.card-item title="Recensione" text="Valutazione del servizio e feedback." url="recensione" />
-
-                    {{-- PAGAMENTI --}}
+                    <x-ui.card-item title="Recensione" text="Valutazione del servizio e feedback."
+                        :url="route('student.review')" />
 
                     <x-ui.card-item title="Pagamento Extra" text="Pagamento lezioni private e servizi aggiuntivi."
-                        url="payment/extra" />
+                        :url="route('payment.extra')" />
 
-                    {{-- FATTURE --}}
-
-                    <x-ui.card-item title="Fatture" text="Storico fatture dei pagamenti extra." url="fatture-studente" />
-
+                    <x-ui.card-item title="Fatture" text="Storico fatture dei pagamenti extra."
+                        :url="route('student.invoices.index')" />
                 </div>
-
             </div>
         @endif
-
     </main>
 @endsection

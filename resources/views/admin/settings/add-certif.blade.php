@@ -16,7 +16,7 @@
         </iframe>
         <br>
         <div class="container" style="text-align: center;width:60%">
-            <form method="POST" action="crea-foto-cert-admin" enctype="multipart/form-data" id="upload">
+            <form method="POST" action="{{ route('admin.account.certificates.uploads.store') }}" enctype="multipart/form-data" id="upload">
                 @csrf
                 <input type="file" class="form-control" id="file" name="file" />
                 <p>
@@ -27,7 +27,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file','mod-foto-cert-admin')">Upload</button>
+                        onclick="upload('upload','file','{{ route('admin.account.certificates.uploads.store') }}')">Upload</button>
                 </div>
                 <br>
                 <br>
@@ -35,7 +35,11 @@
             </form>
             @if (Session::exists('uploaded_cert'))
                 <div class="col-12">
-                    <button class="btn btn-primary" onclick=location.href="del_cert_admin">Elimina File</button>
+                    <form method="POST" action="{{ route('admin.account.certificates.uploads.destroy') }}">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-primary">Elimina File</button>
+                    </form>
                 </div>
             @endif
 
@@ -43,7 +47,7 @@
             <br>
         </div>
         @if (Session::exists('uploaded_cert') && Session::get('uploaded_cert') != null)
-            <form method="POST" action="add-cert-admin">
+            <form method="POST" action="{{ route('admin.account.certificates.store') }}">
                 @csrf
                 <input type="hidden" name="id" />
                 <input class="form-control col-4"=maxlength="255" type="text" name="nome" id="nome"></input>

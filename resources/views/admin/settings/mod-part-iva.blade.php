@@ -15,7 +15,7 @@
 
             <div class="card-body">
 
-                <form method="POST" action="mod-piva">
+                <form method="POST" action="{{ route('admin.account.vat-number.update') }}">
                     @csrf
 
                     <div class="mb-3">

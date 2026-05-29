@@ -17,7 +17,7 @@
     @endphp
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
         </li>
     </ul>
     <div class="row g-0 container-fluid">
@@ -74,7 +74,7 @@
                             <td>
                                 <div>
                                     <button type="submit" class="btn btn-primary"
-                                        onclick=location.href="{{ route('visualizza-richiesta-studente', ['id' => $item->id]) }}">Visualizza</button>
+                                        onclick="location.href='{{ route('student.direct-requests.show', ['id' => $item->id]) }}'">Visualizza</button>
                                 </div>
                             </td>
 

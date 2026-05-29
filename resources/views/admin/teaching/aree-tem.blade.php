@@ -16,7 +16,7 @@
 
                         <h4 class="fw-bold mb-3">Nuova Area Tematica</h4>
 
-                        <form method="POST" action="/theme-areas">
+                        <form method="POST" action="{{ route('admin.theme-areas.store') }}">
                             @csrf
 
                             <input type="text" class="form-control mb-3" name="name" maxlength="255"
@@ -60,7 +60,7 @@
 
                                     {{-- UPDATE --}}
                                     <td>
-                                        <form method="POST" action="/theme-areas/{{ $item->id }}" class="d-flex gap-2">
+                                        <form method="POST" action="{{ route('admin.theme-areas.update', $item->id) }}" class="d-flex gap-2">
                                             @csrf
                                             @method('PUT')
 
@@ -76,7 +76,7 @@
                                     {{-- DELETE --}}
                                     <td>
                                         @if ($item->matter->count() == 0)
-                                            <form method="POST" action="/theme-areas/{{ $item->id }}">
+                                            <form method="POST" action="{{ route('admin.theme-areas.destroy', $item->id) }}">
                                                 @csrf
                                                 @method('DELETE')
 

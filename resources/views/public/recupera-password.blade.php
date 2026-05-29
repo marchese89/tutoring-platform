@@ -25,7 +25,7 @@
 
                 <h3 class="text-center mb-4">Recupera password</h3>
 
-                <form action="recupera-password" method="POST" class="row g-3">
+                <form action="{{ route('password.email') }}" method="POST" class="row g-3">
                     @csrf
 
                     <div class="col-12">

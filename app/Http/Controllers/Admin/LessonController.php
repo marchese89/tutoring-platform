@@ -11,7 +11,7 @@ use App\Models\Course;
 class LessonController extends Controller
 {
 
-    public function viewPresentation(int $id_lezione, int $id_corso)
+    public function viewPresentation(int $id_corso, int $id_lezione)
     {
         $corso = Course::where('id', '=', $id_corso)->first();
         $lezione = Lesson::where('id', '=', $id_lezione)->first();
@@ -19,7 +19,7 @@ class LessonController extends Controller
         return view('public.presentazione-lezione', compact('corso', 'lezione'));
     }
 
-    public function view(int $id_lezione, int $id_corso)
+    public function view(int $id_corso, int $id_lezione)
     {
         $corso = Course::where('id', '=', $id_corso)->first();
         $lezione = Lesson::where('id', '=', $id_lezione)->first();
@@ -119,7 +119,7 @@ class LessonController extends Controller
             'uploaded_lesson'
         ]);
 
-        return redirect('modifica-dettagli-corso/' . $request->id);
+        return redirect()->route('admin.courses.edit', $request->id);
     }
 
     // ===============================
@@ -138,7 +138,7 @@ class LessonController extends Controller
 
         $lesson->delete();
 
-        return redirect('modifica-dettagli-corso/' . $courseId);
+        return redirect()->route('admin.courses.edit', $courseId);
     }
 
     // ===============================

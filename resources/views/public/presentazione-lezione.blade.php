@@ -51,7 +51,7 @@
 
                     <div class="rounded-4 overflow-hidden shadow-sm border bg-dark">
 
-                        <iframe width="100%" height="800px" src="/protected_file/{{ $lezione->presentation }}#view=FitH"
+                        <iframe width="100%" height="800px" src="/protected-files/{{ $lezione->presentation }}#view=FitH"
                             style="border: none;">
                         </iframe>
 

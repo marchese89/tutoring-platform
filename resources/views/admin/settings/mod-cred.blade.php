@@ -14,7 +14,7 @@
             </div>
 
             <div class="card-body">
-                <form method="POST" action="mod-email-admin">
+                <form method="POST" action="{{ route('admin.account.email.update') }}">
                     @csrf
 
                     <div class="mb-3">
@@ -51,7 +51,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="mod-pass-admin">
+                <form method="POST" action="{{ route('admin.account.password.update') }}">
                     @csrf
 
                     {{-- vecchia password --}}

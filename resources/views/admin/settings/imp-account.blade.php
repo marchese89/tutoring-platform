@@ -26,7 +26,7 @@
                             Aggiorna informazioni anagrafiche, indirizzo e dati del profilo.
                         </p>
 
-                        <a href="{{ url('mod-dati-pers') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.account.profile') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -51,7 +51,7 @@
                             Gestisci email, password e sicurezza dell’account amministratore.
                         </p>
 
-                        <a href="{{ url('mod-cred') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.account.credentials') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 

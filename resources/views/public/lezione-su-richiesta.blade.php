@@ -43,7 +43,8 @@
                                     Devi effettuare il login come studente per utilizzare questa funzionalità.
                                 </p>
 
-                                <button class="btn btn-primary px-4 rounded-3" onclick="location.href='login?back=1'">
+                                <button class="btn btn-primary px-4 rounded-3"
+                                    onclick="location.href='{{ route('login', ['back' => 1]) }}'">
                                     Login
                                 </button>
 
@@ -55,7 +56,7 @@
                                     <div class="card bg-light border-0 rounded-4">
                                         <div class="card-body p-4">
 
-                                            <form method="POST" action="add-file-su-richiesta"
+                                            <form method="POST" action="{{ route('lesson-requests.files.store') }}"
                                                 enctype="multipart/form-data" id="upload">
 
                                                 @csrf
@@ -81,7 +82,7 @@
 
                                                 <div class="d-grid">
                                                     <button type="submit" class="btn btn-primary btn-lg rounded-3"
-                                                        onclick="upload('upload','file','add-file-su-richiesta',1)">
+                                                        onclick="upload('upload','file','{{ route('lesson-requests.files.store') }}',1)">
 
                                                         Carica File
 
@@ -108,7 +109,7 @@
                                         <div class="card-body p-3">
 
                                             <iframe class="w-100 rounded-3 border" style="height: 600px;"
-                                                src="/protected_file/{{ session('uploaded_lez_rich') }}#view=FitH">
+                                                src="/protected-files/{{ session('uploaded_lez_rich') }}#view=FitH">
                                             </iframe>
 
                                         </div>
@@ -116,12 +117,13 @@
                                     </div>
 
                                     <div class="mb-5">
-                                        <button type="button" class="btn btn-outline-danger rounded-3 px-4"
-                                            onclick="location.href='elimina-lez-rich'">
-
-                                            Elimina File
-
-                                        </button>
+                                        <form method="POST" action="{{ route('lesson-requests.files.destroy') }}">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn btn-outline-danger rounded-3 px-4">
+                                                Elimina File
+                                            </button>
+                                        </form>
                                     </div>
 
                                     <div class="mx-auto" style="max-width: 700px;">
@@ -133,7 +135,7 @@
                                                     Invia la richiesta
                                                 </h4>
 
-                                                <form method="POST" action="carica-lez-rich">
+                                                <form method="POST" action="{{ route('lesson-requests.store') }}">
 
                                                     @csrf
 

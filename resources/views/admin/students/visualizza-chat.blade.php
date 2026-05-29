@@ -70,7 +70,7 @@
 
             const xhr = new XMLHttpRequest();
 
-            xhr.open("POST", "/chat/admin/invia-messaggio", true);
+            xhr.open("POST", "{{ route('admin.chat.messages.store') }}", true);
 
             xhr.setRequestHeader(
                 "Content-Type",
@@ -107,7 +107,7 @@
                     Presentazione
                 </h5>
 
-                <iframe width="100%" height="700px" src="/protected_file/{{ $pres }}#view=FitH">
+                <iframe width="100%" height="700px" src="/protected-files/{{ $pres }}#view=FitH">
                 </iframe>
 
                 <br><br><br>
@@ -116,7 +116,7 @@
                     Svolgimento
                 </h5>
 
-                <iframe width="100%" height="700px" src="/protected_file/{{ $exec }}#view=FitH">
+                <iframe width="100%" height="700px" src="/protected-files/{{ $exec }}#view=FitH">
                 </iframe>
 
             </div>

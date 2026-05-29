@@ -26,7 +26,7 @@
                             Modifica le informazioni personali associate al profilo.
                         </p>
 
-                        <a href="{{ url('mod-dati-pers-stud') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('student.account.profile') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -51,7 +51,7 @@
                             Aggiorna password e dati di accesso dell’account.
                         </p>
 
-                        <a href="{{ url('mod-cred-stud') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('student.account.credentials') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 

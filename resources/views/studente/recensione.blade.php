@@ -32,8 +32,10 @@
                     _("stars").innerHTML = this.responseText;
                 }
             };
-            xmlhttp.open("GET", "invia-feedback-" + punteggio, true);
-            xmlhttp.send();
+            xmlhttp.open("POST", "{{ route('student.feedback.store') }}", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xmlhttp.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+            xmlhttp.send("punteggio=" + encodeURIComponent(punteggio));
 
         }
 
@@ -53,10 +55,10 @@
                     _("recensione").value = this.responseText;
                 }
             };
-            xmlhttp.open("GET",
-                "invia-recensione-" +
-                testo, true);
-            xmlhttp.send();
+            xmlhttp.open("POST", "{{ route('student.review.store') }}", true);
+            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xmlhttp.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
+            xmlhttp.send("testo=" + encodeURIComponent(testo));
 
         }
     </script>

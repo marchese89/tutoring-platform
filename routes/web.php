@@ -22,5 +22,6 @@ require __DIR__ . '/admin.php';
 // Protected files
 // =========================
 
-Route::get('/protected_file/{path}', FileAccessController::class)
+Route::get('/protected-files/{path}', FileAccessController::class)
+    ->name('protected-files.show')
     ->where('path', '.*');

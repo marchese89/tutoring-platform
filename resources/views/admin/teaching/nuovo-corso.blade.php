@@ -16,7 +16,7 @@
 
                         <h4 class="fw-bold mb-3">Nuovo Corso</h4>
 
-                        <form method="POST" action="/courses">
+                        <form method="POST" action="{{ route('admin.courses.store') }}">
                             @csrf
 
                             <label class="form-label">Materia</label>
@@ -77,7 +77,7 @@
 
                                     {{-- UPDATE --}}
                                     <td>
-                                        <form method="POST" action="/courses/{{ $item->id }}" class="d-flex gap-2">
+                                        <form method="POST" action="{{ route('admin.courses.update', $item->id) }}" class="d-flex gap-2">
                                             @csrf
                                             @method('PUT')
 
@@ -93,7 +93,7 @@
 
                                     {{-- DELETE --}}
                                     <td>
-                                        <form method="POST" action="/courses/{{ $item->id }}">
+                                        <form method="POST" action="{{ route('admin.courses.destroy', $item->id) }}">
                                             @csrf
                                             @method('DELETE')
 

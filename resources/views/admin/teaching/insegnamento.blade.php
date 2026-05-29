@@ -27,7 +27,7 @@
                             Gestione delle aree tematiche della piattaforma didattica.
                         </p>
 
-                        <a href="{{ url('aree-tem') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.theme-areas.index') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -52,7 +52,7 @@
                             Organizzazione e gestione delle materie disponibili nei corsi.
                         </p>
 
-                        <a href="{{ url('materie') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.subjects.index') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -77,7 +77,7 @@
                             Creazione e configurazione di nuovi corsi didattici.
                         </p>
 
-                        <a href="{{ url('nuovo-corso') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.courses.create') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 
@@ -102,7 +102,7 @@
                             Visualizzazione e gestione dell’elenco completo dei corsi.
                         </p>
 
-                        <a href="{{ url('elenco-corsi') }}" class="btn btn-primary rounded-pill px-4">
+                        <a href="{{ route('admin.courses.index') }}" class="btn btn-primary rounded-pill px-4">
                             Accedi
                         </a>
 

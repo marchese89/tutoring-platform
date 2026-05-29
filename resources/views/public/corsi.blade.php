@@ -13,7 +13,7 @@
 
             @foreach ($corsi as $item)
                 <x-ui.card-item :title="$item->name" text="Percorso formativo disponibile nella materia selezionata"
-                    :url="url('/corso/' . $item->id)" button="Vai" />
+                    :url="route('courses.show', $item->id)" button="Vai" />
             @endforeach
 
         </div>

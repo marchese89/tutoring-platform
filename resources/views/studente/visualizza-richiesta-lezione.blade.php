@@ -46,7 +46,7 @@
 
                 let xmlhttp = new XMLHttpRequest();
 
-                xmlhttp.open("POST", "/chat/studente/invia-messaggio", true);
+                xmlhttp.open("POST", "{{ route('student.chat.messages.store') }}", true);
 
                 xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
@@ -64,15 +64,15 @@
     @endif
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
         </li>
         @if ($richiesta->paid == 0)
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/richieste-dirette">Richieste Dirette</a>
+                <a class="nav-link active" aria-current="page" href="{{ route('student.direct-requests.index') }}">Richieste Dirette</a>
             </li>
         @else
             <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/richieste-dirette-acquistate">Richieste Dirette</a>
+                <a class="nav-link active" aria-current="page" href="{{ route('student.direct-requests.purchased') }}">Richieste Dirette</a>
             </li>
         @endif
     </ul>
@@ -81,7 +81,7 @@
         <h3 style="color: blue">{{ $richiesta->title }}</h3>
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $richiesta->trace }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $richiesta->trace }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
@@ -93,14 +93,14 @@
             <br>
             <div class="col-12" style="text-align:center">
                 <button type="submit" class="btn btn-primary"
-                    onclick=location.href="/carrello/add/{{ $richiesta->id }}/5">Acquista</button>
+                    onclick="location.href='{{ route('cart.items.store', ['id' => $richiesta->id, 'type' => 5]) }}'">Acquista</button>
             </div>
         @endif
         @if ($richiesta->paid == 1)
             <br>
             <br>
             <h4>Soluzione</h4>
-            <iframe width="90%" src="/protected_file/{{ $richiesta->execution }}#view=FitH" height="800px">
+            <iframe width="90%" src="/protected-files/{{ $richiesta->execution }}#view=FitH" height="800px">
             </iframe>
             <br>
             <br>

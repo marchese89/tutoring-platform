@@ -182,7 +182,7 @@ class LessonOnRequestController extends Controller
 
         $request->session()->put('uploaded_lez_rich', $name);
 
-        return redirect()->route('lezione-su-richiesta');
+        return redirect()->route('lesson-requests.create');
     }
 
     public function elimina_lez_rich(Request $request)
@@ -190,7 +190,7 @@ class LessonOnRequestController extends Controller
         $this->deleteFile($request->session()->get('uploaded_lez_rich'));
         $request->session()->forget('uploaded_lez_rich');
 
-        return redirect()->route('lezione-su-richiesta');
+        return redirect()->route('lesson-requests.create');
     }
 
     public function carica_lez_rich(Request $request)
@@ -208,12 +208,12 @@ class LessonOnRequestController extends Controller
         Mail::to($admin->email)
             ->send(new NuovaRichiestaStudenteMail());
 
-        return redirect()->route('esito-lez-rich');
+        return redirect()->route('lesson-requests.success');
     }
 
-    public function sol_rich_upload(Request $request)
+    public function sol_rich_upload(Request $request, int $id)
     {
-        $lezione = LessonOnRequest::findOrFail($request->id);
+        $lezione = LessonOnRequest::findOrFail($id);
 
         $this->deleteFile($lezione->execution);
 
@@ -223,12 +223,12 @@ class LessonOnRequestController extends Controller
             'execution' => $path
         ]);
 
-        return redirect()->route('visualizza-richiesta', $lezione->id);
+        return redirect()->route('admin.lesson-requests.show', $lezione->id);
     }
 
-    public function lez_rich_rem_exec(Request $request)
+    public function lez_rich_rem_exec(Request $request, int $id)
     {
-        $lezione = LessonOnRequest::findOrFail($request->id);
+        $lezione = LessonOnRequest::findOrFail($id);
 
         $this->deleteFile($lezione->execution);
 
@@ -236,12 +236,12 @@ class LessonOnRequestController extends Controller
             'execution' => null
         ]);
 
-        return redirect()->route('visualizza-richiesta', $lezione->id);
+        return redirect()->route('admin.lesson-requests.show', $lezione->id);
     }
 
-    public function carica_prezzo_lez_rich(Request $request)
+    public function carica_prezzo_lez_rich(Request $request, int $id)
     {
-        $lezione = LessonOnRequest::findOrFail($request->id);
+        $lezione = LessonOnRequest::findOrFail($id);
 
         $lezione->update([
             'price' => $request->prezzo,
@@ -253,6 +253,6 @@ class LessonOnRequestController extends Controller
         Mail::to($user->email)
             ->send(new RichiestaEvasaMail());
 
-        return redirect()->route('visualizza-richiesta', $lezione->id);
+        return redirect()->route('admin.lesson-requests.show', $lezione->id);
     }
 }

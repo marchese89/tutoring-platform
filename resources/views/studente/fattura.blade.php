@@ -3,13 +3,13 @@
 @section('inner')
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="ordini">Ordini</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.orders.index') }}">Ordini</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="ordine-{{ request('id') }}">Ordine</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.orders.show', request('id')) }}">Ordine</a>
         </li>
     </ul>
     <div class="container">
@@ -18,7 +18,7 @@
         @endphp
         <h4>Fattura</h4>
         <iframe width="90%"
-            src="/protected_file/{{ Invoice::where('order_id', '=', request('id'))->first()->path }}#view=FitH"
+            src="/protected-files/{{ Invoice::where('order_id', '=', request('id'))->first()->path }}#view=FitH"
             height="800px">
         </iframe>
     </div>

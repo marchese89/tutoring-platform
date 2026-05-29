@@ -45,7 +45,7 @@
     <br>
     <br>
     <div class="container" style="text-align: center;width:35%">
-        <button class="btn btn-primary" onclick=location.href="/carrello">Indietro</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route('cart.show') }}'">Indietro</button>
     </div>
     <br>
     <br>
@@ -69,7 +69,7 @@
         // Fetches a payment intent and captures the client secret
         async function initialize() {
             try {
-                const response = await fetch("/payment/process", {
+                const response = await fetch("{{ route('payment.process') }}", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
@@ -120,7 +120,7 @@
                 elements,
                 confirmParams: {
                     // Make sure to change this to your payment completion page
-                    return_url: "{{ env('APP_URL') }}/payment/success",
+                    return_url: "{{ route('payment.success') }}",
                 },
             });
 

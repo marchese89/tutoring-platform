@@ -40,7 +40,7 @@ class ModDatiAdminController extends Controller
         $admin->photo = $path;
         $admin->save();
 
-        return redirect('mod-foto-admin');
+        return redirect()->route('admin.account.photo');
     }
 
     // =========================
@@ -72,7 +72,7 @@ class ModDatiAdminController extends Controller
         $certificate->percorso_file = $path;
         $certificate->save();
 
-        return redirect('mod-certif');
+        return redirect()->route('admin.account.certificates.index');
     }
 
     // =========================
@@ -100,7 +100,7 @@ class ModDatiAdminController extends Controller
 
         $request->session()->put('uploaded_cert', $path);
 
-        return redirect('aggiungi-certif');
+        return redirect()->route('admin.account.certificates.create');
     }
 
     // =========================
@@ -117,7 +117,7 @@ class ModDatiAdminController extends Controller
         $certificate->nome = $request->nome;
         $certificate->save();
 
-        return redirect('mod-certif');
+        return redirect()->route('admin.account.certificates.index');
     }
 
     // =========================
@@ -133,7 +133,7 @@ class ModDatiAdminController extends Controller
         $admin->piva = $request->piva;
         $admin->save();
 
-        return redirect('mod-part-iva');
+        return redirect()->route('admin.account.vat-number');
     }
 
     // =========================
@@ -159,7 +159,7 @@ class ModDatiAdminController extends Controller
 
         $admin->save();
 
-        return redirect('mod-indirizzo-admin');
+        return redirect()->route('admin.account.address');
     }
 
     // =========================
@@ -182,7 +182,7 @@ class ModDatiAdminController extends Controller
 
         $certificate->delete();
 
-        return redirect('mod-certif');
+        return redirect()->route('admin.account.certificates.index');
     }
 
     // =========================
@@ -198,7 +198,7 @@ class ModDatiAdminController extends Controller
             $request->session()->forget('uploaded_cert');
         }
 
-        return redirect('aggiungi-certif');
+        return redirect()->route('admin.account.certificates.create');
     }
 
     // =========================
@@ -218,7 +218,7 @@ class ModDatiAdminController extends Controller
 
         $cert->save();
 
-        return redirect('mod-certif');
+        return redirect()->route('admin.account.certificates.index');
     }
 
     // =========================
@@ -234,7 +234,7 @@ class ModDatiAdminController extends Controller
         $user->email = $request->input('inputEmail');
         $user->save();
 
-        return redirect('mod-cred');
+        return redirect()->route('admin.account.credentials');
     }
 
     // =========================
@@ -258,6 +258,6 @@ class ModDatiAdminController extends Controller
         $user->password = Hash::make($request->input('inputPassword'));
         $user->save();
 
-        return redirect('mod-cred')->withSuccess('Password modificata con successo');
+        return redirect()->route('admin.account.credentials')->withSuccess('Password modificata con successo');
     }
 }

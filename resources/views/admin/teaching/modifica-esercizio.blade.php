@@ -18,12 +18,12 @@
         @endphp
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $esercizio->trace }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $esercizio->trace }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="trace-ex-re-upload" enctype="multipart/form-data" id="upload">
+            <form method="POST" action="{{ route('admin.exercises.trace.update', $id_esercizio) }}" enctype="multipart/form-data" id="upload">
                 @csrf
                 <input type="hidden" name="id" value="{{ $id_esercizio }}" />
                 <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
@@ -36,7 +36,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file-trace-ex','trace-ex-re-upload',1)">Upload</button>
+                        onclick="upload('upload','file-trace-ex','{{ route('admin.exercises.trace.update', $id_esercizio) }}',1)">Upload</button>
                 </div>
 
                 <br>
@@ -48,12 +48,12 @@
         <br>
         <h4>Svolgimento</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $esercizio->execution }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $esercizio->execution }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="ex-re-upload" enctype="multipart/form-data" id="upload2">
+            <form method="POST" action="{{ route('admin.exercises.execution.update', $id_esercizio) }}" enctype="multipart/form-data" id="upload2">
                 @csrf
                 <input type="hidden" name="id" value="{{ $id_esercizio }}" />
                 <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
@@ -66,7 +66,7 @@
 
                 <div class="col-12">
                     <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload2','file-ex','ex-re-upload',2)">Upload</button>
+                        onclick="upload('upload2','file-ex','{{ route('admin.exercises.execution.update', $id_esercizio) }}',2)">Upload</button>
                 </div>
 
                 <br>
@@ -74,7 +74,7 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="/exercises/{{ $id_esercizio }}" enctype="multipart/form-data" id="delete">
+            <form method="POST" action="{{ route('admin.exercises.update', $id_esercizio) }}" enctype="multipart/form-data" id="delete">
                 @csrf
                 @method('PUT')
                 <div class="col-md-12">

@@ -42,7 +42,7 @@
                                     <td>{{ $item->name }}</td>
 
                                     <td>
-                                        <a href="{{ url('modifica-dettagli-corso/' . $item->id) }}"
+                                        <a href="{{ route('admin.courses.edit', $item->id) }}"
                                             class="btn btn-primary btn-sm">
                                             Modifica
                                         </a>

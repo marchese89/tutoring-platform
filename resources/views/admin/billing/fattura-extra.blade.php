@@ -19,7 +19,7 @@
                             Dati Fattura
                         </h4>
 
-                        <form class="row g-4" method="POST" action="crea_fattura_extra" onsubmit="modifica_pass()">
+                        <form class="row g-4" method="POST" action="{{ route('admin.invoices.extra.store') }}" onsubmit="modifica_pass()">
 
                             @csrf
 

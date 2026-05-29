@@ -20,7 +20,7 @@
                         class="img-fluid rounded shadow-sm" style="max-width: 300px; height: auto;">
                 </div>
 
-                <form method="POST" action="upload-foto-admin" enctype="multipart/form-data" id="upload">
+                <form method="POST" action="{{ route('admin.account.photo.update') }}" enctype="multipart/form-data" id="upload">
 
                     @csrf
 
@@ -36,7 +36,7 @@
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100"
-                        onclick="upload('upload','file','upload-foto-admin',1)">
+                        onclick="upload('upload','file','{{ route('admin.account.photo.update') }}',1)">
                         Carica foto
                     </button>
 

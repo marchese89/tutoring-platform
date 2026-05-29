@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 class ExerciseController extends Controller
 {
 
-    public function viewTrace($id_esercizio, $id_corso)
+    public function viewTrace($id_corso, $id_esercizio)
     {
         $corso = Course::where('id', '=', $id_corso)->first();
         $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
@@ -109,7 +109,7 @@ class ExerciseController extends Controller
             'uploaded_ex'
         ]);
 
-        return redirect('modifica-dettagli-corso-' . $data['id']);
+        return redirect()->route('admin.courses.edit', $data['id']);
     }
 
     // =========================

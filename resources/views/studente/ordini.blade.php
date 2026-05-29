@@ -4,7 +4,7 @@
     <script>
         function aggiorna_tabella(anno, mese) {
 
-            fetch(`cambia_tabella_ordini_studente?anno=${anno}&mese=${mese}`)
+            fetch(`{{ route('student.orders.table') }}?anno=${anno}&mese=${mese}`)
                 .then(res => res.json())
                 .then(data => {
 
@@ -17,7 +17,7 @@
                         <td>${o.data}</td>
                         <td>
                             <button class="btn btn-primary"
-                                onclick="location.href='ordine-${o.id}'">
+                                onclick="location.href='{{ route('student.orders.show', ['id' => '__ORDER_ID__']) }}'.replace('__ORDER_ID__', o.id)">
                                 Visualizza
                             </button>
                         </td>
@@ -35,7 +35,7 @@
     </script>
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
         </li>
     </ul>
     <div class="row g-0 container-fluid" style="text-align: center">

@@ -15,10 +15,10 @@
         <h5 class="mt-4">Presentazione</h5>
 
         <iframe width="90%" height="400"
-            src="{{ session()->has('uploaded_pres_lez') ? url('/protected_file/' . session('uploaded_pres_lez') . '#view=FitH') : '' }}">
+            src="{{ session()->has('uploaded_pres_lez') ? route('protected-files.show', ['path' => session('uploaded_pres_lez')]) . '#view=FitH' : '' }}">
         </iframe>
 
-        <form method="POST" action="{{ url('lessons/upload-presentation') }}" enctype="multipart/form-data" id="upload-pres">
+        <form method="POST" action="{{ route('admin.lessons.upload-presentation.store') }}" enctype="multipart/form-data" id="upload-pres">
             @csrf
             <input type="hidden" name="id" value="{{ $id }}">
 
@@ -29,12 +29,12 @@
             </div>
 
             <button type="submit" class="btn btn-primary mt-2"
-                onclick="upload('upload-pres','file-pres-lez','lessons/upload-presentation',1)">
+                onclick="upload('upload-pres','file-pres-lez','{{ route('admin.lessons.upload-presentation.store') }}',1)">
                 Upload
             </button>
         </form>
 
-        <form method="POST" action="{{ url('lessons/upload-presentation') }}" class="mt-2">
+        <form method="POST" action="{{ route('admin.lessons.upload-presentation.destroy') }}" class="mt-2">
             @csrf
             @method('DELETE')
             <button class="btn btn-danger">Cancella file</button>
@@ -45,10 +45,10 @@
             <h5 class="mt-5">Svolgimento</h5>
 
             <iframe width="90%" height="400"
-                src="{{ session()->has('uploaded_lesson') ? url('/protected_file/' . session('uploaded_lesson') . '#view=FitH') : '' }}">
+                src="{{ session()->has('uploaded_lesson') ? route('protected-files.show', ['path' => session('uploaded_lesson')]) . '#view=FitH' : '' }}">
             </iframe>
 
-            <form method="POST" action="{{ url('lessons/upload-file') }}" enctype="multipart/form-data" id="upload-lesson">
+            <form method="POST" action="{{ route('admin.lessons.upload-file.store') }}" enctype="multipart/form-data" id="upload-lesson">
                 @csrf
                 <input type="hidden" name="id" value="{{ $id }}">
 
@@ -59,12 +59,12 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary mt-2"
-                    onclick="upload('upload-lesson','file-lesson','lessons/upload-file',2)">
+                    onclick="upload('upload-lesson','file-lesson','{{ route('admin.lessons.upload-file.store') }}',2)">
                     Upload
                 </button>
             </form>
 
-            <form method="POST" action="{{ url('lessons/upload-file') }}" class="mt-2">
+            <form method="POST" action="{{ route('admin.lessons.upload-file.destroy') }}" class="mt-2">
                 @csrf
                 @method('DELETE')
                 <button class="btn btn-danger">Cancella file</button>
@@ -74,7 +74,7 @@
 
         {{-- SALVATAGGIO LEZIONE --}}
         @if (session()->has('uploaded_pres_lez') && session()->has('uploaded_lesson'))
-            <form method="POST" action="{{ url('carica-lezione') }}" class="mt-4">
+            <form method="POST" action="{{ route('admin.lessons.store') }}" class="mt-4">
                 @csrf
                 <input type="hidden" name="id" value="{{ $id }}">
 

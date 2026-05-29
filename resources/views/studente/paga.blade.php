@@ -42,7 +42,7 @@
     <br>
     <br>
     <div class="container" style="text-align: center;width:35%">
-        <button class="btn btn-primary" onclick=location.href="/payment/extra">Indietro</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route('payment.extra') }}'">Indietro</button>
     </div>
     <br>
     <br>
@@ -68,7 +68,7 @@
 
             const {
                 clientSecret
-            } = await fetch("/payment/process", {
+            } = await fetch("{{ route('payment.process.legacy') }}", {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json"
@@ -93,7 +93,7 @@
                 elements,
                 confirmParams: {
                     // Make sure to change this to your payment completion page
-                    return_url: "{{ env('APP_URL') }}/payment/success",
+                    return_url: "{{ route('payment.success') }}",
                 },
             });
 

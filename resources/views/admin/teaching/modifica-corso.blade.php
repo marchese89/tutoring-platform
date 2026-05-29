@@ -19,7 +19,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Lezioni</h3>
 
-                <a href="{{ url('nuova-lezione/' . $corso->id) }}" class="btn btn-primary">
+                <a href="{{ route('admin.lessons.create', $corso->id) }}" class="btn btn-primary">
                     Nuova Lezione
                 </a>
             </div>
@@ -45,11 +45,11 @@
 
                             <td>
                                 <a class="btn btn-primary btn-sm"
-                                    href="{{ url('modifica-lezione/' . $corso->id . '/' . $item->id) }}">
+                                    href="{{ route('admin.lessons.edit', ['id_corso' => $corso->id, 'id_lezione' => $item->id]) }}">
                                     Modifica
                                 </a>
 
-                                <form method="POST" action="{{ url('lessons/' . $item->id) }}" style="display:inline">
+                                <form method="POST" action="{{ route('admin.lessons.destroy', $item->id) }}" style="display:inline">
                                     @csrf
                                     @method('DELETE')
 
@@ -72,7 +72,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Esercizi</h3>
 
-                <a href="{{ url('exercises/create/' . $corso->id) }}" class="btn btn-primary">
+                <a href="{{ route('admin.exercises.create', $corso->id) }}" class="btn btn-primary">
                     Nuovo Esercizio
                 </a>
             </div>
@@ -98,11 +98,11 @@
 
                             <td>
                                 <a class="btn btn-primary btn-sm"
-                                    href="{{ url('exercises/' . $corso->id . '/edit/' . $item->id) }}">
+                                    href="{{ route('admin.exercises.edit', ['course' => $corso->id, 'exercise' => $item->id]) }}">
                                     Modifica
                                 </a>
 
-                                <form method="POST" action="{{ url('exercises/' . $item->id) }}" style="display:inline">
+                                <form method="POST" action="{{ route('admin.exercises.destroy', $item->id) }}" style="display:inline">
                                     @csrf
                                     @method('DELETE')
 

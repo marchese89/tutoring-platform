@@ -28,7 +28,7 @@
 
             let xmlhttp = new XMLHttpRequest();
 
-            xmlhttp.open("POST", "/chat/studente/invia-messaggio", true);
+                xmlhttp.open("POST", "{{ route('student.chat.messages.store') }}", true);
 
             xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
 
@@ -48,13 +48,13 @@
     </script>
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="corsi">Corsi</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.courses.index') }}">Corsi</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="/course/{{ request('id_corso') }}">Corso</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.courses.show', request('id_corso')) }}">Corso</a>
         </li>
     </ul>
     <div class="container" style="text-align: center;width:100%">
@@ -67,12 +67,12 @@
         <br>
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected_file/{{ $esercizio->trace }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $esercizio->trace }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <h4>Svolgimento</h4>
-        <iframe width="90%" src="/protected_file/{{ $esercizio->execution }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $esercizio->execution }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>

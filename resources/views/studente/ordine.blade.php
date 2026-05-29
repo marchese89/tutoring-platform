@@ -3,10 +3,10 @@
 @section('inner')
     <ul class="nav">
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="dashboard-studente">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="ordini">Ordini</a>
+            <a class="nav-link active" aria-current="page" href="{{ route('student.orders.index') }}">Ordini</a>
         </li>
     </ul>
     <div class="row g-0 container-fluid" style="text-align: center">
@@ -62,7 +62,8 @@
                 </tr>
                 <tr>
                     <td colspan="3">
-                        <button class="btn btn-primary" onclick=location.href="fattura-{{ request('id') }}">Visualizza
+                        <button class="btn btn-primary"
+                            onclick="location.href='{{ route('student.invoices.show', request('id')) }}'">Visualizza
                             Fattura</button>
                     </td>
                 </tr>

@@ -22,7 +22,7 @@
 
                 <h3 class="text-center mb-4">Reset password</h3>
 
-                <form method="POST" action="/reset-password" class="row g-3">
+                <form method="POST" action="{{ route('password.update') }}" class="row g-3">
                     @csrf
 
                     <input type="hidden" name="token" value="{{ $token }}">
