@@ -1,94 +1,143 @@
 @extends('layouts.dashboard-studente')
-@php
-    use App\Models\Course;
-    use App\Models\Lesson;
-    use App\Models\Exercise;
-    use App\Services\AcquistiService;
 
-    $corso = Course::where('id', '=', request('id'))->first();
-
-@endphp
 @section('page-title')
-    <x-ui.section-header :title="'Visualizza Corso'" />
+    <x-ui.section-header :title="'Corso: ' . $corso->name" />
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center;width:35%">
-        <h3 class="font-weight-bold">{{ $corso->name }}</h3>
-    </div>
-    <br>
-    <div class="container" style="text-align: center;width:80%">
-        <h3>Lezioni</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Numero</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
+    <div class="container pb-5">
+        <x-ui.card>
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
 
-            <tbody>
-                @php
-                    $lezioni = Lesson::all();
-                @endphp
-                @foreach ($lezioni as $item)
-                    @if (AcquistiService::prodotto_acquistato(request()->user()->student->id, $item->id, 0))
-                        <tr>
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
-                                {{ $item->number }}
-                            </td>
-                            <td>
-                                {{ $item->title }}
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    onclick=location.href="/lezione/{{ request('id') }}/{{ $item->id }}">Visualizza</button>
-                            </td>
+                <div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
+                        Corso
+                    </span>
 
-                        </tr>
-                    @endif
-                @endforeach
-            </tbody>
-        </table>
-        <br>
-        <br>
-        <h3>Esercizi</h3>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col"></th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
+                    <h3 class="fw-bold mb-0">
+                        {{ $corso->name }}
+                    </h3>
+                </div>
 
-            <tbody>
-                @php
-                    $esercizi = Exercise::all();
-                @endphp
-                @foreach ($esercizi as $item)
-                    @if (AcquistiService::prodotto_acquistato(request()->user()->student->id, $item->id, 2))
-                        <tr>
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
+                <div class="text-lg-end">
+                    <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">
+                        Materiale acquistato
+                    </span>
+                </div>
 
-                            </td>
-                            <td>
-                                {{ $item->title }}
-                            </td>
-                            <td>
-                                <button class="btn btn-primary"
-                                    onclick=location.href="/esercizio/{{ request('id') }}/{{ $item->id }}">Visualizza</button>
-                            </td>
+            </div>
+        </x-ui.card>
 
-                        </tr>
-                    @endif
-                @endforeach
-            </tbody>
-        </table>
+        <div class="mt-4">
+            <x-ui.card>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0">
+                        Lezioni
+                    </h4>
+
+                    <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                        {{ $lezioni->count() }} disponibili
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Numero</th>
+                                <th>Titolo</th>
+                                <th class="text-end">Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse ($lezioni as $lezione)
+                                <tr>
+                                    <td class="fw-semibold">
+                                        {{ $lezione->id }}
+                                    </td>
+
+                                    <td>
+                                        {{ $lezione->number }}
+                                    </td>
+
+                                    <td class="fw-semibold">
+                                        {{ $lezione->title }}
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a href="{{ url('/lezione/' . $corso->id . '/' . $lezione->id) }}"
+                                            class="btn btn-primary btn-sm rounded-pill px-3">
+                                            Visualizza
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted py-4">
+                                        Nessuna lezione acquistata.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </x-ui.card>
+        </div>
+
+        <div class="mt-4">
+            <x-ui.card>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h4 class="fw-bold mb-0">
+                        Esercizi
+                    </h4>
+
+                    <span class="badge bg-light text-dark rounded-pill px-3 py-2">
+                        {{ $esercizi->count() }} disponibili
+                    </span>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Titolo</th>
+                                <th class="text-end">Operazioni</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @forelse ($esercizi as $esercizio)
+                                <tr>
+                                    <td class="fw-semibold">
+                                        {{ $esercizio->id }}
+                                    </td>
+
+                                    <td class="fw-semibold">
+                                        {{ $esercizio->title }}
+                                    </td>
+
+                                    <td class="text-end">
+                                        <a href="{{ url('/esercizio/' . $corso->id . '/' . $esercizio->id) }}"
+                                            class="btn btn-primary btn-sm rounded-pill px-3">
+                                            Visualizza
+                                        </a>
+                                    </td>
+                                </tr>
+                            @empty
+                                <tr>
+                                    <td colspan="3" class="text-center text-muted py-4">
+                                        Nessun esercizio acquistato.
+                                    </td>
+                                </tr>
+                            @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </x-ui.card>
+        </div>
+
     </div>
 @endsection

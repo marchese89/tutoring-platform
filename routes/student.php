@@ -5,6 +5,7 @@ use App\Http\Controllers\AcquistiController;
 use App\Http\Controllers\Student\StudenteController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Student\RouteController;
 
 Route::middleware(['auth', 'role:student'])->group(function () {
 
@@ -30,7 +31,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     // CORSI
     // =========================
     Route::get('corsi', [CourseController::class, 'mieiCorsi'])->name('studente.corsi');
-    Route::view('course/{id}', 'studente.corso')->name('course');
+    Route::get('course/{id}', [RouteController::class, 'show'])->name('course');
 
     Route::view('studente/corso/{id}', 'studente.corso')->name('studente.corso');
 

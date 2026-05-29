@@ -165,7 +165,7 @@ Breadcrumbs::for('studente.corsi', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('course', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('corsi', $id);
+    $trail->parent('studente.corsi', $id);
     $trail->push('Corso', route('course', $id));
 });
 

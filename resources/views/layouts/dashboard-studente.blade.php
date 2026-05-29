@@ -12,9 +12,9 @@
         @else
             {{-- HEADER --}}
             <x-ui.section-header :title="'Dashboard Studente'" />
+
+
             <div class="container">
-
-
 
                 {{-- CARDS --}}
                 <div class="row g-4">
