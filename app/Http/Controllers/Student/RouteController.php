@@ -7,17 +7,19 @@ use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Services\AcquistiService;
-
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RouteController extends Controller
 {
-    public function show(int $id)
+    public function show(Request $request, int $id): View
     {
-        $corso = Course::findOrFail($id);
+        $corso = Course::query()->findOrFail($id);
 
-        $student = request()->user()->student;
+        $student = $request->user()->student;
 
-        $lezioni = Lesson::where('course_id', $corso->id)
+        $lezioni = Lesson::query()
+            ->where('course_id', $corso->id)
             ->orderBy('number')
             ->get()
             ->filter(function ($lezione) use ($student) {
@@ -25,7 +27,8 @@ class RouteController extends Controller
             })
             ->values();
 
-        $esercizi = Exercise::where('course_id', $corso->id)
+        $esercizi = Exercise::query()
+            ->where('course_id', $corso->id)
             ->orderBy('id')
             ->get()
             ->filter(function ($esercizio) use ($student) {
