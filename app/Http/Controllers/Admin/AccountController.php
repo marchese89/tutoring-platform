@@ -9,12 +9,12 @@ use App\Models\User;
 use App\Models\Admin;
 use App\Models\Certificate;
 
-class ModDatiAdminController extends Controller
+class AccountController extends Controller
 {
     // =========================
     // FOTO PROFILO
     // =========================
-    public function upload_foto(Request $request)
+    public function updatePhoto(Request $request)
     {
         $request->validate([
             'file' => 'required|image'
@@ -46,7 +46,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // UPLOAD CERTIFICATO
     // =========================
-    public function upload_cert(Request $request)
+    public function updateCertificateFile(Request $request)
     {
         $request->validate([
             'id' => 'required|exists:certificates,id',
@@ -78,7 +78,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // UPLOAD CERTIFICATO (SESSIONE)
     // =========================
-    public function upload_cert_session(Request $request)
+    public function storeCertificateUpload(Request $request)
     {
         $request->validate([
             'file' => 'required|file'
@@ -106,7 +106,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // MODIFICA NOME CERTIFICATO
     // =========================
-    public function modifica_nome_cert(Request $request)
+    public function updateCertificateName(Request $request)
     {
         $request->validate([
             'id' => 'required|exists:certificates,id',
@@ -123,7 +123,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // PARTITA IVA
     // =========================
-    public function mod_piva(Request $request)
+    public function updateVatNumber(Request $request)
     {
         $request->validate([
             'piva' => 'required|string|max:20'
@@ -139,7 +139,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // INDIRIZZO
     // =========================
-    public function mod_ind(Request $request)
+    public function updateAddress(Request $request)
     {
         $request->validate([
             'inputIndirizzo' => 'required|string|max:255',
@@ -165,7 +165,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // ELIMINA CERTIFICATO
     // =========================
-    public function elimina_cert(Request $request)
+    public function destroyCertificate(Request $request)
     {
         $request->validate([
             'id' => 'required|exists:certificates,id'
@@ -188,7 +188,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // ELIMINA CERTIFICATO SESSIONE
     // =========================
-    public function elimina_cert_session(Request $request)
+    public function destroyCertificateUpload(Request $request)
     {
         if ($request->session()->has('uploaded_cert')) {
             $oldPath = public_path($request->session()->get('uploaded_cert'));
@@ -204,7 +204,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // AGGIUNGI CERTIFICATO
     // =========================
-    public function add_cert_admin(Request $request)
+    public function storeCertificate(Request $request)
     {
         $request->validate([
             'nome' => 'required|string|max:255'
@@ -224,7 +224,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // EMAIL
     // =========================
-    public function mod_email_admin(Request $request)
+    public function updateEmail(Request $request)
     {
         $request->validate([
             'inputEmail' => 'required|email|unique:users,email'
@@ -240,7 +240,7 @@ class ModDatiAdminController extends Controller
     // =========================
     // PASSWORD
     // =========================
-    public function mod_pass_admin(Request $request)
+    public function updatePassword(Request $request)
     {
         $request->validate([
             'inputPassword_old' => 'required',

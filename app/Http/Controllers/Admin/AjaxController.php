@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\DateHelper;
 use App\Models\ChatMessage;
+use App\Models\Chat;
+use App\Models\Student;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -14,7 +16,7 @@ use App\Events\MessageSent;
 class AjaxController extends Controller
 {
 
-    public function getOrdini(Request $request)
+    public function getOrders(Request $request)
     {
         $anno = $request->input('anno');
         $mese = $request->input('mese');
@@ -63,7 +65,7 @@ class AjaxController extends Controller
         ]);
     }
 
-    public function invia_messaggio(Request $request)
+    public function sendMessage(Request $request)
     {
         $request->validate([
             'id_chat' => 'required|integer|exists:chats,id',
@@ -84,7 +86,46 @@ class AjaxController extends Controller
         ]);
     }
 
-    public function invia_feedback()
+    public function getMessages(int $id_chat)
+    {
+        return $this->renderMessages($id_chat, true);
+    }
+
+    public function getStudentMessages(int $id_chat)
+    {
+        return $this->renderMessages($id_chat, false);
+    }
+
+    private function renderMessages(int $chatId, bool $adminPerspective): string
+    {
+        $chat = Chat::findOrFail($chatId);
+        $messages = ChatMessage::where('chat_id', $chatId)
+            ->orderBy('date', 'asc')
+            ->get();
+        $student = Student::with('user')->findOrFail($chat->id_studente);
+        $studentName = e($student->user->name . ' ' . $student->user->surname);
+        $html = '';
+
+        foreach ($messages as $item) {
+            $isAdminAuthor = (int) $item->author === 1;
+            $isOwnMessage = $adminPerspective ? $isAdminAuthor : !$isAdminAuthor;
+            $sender = $isOwnMessage ? 'Tu' : ($adminPerspective ? $studentName : 'Insegnante');
+            $alignment = $isOwnMessage ? 'flex-end' : 'flex-start';
+            $contentStyle = $isOwnMessage ? ' style="background-color: #5755c559;"' : '';
+
+            $html .= '<div class="chat-message" style="justify-content: ' . $alignment . ';">
+                        <div class="message-content"' . $contentStyle . '>
+                            <p class="sender-name">' . $sender . '</p>
+                            <p class="message-text">' . e($item->message) . '</p>
+                            <span class="timestamp">' . DateHelper::format($item->date) . '</span>
+                        </div>
+                    </div>';
+        }
+
+        return $html;
+    }
+
+    public function storeFeedback()
     {
         $punteggio = request('punteggio');
         //cerchiamo per vedere se c'è già un punteggio assegnato
@@ -129,7 +170,7 @@ class AjaxController extends Controller
         return $response;
     }
 
-    public function invia_recensione()
+    public function storeReview()
     {
         $testo = request('testo');
         $id_studente = auth()->user()->student->id;

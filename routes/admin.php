@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\AcquistiController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Admin\LessonController;
-use App\Http\Controllers\Admin\MatterController;
-use App\Http\Controllers\Admin\ModDatiAdminController;
+use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\ThemeAreaController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\Public\LessonOnRequestController;
+use App\Http\Controllers\Public\LessonRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
@@ -28,27 +28,27 @@ Route::prefix('admin')
         Route::view('account/certificates/create', 'admin.settings.add-certif')->name('account.certificates.create');
         Route::view('account/vat-number', 'admin.settings.mod-part-iva')->name('account.vat-number');
 
-        Route::post('account/address', [ModDatiAdminController::class, 'mod_ind'])
+        Route::post('account/address', [AccountController::class, 'updateAddress'])
             ->name('account.address.update');
-        Route::post('account/photo', [ModDatiAdminController::class, 'upload_foto'])
+        Route::post('account/photo', [AccountController::class, 'updatePhoto'])
             ->name('account.photo.update');
-        Route::post('account/certificates/photo', [ModDatiAdminController::class, 'upload_cert'])
+        Route::post('account/certificates/photo', [AccountController::class, 'updateCertificateFile'])
             ->name('account.certificates.photo.update');
-        Route::post('account/certificates/uploads', [ModDatiAdminController::class, 'upload_cert_session'])
+        Route::post('account/certificates/uploads', [AccountController::class, 'storeCertificateUpload'])
             ->name('account.certificates.uploads.store');
-        Route::delete('account/certificates/uploads', [ModDatiAdminController::class, 'elimina_cert_session'])
+        Route::delete('account/certificates/uploads', [AccountController::class, 'destroyCertificateUpload'])
             ->name('account.certificates.uploads.destroy');
-        Route::post('account/certificates/name', [ModDatiAdminController::class, 'modifica_nome_cert'])
+        Route::post('account/certificates/name', [AccountController::class, 'updateCertificateName'])
             ->name('account.certificates.name.update');
-        Route::delete('account/certificates', [ModDatiAdminController::class, 'elimina_cert'])
+        Route::delete('account/certificates', [AccountController::class, 'destroyCertificate'])
             ->name('account.certificates.destroy');
-        Route::post('account/certificates', [ModDatiAdminController::class, 'add_cert_admin'])
+        Route::post('account/certificates', [AccountController::class, 'storeCertificate'])
             ->name('account.certificates.store');
-        Route::post('account/email', [ModDatiAdminController::class, 'mod_email_admin'])
+        Route::post('account/email', [AccountController::class, 'updateEmail'])
             ->name('account.email.update');
-        Route::post('account/password', [ModDatiAdminController::class, 'mod_pass_admin'])
+        Route::post('account/password', [AccountController::class, 'updatePassword'])
             ->name('account.password.update');
-        Route::post('account/vat-number', [ModDatiAdminController::class, 'mod_piva'])
+        Route::post('account/vat-number', [AccountController::class, 'updateVatNumber'])
             ->name('account.vat-number.update');
 
         Route::view('teaching', 'admin.teaching.insegnamento')->name('teaching.index');
@@ -58,10 +58,10 @@ Route::prefix('admin')
         Route::put('theme-areas/{id}', [ThemeAreaController::class, 'update'])->name('theme-areas.update');
         Route::delete('theme-areas/{id}', [ThemeAreaController::class, 'destroy'])->name('theme-areas.destroy');
 
-        Route::get('subjects', [MatterController::class, 'index'])->name('subjects.index');
-        Route::post('subjects', [MatterController::class, 'store'])->name('subjects.store');
-        Route::put('subjects/{id}', [MatterController::class, 'update'])->name('subjects.update');
-        Route::delete('subjects/{id}', [MatterController::class, 'destroy'])->name('subjects.destroy');
+        Route::get('subjects', [SubjectController::class, 'index'])->name('subjects.index');
+        Route::post('subjects', [SubjectController::class, 'store'])->name('subjects.store');
+        Route::put('subjects/{id}', [SubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('subjects/{id}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 
         Route::get('courses', [CourseController::class, 'list'])->name('courses.index');
         Route::get('courses/create', [CourseController::class, 'index'])->name('courses.create');
@@ -109,31 +109,31 @@ Route::prefix('admin')
             ->name('exercises.execution.update');
 
         Route::view('students', 'admin.students.studenti')->name('students.index');
-        Route::get('lesson-requests', [LessonOnRequestController::class, 'index'])
+        Route::get('lesson-requests', [LessonRequestController::class, 'index'])
             ->name('lesson-requests.index');
-        Route::get('lesson-requests/{id}', [LessonOnRequestController::class, 'visualizzaRichiesta'])
+        Route::get('lesson-requests/{id}', [LessonRequestController::class, 'show'])
             ->name('lesson-requests.show');
-        Route::post('lesson-requests/{id}/solution', [LessonOnRequestController::class, 'sol_rich_upload'])
+        Route::post('lesson-requests/{id}/solution', [LessonRequestController::class, 'storeSolution'])
             ->name('lesson-requests.solution.store');
-        Route::delete('lesson-requests/{id}/solution', [LessonOnRequestController::class, 'lez_rich_rem_exec'])
+        Route::delete('lesson-requests/{id}/solution', [LessonRequestController::class, 'destroySolution'])
             ->name('lesson-requests.solution.destroy');
-        Route::post('lesson-requests/{id}/price', [LessonOnRequestController::class, 'carica_prezzo_lez_rich'])
+        Route::post('lesson-requests/{id}/price', [LessonRequestController::class, 'storePrice'])
             ->name('lesson-requests.price.store');
 
-        Route::get('sales', [BillingController::class, 'vendite'])->name('sales.index');
-        Route::get('orders-table', [BillingController::class, 'cambiaTabellaOrdini'])->name('orders.table');
+        Route::get('sales', [BillingController::class, 'sales'])->name('sales.index');
+        Route::get('orders-table', [BillingController::class, 'ordersTable'])->name('orders.table');
         Route::get('orders/{id}', [BillingController::class, 'showOrder'])->name('orders.show');
         Route::get('orders/{id}/invoice', [BillingController::class, 'showInvoice'])->name('orders.invoice');
 
         Route::get('invoices', [InvoiceController::class, 'showAll'])->name('invoices.index');
         Route::view('invoices/extra', 'admin.billing.fattura-extra')->name('invoices.extra');
-        Route::post('invoices/extra', [AcquistiController::class, 'crea_fattura'])->name('invoices.extra.store');
+        Route::post('invoices/extra', [PurchaseController::class, 'createExtraInvoice'])->name('invoices.extra.store');
         Route::view('invoices/created', 'admin.billing.fattura-creata')->name('invoices.created');
         Route::get('invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 
-        Route::get('chats', [LessonOnRequestController::class, 'chatStudenti'])->name('chats.index');
-        Route::get('chats/{id}', [LessonOnRequestController::class, 'visualizzaChat'])->name('chats.show');
-        Route::post('chat/messages', [AjaxController::class, 'invia_messaggio'])->name('chat.messages.store');
-        Route::get('chats/{id_chat}/messages', [AjaxController::class, 'leggi_messaggi'])
+        Route::get('chats', [LessonRequestController::class, 'studentChats'])->name('chats.index');
+        Route::get('chats/{id}', [LessonRequestController::class, 'showChat'])->name('chats.show');
+        Route::post('chat/messages', [AjaxController::class, 'sendMessage'])->name('chat.messages.store');
+        Route::get('chats/{id_chat}/messages', [AjaxController::class, 'getMessages'])
             ->name('chats.messages.index');
     });

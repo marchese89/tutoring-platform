@@ -7,6 +7,9 @@ use App\Http\Utility\ElementoC;
 use App\Models\Exercise;
 use App\Models\Lesson;
 use App\Models\Student;
+use App\Models\Admin;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\Services\OrderService;
 use App\Services\InvoiceService;
@@ -14,10 +17,12 @@ use App\Mail\OrderCompletedMail;
 use App\Models\Order;
 use App\Models\Invoice;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Storage;
+use Dompdf\Dompdf;
 
-class AcquistiController extends Controller
+class PurchaseController extends Controller
 {
-    public function aggiungi_al_carrello(Request $request, int $id, int $type)
+    public function addToCart(Request $request, int $id, int $type)
     {
         $carrello = $request->session()->get('carrello', new \App\Http\Utility\Carrello());
 
@@ -36,7 +41,7 @@ class AcquistiController extends Controller
         };
     }
 
-    public function rimuovi_dal_carrello(Request $request, int $id, int $type)
+    public function removeFromCart(Request $request, int $id, int $type)
     {
         $carrello = $request->session()->get('carrello');
 
@@ -49,7 +54,7 @@ class AcquistiController extends Controller
         return redirect()->route('cart.show');
     }
 
-    public function process_payment(Request $request)
+    public function processPayment(Request $request)
     {
         $user = $request->user();
 
@@ -66,7 +71,7 @@ class AcquistiController extends Controller
         ]);
     }
 
-    public function processa_acquisto(
+    public function completePurchase(
         Request $request,
         OrderService $orderService,
         InvoiceService $invoiceService
@@ -122,7 +127,78 @@ class AcquistiController extends Controller
         }
     }
 
-    public function prepara_pagamento()
+    public function createExtraInvoice(Request $request)
+    {
+        $validated = $request->validate([
+            'inputNome' => ['required', 'string', 'max:255'],
+            'inputCognome' => ['required', 'string', 'max:255'],
+            'inputIndirizzo' => ['required', 'string', 'max:255'],
+            'inputNumeroCivico' => ['required', 'string', 'max:6'],
+            'inputCitta' => ['required', 'string', 'max:255'],
+            'inputProvincia' => ['required', 'string', 'max:2'],
+            'inputCAP' => ['required', 'string', 'max:5'],
+            'inputCF' => ['required', 'string', 'max:16'],
+            'descrizione' => ['required', 'string', 'max:255'],
+            'prezzo' => ['required', 'numeric', 'min:0'],
+            'qta' => ['required', 'numeric', 'min:1'],
+            'note' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $admin = User::where('role', 'admin')->firstOrFail();
+        $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
+
+        $date = Carbon::now();
+        $invoiceNumber = $this->getNextInvoiceNumber();
+        $price = (float) $validated['prezzo'];
+        $quantity = (float) $validated['qta'];
+        $total = $price * $quantity;
+
+        $html = view('invoices.invoice', [
+            'user' => (object) [
+                'name' => $validated['inputNome'],
+                'surname' => $validated['inputCognome'],
+            ],
+            'studente' => (object) [
+                'street' => $validated['inputIndirizzo'],
+                'house_number' => $validated['inputNumeroCivico'],
+                'postal_code' => $validated['inputCAP'],
+                'city' => $validated['inputCitta'],
+                'province' => $validated['inputProvincia'],
+                'cf' => $validated['inputCF'],
+            ],
+            'admin' => $admin,
+            'adminData' => $adminData,
+            'order_products' => [[
+                'description' => $validated['descrizione'],
+                'price' => $price,
+                'quantity' => $quantity,
+                'total' => $total,
+            ]],
+            'total' => $total,
+            'dataFattura' => $date->format('d/m/Y'),
+            'numeroFattura' => $invoiceNumber,
+            'note' => $validated['note'] ?? '',
+        ])->render();
+
+        $dompdf = new Dompdf();
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $path = "extra-invoices/invoice_{$invoiceNumber}.pdf";
+        Storage::disk('private')->put($path, $dompdf->output());
+
+        Invoice::create([
+            'number' => $invoiceNumber,
+            'date' => $date,
+            'order_id' => null,
+            'path' => $path,
+        ]);
+
+        return redirect()->route('admin.invoices.created');
+    }
+
+    public function preparePayment()
     {
         $prezzo = request('prezzo');
         $qta = request('qta');
@@ -138,7 +214,7 @@ class AcquistiController extends Controller
         return redirect()->route('payment.pay');
     }
 
-    public function processa_pagamento_individuale(Request $request)
+    public function processIndividualPayment(Request $request)
     {
         $user = $request->user();
 
@@ -151,5 +227,20 @@ class AcquistiController extends Controller
         return response()->json([
             'clientSecret' => $payment->client_secret
         ]);
+    }
+
+    private function getNextInvoiceNumber(): int
+    {
+        $lastInvoice = Invoice::orderByDesc('date')->orderByDesc('number')->first();
+
+        if (!$lastInvoice || !$lastInvoice->date) {
+            return 1;
+        }
+
+        if (Carbon::parse($lastInvoice->date)->year !== now()->year) {
+            return 1;
+        }
+
+        return ((int) $lastInvoice->number) + 1;
     }
 }

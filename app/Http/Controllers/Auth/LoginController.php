@@ -46,7 +46,7 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    public function recupera_password()
+    public function sendPasswordResetLink()
     {
         $status = Password::sendResetLink(
             request()->only('email')

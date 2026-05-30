@@ -125,8 +125,8 @@
                         <tr>
                             <td align="center">{{ $row['description'] }}</td>
                             <td align="center">{{ $row['price'] }} €</td>
-                            <td align="center">1</td>
-                            <td align="center"><b>{{ $row['price'] }} €</b></td>
+                            <td align="center">{{ $row['quantity'] ?? 1 }}</td>
+                            <td align="center"><b>{{ $row['total'] ?? $row['price'] }} &euro;</b></td>
                         </tr>
                     @endforeach
 

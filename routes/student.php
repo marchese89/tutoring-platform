@@ -1,10 +1,10 @@
 <?php
 
-use App\Http\Controllers\AcquistiController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Student\RouteController;
-use App\Http\Controllers\Student\StudenteController;
+use App\Http\Controllers\Student\StudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:student'])->group(function () {
@@ -13,34 +13,34 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::view('student/account', 'studente.impostazioni-account')->name('student.account');
     Route::view('student/account/profile', 'studente.mod-dati-pers')->name('student.account.profile');
     Route::view('student/account/credentials', 'studente.mod-cred')->name('student.account.credentials');
-    Route::post('student/account/address', [StudenteController::class, 'mod_indirizzo_stud'])
+    Route::post('student/account/address', [StudentController::class, 'updateAddress'])
         ->name('student.account.address.update');
-    Route::post('student/account/email', [StudenteController::class, 'mod_email_stud'])
+    Route::post('student/account/email', [StudentController::class, 'updateEmail'])
         ->name('student.account.email.update');
-    Route::post('student/account/password', [StudenteController::class, 'mod_pass_stud'])
+    Route::post('student/account/password', [StudentController::class, 'updatePassword'])
         ->name('student.account.password.update');
 
     Route::get('student/courses', [CourseController::class, 'mieiCorsi'])->name('student.courses.index');
     Route::get('student/courses/{id}', [RouteController::class, 'show'])->name('student.courses.show');
-    Route::get('student/courses/{id_corso}/lessons/{id_lezione}', [StudenteController::class, 'lezione'])
+    Route::get('student/courses/{id_corso}/lessons/{id_lezione}', [StudentController::class, 'showLesson'])
         ->name('student.lessons.show');
-    Route::get('student/courses/{id_corso}/exercises/{id_esercizio}', [StudenteController::class, 'esercizio'])
+    Route::get('student/courses/{id_corso}/exercises/{id_esercizio}', [StudentController::class, 'showExercise'])
         ->name('student.exercises.show');
 
     Route::view('cart', 'public.visualizza-carrello')->name('cart.show');
-    Route::get('cart/items/{id}/{type}', [AcquistiController::class, 'aggiungi_al_carrello'])
+    Route::get('cart/items/{id}/{type}', [PurchaseController::class, 'addToCart'])
         ->name('cart.items.store');
-    Route::delete('cart/items/{id}/{type}', [AcquistiController::class, 'rimuovi_dal_carrello'])
+    Route::delete('cart/items/{id}/{type}', [PurchaseController::class, 'removeFromCart'])
         ->name('cart.items.destroy');
 
     Route::view('checkout', 'public.acquista')->name('checkout.show');
-    Route::post('checkout/payment', [AcquistiController::class, 'prepara_pagamento'])
+    Route::post('checkout/payment', [PurchaseController::class, 'preparePayment'])
         ->name('checkout.payment.prepare');
-    Route::post('payment/process', [AcquistiController::class, 'process_payment'])
+    Route::post('payment/process', [PurchaseController::class, 'processPayment'])
         ->name('payment.process');
-    Route::get('payment/process', [AcquistiController::class, 'processa_pagamento_individuale'])
+    Route::get('payment/process', [PurchaseController::class, 'processIndividualPayment'])
         ->name('payment.process.legacy');
-    Route::get('payment/success', [AcquistiController::class, 'processa_acquisto'])
+    Route::get('payment/success', [PurchaseController::class, 'completePurchase'])
         ->name('payment.success');
     Route::view('payment/complete', 'public.acquisto-effettuato')->name('payment.complete');
     Route::view('payment/pay', 'studente.paga')->name('payment.pay');
@@ -56,16 +56,18 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::view('student/direct-requests', 'studente.richieste-dirette')->name('student.direct-requests.index');
     Route::view('student/direct-requests/purchased', 'studente.richieste-dirette-acquistate')
         ->name('student.direct-requests.purchased');
-    Route::get('student/direct-requests/{id}', [StudenteController::class, 'showDirectRequest'])
+    Route::get('student/direct-requests/{id}', [StudentController::class, 'showDirectRequest'])
         ->name('student.direct-requests.show');
 
-    Route::post('student/chat/messages', [AjaxController::class, 'invia_messaggio'])
+    Route::post('student/chat/messages', [AjaxController::class, 'sendMessage'])
         ->name('student.chat.messages.store');
+    Route::get('student/chats/{id_chat}/messages', [AjaxController::class, 'getStudentMessages'])
+        ->name('student.chats.messages.index');
     Route::view('student/review', 'studente.recensione')->name('student.review');
-    Route::post('student/feedback', [AjaxController::class, 'invia_feedback'])
+    Route::post('student/feedback', [AjaxController::class, 'storeFeedback'])
         ->name('student.feedback.store');
-    Route::post('student/review', [AjaxController::class, 'invia_recensione'])
+    Route::post('student/review', [AjaxController::class, 'storeReview'])
         ->name('student.review.store');
-    Route::get('student/orders-table', [AjaxController::class, 'getOrdini'])
+    Route::get('student/orders-table', [AjaxController::class, 'getOrders'])
         ->name('student.orders.table');
 });

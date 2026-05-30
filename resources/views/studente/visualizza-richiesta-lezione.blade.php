@@ -23,9 +23,9 @@
     @endphp
     @if ($chat)
         <script type="text/javascript">
-            setInterval(leggi_messaggi, 1000);
+            setInterval(getMessages, 1000);
 
-            function leggi_messaggi() {
+            function getMessages() {
                 let xmlhttp = new XMLHttpRequest();
                 xmlhttp.onreadystatechange = function() {
                     if (this.readyState == 4 && this.status == 200) {
@@ -33,11 +33,11 @@
                     }
                 };
                 //aut=1 -> insegnante
-                xmlhttp.open("GET", "/chat/" + <?php echo $chat->id; ?> + "/messaggi", true);
+                xmlhttp.open("GET", "{{ route('student.chats.messages.index', ['id_chat' => $chat->id]) }}", true);
                 xmlhttp.send();
             }
 
-            function invia_messaggio(testo) {
+            function sendMessage(testo) {
                 document.getElementById("messaggio").value = "";
 
                 if (!testo || testo.trim() === "") {
@@ -157,7 +157,7 @@
                         });
                     </script> <br>
                     <button id="invia" class="btn btn-primary"
-                        onclick=invia_messaggio(_("messaggio").value)>Invia</button>
+                        onclick=sendMessage(_("messaggio").value)>Invia</button>
                     <br>
                     <br>
                 </div>

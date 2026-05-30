@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -26,7 +26,7 @@ class BillingController extends Controller
         return view('admin.billing.fattura', compact('invoice'));
     }
 
-    public function vendite()
+    public function sales()
     {
         $primoOrdine = Order::orderBy('date', 'desc')->first();
 
@@ -56,7 +56,7 @@ class BillingController extends Controller
         ]);
     }
 
-    public function cambiaTabellaOrdini(Request $request)
+    public function ordersTable(Request $request)
     {
         $anno = $request->anno;
         $mese = $request->mese;

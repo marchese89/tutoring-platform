@@ -13,9 +13,9 @@ use App\Models\Exercise;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 
-class StudenteController extends Controller
+class StudentController extends Controller
 {
-    public function mod_indirizzo_stud(Request $request)
+    public function updateAddress(Request $request)
     {
         $indirizzo = $request->input('inputIndirizzo');
         $numeroCivico =  $request->input('inputNumeroCivico');
@@ -36,7 +36,7 @@ class StudenteController extends Controller
         return redirect()->route('student.account.profile');
     }
 
-    function mod_email_stud(Request $request)
+    function updateEmail(Request $request)
     {
         $email = $request->input('inputEmail');
         $user = DB::table('users')->where('email', '=', $email)->first();
@@ -52,7 +52,7 @@ class StudenteController extends Controller
         }
     }
 
-    function mod_pass_stud(Request $request)
+    function updatePassword(Request $request)
     {
 
         $pass_old = password_hash($request->input('inputPassword_old'), PASSWORD_DEFAULT);
@@ -74,7 +74,7 @@ class StudenteController extends Controller
         return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
     }
 
-    public function lezione($id_corso, $id_lezione)
+    public function showLesson($id_corso, $id_lezione)
     {
         $corso = Course::find($id_corso);
         $lezione = Lesson::find($id_lezione);
@@ -112,7 +112,7 @@ class StudenteController extends Controller
         ));
     }
 
-    public function esercizio($id_corso, $id_esercizio)
+    public function showExercise($id_corso, $id_esercizio)
     {
         $corso = Course::find($id_corso);
         $esercizio = Exercise::find($id_esercizio);

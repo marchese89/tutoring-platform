@@ -19,7 +19,7 @@
             ->first();
     @endphp
     <script type="text/javascript">
-        function invia_messaggio(testo) {
+        function sendMessage(testo) {
             document.getElementById("messaggio").value = "";
 
             if (!testo || testo.trim() === "") {
@@ -125,7 +125,7 @@
                         }
                     });
                 </script> <br>
-                <button id="invia" class="btn btn-primary" onclick=invia_messaggio(_("messaggio").value)>Invia</button>
+                <button id="invia" class="btn btn-primary" onclick=sendMessage(_("messaggio").value)>Invia</button>
                 <br>
                 <br>
 

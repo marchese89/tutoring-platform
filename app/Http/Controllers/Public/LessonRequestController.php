@@ -16,7 +16,7 @@ use App\Models\Student;
 use App\Models\Lesson;
 use App\Models\Exercise;
 
-class LessonOnRequestController extends Controller
+class LessonRequestController extends Controller
 {
     public function index()
     {
@@ -24,13 +24,13 @@ class LessonOnRequestController extends Controller
         return view('admin.students.richieste-studenti', compact('lezioni_su_richiesta'));
     }
 
-    public function visualizzaRichiesta(int $id)
+    public function show(int $id)
     {
         $richiesta = LessonOnRequest::where('id', '=', $id)->first();
         return view('admin.students.visualizza-richiesta-lezione', compact('richiesta'));
     }
 
-    public function chatStudenti()
+    public function studentChats()
     {
         $chat = Chat::orderBy('created_at', 'desc')->get();
 
@@ -88,7 +88,7 @@ class LessonOnRequestController extends Controller
         return view('admin.students.chat-studenti', compact('chat'));
     }
 
-    public function visualizzaChat($id)
+    public function showChat($id)
     {
         $chat = Chat::findOrFail($id);
 
@@ -173,7 +173,7 @@ class LessonOnRequestController extends Controller
         return $name;
     }
 
-    public function add_file_su_richiesta(Request $request)
+    public function storeRequestFile(Request $request)
     {
         $this->deleteFile($request->session()->get('uploaded_lez_rich'));
 
@@ -185,7 +185,7 @@ class LessonOnRequestController extends Controller
         return redirect()->route('lesson-requests.create');
     }
 
-    public function elimina_lez_rich(Request $request)
+    public function destroyRequestFile(Request $request)
     {
         $this->deleteFile($request->session()->get('uploaded_lez_rich'));
         $request->session()->forget('uploaded_lez_rich');
@@ -193,7 +193,7 @@ class LessonOnRequestController extends Controller
         return redirect()->route('lesson-requests.create');
     }
 
-    public function carica_lez_rich(Request $request)
+    public function store(Request $request)
     {
         LessonOnRequest::create([
             'title' => $request->input('titolo'),
@@ -211,7 +211,7 @@ class LessonOnRequestController extends Controller
         return redirect()->route('lesson-requests.success');
     }
 
-    public function sol_rich_upload(Request $request, int $id)
+    public function storeSolution(Request $request, int $id)
     {
         $lezione = LessonOnRequest::findOrFail($id);
 
@@ -226,7 +226,7 @@ class LessonOnRequestController extends Controller
         return redirect()->route('admin.lesson-requests.show', $lezione->id);
     }
 
-    public function lez_rich_rem_exec(Request $request, int $id)
+    public function destroySolution(Request $request, int $id)
     {
         $lezione = LessonOnRequest::findOrFail($id);
 
@@ -239,7 +239,7 @@ class LessonOnRequestController extends Controller
         return redirect()->route('admin.lesson-requests.show', $lezione->id);
     }
 
-    public function carica_prezzo_lez_rich(Request $request, int $id)
+    public function storePrice(Request $request, int $id)
     {
         $lezione = LessonOnRequest::findOrFail($id);
 

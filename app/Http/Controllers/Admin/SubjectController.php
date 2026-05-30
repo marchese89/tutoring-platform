@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Matter;
 use App\Models\ThemeArea;
 
-class MatterController extends Controller
+class SubjectController extends Controller
 {
     public function index()
     {

@@ -60,7 +60,7 @@
     </style>
 
     <script>
-        function invia_messaggio(testo) {
+        function sendMessage(testo) {
 
             if (!testo || testo.trim() === "") {
                 return;
@@ -184,7 +184,7 @@
                         placeholder="Scrivi un messaggio..."></textarea>
 
                     <button id="invia" class="btn btn-primary rounded-pill px-4"
-                        onclick="invia_messaggio(document.getElementById('messaggio').value)">
+                        onclick="sendMessage(document.getElementById('messaggio').value)">
                         Invia
                     </button>
 

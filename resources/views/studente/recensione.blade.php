@@ -46,7 +46,7 @@
         }
 
 
-        function invia_recensione(testo) {
+        function storeReview(testo) {
 
             _("recensione").value = "";
             var xmlhttp = new XMLHttpRequest();
@@ -101,12 +101,12 @@
                     // Cancel the default action, if needed
                     event.preventDefault();
                     // Trigger the button element with a click
-                    _("invia_recensione").click();
+                    _("storeReview").click();
                 }
             });
         </script> <br>
 
-        <button id="invia_recensione" class="btn btn-primary" onclick=invia_recensione(_("recensione").value)>Invia</button>
+        <button id="storeReview" class="btn btn-primary" onclick=storeReview(_("recensione").value)>Invia</button>
         <br>
     </div>
 @endsection
