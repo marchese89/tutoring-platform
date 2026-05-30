@@ -32,7 +32,7 @@ class LoginController extends Controller
             if ($request->user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($request->user()->role === 'student') {
-                Session::put('carrello', new Cart());
+                Session::put('cart', new Cart());
                 if (request('return') === '1') {
                     return redirect()->route('lesson-requests.create');
                 } else {

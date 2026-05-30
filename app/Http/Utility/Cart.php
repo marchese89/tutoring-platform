@@ -10,7 +10,7 @@ class Cart
     /** @var CartItem[] */
     private array $items = [];
 
-    public function aggiungi(CartItem $item): bool
+    public function add(CartItem $item): bool
     {
         if ($this->exists($item)) {
             return true;
@@ -29,8 +29,8 @@ class Cart
 
     private function exists(CartItem $item): bool
     {
-        foreach ($this->items as $i) {
-            if ($i->getId() === $item->getId() && $i->getTipo() === $item->getTipo()) {
+        foreach ($this->items as $existingItem) {
+            if ($existingItem->id() === $item->id() && $existingItem->type() === $item->type()) {
                 return true;
             }
         }
@@ -39,18 +39,18 @@ class Cart
 
     private function isCovered(CartItem $item): bool
     {
-        if ($item->getTipo() === CartItem::LEZIONE) {
-            $courseId = Lesson::find($item->getId())?->course_id;
+        if ($item->type() === CartItem::LESSON) {
+            $courseId = Lesson::find($item->id())?->course_id;
 
-            return $this->has($courseId, CartItem::LEZIONI_CORSO)
-                || $this->has($courseId, CartItem::CORSO_COMPLETO);
+            return $this->has($courseId, CartItem::COURSE_LESSONS)
+                || $this->has($courseId, CartItem::FULL_COURSE);
         }
 
-        if ($item->getTipo() === CartItem::ESERCIZIO) {
-            $courseId = Exercise::find($item->getId())?->course_id;
+        if ($item->type() === CartItem::EXERCISE) {
+            $courseId = Exercise::find($item->id())?->course_id;
 
-            return $this->has($courseId, CartItem::ESERCIZI_CORSO)
-                || $this->has($courseId, CartItem::CORSO_COMPLETO);
+            return $this->has($courseId, CartItem::COURSE_EXERCISES)
+                || $this->has($courseId, CartItem::FULL_COURSE);
         }
 
         return false;
@@ -58,46 +58,48 @@ class Cart
 
     private function removeCovered(CartItem $item): void
     {
-        $id = $item->getId();
-        $tipo = $item->getTipo();
+        $id = $item->id();
+        $type = $item->type();
 
-        if ($tipo === CartItem::LEZIONI_CORSO) {
+        if ($type === CartItem::COURSE_LESSONS) {
             $lessonIds = Lesson::where('course_id', $id)->pluck('id');
-            foreach ($lessonIds as $l) {
-                $this->rimuovi($l, CartItem::LEZIONE);
+            foreach ($lessonIds as $lessonId) {
+                $this->remove($lessonId, CartItem::LESSON);
             }
         }
 
-        if ($tipo === CartItem::ESERCIZI_CORSO) {
-            $exIds = Exercise::where('course_id', $id)->pluck('id');
-            foreach ($exIds as $e) {
-                $this->rimuovi($e, CartItem::ESERCIZIO);
+        if ($type === CartItem::COURSE_EXERCISES) {
+            $exerciseIds = Exercise::where('course_id', $id)->pluck('id');
+            foreach ($exerciseIds as $exerciseId) {
+                $this->remove($exerciseId, CartItem::EXERCISE);
             }
         }
 
-        if ($tipo === CartItem::CORSO_COMPLETO) {
-            $this->rimuovi($id, CartItem::LEZIONI_CORSO);
-            $this->rimuovi($id, CartItem::ESERCIZI_CORSO);
+        if ($type === CartItem::FULL_COURSE) {
+            $this->remove($id, CartItem::COURSE_LESSONS);
+            $this->remove($id, CartItem::COURSE_EXERCISES);
         }
     }
 
-    private function has(?int $id, int $tipo): bool
+    private function has(?int $id, int $type): bool
     {
-        if (!$id) return false;
+        if (!$id) {
+            return false;
+        }
 
-        foreach ($this->items as $i) {
-            if ($i->getId() === $id && $i->getTipo() === $tipo) {
+        foreach ($this->items as $item) {
+            if ($item->id() === $id && $item->type() === $type) {
                 return true;
             }
         }
         return false;
     }
 
-    public function rimuovi(int $id, int $tipo): bool
+    public function remove(int $id, int $type): bool
     {
-        foreach ($this->items as $k => $i) {
-            if ($i->getId() === $id && $i->getTipo() === $tipo) {
-                unset($this->items[$k]);
+        foreach ($this->items as $index => $item) {
+            if ($item->id() === $id && $item->type() === $type) {
+                unset($this->items[$index]);
                 $this->items = array_values($this->items);
                 return true;
             }
@@ -105,21 +107,25 @@ class Cart
         return false;
     }
 
-    public function contenuto(): array
+    /**
+     * @return CartItem[]
+     */
+    public function items(): array
     {
         return $this->items;
     }
-    public function nElementi(): int
+
+    public function count(): int
     {
         return count($this->items);
     }
 
-    public function getTotale(): int
+    public function total(): int
     {
-        return array_sum(array_map(fn($i) => $i->getPrezzo(), $this->items));
+        return array_sum(array_map(fn(CartItem $item) => $item->price(), $this->items));
     }
 
-    public function vuotaCart(): void
+    public function clear(): void
     {
         $this->items = [];
     }

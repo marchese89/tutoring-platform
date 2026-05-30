@@ -9,82 +9,85 @@ use App\Models\Course;
 
 class CartItem
 {
-    public const LEZIONE = 0;
-    public const LEZIONI_CORSO = 1;
-    public const ESERCIZIO = 2;
-    public const ESERCIZI_CORSO = 3;
-    public const CORSO_COMPLETO = 4;
-    public const LEZIONE_RICHIESTA = 5;
+    public const LESSON = 0;
+    public const COURSE_LESSONS = 1;
+    public const EXERCISE = 2;
+    public const COURSE_EXERCISES = 3;
+    public const FULL_COURSE = 4;
+    public const REQUESTED_LESSON = 5;
 
     private int $id;
-    private int $tipo;
-    private int $prezzo = 0;
-    private string $nome;
+    private int $type;
+    private int $price = 0;
+    private string $name;
 
-    public function __construct(int $id, int $tipo)
+    public function __construct(int $id, int $type)
     {
         $this->id = $id;
-        $this->tipo = $tipo;
+        $this->type = $type;
 
         $this->init();
     }
 
     private function init(): void
     {
-        switch ($this->tipo) {
+        switch ($this->type) {
 
-            case self::LEZIONE:
-                $l = Lesson::findOrFail($this->id);
-                $this->nome = $l->title;
-                $this->prezzo = $l->price;
+            case self::LESSON:
+                $lesson = Lesson::findOrFail($this->id);
+                $this->name = $lesson->title;
+                $this->price = $lesson->price;
                 break;
 
-            case self::ESERCIZIO:
-                $e = Exercise::findOrFail($this->id);
-                $this->nome = $e->title;
-                $this->prezzo = $e->price;
+            case self::EXERCISE:
+                $exercise = Exercise::findOrFail($this->id);
+                $this->name = $exercise->title;
+                $this->price = $exercise->price;
                 break;
 
-            case self::LEZIONE_RICHIESTA:
-                $r = LessonOnRequest::findOrFail($this->id);
-                $this->nome = "Lezione su richiesta: " . $r->title;
-                $this->prezzo = $r->price;
+            case self::REQUESTED_LESSON:
+                $request = LessonOnRequest::findOrFail($this->id);
+                $this->name = 'Requested lesson: ' . $request->title;
+                $this->price = $request->price;
                 break;
 
-            case self::LEZIONI_CORSO:
-                $c = Course::findOrFail($this->id);
-                $this->nome = "Tutte le lezioni: " . $c->name;
+            case self::COURSE_LESSONS:
+                $course = Course::findOrFail($this->id);
+                $this->name = 'All lessons: ' . $course->name;
                 break;
 
-            case self::ESERCIZI_CORSO:
-                $c = Course::findOrFail($this->id);
-                $this->nome = "Tutti gli esercizi: " . $c->name;
+            case self::COURSE_EXERCISES:
+                $course = Course::findOrFail($this->id);
+                $this->name = 'All exercises: ' . $course->name;
                 break;
 
-            case self::CORSO_COMPLETO:
-                $c = Course::findOrFail($this->id);
-                $this->nome = "Corso completo: " . $c->name;
+            case self::FULL_COURSE:
+                $course = Course::findOrFail($this->id);
+                $this->name = 'Full course: ' . $course->name;
                 break;
 
             default:
-                throw new \Exception("Tipo non valido");
+                throw new \Exception('Invalid cart item type');
         }
     }
 
-    public function getId(): int
+    public function id(): int
     {
         return $this->id;
     }
-    public function getTipo(): int
+
+    public function type(): int
     {
-        return $this->tipo;
+        return $this->type;
     }
-    public function getPrezzo(): int
+
+    public function price(): int
     {
-        return $this->prezzo;
+        return $this->price;
     }
-    public function getNome(): string
+
+    public function name(): string
     {
-        return $this->nome;
+        return $this->name;
     }
 }

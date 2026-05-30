@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Utility\Cart;
 use App\Http\Utility\CartItem;
 use App\Models\Exercise;
 use App\Models\Lesson;
@@ -24,32 +25,33 @@ class PurchaseController extends Controller
 {
     public function addToCart(Request $request, int $id, int $type)
     {
-        $carrello = $request->session()->get('carrello', new \App\Http\Utility\Cart());
+        $cart = $this->cart($request);
 
-        $elemento = new CartItem($id, $type);
-        $carrello->aggiungi($elemento);
+        $item = new CartItem($id, $type);
+        $cart->add($item);
 
-        $request->session()->put('carrello', $carrello);
+        $request->session()->put('cart', $cart);
 
         return match ($type) {
-            CartItem::LEZIONE => redirect()->route('courses.show', Lesson::find($id)->course_id),
-            CartItem::ESERCIZIO => redirect()->route('courses.show', Exercise::find($id)->course_id),
-            CartItem::LEZIONI_CORSO,
-            CartItem::CORSO_COMPLETO => redirect()->route('courses.show', $id),
-            CartItem::LEZIONE_RICHIESTA => redirect()->route('student.direct-requests.show', $id),
+            CartItem::LESSON => redirect()->route('courses.show', Lesson::find($id)->course_id),
+            CartItem::EXERCISE => redirect()->route('courses.show', Exercise::find($id)->course_id),
+            CartItem::COURSE_LESSONS,
+            CartItem::FULL_COURSE => redirect()->route('courses.show', $id),
+            CartItem::REQUESTED_LESSON => redirect()->route('student.direct-requests.show', $id),
             default => redirect()->route('cart.show')
         };
     }
 
     public function removeFromCart(Request $request, int $id, int $type)
     {
-        $carrello = $request->session()->get('carrello');
+        $cart = $this->cart($request);
 
-        if (!$carrello || $carrello->nElementi() === 0) {
-            return response()->json(['error' => 'Carrello vuoto'], 400);
+        if ($cart->count() === 0) {
+            return response()->json(['error' => 'Cart empty'], 400);
         }
 
-        $carrello->rimuovi($id, $type);
+        $cart->remove($id, $type);
+        $request->session()->put('cart', $cart);
 
         return redirect()->route('cart.show');
     }
@@ -60,9 +62,13 @@ class PurchaseController extends Controller
 
         $user->createOrGetStripeCustomer();
 
-        $carrello = $request->session()->get('carrello');
+        $cart = $this->cart($request);
 
-        $tot = $carrello->getTotale() * 100;
+        if ($cart->count() === 0) {
+            return response()->json(['error' => 'Cart empty'], 400);
+        }
+
+        $tot = $cart->total() * 100;
 
         $payment = $user->pay($tot);
 
@@ -81,28 +87,28 @@ class PurchaseController extends Controller
         try {
             $user = $request->user();
 
-            $studente = Student::where('user_id', $user->id)->first();
+            $student = Student::where('user_id', $user->id)->first();
 
-            $carrello = $request->session()->get('carrello');
+            $cart = $this->cart($request);
 
-            if (!$carrello || $carrello->nElementi() === 0) {
-                throw new \Exception("Carrello vuoto");
+            if ($cart->count() === 0) {
+                throw new \Exception('Cart empty');
             }
 
             /*
-             * 1. CREA ORDINE + RIGHE
+             * 1. Create order and rows
              */
-            $orderId = $orderService->process($studente, $carrello);
+            $orderId = $orderService->process($student, $cart);
 
             /*
-             * 2. GENERA PDF
+             * 2. Generate PDF
              */
             $invoiceService->generatePdf($orderId);
 
             $invoice = Invoice::where('order_id', $orderId)->first();
 
             /*
-             * 3. INVIO EMAIL
+             * 3. Send email
              */
             Mail::to($user->email)->send(
                 new OrderCompletedMail(
@@ -114,9 +120,10 @@ class PurchaseController extends Controller
             );
 
             /*
-             * 4. SVUOTA CARRELLO
+             * 4. Clear cart
              */
-            $carrello->vuotaCart();
+            $cart->clear();
+            $request->session()->put('cart', $cart);
 
             DB::commit();
 
@@ -242,5 +249,17 @@ class PurchaseController extends Controller
         }
 
         return ((int) $lastInvoice->number) + 1;
+    }
+
+    private function cart(Request $request): Cart
+    {
+        $cart = $request->session()->get('cart');
+
+        if (!$cart instanceof Cart) {
+            $cart = new Cart();
+            $request->session()->put('cart', $cart);
+        }
+
+        return $cart;
     }
 }

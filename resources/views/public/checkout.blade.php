@@ -5,16 +5,16 @@
 
 
     <div class="container" style="text-align: center;width:35%">
-        <h2>Acquista</h2>
+        <h2>Checkout</h2>
     </div>
     <br>
     <div class="container" style="text-align: center;width:80%; height:550px">
 
         @php
-            $carrello = session()->get('carrello');
-            $tot = $carrello->getTotale();
+            $cart = session()->get('cart');
+            $tot = $cart instanceof \App\Http\Utility\Cart ? $cart->total() : 0;
         @endphp
-        <h3>Paga <strong><?php echo $tot; ?>&euro;</strong> in modo Sicuro tramite Stripe</h3>
+        <h3>Pay <strong>{{ $tot }}&euro;</strong> securely with Stripe</h3>
         <br>
         @if (session('success'))
             <div class="alert alert-success">
@@ -34,7 +34,7 @@
                 <div class="container" style="text-align: center">
                     <button id="submit" class="btn btn-primary">
                         <div class="spinner hidden" id="spinner"></div>
-                        <span id="button-text">Paga Adesso</span>
+                        <span id="button-text">Pay now</span>
                     </button>
                 </div>
                 <div id="payment-message" class="hidden"></div>
@@ -45,7 +45,7 @@
     <br>
     <br>
     <div class="container" style="text-align: center;width:35%">
-        <button class="btn btn-primary" onclick="location.href='{{ route('cart.show') }}'">Indietro</button>
+        <button class="btn btn-primary" onclick="location.href='{{ route('cart.show') }}'">Back</button>
     </div>
     <br>
     <br>

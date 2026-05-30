@@ -49,7 +49,10 @@
                             <a class="nav-link position-relative" href="{{ route('cart.show') }}">
                                 <i class="bi bi-cart3 fs-5"></i>
 
-                                @php $count = session()->get('carrello')?->nElementi() ?? 0; @endphp
+                                @php
+                                    $cart = session()->get('cart');
+                                    $count = $cart instanceof \App\Http\Utility\Cart ? $cart->count() : 0;
+                                @endphp
 
                                 @if ($count > 0)
                                     <span class="badge bg-primary rounded-pill">

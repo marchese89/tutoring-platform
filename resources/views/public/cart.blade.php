@@ -2,25 +2,26 @@
 
 @section('content')
     <div class="container" style="text-align: center;width:35%">
-        <h2>Carrello</h2>
+        <h2>Cart</h2>
     </div>
     <br>
     <div class="container" style="text-align: center;width:80%; height:800px">
 
         @php
-            $items = session()->get('carrello')->contenuto();
+            $cart = session()->get('cart');
+            $items = $cart instanceof \App\Http\Utility\Cart ? $cart->items() : [];
         @endphp
         @if (count($items) == 0)
             <br>
-            <h3>Carrello Vuoto!</h3>
+            <h3>Cart empty!</h3>
         @else
             <table class="table">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Titolo</th>
-                        <th scope="col">Prezzo</th>
-                        <th scope="col">Operazioni</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Price</th>
+                        <th scope="col">Actions</th>
                     </tr>
                 </thead>
 
@@ -29,21 +30,21 @@
                     @foreach ($items as $item)
                         <tr>
 
-                            <th scope="row">{{ $item->getId() }}</th>
+                            <th scope="row">{{ $item->id() }}</th>
                             <td>
-                                {{ $item->getNome() }}
+                                {{ $item->name() }}
                             </td>
                             <td>
-                                {{ $item->getPrezzo() }} &nbsp;<strong>&euro;</strong>
+                                {{ $item->price() }} &nbsp;<strong>&euro;</strong>
                             </td>
                             <td>
-                                <form id="form-remove-{{ $item->getId() }}-{{ $item->getTipoElemento() }}" method="POST"
+                                <form id="form-remove-{{ $item->id() }}-{{ $item->type() }}" method="POST"
                                     style="display: inline"
-                                    action="{{ route('cart.items.destroy', ['id' => $item->getId(), 'type' => $item->getTipoElemento()]) }}"
+                                    action="{{ route('cart.items.destroy', ['id' => $item->id(), 'type' => $item->type()]) }}"
                                     style="display: none;">
                                     @csrf
                                     @method('DELETE')
-                                    <button class="btn btn-primary">Rimuovi</button>
+                                    <button class="btn btn-primary">Remove</button>
                                 </form>
                             </td>
 
@@ -52,10 +53,8 @@
                 </tbody>
             </table>
             <div class="container">
-                <h3>Totale:
-                    @php
-                        echo session()->get('carrello')->getTotale();
-                    @endphp
+                <h3>Total:
+                    {{ $cart->total() }}
                     &nbsp;&euro;
                 </h3>
             </div>
@@ -64,7 +63,7 @@
             <br>
             <br>
             <div>
-                <button class="btn btn-primary" onclick="location.href='{{ route('checkout.show') }}'">Acquista</button>
+                <button class="btn btn-primary" onclick="location.href='{{ route('checkout.show') }}'">Buy</button>
             </div>
             <br>
             <br>

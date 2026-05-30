@@ -15,17 +15,17 @@ use App\Models\Student;
 
 class OrderService
 {
-    public function process(Student $studente, Cart $carrello): int
+    public function process(Student $student, Cart $cart): int
     {
 
         $order = Order::create([
-            'student_id' => $studente->id,
+            'student_id' => $student->id,
         ]);
 
-        $items = $carrello->contenuto();
+        $items = $cart->items();
 
         foreach ($items as $item) {
-            $this->handleItem($item, $order->id, $studente->id);
+            $this->handleItem($item, $order->id, $student->id);
         }
 
         return $order->id;
@@ -33,19 +33,19 @@ class OrderService
 
     private function handleItem(CartItem $item, int $orderId, int $studentId)
     {
-        return match ($item->getTipo()) {
+        return match ($item->type()) {
 
-            CartItem::LEZIONE => $this->handleLesson($item->getId(), $orderId, $studentId),
+            CartItem::LESSON => $this->handleLesson($item->id(), $orderId, $studentId),
 
-            CartItem::ESERCIZIO => $this->handleExercise($item->getId(), $orderId, $studentId),
+            CartItem::EXERCISE => $this->handleExercise($item->id(), $orderId, $studentId),
 
-            CartItem::LEZIONE_RICHIESTA => $this->handleRequest($item->getId(), $orderId, $studentId),
+            CartItem::REQUESTED_LESSON => $this->handleRequest($item->id(), $orderId, $studentId),
 
-            CartItem::LEZIONI_CORSO => $this->handleLessonsOfCourse($item->getId(), $orderId, $studentId),
+            CartItem::COURSE_LESSONS => $this->handleLessonsOfCourse($item->id(), $orderId, $studentId),
 
-            CartItem::ESERCIZI_CORSO => $this->handleExercisesOfCourse($item->getId(), $orderId, $studentId),
+            CartItem::COURSE_EXERCISES => $this->handleExercisesOfCourse($item->id(), $orderId, $studentId),
 
-            CartItem::CORSO_COMPLETO => $this->handleFullCourse($item->getId(), $orderId, $studentId),
+            CartItem::FULL_COURSE => $this->handleFullCourse($item->id(), $orderId, $studentId),
 
             default => null,
         };
@@ -103,10 +103,10 @@ class OrderService
             'tipo_prodotto' => $type,
             'price' => $price,
             'description' => match ($type) {
-                0 => 'Lezione: ' . Lesson::find($productId)->title,
-                2 => 'Esercizio: ' . Exercise::find($productId)->title,
-                5 => 'Richiesta: ' . LessonOnRequest::find($productId)->title,
-                default => 'Prodotto sconosciuto',
+                0 => 'Lesson: ' . Lesson::find($productId)->title,
+                2 => 'Exercise: ' . Exercise::find($productId)->title,
+                5 => 'Request: ' . LessonOnRequest::find($productId)->title,
+                default => 'Unknown product',
             }
         ]);
     }
