@@ -8,11 +8,11 @@ use App\Http\Controllers\Student\StudentController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::view('student/dashboard', 'layouts.dashboard-studente')->name('student.dashboard');
+    Route::view('student/dashboard', 'layouts.student-dashboard')->name('student.dashboard');
 
-    Route::view('student/account', 'studente.impostazioni-account')->name('student.account');
-    Route::view('student/account/profile', 'studente.mod-dati-pers')->name('student.account.profile');
-    Route::view('student/account/credentials', 'studente.mod-cred')->name('student.account.credentials');
+    Route::view('student/account', 'student.account')->name('student.account');
+    Route::view('student/account/profile', 'student.profile')->name('student.account.profile');
+    Route::view('student/account/credentials', 'student.credentials')->name('student.account.credentials');
     Route::post('student/account/address', [StudentController::class, 'updateAddress'])
         ->name('student.account.address.update');
     Route::post('student/account/email', [StudentController::class, 'updateEmail'])
@@ -27,13 +27,13 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('student/courses/{id_corso}/exercises/{id_esercizio}', [StudentController::class, 'showExercise'])
         ->name('student.exercises.show');
 
-    Route::view('cart', 'public.visualizza-carrello')->name('cart.show');
+    Route::view('cart', 'public.cart')->name('cart.show');
     Route::get('cart/items/{id}/{type}', [PurchaseController::class, 'addToCart'])
         ->name('cart.items.store');
     Route::delete('cart/items/{id}/{type}', [PurchaseController::class, 'removeFromCart'])
         ->name('cart.items.destroy');
 
-    Route::view('checkout', 'public.acquista')->name('checkout.show');
+    Route::view('checkout', 'public.checkout')->name('checkout.show');
     Route::post('checkout/payment', [PurchaseController::class, 'preparePayment'])
         ->name('checkout.payment.prepare');
     Route::post('payment/process', [PurchaseController::class, 'processPayment'])
@@ -42,19 +42,19 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('payment.process.legacy');
     Route::get('payment/success', [PurchaseController::class, 'completePurchase'])
         ->name('payment.success');
-    Route::view('payment/complete', 'public.acquisto-effettuato')->name('payment.complete');
-    Route::view('payment/pay', 'studente.paga')->name('payment.pay');
-    Route::view('payment/ok', 'studente.pagamento-ok')->name('payment.ok');
-    Route::view('payment/extra', 'studente.pagamento-extra')->name('payment.extra');
+    Route::view('payment/complete', 'public.purchase-complete')->name('payment.complete');
+    Route::view('payment/pay', 'student.pay')->name('payment.pay');
+    Route::view('payment/ok', 'student.payment-success')->name('payment.ok');
+    Route::view('payment/extra', 'student.extra-payment')->name('payment.extra');
 
-    Route::view('student/orders', 'studente.ordini')->name('student.orders.index');
-    Route::view('student/orders/{id}', 'studente.ordine')->name('student.orders.show');
-    Route::view('student/invoices', 'studente.fatture-studente')->name('student.invoices.index');
-    Route::view('student/invoices/{id}', 'studente.fattura')->name('student.invoices.show');
-    Route::view('student/invoice-sheets/{id}', 'studente.fattura-studente')->name('student.invoice-sheets.show');
+    Route::view('student/orders', 'student.orders')->name('student.orders.index');
+    Route::view('student/orders/{id}', 'student.order')->name('student.orders.show');
+    Route::view('student/invoices', 'student.invoices')->name('student.invoices.index');
+    Route::view('student/invoices/{id}', 'student.invoice')->name('student.invoices.show');
+    Route::view('student/invoice-sheets/{id}', 'student.invoice-sheet')->name('student.invoice-sheets.show');
 
-    Route::view('student/direct-requests', 'studente.richieste-dirette')->name('student.direct-requests.index');
-    Route::view('student/direct-requests/purchased', 'studente.richieste-dirette-acquistate')
+    Route::view('student/direct-requests', 'student.direct-requests')->name('student.direct-requests.index');
+    Route::view('student/direct-requests/purchased', 'student.purchased-direct-requests')
         ->name('student.direct-requests.purchased');
     Route::get('student/direct-requests/{id}', [StudentController::class, 'showDirectRequest'])
         ->name('student.direct-requests.show');
@@ -63,7 +63,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('student.chat.messages.store');
     Route::get('student/chats/{id_chat}/messages', [AjaxController::class, 'getStudentMessages'])
         ->name('student.chats.messages.index');
-    Route::view('student/review', 'studente.recensione')->name('student.review');
+    Route::view('student/review', 'student.review')->name('student.review');
     Route::post('student/feedback', [AjaxController::class, 'storeFeedback'])
         ->name('student.feedback.store');
     Route::post('student/review', [AjaxController::class, 'storeReview'])

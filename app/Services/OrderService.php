@@ -2,8 +2,8 @@
 
 namespace App\Services;
 
-use App\Http\Utility\Carrello;
-use App\Http\Utility\ElementoC;
+use App\Http\Utility\Cart;
+use App\Http\Utility\CartItem;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Lesson;
@@ -15,7 +15,7 @@ use App\Models\Student;
 
 class OrderService
 {
-    public function process(Student $studente, Carrello $carrello): int
+    public function process(Student $studente, Cart $carrello): int
     {
 
         $order = Order::create([
@@ -31,21 +31,21 @@ class OrderService
         return $order->id;
     }
 
-    private function handleItem(ElementoC $item, int $orderId, int $studentId)
+    private function handleItem(CartItem $item, int $orderId, int $studentId)
     {
         return match ($item->getTipo()) {
 
-            ElementoC::LEZIONE => $this->handleLesson($item->getId(), $orderId, $studentId),
+            CartItem::LEZIONE => $this->handleLesson($item->getId(), $orderId, $studentId),
 
-            ElementoC::ESERCIZIO => $this->handleExercise($item->getId(), $orderId, $studentId),
+            CartItem::ESERCIZIO => $this->handleExercise($item->getId(), $orderId, $studentId),
 
-            ElementoC::LEZIONE_RICHIESTA => $this->handleRequest($item->getId(), $orderId, $studentId),
+            CartItem::LEZIONE_RICHIESTA => $this->handleRequest($item->getId(), $orderId, $studentId),
 
-            ElementoC::LEZIONI_CORSO => $this->handleLessonsOfCourse($item->getId(), $orderId, $studentId),
+            CartItem::LEZIONI_CORSO => $this->handleLessonsOfCourse($item->getId(), $orderId, $studentId),
 
-            ElementoC::ESERCIZI_CORSO => $this->handleExercisesOfCourse($item->getId(), $orderId, $studentId),
+            CartItem::ESERCIZI_CORSO => $this->handleExercisesOfCourse($item->getId(), $orderId, $studentId),
 
-            ElementoC::CORSO_COMPLETO => $this->handleFullCourse($item->getId(), $orderId, $studentId),
+            CartItem::CORSO_COMPLETO => $this->handleFullCourse($item->getId(), $orderId, $studentId),
 
             default => null,
         };

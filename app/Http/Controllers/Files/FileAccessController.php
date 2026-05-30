@@ -12,7 +12,7 @@ use App\Models\Exercise;
 use App\Models\LessonOnRequest;
 use App\Models\Invoice;
 use App\Models\Student;
-use App\Services\AcquistiService;
+use App\Services\PurchaseService;
 
 class FileAccessController extends Controller
 {
@@ -102,7 +102,7 @@ class FileAccessController extends Controller
                 return true;
             }
 
-            if (AcquistiService::prodotto_acquistato($studente->id, $lessonFile->id, 0)) {
+            if (PurchaseService::prodotto_acquistato($studente->id, $lessonFile->id, 0)) {
                 return true;
             }
         }
@@ -117,7 +117,7 @@ class FileAccessController extends Controller
                 return true;
             }
 
-            if (AcquistiService::prodotto_acquistato($studente->id, $exerciseExecution->id, 2)) {
+            if (PurchaseService::prodotto_acquistato($studente->id, $exerciseExecution->id, 2)) {
                 return true;
             }
         }

@@ -17,16 +17,16 @@ Route::prefix('admin')
     ->name('admin.')
     ->middleware(['auth', 'role:admin'])
     ->group(function () {
-        Route::view('dashboard', 'layouts.dashboard-admin')->name('dashboard');
+        Route::view('dashboard', 'layouts.admin-dashboard')->name('dashboard');
 
-        Route::view('account', 'admin.settings.imp-account')->name('account');
-        Route::view('account/profile', 'admin.settings.mod-dati-pers')->name('account.profile');
-        Route::view('account/credentials', 'admin.settings.mod-cred')->name('account.credentials');
-        Route::view('account/photo', 'admin.settings.mod-foto')->name('account.photo');
-        Route::view('account/address', 'admin.settings.mod-indirizzo')->name('account.address');
-        Route::view('account/certificates', 'admin.settings.mod-certif')->name('account.certificates.index');
-        Route::view('account/certificates/create', 'admin.settings.add-certif')->name('account.certificates.create');
-        Route::view('account/vat-number', 'admin.settings.mod-part-iva')->name('account.vat-number');
+        Route::view('account', 'admin.settings.account')->name('account');
+        Route::view('account/profile', 'admin.settings.profile')->name('account.profile');
+        Route::view('account/credentials', 'admin.settings.credentials')->name('account.credentials');
+        Route::view('account/photo', 'admin.settings.photo')->name('account.photo');
+        Route::view('account/address', 'admin.settings.address')->name('account.address');
+        Route::view('account/certificates', 'admin.settings.certificates')->name('account.certificates.index');
+        Route::view('account/certificates/create', 'admin.settings.create-certificate')->name('account.certificates.create');
+        Route::view('account/vat-number', 'admin.settings.vat-number')->name('account.vat-number');
 
         Route::post('account/address', [AccountController::class, 'updateAddress'])
             ->name('account.address.update');
@@ -51,7 +51,7 @@ Route::prefix('admin')
         Route::post('account/vat-number', [AccountController::class, 'updateVatNumber'])
             ->name('account.vat-number.update');
 
-        Route::view('teaching', 'admin.teaching.insegnamento')->name('teaching.index');
+        Route::view('teaching', 'admin.teaching.teaching')->name('teaching.index');
 
         Route::get('theme-areas', [ThemeAreaController::class, 'index'])->name('theme-areas.index');
         Route::post('theme-areas', [ThemeAreaController::class, 'store'])->name('theme-areas.store');
@@ -71,7 +71,7 @@ Route::prefix('admin')
         Route::delete('courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
         Route::get('courses/{id}/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
-        Route::view('courses/{id_corso}/lessons/{id_lezione}/edit', 'admin.teaching.modifica-lezione')
+        Route::view('courses/{id_corso}/lessons/{id_lezione}/edit', 'admin.teaching.edit-lesson')
             ->name('lessons.edit');
         Route::post('lessons', [LessonController::class, 'store'])->name('lessons.store');
         Route::put('lessons/{id}', [LessonController::class, 'update'])->name('lessons.update');
@@ -89,8 +89,8 @@ Route::prefix('admin')
         Route::post('lessons/{id}/file', [LessonController::class, 'updateLessonFile'])
             ->name('lessons.file.update');
 
-        Route::view('courses/{course}/exercises/create', 'admin.teaching.nuovo-esercizio')->name('exercises.create');
-        Route::view('courses/{course}/exercises/{exercise}/edit', 'admin.teaching.modifica-esercizio')
+        Route::view('courses/{course}/exercises/create', 'admin.teaching.create-exercise')->name('exercises.create');
+        Route::view('courses/{course}/exercises/{exercise}/edit', 'admin.teaching.edit-exercise')
             ->name('exercises.edit');
         Route::post('exercises', [ExerciseController::class, 'store'])->name('exercises.store');
         Route::put('exercises/{id}', [ExerciseController::class, 'update'])->name('exercises.update');
@@ -108,7 +108,7 @@ Route::prefix('admin')
         Route::post('exercises/{id}/execution', [ExerciseController::class, 'updateExecution'])
             ->name('exercises.execution.update');
 
-        Route::view('students', 'admin.students.studenti')->name('students.index');
+        Route::view('students', 'admin.students.students')->name('students.index');
         Route::get('lesson-requests', [LessonRequestController::class, 'index'])
             ->name('lesson-requests.index');
         Route::get('lesson-requests/{id}', [LessonRequestController::class, 'show'])
@@ -126,9 +126,9 @@ Route::prefix('admin')
         Route::get('orders/{id}/invoice', [BillingController::class, 'showInvoice'])->name('orders.invoice');
 
         Route::get('invoices', [InvoiceController::class, 'showAll'])->name('invoices.index');
-        Route::view('invoices/extra', 'admin.billing.fattura-extra')->name('invoices.extra');
+        Route::view('invoices/extra', 'admin.billing.extra-invoice')->name('invoices.extra');
         Route::post('invoices/extra', [PurchaseController::class, 'createExtraInvoice'])->name('invoices.extra.store');
-        Route::view('invoices/created', 'admin.billing.fattura-creata')->name('invoices.created');
+        Route::view('invoices/created', 'admin.billing.invoice-created')->name('invoices.created');
         Route::get('invoices/{id}', [InvoiceController::class, 'show'])->name('invoices.show');
 
         Route::get('chats', [LessonRequestController::class, 'studentChats'])->name('chats.index');

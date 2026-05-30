@@ -10,7 +10,7 @@ use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Models\Order;
 use App\Models\OrderProduct;
-use App\Services\AcquistiService;
+use App\Services\PurchaseService;
 
 class CourseController extends Controller
 {
@@ -18,21 +18,21 @@ class CourseController extends Controller
     {
         $materie = Matter::with('theme_area')->get();
         $corsi = Course::with('matter.theme_area')->get();
-        return view('admin.teaching.nuovo-corso', compact('materie', 'corsi'));
+        return view('admin.teaching.create-course', compact('materie', 'corsi'));
     }
 
     public function publicIndex(int $id_materia)
     {
         $corsi = Course::where('matter_id', $id_materia)->get();
 
-        return view('public.corsi', compact('corsi'));
+        return view('public.courses', compact('corsi'));
     }
 
     public function list()
     {
         $corsi = Course::with('matter.theme_area')->get();
 
-        return view('admin.teaching.elenco-corsi', compact('corsi'));
+        return view('admin.teaching.courses', compact('corsi'));
     }
 
     public function mieiCorsi(Request $request)
@@ -67,7 +67,7 @@ class CourseController extends Controller
             ->whereIn('id', $courseIds)
             ->get();
 
-        return view('studente.elenco-corsi', compact('courses'));
+        return view('student.courses', compact('courses'));
     }
 
     public function edit(int $id)
@@ -77,7 +77,7 @@ class CourseController extends Controller
         $lezioni = Lesson::where('course_id', $id)->orderBy('number')->get();
         $esercizi = Exercise::where('course_id', $id)->orderBy('id')->get();
 
-        return view('admin.teaching.modifica-corso', compact('corso', 'lezioni', 'esercizi'));
+        return view('admin.teaching.edit-course', compact('corso', 'lezioni', 'esercizi'));
     }
 
     public function store(Request $request)
@@ -130,7 +130,7 @@ class CourseController extends Controller
             $purchased = false;
 
             if ($studentId) {
-                $purchased = AcquistiService::prodotto_acquistato(
+                $purchased = PurchaseService::prodotto_acquistato(
                     $studentId,
                     $lesson->id,
                     0
@@ -150,7 +150,7 @@ class CourseController extends Controller
             $purchased = false;
 
             if ($studentId) {
-                $purchased = AcquistiService::prodotto_acquistato(
+                $purchased = PurchaseService::prodotto_acquistato(
                     $studentId,
                     $exercise->id,
                     2
@@ -165,7 +165,7 @@ class CourseController extends Controller
             return $exercise;
         });
 
-        return view('public.corso', compact(
+        return view('public.course', compact(
             'course',
             'lessons',
             'exercises'

@@ -104,7 +104,7 @@ class StudentController extends Controller
             ->orderBy('date', 'asc')
             ->get();
 
-        return view('studente.lezione', compact(
+        return view('student.lesson', compact(
             'corso',
             'lezione',
             'chat',
@@ -128,11 +128,11 @@ class StudentController extends Controller
             abort(404);
         }
 
-        return view('studente.esercizio', compact('corso', 'esercizio'));
+        return view('student.exercise', compact('corso', 'esercizio'));
     }
 
     public function showDirectRequest(int $id)
     {
-        return view('studente.visualizza-richiesta-lezione', compact('id'));
+        return view('student.direct-request', compact('id'));
     }
 }

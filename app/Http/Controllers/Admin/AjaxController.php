@@ -58,7 +58,7 @@ class AjaxController extends Controller
         //     'totale' => $ordiniMapped->sum('totale'),
         // ]);
         return response()->json([
-            'html' => view('admin.partials.righe-ordini', [
+            'html' => view('admin.partials.order-rows', [
                 'ordini' => $ordiniMapped
             ])->render(),
             'totale' => $ordiniMapped->sum('totale')

@@ -16,7 +16,7 @@ class LessonController extends Controller
         $corso = Course::where('id', '=', $id_corso)->first();
         $lezione = Lesson::where('id', '=', $id_lezione)->first();
 
-        return view('public.presentazione-lezione', compact('corso', 'lezione'));
+        return view('public.lesson-presentation', compact('corso', 'lezione'));
     }
 
     public function view(int $id_corso, int $id_lezione)
@@ -24,13 +24,13 @@ class LessonController extends Controller
         $corso = Course::where('id', '=', $id_corso)->first();
         $lezione = Lesson::where('id', '=', $id_lezione)->first();
 
-        return view('public.contenuto-lezione', compact('corso', 'lezione'));
+        return view('public.lesson-content', compact('corso', 'lezione'));
     }
 
     public function create(int $id)
     {
         $corso = Course::where('id', '=', $id)->first();
-        return view('admin.teaching.nuova-lezione', compact('id', 'corso'));
+        return view('admin.teaching.create-lesson', compact('id', 'corso'));
     }
 
     // ===============================

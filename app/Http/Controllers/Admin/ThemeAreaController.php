@@ -13,7 +13,7 @@ class ThemeAreaController extends Controller
     {
         $aree_t = ThemeArea::all();
 
-        return view('admin.teaching.aree-tem', compact('aree_t'));
+        return view('admin.teaching.theme-areas', compact('aree_t'));
     }
 
     public function publicIndex()
@@ -21,7 +21,7 @@ class ThemeAreaController extends Controller
         $themeAreas = ThemeArea::whereHas('matter')
             ->orderBy('name')
             ->get();
-        return view('public.aree-tematiche', compact('themeAreas'));
+        return view('public.theme-areas', compact('themeAreas'));
     }
 
     // CREATE

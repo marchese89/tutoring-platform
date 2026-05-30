@@ -12,13 +12,13 @@ class InvoiceController extends Controller
     {
         $fatture = Invoice::all();
 
-        return view('admin.billing.fatture', compact('fatture'));
+        return view('admin.billing.invoices', compact('fatture'));
     }
 
     public function show($number)
     {
         $fattura = Invoice::where('number', $number)->firstOrFail();
 
-        return view('admin.billing.visualizza-fattura', compact('fattura'));
+        return view('admin.billing.invoice-details', compact('fattura'));
     }
 }

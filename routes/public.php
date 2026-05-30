@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::view('registration/success', 'sicurezza.registrazione_ok')->name('registration.success');
-Route::view('registration/error', 'sicurezza.registrazione_no')->name('registration.error');
+Route::view('registration/success', 'auth.registration-success')->name('registration.success');
+Route::view('registration/error', 'auth.registration-error')->name('registration.error');
 
 Route::view('privacy-policy', 'public.privacy-policy')->name('privacy-policy');
-Route::view('cookie-policy', 'public.coockie-policy')->name('cookie-policy');
-Route::view('about', 'public.informazioni')->name('about');
+Route::view('cookie-policy', 'public.cookie-policy')->name('cookie-policy');
+Route::view('about', 'public.about')->name('about');
 
 Route::get('theme-areas', [ThemeAreaController::class, 'publicIndex'])->name('theme-areas.index');
 Route::get('theme-areas/{id_at}/subjects', [SubjectController::class, 'publicIndex'])->name('subjects.index');
@@ -30,11 +30,11 @@ Route::get('courses/{id_corso}/lessons/{id_lezione}', [LessonController::class, 
 Route::get('courses/{id_corso}/exercises/{id_esercizio}/trace', [ExerciseController::class, 'viewTrace'])
     ->name('exercises.trace');
 
-Route::view('lesson-requests/create', 'public.lezione-su-richiesta')->name('lesson-requests.create');
+Route::view('lesson-requests/create', 'public.lesson-request')->name('lesson-requests.create');
 Route::post('lesson-requests/files', [LessonRequestController::class, 'storeRequestFile'])
     ->name('lesson-requests.files.store');
 Route::delete('lesson-requests/files', [LessonRequestController::class, 'destroyRequestFile'])
     ->name('lesson-requests.files.destroy');
 Route::post('lesson-requests', [LessonRequestController::class, 'store'])
     ->name('lesson-requests.store');
-Route::view('lesson-requests/success', 'public.esito-lez-rich')->name('lesson-requests.success');
+Route::view('lesson-requests/success', 'public.lesson-request-success')->name('lesson-requests.success');

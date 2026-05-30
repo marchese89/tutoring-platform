@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Http\Utility\ElementoC;
+use App\Http\Utility\CartItem;
 use App\Models\Exercise;
 use App\Models\Lesson;
 use App\Models\Student;
@@ -24,19 +24,19 @@ class PurchaseController extends Controller
 {
     public function addToCart(Request $request, int $id, int $type)
     {
-        $carrello = $request->session()->get('carrello', new \App\Http\Utility\Carrello());
+        $carrello = $request->session()->get('carrello', new \App\Http\Utility\Cart());
 
-        $elemento = new ElementoC($id, $type);
+        $elemento = new CartItem($id, $type);
         $carrello->aggiungi($elemento);
 
         $request->session()->put('carrello', $carrello);
 
         return match ($type) {
-            ElementoC::LEZIONE => redirect()->route('courses.show', Lesson::find($id)->course_id),
-            ElementoC::ESERCIZIO => redirect()->route('courses.show', Exercise::find($id)->course_id),
-            ElementoC::LEZIONI_CORSO,
-            ElementoC::CORSO_COMPLETO => redirect()->route('courses.show', $id),
-            ElementoC::LEZIONE_RICHIESTA => redirect()->route('student.direct-requests.show', $id),
+            CartItem::LEZIONE => redirect()->route('courses.show', Lesson::find($id)->course_id),
+            CartItem::ESERCIZIO => redirect()->route('courses.show', Exercise::find($id)->course_id),
+            CartItem::LEZIONI_CORSO,
+            CartItem::CORSO_COMPLETO => redirect()->route('courses.show', $id),
+            CartItem::LEZIONE_RICHIESTA => redirect()->route('student.direct-requests.show', $id),
             default => redirect()->route('cart.show')
         };
     }
@@ -116,7 +116,7 @@ class PurchaseController extends Controller
             /*
              * 4. SVUOTA CARRELLO
              */
-            $carrello->vuotaCarrello();
+            $carrello->vuotaCart();
 
             DB::commit();
 

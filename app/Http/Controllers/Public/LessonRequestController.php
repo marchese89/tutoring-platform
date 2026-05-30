@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Models\LessonOnRequest;
 use App\Models\User;
-use App\Mail\NuovaRichiestaStudenteMail;
-use App\Mail\RichiestaEvasaMail;
+use App\Mail\NewStudentRequestMail;
+use App\Mail\LessonRequestFulfilledMail;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -21,13 +21,13 @@ class LessonRequestController extends Controller
     public function index()
     {
         $lezioni_su_richiesta = LessonOnRequest::with('student.user')->get();
-        return view('admin.students.richieste-studenti', compact('lezioni_su_richiesta'));
+        return view('admin.students.lesson-requests', compact('lezioni_su_richiesta'));
     }
 
     public function show(int $id)
     {
         $richiesta = LessonOnRequest::where('id', '=', $id)->first();
-        return view('admin.students.visualizza-richiesta-lezione', compact('richiesta'));
+        return view('admin.students.lesson-request', compact('richiesta'));
     }
 
     public function studentChats()
@@ -85,7 +85,7 @@ class LessonRequestController extends Controller
                 $ultimoMessaggio && $ultimoMessaggio->author == 0;
         }
 
-        return view('admin.students.chat-studenti', compact('chat'));
+        return view('admin.students.chats', compact('chat'));
     }
 
     public function showChat($id)
@@ -152,7 +152,7 @@ class LessonRequestController extends Controller
 
         $utente = $studente?->user;
 
-        return view('admin.students.visualizza-chat', compact(
+        return view('admin.students.chat', compact(
             'chat',
             'pres',
             'exec',
@@ -206,7 +206,7 @@ class LessonRequestController extends Controller
         $admin = User::where('role', 'admin')->first();
 
         Mail::to($admin->email)
-            ->send(new NuovaRichiestaStudenteMail());
+            ->send(new NewStudentRequestMail());
 
         return redirect()->route('lesson-requests.success');
     }
@@ -251,7 +251,7 @@ class LessonRequestController extends Controller
         $user = $lezione->student->user;
 
         Mail::to($user->email)
-            ->send(new RichiestaEvasaMail());
+            ->send(new LessonRequestFulfilledMail());
 
         return redirect()->route('admin.lesson-requests.show', $lezione->id);
     }

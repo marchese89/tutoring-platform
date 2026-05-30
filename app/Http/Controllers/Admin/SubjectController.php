@@ -13,13 +13,13 @@ class SubjectController extends Controller
     {
         $materie = Matter::with('theme_area')->get();
         $aree_t = ThemeArea::all();
-        return view('admin.teaching.materie', compact('materie', 'aree_t'));
+        return view('admin.teaching.subjects', compact('materie', 'aree_t'));
     }
 
     public function publicIndex(int $id_at)
     {
         $materie = Matter::where('theme_area_id', $id_at)->get();
-        return view('public.materie', compact('materie'));
+        return view('public.subjects', compact('materie'));
     }
 
     public function store(Request $request)

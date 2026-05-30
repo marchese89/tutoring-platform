@@ -16,7 +16,7 @@ class ExerciseController extends Controller
         $corso = Course::where('id', '=', $id_corso)->first();
         $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
 
-        return view('public.traccia-esercizio', compact('esercizio', 'corso'));
+        return view('public.exercise-trace', compact('esercizio', 'corso'));
     }
 
     // =========================

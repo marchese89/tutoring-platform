@@ -17,13 +17,13 @@ class BillingController extends Controller
         $ordine = Order::where('id', '=', $id)->first();
         $prodotti = OrderProduct::where('id_ordine', '=', request('id'))->get();
         $tot_ordine = OrderProduct::where('id_ordine', '=', request('id'))->sum('price');
-        return View('admin.billing.ordine', compact('ordine', 'prodotti', 'tot_ordine'));
+        return View('admin.billing.order', compact('ordine', 'prodotti', 'tot_ordine'));
     }
 
     public function showInvoice(int $id)
     {
         $invoice = Invoice::where('order_id', '=', $id)->first();
-        return view('admin.billing.fattura', compact('invoice'));
+        return view('admin.billing.invoice', compact('invoice'));
     }
 
     public function sales()
@@ -31,7 +31,7 @@ class BillingController extends Controller
         $primoOrdine = Order::orderBy('date', 'desc')->first();
 
         if (!$primoOrdine) {
-            return view('admin.billing.vendite', [
+            return view('admin.billing.sales', [
                 'hasOrders' => false
             ]);
         }
@@ -48,7 +48,7 @@ class BillingController extends Controller
             ->orderBy('month')
             ->get();
 
-        return view('admin.billing.vendite', [
+        return view('admin.billing.sales', [
             'hasOrders' => true,
             'dataPrimo' => $data,
             'years' => $years,

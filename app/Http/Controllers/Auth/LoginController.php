@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Utility\Carrello;
+use App\Http\Utility\Cart;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Password;
 
@@ -32,7 +32,7 @@ class LoginController extends Controller
             if ($request->user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($request->user()->role === 'student') {
-                Session::put('carrello', new Carrello());
+                Session::put('carrello', new Cart());
                 if (request('return') === '1') {
                     return redirect()->route('lesson-requests.create');
                 } else {

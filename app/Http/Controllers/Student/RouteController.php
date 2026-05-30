@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Services\AcquistiService;
+use App\Services\PurchaseService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -23,7 +23,7 @@ class RouteController extends Controller
             ->orderBy('number')
             ->get()
             ->filter(function ($lezione) use ($student) {
-                return AcquistiService::prodotto_acquistato($student->id, $lezione->id, 0);
+                return PurchaseService::prodotto_acquistato($student->id, $lezione->id, 0);
             })
             ->values();
 
@@ -32,11 +32,11 @@ class RouteController extends Controller
             ->orderBy('id')
             ->get()
             ->filter(function ($esercizio) use ($student) {
-                return AcquistiService::prodotto_acquistato($student->id, $esercizio->id, 2);
+                return PurchaseService::prodotto_acquistato($student->id, $esercizio->id, 2);
             })
             ->values();
 
-        return view('studente.corso', compact(
+        return view('student.course', compact(
             'corso',
             'lezioni',
             'esercizi'
