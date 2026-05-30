@@ -3,6 +3,7 @@
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Student\OrderController;
 use App\Http\Controllers\Student\RouteController;
 use App\Http\Controllers\Student\StudentController;
 use Illuminate\Support\Facades\Route;
@@ -47,8 +48,8 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::view('payment/ok', 'student.payment-success')->name('payment.ok');
     Route::view('payment/extra', 'student.extra-payment')->name('payment.extra');
 
-    Route::view('student/orders', 'student.orders')->name('student.orders.index');
-    Route::view('student/orders/{id}', 'student.order')->name('student.orders.show');
+    Route::get('student/orders', [OrderController::class, 'index'])->name('student.orders.index');
+    Route::get('student/orders/{id}', [OrderController::class, 'show'])->name('student.orders.show');
     Route::view('student/invoices', 'student.invoices')->name('student.invoices.index');
     Route::view('student/invoices/{id}', 'student.invoice')->name('student.invoices.show');
     Route::view('student/invoice-sheets/{id}', 'student.invoice-sheet')->name('student.invoice-sheets.show');
@@ -68,6 +69,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('student.feedback.store');
     Route::post('student/review', [AjaxController::class, 'storeReview'])
         ->name('student.review.store');
-    Route::get('student/orders-table', [AjaxController::class, 'getOrders'])
+    Route::get('student/orders-table', [OrderController::class, 'table'])
         ->name('student.orders.table');
 });

@@ -29,70 +29,46 @@
                 });
         }
         window.onload = function() {
-            aggiorna_tabella(document.getElementById('floatingSelect1').value, document.getElementById(
-                'floatingSelect2').value);
+            const yearSelect = document.getElementById('floatingSelect1');
+            const monthSelect = document.getElementById('floatingSelect2');
+
+            if (!yearSelect || !monthSelect) {
+                return;
+            }
+
+            aggiorna_tabella(yearSelect.value, monthSelect.value);
         }
     </script>
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
-        </li>
-    </ul>
+
     <div class="row g-0 container-fluid" style="text-align: center">
         <h3>Ordini Effettuati</h3>
 
-        @php
-            use App\Helpers\DateHelper;
-            use App\Models\Order;
-            use App\Services\PurchaseService;
-
-            $primo_ordine = Order::where('student_id', '=', auth()->user()->student->id)
-                ->orderBy('date', 'desc')
-                ->first();
-            if ($primo_ordine != null) {
-                $data_primo = DateHelper::parse($primo_ordine->date);
-
-                $ordini = DB::table('orders')
-                    ->where('student_id', '=', auth()->user()->student->id)
-                    ->whereMonth('date', $data_primo['mese'])
-                    ->whereYear('date', $data_primo['anno'])
-                    ->orderBy(DB::raw('date'), 'desc')
-                    ->get();
-
-                $years = DB::table('orders')
-                    ->select(DB::raw('YEAR(date) as year'))
-                    ->where('student_id', '=', auth()->user()->student->id)
-                    ->groupBy('year')
-                    ->orderBy('year', 'asc')
-                    ->get();
-
-                $months = DB::table('orders')
-                    ->select(DB::raw('MONTH(date) as month'))
-                    ->where('student_id', '=', auth()->user()->student->id)
-                    ->groupBy('month')
-                    ->orderBy('month', 'asc')
-                    ->get();
-            }
-        @endphp
-        @if ($primo_ordine != null)
+        @if ($hasOrders)
             <div class="form-floating" style="display: inline">
                 <select class="form-select" id="floatingSelect1" aria-label="Floating label select example"
-                    onchange="aggiorna_tabella(_('floatingSelect1').value,_('floatingSelect2').value)">
-                    <option selected value="{{ $data_primo['anno'] }}">{{ $data_primo['anno'] }}</option>
-                    @foreach ($years as $item)
-                        <option value="{{ $item->year }}">{{ $item->year }}</option>
+                    onchange="aggiorna_tabella(
+                        document.getElementById('floatingSelect1').value,
+                        document.getElementById('floatingSelect2').value
+                    )">
+                    <option selected value="{{ $selectedYear }}">{{ $selectedYear }}</option>
+                    @foreach ($years as $year)
+                        <option value="{{ $year }}">{{ $year }}</option>
                     @endforeach
                 </select>
                 <label for="floatingSelect">Anno</label>
             </div>
             <div class="form-floating" style="display: inline">
                 <select class="form-select" id="floatingSelect2" aria-label="Floating label select example"
-                    onchange="aggiorna_tabella(_('floatingSelect1').value,_('floatingSelect2').value)">
-                    <option selected value="{{ $data_primo['mese'] }}">
-                        {{ PurchaseService::stringa_mese(intval($data_primo['mese'])) }}
+                    onchange="aggiorna_tabella(
+                        document.getElementById('floatingSelect1').value,
+                        document.getElementById('floatingSelect2').value
+                    )">
+                    <option selected value="{{ $selectedMonth }}">
+                        {{ $selectedMonthLabel }}
                     </option>
-                    @foreach ($months as $item)
-                        <option value="{{ $item->month }}">{{ PurchaseService::stringa_mese(intval($item->month)) }}
+                    @foreach ($months as $month)
+                        <option value="{{ $month['value'] }}">
+                            {{ $month['label'] }}
                         </option>
                     @endforeach
                 </select>
@@ -114,4 +90,5 @@
         @else
             <h3>Non ci sono ordini!</h3>
         @endif
-    @endsection
+    </div>
+@endsection

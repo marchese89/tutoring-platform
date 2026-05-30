@@ -1,23 +1,9 @@
 @extends('layouts.student-dashboard')
 
 @section('inner')
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('student.orders.index') }}">Ordini</a>
-        </li>
-    </ul>
     <div class="row g-0 container-fluid" style="text-align: center">
-        @php
-            use App\Models\Order;
-            use App\Models\OrderProduct;
-
-            $ordine = Order::where('id', '=', request('id'))->first();
-        @endphp
-        <h3>Ordine #{{ request('id') }}</h3>
-        <h4>{{ $ordine->date }}</h4>
+        <h3>Ordine #{{ $ordine->id }}</h3>
+        <h4>{{ $orderDate }}</h4>
         <table class="table">
             <thead>
                 <tr>
@@ -27,43 +13,26 @@
                 </tr>
             </thead>
             <tbody>
-                @php
-                    $prodotti = OrderProduct::where('id_ordine', '=', request('id'))->get();
-                    $tot = 0;
-                @endphp
                 @foreach ($prodotti as $item)
                     <tr>
 
-                        <th scope="row">{{ $item->id_prodotto }}</th>
+                        <th scope="row">{{ $item['id'] }}</th>
                         <td>
-                            @php
-                                if ($item->tipo_prodotto == 0) {
-                                    echo 'lezione';
-                                }
-                                if ($item->tipo_prodotto == 2) {
-                                    echo 'esercizio';
-                                }
-                                if ($item->tipo_prodotto == 5) {
-                                    echo 'lezione su richiesta';
-                                }
-                            @endphp
+                            {{ $item['type'] }}
                         </td>
                         <td>
-                            @php
-                                $tot += $item->price;
-                            @endphp
-                            {{ $item->price }}<strong>&euro;</strong>
+                            {{ $item['price'] }}<strong>&euro;</strong>
                         </td>
 
                     </tr>
                 @endforeach
                 <tr>
-                    <td colspan="3"><strong>Totale: {{ $tot }}&euro;</strong></td>
+                    <td colspan="3"><strong>Totale: {{ $tot_ordine }}&euro;</strong></td>
                 </tr>
                 <tr>
                     <td colspan="3">
                         <button class="btn btn-primary"
-                            onclick="location.href='{{ route('student.invoices.show', request('id')) }}'">Visualizza
+                            onclick="location.href='{{ route('student.invoices.show', $ordine->id) }}'">Visualizza
                             Fattura</button>
                     </td>
                 </tr>
