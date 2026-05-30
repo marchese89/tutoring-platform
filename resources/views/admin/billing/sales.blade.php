@@ -10,9 +10,28 @@
         async function aggiorna_tabella(anno, mese) {
             const response = await fetch(`{{ route('admin.orders.table') }}?anno=${anno}&mese=${mese}`);
             const data = await response.json();
+            const orderShowUrl = "{{ route('admin.orders.show', ['id' => '__ORDER_ID__']) }}";
 
-            document.getElementById('tabella-body').innerHTML = data.html;
-            document.getElementById('totale').textContent = `Totale Vendite: ${data.totale}€`;
+            const rows = data.ordini.map((ordine) => {
+                const url = orderShowUrl.replace('__ORDER_ID__', ordine.id);
+
+                return `
+                    <tr>
+                        <td class="fw-semibold">${ordine.id}</td>
+                        <td>${ordine.studente}</td>
+                        <td>${ordine.data}</td>
+                        <td class="fw-semibold text-success">${ordine.totale}&euro;</td>
+                        <td>
+                            <a href="${url}" class="btn btn-primary btn-sm rounded-pill px-3">
+                                Visualizza
+                            </a>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.getElementById('tabella-body').innerHTML = rows;
+            document.getElementById('totale').innerHTML = `Totale Vendite: ${data.totale}&euro;`;
         }
 
         window.onload = function() {

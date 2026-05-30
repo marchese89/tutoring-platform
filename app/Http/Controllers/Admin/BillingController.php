@@ -61,7 +61,8 @@ class BillingController extends Controller
         $anno = $request->anno;
         $mese = $request->mese;
 
-        $orders = Order::whereYear('date', $anno)
+        $orders = Order::with(['student.user', 'order_products'])
+            ->whereYear('date', $anno)
             ->whereMonth('date', $mese)
             ->orderBy('date', 'desc')
             ->get();
@@ -70,13 +71,14 @@ class BillingController extends Controller
 
         $ordini = $orders->map(function ($order) use (&$totale) {
 
-            $totale += $order->total;
+            $orderTotal = $order->order_products->sum('price');
+            $totale += $orderTotal;
 
             return [
                 'id' => $order->id,
-                'studente' => $order->student->user->name,
-                'data' => $order->date,
-                'totale' => $order->total
+                'studente' => $order->student->user->name . ' ' . $order->student->user->surname,
+                'data' => DateHelper::format($order->date),
+                'totale' => $orderTotal
             ];
         });
 
