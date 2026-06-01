@@ -1,112 +1,149 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Recensione" />
+    <x-ui.section-header :title="'Recensione'" />
 @endsection
 
 @section('inner')
-    <style>
-        .stars a {
-            opacity: 20%;
-            cursor: pointer;
-        }
-
-        .stars:hover a {
-            opacity: 100%;
-        }
-
-        .stars a:hover {
-            opacity: 100%;
-        }
-
-        .stars a:hover~a {
-            opacity: 20%;
-        }
-    </style>
-    <script>
-        function invia_feefback(punteggio) {
-
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    _("stars").innerHTML = this.responseText;
-                }
-            };
-            xmlhttp.open("POST", "{{ route('student.feedback.store') }}", true);
-            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xmlhttp.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-            xmlhttp.send("punteggio=" + encodeURIComponent(punteggio));
-
-        }
-
-
-        function countChar(val) {
-            var len = val.value.length;
-            _("current").innerHTML = len;
-        }
-
-
-        function storeReview(testo) {
-
-            _("recensione").value = "";
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                    _("recensione").value = this.responseText;
-                }
-            };
-            xmlhttp.open("POST", "{{ route('student.review.store') }}", true);
-            xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-            xmlhttp.setRequestHeader("X-CSRF-TOKEN", "{{ csrf_token() }}");
-            xmlhttp.send("testo=" + encodeURIComponent(testo));
-
-        }
-    </script>
-    </script>
-
     @php
         use App\Models\Feedback;
-        $student_id = auth()->user()->student->id;
-        $feedback = Feedback::where('student_id', '=', $student_id)->first();
-        $f = 0;
-        if ($feedback != null) {
-            $f = $feedback->punteggio;
-        }
-        $id_stud = 0;
-        $id_lez = 0;
+
+        $feedback = Feedback::where('student_id', auth()->user()->student->id)->first();
+        $rating = (int) ($feedback?->punteggio ?? 0);
+        $review = $feedback?->recensione ?? '';
     @endphp
-    <div class="container" style="width: 70%;text-align:center">
-        <h2>Valutazione</h2>
-        <div class="stars" id="stars">
-            <a <?php if($f > 0){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(1)">⭐</a>
-            <a <?php if($f > 1){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(2)">⭐</a>
-            <a <?php if($f > 2){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(3)">⭐</a>
-            <a <?php if($f > 3){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(4)">⭐</a>
-            <a <?php if($f > 4){?> style="opacity: 100%;" <?php }?> onclick="invia_feefback(5)">⭐</a>
-        </div>
-        <h2>Recensione</h2>
 
-        <textarea id="recensione" name="recensione" rows="5" cols="100" maxlength="500" onkeyup="countChar(this)"
-            style="width: 80%; font-size: 18px; resize: none; border-radius: 5px 5px 5px 5px"></textarea>
-        <div id="the-count">
-            <span id="current">0</span> <span id="maximum">/ 500</span>
-        </div>
-        <script type="text/javascript">
-            var input = document.getElementById("recensione");
+    <style>
+        .review-stars {
+            display: inline-flex;
+            gap: .35rem;
+        }
 
-            //Execute a function when the user presses a key on the keyboard
-            input.addEventListener("keypress", function(event) {
-                // If the user presses the "Enter" key on the keyboard
-                if (event.key === "Enter") {
-                    // Cancel the default action, if needed
-                    event.preventDefault();
-                    // Trigger the button element with a click
-                    _("storeReview").click();
-                }
+        .review-star {
+            border: 0;
+            background: transparent;
+            color: #adb5bd;
+            font-size: 2rem;
+            line-height: 1;
+            padding: .25rem;
+            transition: color .15s ease, transform .15s ease;
+        }
+
+        .review-star:hover,
+        .review-star:focus,
+        .review-star.is-active {
+            color: #ffc107;
+            transform: translateY(-1px);
+        }
+    </style>
+
+    <script>
+        let currentRating = @json($rating);
+
+        function renderStars(rating) {
+            document.querySelectorAll('[data-review-star]').forEach((star) => {
+                const value = Number(star.dataset.reviewStar);
+                star.classList.toggle('is-active', value <= rating);
             });
-        </script> <br>
+        }
 
-        <button id="storeReview" class="btn btn-primary" onclick=storeReview(_("recensione").value)>Invia</button>
-        <br>
-    </div>
+        async function invia_feefback(punteggio) {
+            currentRating = punteggio;
+            renderStars(currentRating);
+
+            await fetch("{{ route('student.feedback.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                body: `punteggio=${encodeURIComponent(punteggio)}`,
+            });
+        }
+
+        function countChar(field) {
+            document.getElementById('current').innerHTML = field.value.length;
+        }
+
+        async function storeReview(testo) {
+            const response = await fetch("{{ route('student.review.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                body: `testo=${encodeURIComponent(testo)}`,
+            });
+
+            document.getElementById('recensione').value = await response.text();
+            countChar(document.getElementById('recensione'));
+            document.getElementById('review-status').classList.remove('d-none');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const reviewField = document.getElementById('recensione');
+
+            renderStars(currentRating);
+            countChar(reviewField);
+        });
+    </script>
+
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <x-ui.card>
+                    <div class="mb-4 text-center">
+                        <h4 class="fw-bold mb-3">
+                            Valutazione
+                        </h4>
+
+                        <div class="review-stars" id="stars" aria-label="Valutazione">
+                            @for ($value = 1; $value <= 5; $value++)
+                                <button
+                                    type="button"
+                                    class="review-star"
+                                    data-review-star="{{ $value }}"
+                                    onclick="invia_feefback({{ $value }})"
+                                    aria-label="{{ $value }} stelle"
+                                >
+                                    <i class="bi bi-star-fill"></i>
+                                </button>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="recensione">
+                            Recensione
+                        </label>
+
+                        <textarea
+                            id="recensione"
+                            name="recensione"
+                            rows="6"
+                            maxlength="500"
+                            class="form-control rounded-4"
+                            onkeyup="countChar(this)"
+                        >{{ $review }}</textarea>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                        <div class="text-muted small">
+                            <span id="current">0</span><span id="maximum">/500</span>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <span id="review-status" class="text-success small d-none">
+                                Recensione salvata.
+                            </span>
+
+                            <x-ui.primary-button id="storeReview" onclick="storeReview(document.getElementById('recensione').value)">
+                                Invia
+                            </x-ui.primary-button>
+                        </div>
+                    </div>
+                </x-ui.card>
+            </div>
+        </div>
+    </x-ui.page-section>
 @endsection
