@@ -1,26 +1,6 @@
 @extends('layouts.student-dashboard')
 
 @section('inner')
-    @php
-
-        use App\Models\Course;
-        use App\Models\Lesson;
-        use App\Models\ChatMessage;
-        use App\Models\Chat;
-        use App\Models\User;
-        use App\Models\Student;
-        use App\Models\LessonOnRequest;
-        use App\Models\Exercise;
-        use App\Helpers\DateHelper;
-
-        $richiesta = LessonOnRequest::findOrFail($id);
-
-        $chat = Chat::where('id_prodotto', '=', $id)
-            ->where('tipo_prodotto', '=', 5)
-            ->where('id_studente', '=', auth()->user()->student->id)
-            ->first();
-
-    @endphp
     @if ($chat)
         <script type="text/javascript">
             setInterval(getMessages, 1000);
@@ -57,7 +37,7 @@
                 );
 
                 xmlhttp.send(
-                    "id_chat=<?php echo $chat->id; ?>&testo=" + encodeURIComponent(testo)
+                    "id_chat={{ $chat->id }}&testo=" + encodeURIComponent(testo)
                 );
             }
         </script>
@@ -111,28 +91,22 @@
                 <h2>Chat di Supporto</h2>
                 <br>
                 <br>
-                @php
-
-                    $messaggi = ChatMessage::where('chat_id', '=', $chat->id)->orderBy('date', 'asc')->get();
-                    $studente = Student::where('id', '=', $chat->id_studente)->first();
-                    $utente = $studente->user;
-                @endphp
                 <div id="messaggi">
                     @foreach ($messaggi as $item)
-                        @if ($item->author == 1)
+                        @if ($item['is_teacher'])
                             <div class="chat-message" style="justify-content: flex-start;">
                                 <div class="message-content">
                                     <p class="sender-name">Insegnante</p>
-                                    <p class="message-text">{{ $item->message }}</p>
-                                    <span class="timestamp">{{ DateHelper::format($item->date) }}</span>
+                                    <p class="message-text">{{ $item['message'] }}</p>
+                                    <span class="timestamp">{{ $item['date'] }}</span>
                                 </div>
                             </div>
                         @else
                             <div class="chat-message" style="justify-content: flex-end;">
                                 <div class="message-content" style="background-color: #5755c559;">
                                     <p class="sender-name">Tu</p>
-                                    <p class="message-text">{{ $item->message }}</p>
-                                    <span class="timestamp">{{ DateHelper::format($item->date) }}</span>
+                                    <p class="message-text">{{ $item['message'] }}</p>
+                                    <span class="timestamp">{{ $item['date'] }}</span>
                                 </div>
                             </div>
                         @endif

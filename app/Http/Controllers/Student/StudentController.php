@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use App\Helpers\DateHelper;
 use App\Models\User;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Models\Chat;
 use App\Models\ChatMessage;
+use App\Models\LessonOnRequest;
 
 class StudentController extends Controller
 {
@@ -100,9 +102,7 @@ class StudentController extends Controller
             ]);
         }
 
-        $messaggi = ChatMessage::where('chat_id', $chat->id)
-            ->orderBy('date', 'asc')
-            ->get();
+        $messaggi = $this->chatMessages($chat->id);
 
         return view('student.lesson', compact(
             'corso',
@@ -112,7 +112,7 @@ class StudentController extends Controller
         ));
     }
 
-    public function showExercise($id_corso, $id_esercizio)
+    public function showExercise(Request $request, $id_corso, $id_esercizio)
     {
         $corso = Course::find($id_corso);
         $esercizio = Exercise::find($id_esercizio);
@@ -128,11 +128,52 @@ class StudentController extends Controller
             abort(404);
         }
 
-        return view('student.exercise', compact('corso', 'esercizio'));
+        $chat = Chat::firstOrCreate([
+            'id_prodotto' => $id_esercizio,
+            'tipo_prodotto' => 2,
+            'id_studente' => $request->user()->student->id,
+        ]);
+
+        $messaggi = $this->chatMessages($chat->id);
+        $enableEcho = true;
+
+        return view('student.exercise', compact('corso', 'esercizio', 'chat', 'messaggi', 'enableEcho'));
     }
 
-    public function showDirectRequest(int $id)
+    public function showDirectRequest(Request $request, int $id)
     {
-        return view('student.direct-request', compact('id'));
+        $richiesta = LessonOnRequest::where('student_id', $request->user()->student->id)->findOrFail($id);
+
+        $chat = Chat::where('id_prodotto', $id)
+            ->where('tipo_prodotto', 5)
+            ->where('id_studente', $request->user()->student->id)
+            ->first();
+
+        if (!$chat && (int) $richiesta->paid === 1) {
+            $chat = Chat::create([
+                'id_prodotto' => $id,
+                'tipo_prodotto' => 5,
+                'id_studente' => $request->user()->student->id,
+            ]);
+        }
+
+        $messaggi = $chat ? $this->chatMessages($chat->id) : collect();
+        $enableEcho = (bool) $chat;
+
+        return view('student.direct-request', compact('richiesta', 'chat', 'messaggi', 'enableEcho'));
+    }
+
+    private function chatMessages(int $chatId)
+    {
+        return ChatMessage::where('chat_id', $chatId)
+            ->orderBy('date', 'asc')
+            ->get()
+            ->map(fn(ChatMessage $message) => [
+                'message' => $message->message,
+                'author' => $message->author,
+                'is_teacher' => (int) $message->author === 1,
+                'sender' => (int) $message->author === 1 ? 'Insegnante' : 'Tu',
+                'date' => DateHelper::format($message->date),
+            ]);
     }
 }

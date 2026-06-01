@@ -5,8 +5,6 @@
 @endsection
 
 @section('inner')
-    @php $enableEcho = true; @endphp
-
     <div class="container pb-5">
 
         <x-ui.card>
@@ -76,24 +74,20 @@
                 <div id="messaggi" class="d-flex flex-column gap-3 mb-4">
 
                     @foreach ($messaggi as $item)
-                        @php
-                            $isTeacher = $item->author == 1;
-                        @endphp
-
-                        <div class="d-flex {{ $isTeacher ? 'justify-content-start' : 'justify-content-end' }}">
-                            <div class="p-3 rounded-4 shadow-sm {{ $isTeacher ? 'bg-light' : 'bg-primary text-white' }}"
+                        <div class="d-flex {{ $item['is_teacher'] ? 'justify-content-start' : 'justify-content-end' }}">
+                            <div class="p-3 rounded-4 shadow-sm {{ $item['is_teacher'] ? 'bg-light' : 'bg-primary text-white' }}"
                                 style="max-width: 75%;">
 
                                 <p class="fw-semibold mb-1">
-                                    {{ $isTeacher ? 'Insegnante' : 'Tu' }}
+                                    {{ $item['sender'] }}
                                 </p>
 
                                 <p class="mb-2">
-                                    {{ $item->message }}
+                                    {{ $item['message'] }}
                                 </p>
 
-                                <small class="{{ $isTeacher ? 'text-muted' : 'text-white-50' }}">
-                                    {{ \App\Helpers\DateHelper::format($item->date) }}
+                                <small class="{{ $item['is_teacher'] ? 'text-muted' : 'text-white-50' }}">
+                                    {{ $item['date'] }}
                                 </small>
                             </div>
                         </div>
