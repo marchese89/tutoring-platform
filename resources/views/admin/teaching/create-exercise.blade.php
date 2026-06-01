@@ -6,14 +6,6 @@
 
 @section('inner')
     <div class="container" style="text-align: center;width:35%">
-        @php
-            use App\Models\Course;
-            use App\Models\Lesson;
-
-            $id = request('course');
-            $corso = Course::where('id', '=', $id)->first();
-
-        @endphp
         <h2>Nuovo Esercizio Corso di</h2>
         <h2>"{{ $corso->name }}"</h2>
         <br>

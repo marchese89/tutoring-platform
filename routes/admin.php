@@ -71,8 +71,7 @@ Route::prefix('admin')
         Route::delete('courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
         Route::get('courses/{id}/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
-        Route::view('courses/{id_corso}/lessons/{id_lezione}/edit', 'admin.teaching.edit-lesson')
-            ->name('lessons.edit');
+        Route::get('courses/{id_corso}/lessons/{id_lezione}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
         Route::post('lessons', [LessonController::class, 'store'])->name('lessons.store');
         Route::put('lessons/{id}', [LessonController::class, 'update'])->name('lessons.update');
         Route::delete('lessons/{id}', [LessonController::class, 'destroy'])->name('lessons.destroy');
@@ -89,9 +88,8 @@ Route::prefix('admin')
         Route::post('lessons/{id}/file', [LessonController::class, 'updateLessonFile'])
             ->name('lessons.file.update');
 
-        Route::view('courses/{course}/exercises/create', 'admin.teaching.create-exercise')->name('exercises.create');
-        Route::view('courses/{course}/exercises/{exercise}/edit', 'admin.teaching.edit-exercise')
-            ->name('exercises.edit');
+        Route::get('courses/{course}/exercises/create', [ExerciseController::class, 'create'])->name('exercises.create');
+        Route::get('courses/{course}/exercises/{exercise}/edit', [ExerciseController::class, 'edit'])->name('exercises.edit');
         Route::post('exercises', [ExerciseController::class, 'store'])->name('exercises.store');
         Route::put('exercises/{id}', [ExerciseController::class, 'update'])->name('exercises.update');
         Route::delete('exercises/{id}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');

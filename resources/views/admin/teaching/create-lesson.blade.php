@@ -5,10 +5,6 @@
 @endsection
 
 @section('inner')
-    @php
-        $id = $id ?? request('id');
-    @endphp
-
     <div class="container text-center" style="width: 40%">
 
         {{-- PRESENTAZIONE --}}

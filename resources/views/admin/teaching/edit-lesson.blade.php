@@ -6,16 +6,6 @@
 
 @section('inner')
     <div class="container" style="text-align: center;">
-        @php
-            use App\Models\Course;
-            use App\Models\Lesson;
-
-            $id_corso = request('id_corso');
-            $id_lezione = request('id_lezione');
-            $corso = Course::where('id', '=', $id_corso)->first();
-            $lezione = Lesson::where('id', '=', $id_lezione)->first();
-
-        @endphp
         <h2>Modifica Lezione Corso di</h2>
         <h2>"{{ $corso->name }}"</h2>
         <h3>Titolo Lezione</h3>

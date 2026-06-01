@@ -10,6 +10,23 @@ use Illuminate\Support\Facades\Storage;
 
 class ExerciseController extends Controller
 {
+    public function create(int $course)
+    {
+        $corso = Course::findOrFail($course);
+        $id = $corso->id;
+
+        return view('admin.teaching.create-exercise', compact('id', 'corso'));
+    }
+
+    public function edit(int $course, int $exercise)
+    {
+        $corso = Course::findOrFail($course);
+        $esercizio = Exercise::where('course_id', $course)->findOrFail($exercise);
+        $id_corso = $corso->id;
+        $id_esercizio = $esercizio->id;
+
+        return view('admin.teaching.edit-exercise', compact('id_corso', 'id_esercizio', 'corso', 'esercizio'));
+    }
 
     public function viewTrace($id_corso, $id_esercizio)
     {

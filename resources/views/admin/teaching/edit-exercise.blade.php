@@ -6,16 +6,6 @@
 
 @section('inner')
     <div class="container" style="text-align: center;width:100%">
-        @php
-            use App\Models\Course;
-            use App\Models\Exercise;
-
-            $id_corso = request('course');
-            $id_esercizio = request('exercise');
-            $corso = Course::where('id', '=', $id_corso)->first();
-            $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
-
-        @endphp
         <h4>Traccia</h4>
 
         <iframe width="90%" src="/protected-files/{{ $esercizio->trace }}#view=FitH" height="800px">

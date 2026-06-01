@@ -33,6 +33,14 @@ class LessonController extends Controller
         return view('admin.teaching.create-lesson', compact('id', 'corso'));
     }
 
+    public function edit(int $id_corso, int $id_lezione)
+    {
+        $corso = Course::findOrFail($id_corso);
+        $lezione = Lesson::where('course_id', $id_corso)->findOrFail($id_lezione);
+
+        return view('admin.teaching.edit-lesson', compact('id_corso', 'id_lezione', 'corso', 'lezione'));
+    }
+
     // ===============================
     // 📤 Upload presentazione (sessione)
     // ===============================
