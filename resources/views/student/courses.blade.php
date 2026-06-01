@@ -5,41 +5,39 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align:center;">
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Area Tematica</th>
-                    <th>Materia</th>
-                    <th>Corso</th>
-                    <th>Operazioni</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @foreach ($courses as $course)
+    <x-ui.page-section>
+        <x-ui.table-card>
+            <table class="table align-middle">
+                <thead>
                     <tr>
-                        <th scope="row">{{ $course->id }}</th>
-
-                        <td>{{ $course->matter->theme_area->name }}</td>
-
-                        <td>{{ $course->matter->name }}</td>
-
-                        <td>{{ $course->name }}</td>
-
-                        <td>
-                            <button class="btn btn-primary"
-                                onclick="location.href='{{ route('student.courses.show', $course->id) }}'">
-                                Visualizza
-                            </button>
-                        </td>
+                        <th>#</th>
+                        <th>Area Tematica</th>
+                        <th>Materia</th>
+                        <th>Corso</th>
+                        <th>Operazioni</th>
                     </tr>
-                @endforeach
-            </tbody>
+                </thead>
 
-        </table>
+                <tbody>
+                    @foreach ($courses as $course)
+                        <tr>
+                            <th scope="row">{{ $course->id }}</th>
 
-    </div>
+                            <td>{{ $course->matter->theme_area->name }}</td>
+
+                            <td>{{ $course->matter->name }}</td>
+
+                            <td>{{ $course->name }}</td>
+
+                            <td>
+                                <x-ui.primary-button href="{{ route('student.courses.show', $course->id) }}">
+                                    Visualizza
+                                </x-ui.primary-button>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </x-ui.table-card>
+    </x-ui.page-section>
 @endsection

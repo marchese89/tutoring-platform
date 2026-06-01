@@ -5,8 +5,7 @@
 @endsection
 
 @section('inner')
-
-    <div class="container">
+    <x-ui.page-section>
 
         @php
             use App\Models\Invoice;
@@ -14,64 +13,46 @@
         @endphp
 
         @if ($fatture->count() > 0)
-            <div class="card border-0 shadow-sm rounded-4">
+            <x-ui.table-card title="Fatture">
+                <table class="table align-middle">
 
-                <div class="card-body p-4">
+                    <thead>
+                        <tr>
+                            <th>Numero</th>
+                            <th>Data</th>
+                            <th>Operazioni</th>
+                        </tr>
+                    </thead>
 
-                    <h4 class="fw-bold mb-4">
-                        Fatture
-                    </h4>
+                    <tbody>
 
-                    <div class="table-responsive">
+                        @foreach ($fatture as $item)
+                            <tr>
 
-                        <table class="table align-middle">
+                                <td>
+                                    {{ $item->number }}
+                                </td>
 
-                            <thead>
-                                <tr>
-                                    <th>Numero</th>
-                                    <th>Data</th>
-                                    <th>Operazioni</th>
-                                </tr>
-                            </thead>
+                                <td>
+                                    {{ DateHelper::format($item->date) }}
+                                </td>
 
-                            <tbody>
+                                <td>
+                                    <x-ui.primary-button href="{{ route('admin.invoices.show', $item->number) }}">
+                                        Visualizza
+                                    </x-ui.primary-button>
+                                </td>
 
-                                @foreach ($fatture as $item)
-                                    <tr>
+                            </tr>
+                        @endforeach
 
-                                        <td>
-                                            {{ $item->number }}
-                                        </td>
+                    </tbody>
 
-                                        <td>
-                                            {{ DateHelper::format($item->date) }}
-                                        </td>
-
-                                        <td>
-                                            <a href="{{ route('admin.invoices.show', $item->number) }}"
-                                                class="btn btn-primary btn-sm rounded-pill px-3">
-                                                Visualizza
-                                            </a>
-                                        </td>
-
-                                    </tr>
-                                @endforeach
-
-                            </tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </div>
+                </table>
+            </x-ui.table-card>
         @else
-            <div class="text-center py-5">
-                <h4 class="text-muted">Non ci sono fatture</h4>
-            </div>
+            <x-ui.empty-state title="Non ci sono fatture" />
         @endif
 
-    </div>
-
+    </x-ui.page-section>
 @endsection

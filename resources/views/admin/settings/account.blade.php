@@ -5,61 +5,21 @@
 @endsection
 
 @section('inner')
-    <div class="container">
-
+    <x-ui.page-section>
         <div class="row g-4">
+            <x-ui.card-item
+                title="Modifica Dati Personali"
+                text="Aggiorna informazioni anagrafiche, indirizzo e dati del profilo."
+                :url="route('admin.account.profile')"
+                icon="fa-solid fa-user"
+            />
 
-            {{-- DATI PERSONALI --}}
-            <div class="col-xl-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 rounded-4">
-                    <div class="card-body p-4">
-
-                        <div class="mb-4">
-                            <i class="fa-solid fa-user fa-2x text-primary"></i>
-                        </div>
-
-                        <h4 class="fw-bold mb-3">
-                            Modifica Dati Personali
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Aggiorna informazioni anagrafiche, indirizzo e dati del profilo.
-                        </p>
-
-                        <a href="{{ route('admin.account.profile') }}" class="btn btn-primary rounded-pill px-4">
-                            Accedi
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-
-            {{-- CREDENZIALI --}}
-            <div class="col-xl-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 rounded-4">
-                    <div class="card-body p-4">
-
-                        <div class="mb-4">
-                            <i class="fa-solid fa-shield-halved fa-2x text-primary"></i>
-                        </div>
-
-                        <h4 class="fw-bold mb-3">
-                            Modifica Credenziali
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Gestisci email, password e sicurezza dell’account amministratore.
-                        </p>
-
-                        <a href="{{ route('admin.account.credentials') }}" class="btn btn-primary rounded-pill px-4">
-                            Accedi
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-
+            <x-ui.card-item
+                title="Modifica Credenziali"
+                text="Gestisci email, password e sicurezza dell'account amministratore."
+                :url="route('admin.account.credentials')"
+                icon="fa-solid fa-shield-halved"
+            />
         </div>
-
-    </div>
+    </x-ui.page-section>
 @endsection

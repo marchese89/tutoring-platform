@@ -1,15 +1,15 @@
-{{-- resources/views/components/ui/section-header.blade.php --}}
-
 @props(['title', 'description' => null])
 
-<div class="my-3 text-center container">
-    <h2 class="fw-bold mb-3 bg-secondary bg-gradient text-white p-3 rounded shadow-sm">
-        {{ $title }}
-    </h2>
+<div class="container my-4">
+    <div class="border-bottom pb-3 text-center text-md-start">
+        <h1 class="h2 fw-bold mb-1">
+            {{ $title }}
+        </h1>
 
-    @if ($description)
-        <p class="text-muted mx-auto" style="max-width: 700px;">
-            {{ $description }}
-        </p>
-    @endif
+        @if ($description)
+            <p class="text-muted mb-0">
+                {{ $description }}
+            </p>
+        @endif
+    </div>
 </div>

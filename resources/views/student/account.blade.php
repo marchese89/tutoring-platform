@@ -5,61 +5,21 @@
 @endsection
 
 @section('inner')
-    <div class="container py-4">
+    <x-ui.page-section>
+        <div class="row g-4">
+            <x-ui.card-item
+                title="Dati Personali"
+                text="Modifica le informazioni personali associate al profilo."
+                :url="route('student.account.profile')"
+                icon="fa-solid fa-id-card"
+            />
 
-        {{-- CARDS --}} <div class="row g-4">
-
-            {{-- DATI PERSONALI --}}
-            <div class="col-xl-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 rounded-4">
-                    <div class="card-body p-4">
-
-                        <div class="mb-4">
-                            <i class="fa-solid fa-id-card fa-2x text-primary"></i>
-                        </div>
-
-                        <h4 class="fw-bold mb-3">
-                            Dati Personali
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Modifica le informazioni personali associate al profilo.
-                        </p>
-
-                        <a href="{{ route('student.account.profile') }}" class="btn btn-primary rounded-pill px-4">
-                            Accedi
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-
-            {{-- CREDENZIALI --}}
-            <div class="col-xl-4 col-md-6">
-                <div class="card border-0 shadow-sm h-100 rounded-4">
-                    <div class="card-body p-4">
-
-                        <div class="mb-4">
-                            <i class="fa-solid fa-key fa-2x text-primary"></i>
-                        </div>
-
-                        <h4 class="fw-bold mb-3">
-                            Credenziali
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Aggiorna password e dati di accesso dell’account.
-                        </p>
-
-                        <a href="{{ route('student.account.credentials') }}" class="btn btn-primary rounded-pill px-4">
-                            Accedi
-                        </a>
-
-                    </div>
-                </div>
-            </div>
-
+            <x-ui.card-item
+                title="Credenziali"
+                text="Aggiorna password e dati di accesso dell'account."
+                :url="route('student.account.credentials')"
+                icon="fa-solid fa-key"
+            />
         </div>
-
-    </div>
+    </x-ui.page-section>
 @endsection

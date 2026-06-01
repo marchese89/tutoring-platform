@@ -5,61 +5,21 @@
 @endsection
 
 @section('inner')
-    <div class="container">
-
+    <x-ui.page-section>
         <div class="row g-4">
+            <x-ui.card-item
+                title="Richieste Studenti"
+                text="Visualizza e gestisci tutte le richieste inviate dagli studenti."
+                :url="route('admin.lesson-requests.index')"
+                column-class="col-lg-5"
+            />
 
-            {{-- RICHIESTE STUDENTI --}}
-            <div class="col-lg-5">
-
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body p-4 d-flex flex-column">
-
-                        <h4 class="fw-bold mb-3">
-                            Richieste Studenti
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Visualizza e gestisci tutte le richieste inviate dagli studenti.
-                        </p>
-
-                        <div class="mt-auto">
-                            <a href="{{ route('admin.lesson-requests.index') }}" class="btn btn-primary rounded-pill px-4">
-                                Accedi
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
-            {{-- CHAT STUDENTI --}}
-            <div class="col-lg-5">
-
-                <div class="card border-0 shadow-sm rounded-4 h-100">
-                    <div class="card-body p-4 d-flex flex-column">
-
-                        <h4 class="fw-bold mb-3">
-                            Chat Studenti
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Accedi alle conversazioni e comunica con gli studenti.
-                        </p>
-
-                        <div class="mt-auto">
-                            <a href="{{ route('admin.chats.index') }}" class="btn btn-primary rounded-pill px-4">
-                                Accedi
-                            </a>
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-
+            <x-ui.card-item
+                title="Chat Studenti"
+                text="Accedi alle conversazioni e comunica con gli studenti."
+                :url="route('admin.chats.index')"
+                column-class="col-lg-5"
+            />
         </div>
-
-    </div>
+    </x-ui.page-section>
 @endsection
