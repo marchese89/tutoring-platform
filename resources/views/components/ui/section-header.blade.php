@@ -1,15 +1,13 @@
 @props(['title', 'description' => null])
 
-<div class="container my-4">
-    <div class="border-bottom pb-3 text-center text-md-start">
-        <h1 class="h2 fw-bold mb-1">
-            {{ $title }}
-        </h1>
+<div class="my-3 text-center container">
+    <h2 class="fw-bold mb-3 bg-secondary bg-gradient text-white p-3 rounded shadow-sm">
+        {{ $title }}
+    </h2>
 
-        @if ($description)
-            <p class="text-muted mb-0">
-                {{ $description }}
-            </p>
-        @endif
-    </div>
+    @if ($description)
+        <p class="text-muted mb-0">
+            {{ $description }}
+        </p>
+    @endif
 </div>
