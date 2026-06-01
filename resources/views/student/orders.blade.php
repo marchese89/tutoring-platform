@@ -44,7 +44,7 @@
         }
     </script>
 
-    <div class="row g-0 container-fluid" style="text-align: center">
+    <div class="container" style="text-align: center">
 
         @if ($hasOrders)
             <div class="form-floating" style="display: inline">

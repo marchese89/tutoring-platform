@@ -19,7 +19,7 @@
         use App\Models\ChatMessage;
         use App\Models\Chat;
     @endphp
-    <div class="row g-0 container-fluid">
+    <div class="container">
         <table class="table">
             <thead>
                 <tr>

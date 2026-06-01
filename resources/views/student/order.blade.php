@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('inner')
-    <div class="row g-0 container-fluid" style="text-align: center">
+    <div class="container" style="text-align: center">
         <h3>Ordine #{{ $ordine->id }}</h3>
         <h4>{{ $orderDate }}</h4>
         <table class="table">

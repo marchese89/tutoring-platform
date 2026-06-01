@@ -16,7 +16,7 @@
     @php
         use App\Models\LessonOnRequest;
     @endphp
-    <div class="row g-0 container-fluid">
+    <div class="container">
         <table class="table">
             <thead>
                 <tr>

@@ -5,7 +5,7 @@
 @endsection
 
 @section('inner')
-    <div class="row g-0 container-fluid" style="text-align: center">
+    <div class="container" style="text-align: center">
         @php
             use App\Models\StudentInvoice;
             $fatture0 = StudentInvoice::where('student_id', '=', auth()->user()->student->id)->get();
