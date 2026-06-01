@@ -5,14 +5,6 @@
 @endsection
 
 @section('inner')
-    @php
-        use App\Models\Feedback;
-
-        $feedback = Feedback::where('student_id', auth()->user()->student->id)->first();
-        $rating = (int) ($feedback?->punteggio ?? 0);
-        $review = $feedback?->recensione ?? '';
-    @endphp
-
     <style>
         .review-stars {
             display: inline-flex;

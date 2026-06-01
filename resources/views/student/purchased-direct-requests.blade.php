@@ -5,19 +5,6 @@
 @endsection
 
 @section('inner')
-    @php
-        use App\Helpers\DateHelper;
-        use App\Models\LessonOnRequest;
-        use App\Models\ChatMessage;
-        use App\Models\Chat;
-    @endphp
-    @php
-        $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
-            ->where('paid', '=', 1)
-            ->orderBy('date', 'desc')
-            ->get();
-    @endphp
-
     <x-ui.page-section>
         <x-ui.table-card title="Lezioni acquistate">
             <table class="table align-middle">
@@ -32,43 +19,24 @@
                 </thead>
 
                 <tbody>
-                    @forelse ($lezioni_su_richiesta as $item)
+                    @forelse ($purchasedDirectRequests as $item)
                         <tr>
-                            <th scope="row">{{ $item->id }}</th>
+                            <th scope="row">{{ $item['id'] }}</th>
                             <td>
-                                {{ $item->title }}
+                                {{ $item['title'] }}
                             </td>
                             <td>
-                                {{ DateHelper::format($item->date) }}
+                                {{ $item['date'] }}
                             </td>
                             <td class="text-center">
-                                @php
-                                    $chat = Chat::where('id_prodotto', '=', $item->id)
-                                        ->where('tipo_prodotto', '=', 5)
-                                        ->where('id_studente', '=', auth()->user()->student->id)
-                                        ->first();
-                                    if ($chat) {
-                                        $chat_ = ChatMessage::where('chat_id', '=', $chat->id)
-                                            ->orderBy('date', 'desc')
-                                            ->first();
-                                        if ($chat_ != null && $chat_->author == 1) {
-                                            $hasUnreadMessage = true;
-                                        } else {
-                                            $hasUnreadMessage = false;
-                                        }
-                                    } else {
-                                        $hasUnreadMessage = false;
-                                    }
-                                @endphp
-
                                 <x-ui.status-dot
-                                    :variant="$hasUnreadMessage ? 'danger' : 'success'"
-                                    :label="$hasUnreadMessage ? 'Da leggere' : 'Nessun nuovo messaggio'"
+                                    :variant="$item['has_unread_message'] ? 'danger' : 'success'"
+                                    :label="$item['has_unread_message'] ? 'Da leggere' : 'Nessun nuovo messaggio'"
                                 />
                             </td>
                             <td>
                                 <x-ui.primary-button
-                                    href="{{ route('student.direct-requests.show', ['id' => $item->id]) }}"
+                                    href="{{ route('student.direct-requests.show', ['id' => $item['id']]) }}"
                                     size="sm"
                                 >
                                     Visualizza

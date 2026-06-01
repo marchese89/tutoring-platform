@@ -3,8 +3,11 @@
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Student\DirectRequestController;
+use App\Http\Controllers\Student\InvoiceController;
 use App\Http\Controllers\Student\OrderController;
 use App\Http\Controllers\Student\RouteController;
+use App\Http\Controllers\Student\ReviewController;
 use App\Http\Controllers\Student\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -50,12 +53,12 @@ Route::middleware(['auth', 'role:student'])->group(function () {
 
     Route::get('student/orders', [OrderController::class, 'index'])->name('student.orders.index');
     Route::get('student/orders/{id}', [OrderController::class, 'show'])->name('student.orders.show');
-    Route::view('student/invoices', 'student.invoices')->name('student.invoices.index');
-    Route::view('student/invoices/{id}', 'student.invoice')->name('student.invoices.show');
-    Route::view('student/invoice-sheets/{id}', 'student.invoice-sheet')->name('student.invoice-sheets.show');
+    Route::get('student/invoices', [InvoiceController::class, 'index'])->name('student.invoices.index');
+    Route::get('student/invoices/{id}', [InvoiceController::class, 'showOrderInvoice'])->name('student.invoices.show');
+    Route::get('student/invoice-sheets/{id}', [InvoiceController::class, 'showInvoiceSheet'])->name('student.invoice-sheets.show');
 
-    Route::view('student/direct-requests', 'student.direct-requests')->name('student.direct-requests.index');
-    Route::view('student/direct-requests/purchased', 'student.purchased-direct-requests')
+    Route::get('student/direct-requests', [DirectRequestController::class, 'index'])->name('student.direct-requests.index');
+    Route::get('student/direct-requests/purchased', [DirectRequestController::class, 'purchased'])
         ->name('student.direct-requests.purchased');
     Route::get('student/direct-requests/{id}', [StudentController::class, 'showDirectRequest'])
         ->name('student.direct-requests.show');
@@ -64,7 +67,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('student.chat.messages.store');
     Route::get('student/chats/{id_chat}/messages', [AjaxController::class, 'getStudentMessages'])
         ->name('student.chats.messages.index');
-    Route::view('student/review', 'student.review')->name('student.review');
+    Route::get('student/review', [ReviewController::class, 'show'])->name('student.review');
     Route::post('student/feedback', [AjaxController::class, 'storeFeedback'])
         ->name('student.feedback.store');
     Route::post('student/review', [AjaxController::class, 'storeReview'])

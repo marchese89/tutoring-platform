@@ -5,18 +5,8 @@
 @endsection
 
 @section('inner')
-    @php
-        use App\Helpers\DateHelper;
-        use App\Models\StudentInvoice;
-
-        $fatture0 = StudentInvoice::with('invoice_sheet')
-            ->where('student_id', auth()->user()->student->id)
-            ->orderByDesc('created_at')
-            ->get();
-    @endphp
-
     <x-ui.page-section>
-        @if ($fatture0->isNotEmpty())
+        @if ($invoices->isNotEmpty())
             <x-ui.table-card title="Fatture disponibili">
                 <table class="table align-middle">
                     <thead class="table-light">
@@ -28,15 +18,15 @@
                     </thead>
 
                     <tbody>
-                        @foreach ($fatture0 as $item)
+                        @foreach ($invoices as $item)
                             <tr>
-                                <th scope="row">{{ $item->id }}</th>
+                                <th scope="row">{{ $item['id'] }}</th>
                                 <td>
-                                    {{ $item->invoice_sheet?->date ? DateHelper::format($item->invoice_sheet->date) : '-' }}
+                                    {{ $item['date'] }}
                                 </td>
                                 <td>
                                     <x-ui.primary-button
-                                        href="{{ route('student.invoice-sheets.show', $item->invoice_sheet_id) }}"
+                                        href="{{ route('student.invoice-sheets.show', $item['invoice_sheet_id']) }}"
                                         size="sm"
                                     >
                                         Visualizza
