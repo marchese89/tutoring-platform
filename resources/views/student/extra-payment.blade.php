@@ -5,49 +5,117 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="width: 60%;text-align:center">
-        @if (session()->has('error'))
-            <div class="alert alert-danger">
-                {{ session()->get('error') }}
+    <script>
+        function updatePaymentTotal() {
+            const price = Number(document.getElementById('prezzo').value.replace(',', '.')) || 0;
+            const quantity = Number(document.getElementById('qta').value.replace(',', '.')) || 0;
+            const total = price * quantity;
+
+            document.getElementById('payment-total').innerHTML = `${total.toFixed(2)}&euro;`;
+        }
+
+        window.addEventListener('DOMContentLoaded', updatePaymentTotal);
+    </script>
+
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <x-ui.card>
+                    <div class="mb-4">
+                        <h4 class="fw-bold mb-2">
+                            Dettagli pagamento
+                        </h4>
+
+                        <p class="text-muted mb-0">
+                            Inserisci descrizione, prezzo unitario e quantita del servizio da pagare.
+                        </p>
+                    </div>
+
+                    @if (session()->has('error'))
+                        <div class="alert alert-danger rounded-4">
+                            {{ session()->get('error') }}
+                        </div>
+                    @endif
+
+                    <form class="row g-3" method="POST" action="{{ route('checkout.payment.prepare') }}">
+                        @csrf
+
+                        <div class="col-md-8">
+                            <label class="form-label fw-semibold" for="descrizione">
+                                Descrizione
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control rounded-3 @error('descrizione') is-invalid @enderror"
+                                id="descrizione"
+                                name="descrizione"
+                                value="{{ old('descrizione') }}"
+                                maxlength="255"
+                                placeholder="Esempio: lezione privata"
+                            >
+                            @error('descrizione')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold" for="prezzo">
+                                Prezzo
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control rounded-3 @error('prezzo') is-invalid @enderror"
+                                id="prezzo"
+                                name="prezzo"
+                                value="{{ old('prezzo') }}"
+                                maxlength="12"
+                                inputmode="decimal"
+                                oninput="updatePaymentTotal()"
+                            >
+                            @error('prezzo')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label fw-semibold" for="qta">
+                                Qta
+                            </label>
+                            <input
+                                type="text"
+                                class="form-control rounded-3 @error('qta') is-invalid @enderror"
+                                id="qta"
+                                name="qta"
+                                value="{{ old('qta') }}"
+                                maxlength="5"
+                                inputmode="numeric"
+                                oninput="updatePaymentTotal()"
+                            >
+                            @error('qta')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-12">
+                            <div class="border rounded-4 p-3 bg-light d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
+                                <span class="text-muted">
+                                    Totale
+                                </span>
+
+                                <span class="fs-4 fw-bold text-success" id="payment-total">
+                                    0.00&euro;
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-12 text-end">
+                            <x-ui.primary-button type="submit">
+                                Paga
+                            </x-ui.primary-button>
+                        </div>
+                    </form>
+                </x-ui.card>
             </div>
-        @endif
-        <form class="row g-3" method="POST" action="{{ route('checkout.payment.prepare') }}" onsubmit="modifica_pass()">
-            @csrf
-            <div class="col-md-8">
-                <label class="form-label">Descrizione</label>
-                <input type="text" class="form-control" id="descrizione" name="descrizione" maxlength="255">
-                <script type="text/javascript">
-                    var descrizione_ = new LiveValidation('descrizione', {
-                        onlyOnSubmit: true
-                    });
-                    descrizione_.add(Validate.Presence);
-                    descrizione_.add(Validate.SoloTesto);
-                </script>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Prezzo Unitario</label>
-                <input type="text" class="form-control" id="prezzo" name="prezzo" maxlength="12">
-                <script type="text/javascript">
-                    var prezzo_ = new LiveValidation('prezzo', {
-                        onlyOnSubmit: true
-                    });
-                    prezzo_.add(Validate.Presence);
-                    prezzo_.add(Validate.InteriPositivi);
-                </script>
-            </div>
-            <div class="col-md-2">
-                <label class="form-label">Qta</label>
-                <input type="text" class="form-control" id="qta" name="qta" maxlength="5">
-                <script type="text/javascript">
-                    var qta_ = new LiveValidation('qta', {
-                        onlyOnSubmit: true
-                    });
-                    qta_.add(Validate.Presence);
-                    qta_.add(Validate.InteriPositivi);
-                </script>
-            </div>
-            <div class="col-12" style="text-align:center">
-                <button type="submit" class="btn btn-primary">Paga</button>
-            </div>
-        </form>
-    @endsection
+        </div>
+    </x-ui.page-section>
+@endsection

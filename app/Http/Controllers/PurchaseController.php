@@ -205,12 +205,22 @@ class PurchaseController extends Controller
         return redirect()->route('admin.invoices.created');
     }
 
-    public function preparePayment()
+    public function preparePayment(Request $request)
     {
-        $prezzo = request('prezzo');
-        $qta = request('qta');
+        $request->merge([
+            'prezzo' => str_replace(',', '.', (string) $request->input('prezzo')),
+        ]);
 
-        session()->put('descrizione', request('descrizione'));
+        $validated = $request->validate([
+            'descrizione' => ['required', 'string', 'max:255'],
+            'prezzo' => ['required', 'numeric', 'min:0.01'],
+            'qta' => ['required', 'integer', 'min:1'],
+        ]);
+
+        $prezzo = $validated['prezzo'];
+        $qta = $validated['qta'];
+
+        session()->put('descrizione', $validated['descrizione']);
         session()->put('prezzo', $prezzo);
         session()->put('qta', $qta);
 
