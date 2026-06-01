@@ -5,37 +5,53 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center">
-        @php
-            use App\Models\StudentInvoice;
-            $fatture0 = StudentInvoice::where('student_id', '=', auth()->user()->student->id)->get();
-            $cont = StudentInvoice::where('student_id', '=', auth()->user()->student->id)->count();
-        @endphp
-        @if ($cont > 0)
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Operazioni</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @php
+    @php
+        use App\Helpers\DateHelper;
+        use App\Models\StudentInvoice;
 
-                    @endphp
-                    @foreach ($fatture0 as $item)
+        $fatture0 = StudentInvoice::with('invoice_sheet')
+            ->where('student_id', auth()->user()->student->id)
+            ->orderByDesc('created_at')
+            ->get();
+    @endphp
+
+    <x-ui.page-section>
+        @if ($fatture0->isNotEmpty())
+            <x-ui.table-card title="Fatture disponibili">
+                <table class="table align-middle">
+                    <thead class="table-light">
                         <tr>
-
-                            <th scope="row">{{ $item->id }}</th>
-                            <td>
-                                <button class="btn btn-primary"
-                                    onclick="location.href='{{ route('student.invoice-sheets.show', $item->invoice_sheet_id) }}'">Visualizza</button>
-                            </td>
+                            <th scope="col">#</th>
+                            <th scope="col">Data</th>
+                            <th scope="col">Operazioni</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @foreach ($fatture0 as $item)
+                            <tr>
+                                <th scope="row">{{ $item->id }}</th>
+                                <td>
+                                    {{ $item->invoice_sheet?->date ? DateHelper::format($item->invoice_sheet->date) : '-' }}
+                                </td>
+                                <td>
+                                    <x-ui.primary-button
+                                        href="{{ route('student.invoice-sheets.show', $item->invoice_sheet_id) }}"
+                                        size="sm"
+                                    >
+                                        Visualizza
+                                    </x-ui.primary-button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </x-ui.table-card>
         @else
-            <h3>Non ci sono fatture!</h3>
+            <x-ui.empty-state
+                title="Non ci sono fatture"
+                text="Quando una fattura sara disponibile, la troverai in questa sezione."
+            />
         @endif
-    @endsection
+    </x-ui.page-section>
+@endsection
