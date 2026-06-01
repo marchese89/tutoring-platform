@@ -5,43 +5,35 @@
 @endsection
 
 @section('inner')
-    <style>
-        .cerchio {
-            width: 40px;
-            height: 40px;
-            background-color: red;
-            border-radius: 50%;
-        }
-    </style>
     @php
         use App\Helpers\DateHelper;
         use App\Models\LessonOnRequest;
         use App\Models\ChatMessage;
         use App\Models\Chat;
     @endphp
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Svolta</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
-                    ->where('paid', '=', 1)
-                    ->orderBy('date', 'desc')
-                    ->get();
-            @endphp
-            <tbody>
+    @php
+        $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
+            ->where('paid', '=', 1)
+            ->orderBy('date', 'desc')
+            ->get();
+    @endphp
 
-                @if (!$lezioni_su_richiesta->isEmpty())
-                    @foreach ($lezioni_su_richiesta as $item)
+    <x-ui.page-section>
+        <x-ui.table-card title="Lezioni acquistate">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Titolo</th>
+                        <th scope="col">Data</th>
+                        <th scope="col" class="text-center">Stato</th>
+                        <th scope="col">Operazioni</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($lezioni_su_richiesta as $item)
                         <tr>
-
                             <th scope="row">{{ $item->id }}</th>
                             <td>
                                 {{ $item->title }}
@@ -49,7 +41,7 @@
                             <td>
                                 {{ DateHelper::format($item->date) }}
                             </td>
-                            <td>
+                            <td class="text-center">
                                 @php
                                     $chat = Chat::where('id_prodotto', '=', $item->id)
                                         ->where('tipo_prodotto', '=', 5)
@@ -60,24 +52,39 @@
                                             ->orderBy('date', 'desc')
                                             ->first();
                                         if ($chat_ != null && $chat_->author == 1) {
-                                            echo '<div class="cerchio" style="background-color: red;"></div>';
+                                            $hasUnreadMessage = true;
                                         } else {
-                                            echo '<div class="cerchio" style="background-color: green;"></div>';
+                                            $hasUnreadMessage = false;
                                         }
+                                    } else {
+                                        $hasUnreadMessage = false;
                                     }
                                 @endphp
+
+                                <x-ui.status-dot
+                                    :variant="$hasUnreadMessage ? 'danger' : 'success'"
+                                    :label="$hasUnreadMessage ? 'Da leggere' : 'Nessun nuovo messaggio'"
+                                />
                             </td>
                             <td>
-                                <div>
-                                    <button type="submit" class="btn btn-primary"
-                                        onclick="location.href='{{ route('student.direct-requests.show', ['id' => $item->id]) }}'">Visualizza</button>
-                                </div>
+                                <x-ui.primary-button
+                                    href="{{ route('student.direct-requests.show', ['id' => $item->id]) }}"
+                                    size="sm"
+                                >
+                                    Visualizza
+                                </x-ui.primary-button>
                             </td>
 
                         </tr>
-                    @endforeach
-                @endif
-            </tbody>
-        </table>
-    </div>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Nessuna lezione acquistata.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </x-ui.table-card>
+    </x-ui.page-section>
 @endsection

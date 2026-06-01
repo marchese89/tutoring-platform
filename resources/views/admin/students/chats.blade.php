@@ -5,94 +5,51 @@
 @endsection
 
 @section('inner')
-    <style>
-        .status-dot {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            display: inline-block;
-        }
-    </style>
+    <x-ui.page-section>
+        <x-ui.table-card title="Elenco Chat">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Tipo Prodotto</th>
+                        <th>Titolo</th>
+                        <th>Studente</th>
+                        <th class="text-center">Stato</th>
+                        <th>Operazioni</th>
+                    </tr>
+                </thead>
 
-    <div class="container">
-        {{-- CARD --}}
-        <div class="card border-0 shadow-sm rounded-4">
-            <div class="card-body p-4">
-
-                <h4 class="fw-bold mb-4">
-                    Elenco Chat
-                </h4>
-
-                <div class="table-responsive">
-
-                    <table class="table align-middle">
-
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Tipo Prodotto</th>
-                                <th>Titolo</th>
-                                <th>Studente</th>
-                                <th>Stato</th>
-                                <th>Operazioni</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-
-                            @forelse ($chat as $item)
-                                <tr>
-
-                                    <td>
-                                        {{ $item->id }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->tipo_stringa }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->nome_prodotto }}
-                                    </td>
-
-                                    <td>
-                                        {{ $item->studente_nome }}
-                                    </td>
-
-                                    <td class="text-center">
-
-                                        @if ($item->non_letta_admin)
-                                            <span class="status-dot bg-danger"></span>
-                                        @else
-                                            <span class="status-dot bg-success"></span>
-                                        @endif
-
-                                    </td>
-
-                                    <td>
-                                        <a href="{{ route('admin.chats.show', $item->id) }}"
-                                            class="btn btn-primary btn-sm rounded-pill px-3">
-                                            Visualizza Chat
-                                        </a>
-                                    </td>
-
-                                </tr>
-                            @empty
-                                <tr>
-                                    <td colspan="6" class="text-center text-muted py-4">
-                                        Nessuna chat presente.
-                                    </td>
-                                </tr>
-                            @endforelse
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-        </div>
-
-    </div>
+                <tbody>
+                    @forelse ($chat as $item)
+                        <tr>
+                            <td>{{ $item->id }}</td>
+                            <td>{{ $item->tipo_stringa }}</td>
+                            <td>{{ $item->nome_prodotto }}</td>
+                            <td>{{ $item->studente_nome }}</td>
+                            <td class="text-center">
+                                <x-ui.status-dot
+                                    :variant="$item->non_letta_admin ? 'danger' : 'success'"
+                                    :label="$item->non_letta_admin ? 'Da leggere' : 'Letta'"
+                                />
+                            </td>
+                            <td>
+                                <x-ui.primary-button
+                                    href="{{ route('admin.chats.show', $item->id) }}"
+                                    size="sm"
+                                >
+                                    Visualizza Chat
+                                </x-ui.primary-button>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                Nessuna chat presente.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </x-ui.table-card>
+    </x-ui.page-section>
 @endsection

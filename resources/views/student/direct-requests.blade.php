@@ -5,35 +5,30 @@
 @endsection
 
 @section('inner')
-    <style>
-        .cerchio {
-            width: 40px;
-            height: 40px;
-            background-color: red;
-            border-radius: 50%;
-        }
-    </style>
     @php
         use App\Models\LessonOnRequest;
     @endphp
-    <div class="container">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Titolo</th>
-                    <th scope="col">Data</th>
-                    <th scope="col">Svolta</th>
-                    <th scope="col">Operazioni</th>
-                </tr>
-            </thead>
-            @php
-                $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
-                    ->where('paid', '=', 0)
-                    ->get();
-            @endphp
-            <tbody>
-                @foreach ($lezioni_su_richiesta as $item)
+    @php
+        $lezioni_su_richiesta = LessonOnRequest::where('student_id', '=', auth()->user()->student->id)
+            ->where('paid', '=', 0)
+            ->get();
+    @endphp
+
+    <x-ui.page-section>
+        <x-ui.table-card title="Richieste non acquistate">
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Titolo</th>
+                        <th scope="col">Data</th>
+                        <th scope="col" class="text-center">Stato</th>
+                        <th scope="col">Operazioni</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($lezioni_su_richiesta as $item)
                     <tr>
 
                         <th scope="row">{{ $item->id }}</th>
@@ -43,26 +38,31 @@
                         <td>
                             {{ $item->date }}
                         </td>
-                        <td>
-                            @php
-                                $r = $item->escaped;
-                                if ($r == 0) {
-                                    echo '<div class="cerchio" style="background-color: red;"></div>';
-                                } else {
-                                    echo '<div class="cerchio" style="background-color: green;"></div>';
-                                }
-                            @endphp
+                        <td class="text-center">
+                            <x-ui.status-dot
+                                :variant="$item->escaped == 0 ? 'danger' : 'success'"
+                                :label="$item->escaped == 0 ? 'Da svolgere' : 'Svolta'"
+                            />
                         </td>
                         <td>
-                            <div>
-                                <button type="submit" class="btn btn-primary"
-                                    onclick="location.href='{{ route('student.direct-requests.show', ['id' => $item->id]) }}'">Visualizza</button>
-                            </div>
+                            <x-ui.primary-button
+                                href="{{ route('student.direct-requests.show', ['id' => $item->id]) }}"
+                                size="sm"
+                            >
+                                Visualizza
+                            </x-ui.primary-button>
                         </td>
 
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-4">
+                                Nessuna richiesta diretta presente.
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </x-ui.table-card>
+    </x-ui.page-section>
 @endsection
