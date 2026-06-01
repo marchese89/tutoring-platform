@@ -1,12 +1,11 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Lezioni Private" />
+    <x-ui.section-header :title="'Fatture'" />
 @endsection
 
 @section('inner')
     <div class="row g-0 container-fluid" style="text-align: center">
-        <h3>Fatture Lezioni Private</h3>
         @php
             use App\Models\StudentInvoice;
             $fatture0 = StudentInvoice::where('student_id', '=', auth()->user()->student->id)->get();

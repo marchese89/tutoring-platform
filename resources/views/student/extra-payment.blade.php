@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Pagamento Lezioni Private" />
+    <x-ui.section-header :title="'Pagamento Extra'" />
 @endsection
 
 @section('inner')

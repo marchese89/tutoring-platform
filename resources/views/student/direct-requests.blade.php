@@ -1,5 +1,9 @@
 @extends('layouts.student-dashboard')
 
+@section('page-title')
+    <x-ui.section-header :title="'Richieste Dirette'" />
+@endsection
+
 @section('inner')
     <style>
         .cerchio {
@@ -12,11 +16,6 @@
     @php
         use App\Models\LessonOnRequest;
     @endphp
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
-        </li>
-    </ul>
     <div class="row g-0 container-fluid">
         <table class="table">
             <thead>

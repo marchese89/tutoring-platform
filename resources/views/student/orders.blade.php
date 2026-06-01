@@ -1,5 +1,9 @@
 @extends('layouts.student-dashboard')
 
+@section('page-title')
+    <x-ui.section-header :title="'Ordini'" />
+@endsection
+
 @section('inner')
     <script>
         function aggiorna_tabella(anno, mese) {
@@ -41,7 +45,6 @@
     </script>
 
     <div class="row g-0 container-fluid" style="text-align: center">
-        <h3>Ordini Effettuati</h3>
 
         @if ($hasOrders)
             <div class="form-floating" style="display: inline">

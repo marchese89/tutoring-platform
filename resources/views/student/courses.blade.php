@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Elenco Corsi'" />
+    <x-ui.section-header :title="'Corsi Acquistati'" />
 @endsection
 
 @section('inner')

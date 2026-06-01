@@ -1,5 +1,9 @@
 @extends('layouts.student-dashboard')
 
+@section('page-title')
+    <x-ui.section-header :title="'Lezioni su Richiesta'" />
+@endsection
+
 @section('inner')
     <style>
         .cerchio {
@@ -15,15 +19,7 @@
         use App\Models\ChatMessage;
         use App\Models\Chat;
     @endphp
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
-        </li>
-    </ul>
     <div class="row g-0 container-fluid">
-        <div>
-            <h3 style="text-align: center">Lezioni su Richiesta Acquistate</h3>
-        </div>
         <table class="table">
             <thead>
                 <tr>
