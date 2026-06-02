@@ -1,42 +1,69 @@
 @extends('layouts.student-dashboard')
 
+@section('page-title')
+    <x-ui.section-header :title="'Ordine #' . $ordine->id" />
+@endsection
+
 @section('inner')
-    <div class="container" style="text-align: center">
-        <h3>Ordine #{{ $ordine->id }}</h3>
-        <h4>{{ $orderDate }}</h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Tipo Prodotto</th>
-                    <th scope="col">Prezzo</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($prodotti as $item)
+    <x-ui.page-section>
+        <x-ui.card class="mb-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h4 class="fw-bold mb-1">
+                        Ordine #{{ $ordine->id }}
+                    </h4>
+
+                    <p class="text-muted mb-0">
+                        {{ $orderDate }}
+                    </p>
+                </div>
+
+                <x-ui.primary-button href="{{ route('student.invoices.show', $ordine->id) }}">
+                    Visualizza fattura
+                </x-ui.primary-button>
+            </div>
+        </x-ui.card>
+
+        <x-ui.table-card title="Prodotti acquistati">
+            <table class="table align-middle">
+                <thead>
                     <tr>
-
-                        <th scope="row">{{ $item['id'] }}</th>
-                        <td>
-                            {{ $item['type'] }}
-                        </td>
-                        <td>
-                            {{ $item['price'] }}<strong>&euro;</strong>
-                        </td>
-
+                        <th>#</th>
+                        <th>Tipo prodotto</th>
+                        <th class="text-end">Prezzo</th>
                     </tr>
-                @endforeach
-                <tr>
-                    <td colspan="3"><strong>Totale: {{ $tot_ordine }}&euro;</strong></td>
-                </tr>
-                <tr>
-                    <td colspan="3">
-                        <button class="btn btn-primary"
-                            onclick="location.href='{{ route('student.invoices.show', $ordine->id) }}'">Visualizza
-                            Fattura</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                </thead>
+
+                <tbody>
+                    @foreach ($prodotti as $item)
+                        <tr>
+                            <td class="fw-semibold">
+                                {{ $item['id'] }}
+                            </td>
+
+                            <td>
+                                {{ ucfirst($item['type']) }}
+                            </td>
+
+                            <td class="text-end">
+                                {{ number_format($item['price'], 2, ',', '.') }}&euro;
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+
+                <tfoot>
+                    <tr>
+                        <th colspan="2">
+                            Totale
+                        </th>
+
+                        <th class="text-end">
+                            {{ number_format($tot_ordine, 2, ',', '.') }}&euro;
+                        </th>
+                    </tr>
+                </tfoot>
+            </table>
+        </x-ui.table-card>
+    </x-ui.page-section>
 @endsection

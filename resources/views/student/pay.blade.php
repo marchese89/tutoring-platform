@@ -1,52 +1,59 @@
 @extends('layouts.student-dashboard')
 
+@section('page-title')
+    <x-ui.section-header :title="'Acquista'" />
+@endsection
+
 @section('inner')
     <script src="https://js.stripe.com/v3/"></script>
 
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <x-ui.card>
+                    <div class="text-center mb-4">
+                        <h4 class="fw-bold mb-2">
+                            Pagamento sicuro
+                        </h4>
 
-    <div class="container" style="text-align: center;width:35%">
-        <h2>Acquista</h2>
-    </div>
-    <br>
-    <div class="container" style="text-align: center;width:80%; height:500px">
+                        <p class="text-muted mb-0">
+                            Paga
+                            <span class="fw-bold text-success">
+                                {{ number_format(session()->get('prezzo') * session()->get('qta'), 2, ',', '.') }}&euro;
+                            </span>
+                            tramite Stripe.
+                        </p>
+                    </div>
 
-        <h3>Paga <strong>{{ session()->get('prezzo') * session()->get('qta') }}&euro;</strong> in modo Sicuro tramite Stripe
-        </h3>
-        <br>
-        @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
+                    @if (session('success'))
+                        <div class="alert alert-success rounded-3">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form id="payment-form">
+                        <div id="payment-element">
+                            <!--Stripe.js injects the Payment Element-->
+                        </div>
+
+                        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-4">
+                            <x-ui.primary-button href="{{ route('payment.extra') }}" size="sm">
+                                Indietro
+                            </x-ui.primary-button>
+
+                            <x-ui.primary-button id="submit" type="submit">
+                                <span class="spinner hidden" id="spinner"></span>
+                                <span id="button-text">Paga adesso</span>
+                            </x-ui.primary-button>
+                        </div>
+
+                        <div id="payment-message" class="alert alert-danger rounded-3 mt-4 hidden"></div>
+                    </form>
+                </x-ui.card>
             </div>
-        @endif
-        <div class="container" style="text-align: center;width:35%">
-
-            <br>
-            <br>
-            <form id="payment-form">
-                <div id="payment-element">
-                    <!--Stripe.js injects the Payment Element-->
-                </div>
-                <br>
-                <br>
-                <div class="container" style="text-align: center">
-                    <button id="submit" class="btn btn-primary">
-                        <div class="spinner hidden" id="spinner"></div>
-                        <span id="button-text">Paga Adesso</span>
-                    </button>
-                </div>
-                <div id="payment-message" class="hidden"></div>
-
-            </form>
         </div>
-    </div>
-    <br>
-    <br>
-    <div class="container" style="text-align: center;width:35%">
-        <button class="btn btn-primary" onclick="location.href='{{ route('payment.extra') }}'">Indietro</button>
-    </div>
-    <br>
-    <br>
-    </div>
+    </x-ui.page-section>
+
     <script>
         // This is your test publishable API key.
 
