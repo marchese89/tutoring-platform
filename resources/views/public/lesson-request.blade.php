@@ -66,8 +66,12 @@
                                                         Seleziona il file
                                                     </label>
 
-                                                    <input type="file" class="form-control form-control-lg"
+                                                    <input type="file"
+                                                        class="form-control form-control-lg @error('file') is-invalid @enderror"
                                                         id="file" name="file" />
+                                                    @error('file')
+                                                        <div class="invalid-feedback">{{ $message }}</div>
+                                                    @enderror
                                                 </div>
 
                                                 <div class="progress mb-4" role="progressbar" aria-valuenow="25"
@@ -147,20 +151,16 @@
 
                                                         </label>
 
-                                                        <input type="text" class="form-control form-control-lg"
+                                                        <input type="text"
+                                                            class="form-control form-control-lg @error('titolo') is-invalid @enderror"
                                                             id="titolo" name="titolo" maxlength="255"
+                                                            value="{{ old('titolo') }}"
                                                             placeholder="Inserisci una breve descrizione della richiesta">
+                                                        @error('titolo')
+                                                            <div class="invalid-feedback">{{ $message }}</div>
+                                                        @enderror
 
                                                     </div>
-
-                                                    <script type="text/javascript">
-                                                        var titolo_ = new LiveValidation('titolo', {
-                                                            onlyOnSubmit: true
-                                                        });
-
-                                                        titolo_.add(Validate.Presence);
-                                                        titolo_.add(Validate.SoloTesto);
-                                                    </script>
 
                                                     <div class="d-grid">
                                                         <button type="submit" class="btn btn-primary btn-lg rounded-3">

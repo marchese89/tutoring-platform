@@ -24,7 +24,11 @@
             @csrf
             @method('POST')
             <input type="hidden" name="id" value="{{ $id }}" />
-            <input type="file" class="form-control" id="file-trace-ex" name="file-trace-ex" />
+            <input type="file" class="form-control @error('file-trace-ex') is-invalid @enderror" id="file-trace-ex"
+                name="file-trace-ex" />
+            @error('file-trace-ex')
+                <div class="invalid-feedback">{{ $message }}</div>
+            @enderror
             <p>
             <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
                 aria-valuemax="100" id="progressbar" style="display: none">
@@ -64,7 +68,11 @@
             <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2">
                 @csrf
                 @method('POST')
-                <input type="file" class="form-control" id="file-ex" name="file-ex" />
+                <input type="file" class="form-control @error('file-ex') is-invalid @enderror" id="file-ex"
+                    name="file-ex" />
+                @error('file-ex')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <p>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100" id="progressbar2" style="display: none">
@@ -97,26 +105,19 @@
                 <input type="hidden" name="id" value="{{ $id }}" />
                 <div class="col-md-12">
                     <h5>Titolo</h5>
-                    <input type="text" class="form-control" id="titolo" name="titolo" maxlength="255">
-                    <script type="text/javascript">
-                        var titolo_ = new LiveValidation('titolo', {
-                            onlyOnSubmit: true
-                        });
-                        titolo_.add(Validate.Presence);
-                        titolo_.add(Validate.SoloTesto);
-                    </script>
+                    <input type="text" class="form-control @error('titolo') is-invalid @enderror" id="titolo"
+                        name="titolo" maxlength="255" value="{{ old('titolo') }}">
+                    @error('titolo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control" id="prezzo" name="prezzo" maxlength="5"
-                        style="display: inline">
-                    <script type="text/javascript">
-                        var prezzo_ = new LiveValidation('prezzo', {
-                            onlyOnSubmit: true
-                        });
-                        prezzo_.add(Validate.Presence);
-                        prezzo_.add(Validate.InteriPositivi);
-                    </script>
+                    <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
+                        name="prezzo" maxlength="5" value="{{ old('prezzo') }}" style="display: inline">
+                    @error('prezzo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <br>
                 <div class="col-12" style="text-align:center">

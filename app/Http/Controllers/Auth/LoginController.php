@@ -46,10 +46,14 @@ class LoginController extends Controller
         ])->onlyInput('email');
     }
 
-    public function sendPasswordResetLink()
+    public function sendPasswordResetLink(Request $request)
     {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
         $status = Password::sendResetLink(
-            request()->only('email')
+            $request->only('email')
         );
 
         if ($status == Password::RESET_LINK_SENT) {

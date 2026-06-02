@@ -31,15 +31,11 @@
                     <div class="col-12">
                         <label class="form-label">Email</label>
 
-                        <input type="text" class="form-control" id="email" name="email" maxlength="255">
-
-                        <script>
-                            var email1 = new LiveValidation('email', {
-                                onlyOnSubmit: true
-                            });
-                            email1.add(Validate.Presence);
-                            email1.add(Validate.Email);
-                        </script>
+                        <input type="email" class="form-control @error('email') is-invalid @enderror" id="email"
+                            name="email" maxlength="255" value="{{ old('email') }}">
+                        @error('email')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="col-12">

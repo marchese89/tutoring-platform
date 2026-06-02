@@ -42,18 +42,11 @@
 
                         <label class="form-label">Nome certificato</label>
 
-                        <input class="form-control" type="text" id="nome_{{ $item->id }}"
-                            name="nome_{{ $item->id }}" maxlength="255" value="{{ $item->nome }}">
-
-                        <script>
-                            var nome_{{ $item->id }} =
-                                new LiveValidation('nome_{{ $item->id }}', {
-                                    onlyOnSubmit: true
-                                });
-
-                            nome_{{ $item->id }}.add(Validate.Presence);
-                            nome_{{ $item->id }}.add(Validate.SoloTesto);
-                        </script>
+                        <input class="form-control @error('nome') is-invalid @enderror" type="text"
+                            id="nome_{{ $item->id }}" name="nome" maxlength="255" value="{{ old('nome', $item->nome) }}">
+                        @error('nome')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
 
                         <button type="submit" class="btn btn-primary mt-2">
                             Modifica nome

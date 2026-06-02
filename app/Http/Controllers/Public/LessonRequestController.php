@@ -175,6 +175,10 @@ class LessonRequestController extends Controller
 
     public function storeRequestFile(Request $request)
     {
+        $request->validate([
+            'file' => ['required', 'file'],
+        ]);
+
         $this->deleteFile($request->session()->get('uploaded_lez_rich'));
 
         $file = $request->file('file');
@@ -195,6 +199,10 @@ class LessonRequestController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'titolo' => ['required', 'string', 'max:255'],
+        ]);
+
         LessonOnRequest::create([
             'title' => $request->input('titolo'),
             'student_id' => $request->user()->student->id,
@@ -213,6 +221,10 @@ class LessonRequestController extends Controller
 
     public function storeSolution(Request $request, int $id)
     {
+        $request->validate([
+            'file' => ['required', 'file'],
+        ]);
+
         $lezione = LessonOnRequest::findOrFail($id);
 
         $this->deleteFile($lezione->execution);
@@ -241,6 +253,10 @@ class LessonRequestController extends Controller
 
     public function storePrice(Request $request, int $id)
     {
+        $request->validate([
+            'prezzo' => ['required', 'numeric', 'min:0'],
+        ]);
+
         $lezione = LessonOnRequest::findOrFail($id);
 
         $lezione->update([

@@ -30,24 +30,13 @@
                                     Nuova Email
                                 </label>
 
-                                <input type="email" class="form-control rounded-3" id="inputEmail" name="inputEmail"
-                                    maxlength="255" value="{{ auth()->user()->email }}">
-
-                                <script type="text/javascript">
-                                    var email1 = new LiveValidation('inputEmail', {
-                                        onlyOnSubmit: true
-                                    });
-
-                                    email1.add(Validate.Presence);
-                                    email1.add(Validate.Email);
-                                </script>
+                                <input type="email" class="form-control rounded-3 @error('inputEmail') is-invalid @enderror"
+                                    id="inputEmail" name="inputEmail" maxlength="255"
+                                    value="{{ old('inputEmail', auth()->user()->email) }}">
+                                @error('inputEmail')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
                             </div>
-
-                            @if ($errors->any())
-                                <div class="alert alert-danger rounded-3">
-                                    {{ $errors->first('email') }}
-                                </div>
-                            @endif
 
                             <button type="submit" class="btn btn-primary rounded-pill px-4">
                                 Salva Email
@@ -78,7 +67,7 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('student.account.password.update') }}" onsubmit="modifica_pass()">
+                        <form method="POST" action="{{ route('student.account.password.update') }}">
 
                             @csrf
 
@@ -89,8 +78,12 @@
                                     Vecchia Password
                                 </label>
 
-                                <input type="password" class="form-control rounded-3" id="inputPassword_old"
-                                    name="inputPassword_old" maxlength="255">
+                                <input type="password"
+                                    class="form-control rounded-3 @error('inputPassword_old') is-invalid @enderror"
+                                    id="inputPassword_old" name="inputPassword_old" maxlength="255">
+                                @error('inputPassword_old')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
 
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" onclick="mostraPassword_old()">
@@ -100,20 +93,6 @@
                                     </label>
                                 </div>
 
-                                <script type="text/javascript">
-                                    var pass_old = new LiveValidation('inputPassword_old', {
-                                        onlyOnSubmit: true
-                                    });
-
-                                    pass_old.add(Validate.Presence);
-                                    pass_old.add(Validate.Pass);
-                                </script>
-
-                                @if ($errors->any())
-                                    <div class="text-danger small mt-2">
-                                        {{ $errors->first('pass0') }}
-                                    </div>
-                                @endif
                             </div>
 
                             {{-- NUOVA PASSWORD --}}
@@ -123,8 +102,12 @@
                                     Nuova Password
                                 </label>
 
-                                <input type="password" class="form-control rounded-3" id="inputPassword"
-                                    name="inputPassword" maxlength="255">
+                                <input type="password"
+                                    class="form-control rounded-3 @error('inputPassword') is-invalid @enderror"
+                                    id="inputPassword" name="inputPassword" maxlength="255">
+                                @error('inputPassword')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
 
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" onclick="mostraPassword1()">
@@ -133,15 +116,6 @@
                                         Mostra Password
                                     </label>
                                 </div>
-
-                                <script type="text/javascript">
-                                    var pass1_ = new LiveValidation('inputPassword', {
-                                        onlyOnSubmit: true
-                                    });
-
-                                    pass1_.add(Validate.Presence);
-                                    pass1_.add(Validate.Pass);
-                                </script>
 
                             </div>
 
@@ -152,8 +126,12 @@
                                     Conferma Password
                                 </label>
 
-                                <input type="password" class="form-control rounded-3" id="inputPassword2"
-                                    name="inputPassword2" maxlength="255">
+                                <input type="password"
+                                    class="form-control rounded-3 @error('inputPassword2') is-invalid @enderror"
+                                    id="inputPassword2" name="inputPassword2" maxlength="255">
+                                @error('inputPassword2')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
 
                                 <div class="form-check mt-2">
                                     <input class="form-check-input" type="checkbox" onclick="mostraPassword2()">
@@ -162,18 +140,6 @@
                                         Mostra Password
                                     </label>
                                 </div>
-
-                                <script type="text/javascript">
-                                    var pass2_ = new LiveValidation('inputPassword2', {
-                                        onlyOnSubmit: true
-                                    });
-
-                                    pass2_.add(Validate.Presence);
-
-                                    pass2_.add(Validate.Confirmation, {
-                                        match: 'inputPassword'
-                                    });
-                                </script>
 
                             </div>
 

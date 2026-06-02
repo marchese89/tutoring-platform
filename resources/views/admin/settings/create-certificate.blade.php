@@ -18,7 +18,10 @@
         <div class="container" style="text-align: center;width:60%">
             <form method="POST" action="{{ route('admin.account.certificates.uploads.store') }}" enctype="multipart/form-data" id="upload">
                 @csrf
-                <input type="file" class="form-control" id="file" name="file" />
+                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" />
+                @error('file')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <p>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100" id="progressbar" style="display: none">
@@ -50,14 +53,11 @@
             <form method="POST" action="{{ route('admin.account.certificates.store') }}">
                 @csrf
                 <input type="hidden" name="id" />
-                <input class="form-control col-4"=maxlength="255" type="text" name="nome" id="nome"></input>
-                <script type="text/javascript">
-                    var nome_ = new LiveValidation('nome', {
-                        onlyOnSubmit: true
-                    });
-                    nome_.add(Validate.Presence);
-                    nome_.add(Validate.SoloTesto);
-                </script>
+                <input class="form-control col-4 @error('nome') is-invalid @enderror" maxlength="255" type="text"
+                    name="nome" id="nome" value="{{ old('nome') }}">
+                @error('nome')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <br>
                 <button type="submit" class="btn btn-primary">Aggiungi Certificato</button>
             </form>

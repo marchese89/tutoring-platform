@@ -39,7 +39,10 @@
                 @csrf
                 @method('POST')
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />
-                <input type="file" class="form-control" id="file" name="file" />
+                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" />
+                @error('file')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <p>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100" id="progressbar" style="display: none">
@@ -62,15 +65,11 @@
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control" id="prezzo" name="prezzo" value="{{ $richiesta->price }}"
-                        maxlength="5" style="display: inline">
-                    <script type="text/javascript">
-                        var prezzo_ = new LiveValidation('prezzo', {
-                            onlyOnSubmit: true
-                        });
-                        prezzo_.add(Validate.Presence);
-                        prezzo_.add(Validate.InteriPositivi);
-                    </script>
+                    <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
+                        name="prezzo" value="{{ old('prezzo', $richiesta->price) }}" maxlength="5" style="display: inline">
+                    @error('prezzo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <br>
                 <div class="col-12" style="text-align:center">

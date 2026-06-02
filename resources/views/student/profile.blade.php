@@ -50,17 +50,12 @@
                             Indirizzo (via/piazza)
                         </label>
 
-                        <input type="text" class="form-control rounded-3" id="inputIndirizzo" name="inputIndirizzo"
-                            maxlength="255" value="{{ auth()->user()->student->street }}">
-
-                        <script type="text/javascript">
-                            var via_ = new LiveValidation('inputIndirizzo', {
-                                onlyOnSubmit: true
-                            });
-
-                            via_.add(Validate.Presence);
-                            via_.add(Validate.SoloTesto);
-                        </script>
+                        <input type="text" class="form-control rounded-3 @error('inputIndirizzo') is-invalid @enderror"
+                            id="inputIndirizzo" name="inputIndirizzo" maxlength="255"
+                            value="{{ old('inputIndirizzo', auth()->user()->student->street) }}">
+                        @error('inputIndirizzo')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="col-md-2">
@@ -68,16 +63,13 @@
                             N. Civico
                         </label>
 
-                        <input type="text" class="form-control rounded-3" id="inputNumeroCivico" name="inputNumeroCivico"
-                            maxlength="6" value="{{ auth()->user()->student->house_number }}">
-
-                        <script type="text/javascript">
-                            var n_civico_ = new LiveValidation('inputNumeroCivico', {
-                                onlyOnSubmit: true
-                            });
-
-                            n_civico_.add(Validate.Presence);
-                        </script>
+                        <input type="text"
+                            class="form-control rounded-3 @error('inputNumeroCivico') is-invalid @enderror"
+                            id="inputNumeroCivico" name="inputNumeroCivico" maxlength="6"
+                            value="{{ old('inputNumeroCivico', auth()->user()->student->house_number) }}">
+                        @error('inputNumeroCivico')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="col-md-3">
@@ -85,17 +77,12 @@
                             Città
                         </label>
 
-                        <input type="text" class="form-control rounded-3" id="inputCitta" name="inputCitta"
-                            maxlength="255" value="{{ auth()->user()->student->city }}">
-
-                        <script type="text/javascript">
-                            var citta_ = new LiveValidation('inputCitta', {
-                                onlyOnSubmit: true
-                            });
-
-                            citta_.add(Validate.Presence);
-                            citta_.add(Validate.SoloTesto);
-                        </script>
+                        <input type="text" class="form-control rounded-3 @error('inputCitta') is-invalid @enderror"
+                            id="inputCitta" name="inputCitta" maxlength="255"
+                            value="{{ old('inputCitta', auth()->user()->student->city) }}">
+                        @error('inputCitta')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="col-md-1">
@@ -103,17 +90,12 @@
                             Prov.
                         </label>
 
-                        <input type="text" class="form-control rounded-3" id="inputProvincia" name="inputProvincia"
-                            maxlength="2" value="{{ auth()->user()->student->province }}">
-
-                        <script type="text/javascript">
-                            var provincia_ = new LiveValidation('inputProvincia', {
-                                onlyOnSubmit: true
-                            });
-
-                            provincia_.add(Validate.Presence);
-                            provincia_.add(Validate.SoloTesto);
-                        </script>
+                        <input type="text" class="form-control rounded-3 @error('inputProvincia') is-invalid @enderror"
+                            id="inputProvincia" name="inputProvincia" maxlength="2"
+                            value="{{ old('inputProvincia', auth()->user()->student->province) }}">
+                        @error('inputProvincia')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="col-md-1">
@@ -121,17 +103,12 @@
                             CAP
                         </label>
 
-                        <input type="text" class="form-control rounded-3" id="inputCAP" name="inputCAP" maxlength="5"
-                            value="{{ auth()->user()->student->postal_code }}">
-
-                        <script type="text/javascript">
-                            var cap_ = new LiveValidation('inputCAP', {
-                                onlyOnSubmit: true
-                            });
-
-                            cap_.add(Validate.Presence);
-                            cap_.add(Validate.InteriPositivi);
-                        </script>
+                        <input type="text" class="form-control rounded-3 @error('inputCAP') is-invalid @enderror"
+                            id="inputCAP" name="inputCAP" maxlength="5"
+                            value="{{ old('inputCAP', auth()->user()->student->postal_code) }}">
+                        @error('inputCAP')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <div class="col-12 pt-2">

@@ -101,18 +101,3 @@ function mostraPassword_old() {
     x.type = "password";
   }
 }
-
-function modifica_pass(){
-  var x = document.getElementById("inputPassword");
-  if (x.type === "text") {
-      x.type = "password";
-    }
-  var y = document.getElementById("inputPassword2");
-  if (y.type === "text") {
-        y.type = "password";
-      }
-  var z = document.getElementById("inputPassword_old");
-  if (z !== null && z.type === "text") {
-        z.type = "password";
-      }
-}

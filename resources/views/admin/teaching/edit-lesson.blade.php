@@ -24,7 +24,11 @@
                 id="upload">
                 @csrf
                 @method('POST')
-                <input type="file" class="form-control" id="file-pres-lez" name="file-pres-lez" />
+                <input type="file" class="form-control @error('file-pres-lez') is-invalid @enderror" id="file-pres-lez"
+                    name="file-pres-lez" />
+                @error('file-pres-lez')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <p>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100" id="progressbar" style="display: none">
@@ -53,7 +57,11 @@
             <form method="POST" action="{{ route('admin.lessons.file.update', $id_lezione) }}" enctype="multipart/form-data" id="upload2">
                 @csrf
                 @method('POST')
-                <input type="file" class="form-control" id="file-lesson" name="file-lesson" />
+                <input type="file" class="form-control @error('file-lesson') is-invalid @enderror" id="file-lesson"
+                    name="file-lesson" />
+                @error('file-lesson')
+                    <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
                 <p>
                 <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
                     aria-valuemax="100" id="progressbar2" style="display: none">
@@ -77,39 +85,27 @@
                 <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
                 <div class="col-md-12">
                     <h5>Numero</h5>
-                    <input type="text" class="form-control" id="numero" name="numero"
-                        value="{{ $lezione->number }}"maxlength="5">
-                    <script type="text/javascript">
-                        var numero_ = new LiveValidation('numero', {
-                            onlyOnSubmit: true
-                        });
-                        numero_.add(Validate.Presence);
-                        numero_.add(Validate.InteriPositivi);
-                    </script>
+                    <input type="text" class="form-control @error('numero') is-invalid @enderror" id="numero"
+                        name="numero" value="{{ old('numero', $lezione->number) }}" maxlength="5">
+                    @error('numero')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-12">
                     <h5>Titolo</h5>
-                    <input type="text" class="form-control" id="titolo" name="titolo" value="{{ $lezione->title }}"
-                        maxlength="255">
-                    <script type="text/javascript">
-                        var titolo_ = new LiveValidation('titolo', {
-                            onlyOnSubmit: true
-                        });
-                        titolo_.add(Validate.Presence);
-                        titolo_.add(Validate.SoloTesto);
-                    </script>
+                    <input type="text" class="form-control @error('titolo') is-invalid @enderror" id="titolo"
+                        name="titolo" value="{{ old('titolo', $lezione->title) }}" maxlength="255">
+                    @error('titolo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control" id="prezzo" name="prezzo" value="{{ $lezione->price }}"
-                        maxlength="5" style="display: inline">
-                    <script type="text/javascript">
-                        var prezzo_ = new LiveValidation('prezzo', {
-                            onlyOnSubmit: true
-                        });
-                        prezzo_.add(Validate.Presence);
-                        prezzo_.add(Validate.InteriPositivi);
-                    </script>
+                    <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
+                        name="prezzo" value="{{ old('prezzo', $lezione->price) }}" maxlength="5" style="display: inline">
+                    @error('prezzo')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
                 <br>
                 <div class="col-12" style="text-align:center">

@@ -21,16 +21,11 @@
                     <div class="mb-3">
                         <label class="form-label">Partita IVA</label>
 
-                        <input type="text" class="form-control" id="piva" name="piva" minlength="11"
-                            maxlength="11" value="{{ auth()->user()->admin->piva }}">
-
-                        <script>
-                            var piva_ = new LiveValidation('piva', {
-                                onlyOnSubmit: true
-                            });
-                            piva_.add(Validate.Presence);
-                            piva_.add(Validate.InteriPositivi);
-                        </script>
+                        <input type="text" class="form-control @error('piva') is-invalid @enderror" id="piva"
+                            name="piva" minlength="11" maxlength="11" value="{{ old('piva', auth()->user()->admin->piva) }}">
+                        @error('piva')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
                     </div>
 
                     <button type="submit" class="btn btn-primary w-100">

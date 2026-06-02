@@ -4,10 +4,9 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use App\Helpers\DateHelper;
-use App\Models\User;
 use App\Models\Course;
 use App\Models\Lesson;
 use App\Models\Exercise;
@@ -19,19 +18,21 @@ class StudentController extends Controller
 {
     public function updateAddress(Request $request)
     {
-        $indirizzo = $request->input('inputIndirizzo');
-        $numeroCivico =  $request->input('inputNumeroCivico');
-        $citta =  $request->input('inputCitta');
-        $provincia =  $request->input('inputProvincia');
-        $cap =    $request->input('inputCAP');
+        $validated = $request->validate([
+            'inputIndirizzo' => ['required', 'string', 'max:255'],
+            'inputNumeroCivico' => ['required', 'string', 'max:6'],
+            'inputCitta' => ['required', 'string', 'max:255'],
+            'inputProvincia' => ['required', 'string', 'max:2'],
+            'inputCAP' => ['required', 'string', 'max:5'],
+        ]);
 
-        $student = auth()->user()->student;
+        $student = $request->user()->student;
 
-        $student->street = $indirizzo;
-        $student->house_number = $numeroCivico;
-        $student->city = $citta;
-        $student->province = $provincia;
-        $student->postal_code = $cap;
+        $student->street = $validated['inputIndirizzo'];
+        $student->house_number = $validated['inputNumeroCivico'];
+        $student->city = $validated['inputCitta'];
+        $student->province = $validated['inputProvincia'];
+        $student->postal_code = $validated['inputCAP'];
 
         $student->save();
 
@@ -40,38 +41,46 @@ class StudentController extends Controller
 
     function updateEmail(Request $request)
     {
-        $email = $request->input('inputEmail');
-        $user = DB::table('users')->where('email', '=', $email)->first();
-        if ($user != null) {
-            return back()->withErrors([
-                'email' => 'Email già presente',
-            ])->onlyInput('email');
-        } else {
-            $usr = User::where('email', '=', auth()->user()->email)->first();
-            $usr->email = $email;
-            $usr->save();
-            return redirect()->route('student.account.credentials');
-        }
+        $validated = $request->validate([
+            'inputEmail' => [
+                'required',
+                'email',
+                'max:255',
+                Rule::unique('users', 'email')->ignore($request->user()->id),
+            ],
+        ]);
+
+        $user = $request->user();
+        $user->email = $validated['inputEmail'];
+        $user->save();
+
+        return redirect()->route('student.account.credentials');
     }
 
     function updatePassword(Request $request)
     {
+        $validated = $request->validate([
+            'inputPassword_old' => ['required'],
+            'inputPassword' => [
+                'required',
+                'min:10',
+                'regex:/[A-Z]/',
+                'regex:/[a-z]/',
+                'regex:/[0-9]/',
+                'regex:/[@#!?.:,;]/',
+            ],
+            'inputPassword2' => ['required', 'same:inputPassword'],
+        ]);
 
-        $pass_old = password_hash($request->input('inputPassword_old'), PASSWORD_DEFAULT);
-        if (Hash::check($pass_old, auth()->user()->password)) {
+        if (!Hash::check($validated['inputPassword_old'], $request->user()->password)) {
             return back()->withErrors([
-                'pass0' => 'La password non corrisponde  a quella già inserita'
+                'inputPassword_old' => 'La password non corrisponde a quella gia inserita',
             ]);
         }
 
-        $new_pass = $request->input('inputPassword');
-        $confirm_pass = $request->input('inputPassword2');
-
-        $usr = User::where('email', '=', auth()->user()->email)->first();
-
-        $usr->password = password_hash($new_pass, PASSWORD_DEFAULT);
-
-        $usr->save();
+        $user = $request->user();
+        $user->password = Hash::make($validated['inputPassword']);
+        $user->save();
 
         return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
     }
