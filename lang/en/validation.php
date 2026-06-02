@@ -186,6 +186,19 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'inputNome' => 'nome',
+        'inputCognome' => 'cognome',
+        'inputIndirizzo' => 'indirizzo',
+        'inputNumeroCivico' => 'numero civico',
+        'inputCitta' => 'citta',
+        'inputProvincia' => 'provincia',
+        'inputCAP' => 'CAP',
+        'inputCF' => 'codice fiscale',
+        'descrizione' => 'descrizione',
+        'prezzo' => 'prezzo',
+        'qta' => 'quantita',
+        'note' => 'note',
+    ],
 
 ];

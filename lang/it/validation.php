@@ -161,6 +161,18 @@ return [
         'city' => 'città',
         'province' => 'provincia',
         'postal_code' => 'CAP',
+        'inputNome' => 'nome',
+        'inputCognome' => 'cognome',
+        'inputIndirizzo' => 'indirizzo',
+        'inputNumeroCivico' => 'numero civico',
+        'inputCitta' => 'città',
+        'inputProvincia' => 'provincia',
+        'inputCAP' => 'CAP',
+        'inputCF' => 'codice fiscale',
+        'descrizione' => 'descrizione',
+        'prezzo' => 'prezzo',
+        'qta' => 'quantità',
+        'note' => 'note',
     ],
 
 ];

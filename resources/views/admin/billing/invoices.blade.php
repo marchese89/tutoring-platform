@@ -7,11 +7,6 @@
 @section('inner')
     <x-ui.page-section>
 
-        @php
-            use App\Models\Invoice;
-            use App\Helpers\DateHelper;
-        @endphp
-
         @if ($fatture->count() > 0)
             <x-ui.table-card title="Fatture">
                 <table class="table align-middle">
@@ -34,13 +29,17 @@
                                 </td>
 
                                 <td>
-                                    {{ DateHelper::format($item->date) }}
+                                    {{ $item->date }}
                                 </td>
 
                                 <td>
-                                    <x-ui.primary-button href="{{ route('admin.invoices.show', $item->number) }}">
-                                        Visualizza
-                                    </x-ui.primary-button>
+                                    @if ($item->showUrl)
+                                        <x-ui.primary-button href="{{ $item->showUrl }}">
+                                            Visualizza
+                                        </x-ui.primary-button>
+                                    @else
+                                        <span class="text-muted">Non disponibile</span>
+                                    @endif
                                 </td>
 
                             </tr>

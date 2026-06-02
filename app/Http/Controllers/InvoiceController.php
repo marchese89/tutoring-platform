@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Helpers\DateHelper;
 use App\Models\Invoice;
 
 
@@ -10,7 +10,15 @@ class InvoiceController extends Controller
 {
     public function showAll()
     {
-        $fatture = Invoice::all();
+        $fatture = Invoice::query()
+            ->orderByDesc('date')
+            ->orderByDesc('id')
+            ->get()
+            ->map(fn (Invoice $invoice) => (object) [
+                'number' => $invoice->number ?? '-',
+                'date' => $invoice->date ? DateHelper::format($invoice->date) : '-',
+                'showUrl' => $invoice->number ? route('admin.invoices.show', $invoice->number) : null,
+            ]);
 
         return view('admin.billing.invoices', compact('fatture'));
     }
