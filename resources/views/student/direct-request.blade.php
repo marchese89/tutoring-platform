@@ -1,144 +1,220 @@
 @extends('layouts.student-dashboard')
 
+@section('page-title')
+    <x-ui.section-header :title="'Richiesta lezione'" />
+@endsection
+
 @section('inner')
+    <x-ui.page-section>
+        <x-ui.card>
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                <div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
+                        Richiesta lezione
+                    </span>
+
+                    <h3 class="fw-bold mb-0">
+                        {{ $richiesta->title }}
+                    </h3>
+                </div>
+
+                <div class="text-lg-end">
+                    <span class="badge {{ $richiesta->paid ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }} rounded-pill px-3 py-2 mb-2">
+                        {{ $richiesta->paid ? 'Acquistata' : 'Da acquistare' }}
+                    </span>
+
+                    @if ($richiesta->price)
+                        <h5 class="fw-semibold mb-0">
+                            {{ number_format($richiesta->price, 2, ',', '.') }}&euro;
+                        </h5>
+                    @endif
+                </div>
+            </div>
+        </x-ui.card>
+
+        <div class="mt-4">
+            <x-ui.card>
+                <h4 class="fw-bold mb-3">
+                    Traccia
+                </h4>
+
+                <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
+                    <iframe src="/protected-files/{{ $richiesta->trace }}#view=FitH"></iframe>
+                </div>
+            </x-ui.card>
+        </div>
+
+        @if ($richiesta->price != null && $richiesta->price != 0 && $richiesta->paid == 0)
+            <div class="mt-4">
+                <x-ui.card>
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                        <div>
+                            <h4 class="fw-bold mb-1">
+                                Soluzione disponibile
+                            </h4>
+
+                            <p class="text-muted mb-0">
+                                Acquista la richiesta per accedere allo svolgimento e alla chat di supporto.
+                            </p>
+                        </div>
+
+                        <x-ui.primary-button href="{{ route('cart.items.store', ['id' => $richiesta->id, 'type' => 5]) }}">
+                            Acquista
+                        </x-ui.primary-button>
+                    </div>
+                </x-ui.card>
+            </div>
+        @endif
+
+        @if ($richiesta->paid == 1)
+            <div class="mt-4">
+                <x-ui.card>
+                    <h4 class="fw-bold mb-3">
+                        Soluzione
+                    </h4>
+
+                    <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
+                        <iframe src="/protected-files/{{ $richiesta->execution }}#view=FitH"></iframe>
+                    </div>
+                </x-ui.card>
+            </div>
+
+            @if ($chat)
+                <div class="mt-4">
+                    <x-ui.card>
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div>
+                                <h4 class="fw-bold mb-1">
+                                    Chat di supporto
+                                </h4>
+
+                                <p class="text-muted mb-0">
+                                    Scrivi qui per ricevere supporto sulla richiesta.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div id="messaggi" class="d-flex flex-column gap-3 mb-4">
+                            @foreach ($messaggi as $item)
+                                <div class="d-flex {{ $item['is_teacher'] ? 'justify-content-start' : 'justify-content-end' }}">
+                                    <div
+                                        class="w-75 p-3 rounded-4 shadow-sm {{ $item['is_teacher'] ? 'bg-light' : 'bg-primary text-white' }}">
+                                        <p class="fw-semibold mb-1">
+                                            {{ $item['sender'] }}
+                                        </p>
+
+                                        <p class="mb-2">
+                                            {{ $item['message'] }}
+                                        </p>
+
+                                        <small class="{{ $item['is_teacher'] ? 'text-muted' : 'text-white-50' }}">
+                                            {{ $item['date'] }}
+                                        </small>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <div>
+                            <textarea id="messaggio" name="messaggio" rows="4" class="form-control rounded-4 mb-3"
+                                placeholder="Scrivi un messaggio..."></textarea>
+
+                            <div class="text-end">
+                                <x-ui.primary-button id="invia" type="button"
+                                    onclick="sendMessage(document.getElementById('messaggio').value)">
+                                    Invia
+                                </x-ui.primary-button>
+                            </div>
+                        </div>
+                    </x-ui.card>
+                </div>
+            @endif
+        @endif
+    </x-ui.page-section>
+
     @if ($chat)
-        <script type="text/javascript">
-            setInterval(getMessages, 1000);
-
-            function getMessages() {
-                let xmlhttp = new XMLHttpRequest();
-                xmlhttp.onreadystatechange = function() {
-                    if (this.readyState == 4 && this.status == 200) {
-                        _("messaggi").innerHTML = this.responseText;
-                    }
-                };
-                //aut=1 -> insegnante
-                xmlhttp.open("GET", "{{ route('student.chats.messages.index', ['id_chat' => $chat->id]) }}", true);
-                xmlhttp.send();
-            }
-
+        <script>
             function sendMessage(testo) {
-                document.getElementById("messaggio").value = "";
+                const input = document.getElementById("messaggio");
+
+                input.value = "";
 
                 if (!testo || testo.trim() === "") {
                     return;
                 }
 
-                let xmlhttp = new XMLHttpRequest();
-
-                xmlhttp.open("POST", "{{ route('student.chat.messages.store') }}", true);
-
-                xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-                // CSRF Laravel (OBBLIGATORIO)
-                xmlhttp.setRequestHeader(
-                    "X-CSRF-TOKEN",
-                    document.querySelector('meta[name="csrf-token"]').getAttribute("content")
-                );
-
-                xmlhttp.send(
-                    "id_chat={{ $chat->id }}&testo=" + encodeURIComponent(testo)
-                );
+                fetch("{{ route('student.chat.messages.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/x-www-form-urlencoded",
+                        "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
+                    },
+                    body: new URLSearchParams({
+                        id_chat: "{{ $chat->id }}",
+                        testo: testo
+                    })
+                });
             }
+
+            function escapeHtml(value) {
+                const div = document.createElement("div");
+
+                div.textContent = value ?? "";
+
+                return div.innerHTML;
+            }
+
+            function appendMessage(msg) {
+                const isStudent = msg.author == 0;
+                const wrapper = document.createElement("div");
+
+                wrapper.className = `d-flex ${isStudent ? 'justify-content-end' : 'justify-content-start'}`;
+                wrapper.innerHTML = `
+                    <div class="w-75 p-3 rounded-4 shadow-sm ${isStudent ? 'bg-primary text-white' : 'bg-light'}">
+                        <p class="fw-semibold mb-1">
+                            ${isStudent ? 'Tu' : 'Insegnante'}
+                        </p>
+
+                        <p class="mb-2">
+                            ${escapeHtml(msg.message)}
+                        </p>
+
+                        <small class="${isStudent ? 'text-white-50' : 'text-muted'}">
+                            ${escapeHtml(msg.date ?? '')}
+                        </small>
+                    </div>
+                `;
+
+                const container = document.getElementById("messaggi");
+
+                container.appendChild(wrapper);
+                container.scrollTop = container.scrollHeight;
+            }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                const input = document.getElementById("messaggio");
+
+                input.addEventListener("keydown", function(event) {
+                    if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
+
+                        document.getElementById("invia").click();
+                    }
+                });
+
+                const chatId = {{ $chat->id }};
+
+                if (!window.Echo) {
+                    console.error("Echo non disponibile");
+                    return;
+                }
+
+                window.Echo
+                    .channel("chat." + chatId)
+                    .listen(".MessageSent", function(e) {
+                        appendMessage(e);
+                    });
+            });
         </script>
     @endif
-    <ul class="nav">
-        <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="{{ route('student.dashboard') }}">Dashboard</a>
-        </li>
-        @if ($richiesta->paid == 0)
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ route('student.direct-requests.index') }}">Richieste Dirette</a>
-            </li>
-        @else
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="{{ route('student.direct-requests.purchased') }}">Richieste Dirette</a>
-            </li>
-        @endif
-    </ul>
-    <div class="container" style="text-align: center">
-        <h3>Richiesta Lezione: </h3>
-        <h3 style="color: blue">{{ $richiesta->title }}</h3>
-        <h4>Traccia</h4>
-
-        <iframe width="90%" src="/protected-files/{{ $richiesta->trace }}#view=FitH" height="800px">
-        </iframe>
-        <br>
-        <br>
-        @if ($richiesta->price != null && $richiesta->price != 0 && $richiesta->paid == 0)
-            <div class="col-md-12">
-                <h5>Prezzo</h5>
-                <label>{{ $richiesta->price }} &nbsp;<strong>&euro;</strong></label>
-            </div>
-            <br>
-            <div class="col-12" style="text-align:center">
-                <button type="submit" class="btn btn-primary"
-                    onclick="location.href='{{ route('cart.items.store', ['id' => $richiesta->id, 'type' => 5]) }}'">Acquista</button>
-            </div>
-        @endif
-        @if ($richiesta->paid == 1)
-            <br>
-            <br>
-            <h4>Soluzione</h4>
-            <iframe width="90%" src="/protected-files/{{ $richiesta->execution }}#view=FitH" height="800px">
-            </iframe>
-            <br>
-            <br>
-
-            <br>
-            <br>
-            <div class="container" style="width: 70%;text-align:center">
-                <h2>Chat di Supporto</h2>
-                <br>
-                <br>
-                <div id="messaggi">
-                    @foreach ($messaggi as $item)
-                        @if ($item['is_teacher'])
-                            <div class="chat-message" style="justify-content: flex-start;">
-                                <div class="message-content">
-                                    <p class="sender-name">Insegnante</p>
-                                    <p class="message-text">{{ $item['message'] }}</p>
-                                    <span class="timestamp">{{ $item['date'] }}</span>
-                                </div>
-                            </div>
-                        @else
-                            <div class="chat-message" style="justify-content: flex-end;">
-                                <div class="message-content" style="background-color: #5755c559;">
-                                    <p class="sender-name">Tu</p>
-                                    <p class="message-text">{{ $item['message'] }}</p>
-                                    <span class="timestamp">{{ $item['date'] }}</span>
-                                </div>
-                            </div>
-                        @endif
-                    @endforeach
-                </div>
-                <div style="text-align: center">
-                    <textarea id="messaggio" name="messaggio" rows="5" cols="100"
-                        style="width: 80%; font-size: 18px; resize: none; border-radius: 5px 5px 5px 5px"></textarea>
-
-                    <script type="text/javascript">
-                        var input = _("messaggio");
-
-                        //Execute a function when the user presses a key on the keyboard
-                        input.addEventListener("keypress", function(event) {
-                            // If the user presses the "Enter" key on the keyboard
-                            if (event.key === "Enter") {
-                                // Cancel the default action, if needed
-                                event.preventDefault();
-                                // Trigger the button element with a click
-                                _("invia").click();
-                            }
-                        });
-                    </script> <br>
-                    <button id="invia" class="btn btn-primary"
-                        onclick=sendMessage(_("messaggio").value)>Invia</button>
-                    <br>
-                    <br>
-                </div>
-            </div>
-        @endif
-        <br>
-        <br>
-        <br>
-    </div>
 @endsection
