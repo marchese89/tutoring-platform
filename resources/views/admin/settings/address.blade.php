@@ -5,82 +5,55 @@
 @endsection
 
 @section('inner')
-    <div class="container py-4" style="max-width: 900px;">
+    <x-ui.page-section>
+        <x-ui.form-card
+            title="Indirizzo"
+            description="Aggiorna i dati di residenza associati al profilo amministratore."
+            icon="bi-geo-alt">
+            <form method="POST" action="{{ route('admin.account.address.update') }}" class="row g-4">
+                @csrf
 
-        <div class="card shadow-sm">
+                <x-ui.form-field
+                    wrapper-class="col-md-5"
+                    name="inputIndirizzo"
+                    label="Indirizzo (via/piazza)"
+                    maxlength="255"
+                    :value="old('inputIndirizzo', auth()->user()->admin->street)" />
 
-            <div class="card-header">
-                <h5 class="mb-0">Modifica indirizzo</h5>
-            </div>
+                <x-ui.form-field
+                    wrapper-class="col-md-2"
+                    name="inputNumeroCivico"
+                    label="N. Civico"
+                    maxlength="6"
+                    :value="old('inputNumeroCivico', auth()->user()->admin->house_number)" />
 
-            <div class="card-body">
+                <x-ui.form-field
+                    wrapper-class="col-md-3"
+                    name="inputCitta"
+                    label="Città"
+                    maxlength="255"
+                    :value="old('inputCitta', auth()->user()->admin->city)" />
 
-                <form method="POST" action="{{ route('admin.account.address.update') }}" class="row g-3">
-                    @csrf
+                <x-ui.form-field
+                    wrapper-class="col-md-1"
+                    name="inputProvincia"
+                    label="Prov."
+                    maxlength="2"
+                    :value="old('inputProvincia', auth()->user()->admin->province)" />
 
-                    {{-- VIA --}}
-                    <div class="col-md-8">
-                        <label class="form-label">Via / Piazza</label>
-                        <input type="text" class="form-control @error('inputIndirizzo') is-invalid @enderror"
-                            id="inputIndirizzo" name="inputIndirizzo" maxlength="255"
-                            value="{{ old('inputIndirizzo', auth()->user()->admin->street) }}">
-                        @error('inputIndirizzo')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <x-ui.form-field
+                    wrapper-class="col-md-1"
+                    name="inputCAP"
+                    label="CAP"
+                    maxlength="5"
+                    :value="old('inputCAP', auth()->user()->admin->postal_code)" />
 
-                    {{-- CIVICO --}}
-                    <div class="col-md-4">
-                        <label class="form-label">N. civico</label>
-                        <input type="text" class="form-control @error('inputNumeroCivico') is-invalid @enderror"
-                            id="inputNumeroCivico" name="inputNumeroCivico" maxlength="6"
-                            value="{{ old('inputNumeroCivico', auth()->user()->admin->house_number) }}">
-                        @error('inputNumeroCivico')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- CITTA' --}}
-                    <div class="col-md-6">
-                        <label class="form-label">Città</label>
-                        <input type="text" class="form-control @error('inputCitta') is-invalid @enderror" id="inputCitta"
-                            name="inputCitta" maxlength="255" value="{{ old('inputCitta', auth()->user()->admin->city) }}">
-                        @error('inputCitta')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- PROVINCIA --}}
-                    <div class="col-md-2">
-                        <label class="form-label">Provincia</label>
-                        <input type="text" class="form-control @error('inputProvincia') is-invalid @enderror"
-                            id="inputProvincia" name="inputProvincia" maxlength="2"
-                            value="{{ old('inputProvincia', auth()->user()->admin->province) }}">
-                        @error('inputProvincia')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    {{-- CAP --}}
-                    <div class="col-md-4">
-                        <label class="form-label">CAP</label>
-                        <input type="text" class="form-control @error('inputCAP') is-invalid @enderror" id="inputCAP"
-                            name="inputCAP" maxlength="5" value="{{ old('inputCAP', auth()->user()->admin->postal_code) }}">
-                        @error('inputCAP')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="col-12 text-center mt-3">
-                        <button type="submit" class="btn btn-primary px-4">
-                            Salva modifiche
-                        </button>
-                    </div>
-
-                </form>
-
-            </div>
-        </div>
-
-    </div>
+                <div class="col-12 pt-2">
+                    <x-ui.primary-button type="submit">
+                        Salva Modifiche
+                    </x-ui.primary-button>
+                </div>
+            </form>
+        </x-ui.form-card>
+    </x-ui.page-section>
 @endsection

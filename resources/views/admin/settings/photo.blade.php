@@ -5,46 +5,50 @@
 @endsection
 
 @section('inner')
-    <div class="container py-4" style="max-width: 600px;">
-
-        <div class="card shadow-sm">
-
-            <div class="card-header">
-                <h5 class="mb-0">Foto profilo amministratore</h5>
-            </div>
-
-            <div class="card-body text-center">
-
-                <div class="mb-4">
-                    <img alt="Nessuna foto caricata" src="{{ auth()->user()->admin->photo }}"
-                        class="img-fluid rounded shadow-sm" style="max-width: 300px; height: auto;">
-                </div>
-
-                <form method="POST" action="{{ route('admin.account.photo.update') }}" enctype="multipart/form-data" id="upload">
-
-                    @csrf
-
-                    <div class="mb-3 text-start">
-                        <label class="form-label">Seleziona immagine</label>
-                        <input type="file" class="form-control" id="file" name="file">
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-7">
+                <x-ui.form-card
+                    title="Foto profilo amministratore"
+                    description="Carica o sostituisci l'immagine mostrata nel sito."
+                    icon="bi-person-circle">
+                    <div class="text-center mb-4">
+                        <img
+                            alt="Nessuna foto caricata"
+                            src="{{ auth()->user()->admin->photo }}"
+                            class="img-fluid rounded-4 shadow-sm border"
+                            style="max-width: 300px; height: auto;">
                     </div>
 
-                    <div class="progress mb-3" id="progressbar" style="display:none; height: 20px;">
-                        <div class="progress-bar" id="percent" style="width: 0%;">
-                            0%
+                    <form
+                        method="POST"
+                        action="{{ route('admin.account.photo.update') }}"
+                        enctype="multipart/form-data"
+                        id="upload">
+                        @csrf
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="file">
+                                Seleziona immagine
+                            </label>
+                            <input type="file" class="form-control rounded-3" id="file" name="file">
                         </div>
-                    </div>
 
-                    <button type="submit" class="btn btn-primary w-100"
-                        onclick="upload('upload','file','{{ route('admin.account.photo.update') }}',1)">
-                        Carica foto
-                    </button>
+                        <div class="progress mb-3" id="progressbar" style="display: none; height: 20px;">
+                            <div class="progress-bar" id="percent" style="width: 0%;">
+                                0%
+                            </div>
+                        </div>
 
-                </form>
-
+                        <x-ui.primary-button
+                            type="submit"
+                            class="w-100 justify-content-center"
+                            onclick="upload('upload','file','{{ route('admin.account.photo.update') }}',1)">
+                            Carica foto
+                        </x-ui.primary-button>
+                    </form>
+                </x-ui.form-card>
             </div>
-
         </div>
-
-    </div>
+    </x-ui.page-section>
 @endsection

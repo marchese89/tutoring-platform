@@ -5,114 +5,98 @@
 @endsection
 
 @section('inner')
-    <div class="container py-4" style="max-width: 700px;">
+    <x-ui.page-section>
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <x-ui.form-card
+                    class="h-100"
+                    title="Modifica Email"
+                    description="Aggiorna l'indirizzo email usato per accedere."
+                    icon="bi-envelope">
+                    <form method="POST" action="{{ route('admin.account.email.update') }}">
+                        @csrf
 
-        {{-- EMAIL --}}
-        <div class="card mb-4 shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0">Modifica Email</h5>
+                        <x-ui.form-field
+                            type="email"
+                            name="inputEmail"
+                            label="Nuova Email"
+                            maxlength="255"
+                            :value="old('inputEmail', auth()->user()->email)" />
+
+                        <x-ui.primary-button type="submit">
+                            Aggiorna Email
+                        </x-ui.primary-button>
+                    </form>
+                </x-ui.form-card>
             </div>
 
-            <div class="card-body">
-                <form method="POST" action="{{ route('admin.account.email.update') }}">
-                    @csrf
+            <div class="col-lg-6">
+                <x-ui.form-card
+                    class="h-100"
+                    title="Modifica Password"
+                    description="Aggiorna la password dell'account amministratore."
+                    icon="bi-lock">
+                    @if (session()->has('success'))
+                        <div class="alert alert-success rounded-3">
+                            {{ session()->get('success') }}
+                        </div>
+                    @endif
 
-                    <div class="mb-3">
-                        <label class="form-label">Email</label>
-                        <input type="email" class="form-control" id="inputEmail" name="inputEmail" maxlength="255"
-                            value="{{ auth()->user()->email }}">
+                    <form method="POST" action="{{ route('admin.account.password.update') }}">
+                        @csrf
 
-                        @if ($errors->any())
-                            <small class="text-danger">
-                                {{ $errors->first('email') }}
-                            </small>
-                        @endif
-                    </div>
+                        <x-ui.form-field
+                            wrapper-class="mb-2"
+                            type="password"
+                            name="inputPassword_old"
+                            label="Vecchia Password"
+                            error-name="pass0" />
 
-                    <button type="submit" class="btn btn-primary">
-                        Aggiorna Email
-                    </button>
-                </form>
-            </div>
-        </div>
-
-
-        {{-- PASSWORD --}}
-        <div class="card shadow-sm">
-            <div class="card-header">
-                <h5 class="mb-0">Modifica Password</h5>
-            </div>
-
-            <div class="card-body">
-
-                @if (session()->has('success'))
-                    <div class="alert alert-success">
-                        {{ session()->get('success') }}
-                    </div>
-                @endif
-
-                <form method="POST" action="{{ route('admin.account.password.update') }}">
-                    @csrf
-
-                    {{-- vecchia password --}}
-                    <div class="mb-3">
-                        <label class="form-label">Vecchia password</label>
-                        <input type="password" class="form-control" id="inputPassword_old" name="inputPassword_old">
-
-                        <div class="form-check mt-1">
+                        <div class="form-check mb-4">
                             <input class="form-check-input" type="checkbox" onclick="mostraPassword_old()" id="showOld">
                             <label class="form-check-label" for="showOld">
-                                Mostra password
+                                Mostra Password
                             </label>
                         </div>
 
-                        @if ($errors->any())
-                            <small class="text-danger">
-                                {{ $errors->first('pass0') }}
-                            </small>
-                        @endif
-                    </div>
+                        <x-ui.form-field
+                            wrapper-class="mb-2"
+                            type="password"
+                            name="inputPassword"
+                            label="Nuova Password" />
 
-                    {{-- nuova password --}}
-                    <div class="mb-3">
-                        <label class="form-label">Nuova password</label>
-                        <input type="password" class="form-control" id="inputPassword" name="inputPassword">
-
-                        <div class="form-check mt-1">
+                        <div class="form-check mb-4">
                             <input class="form-check-input" type="checkbox" onclick="mostraPassword1()" id="showNew">
                             <label class="form-check-label" for="showNew">
-                                Mostra password
+                                Mostra Password
                             </label>
                         </div>
-                    </div>
 
-                    {{-- conferma --}}
-                    <div class="mb-3">
-                        <label class="form-label">Conferma password</label>
-                        <input type="password" class="form-control" id="inputPassword2" name="inputPassword2">
+                        <x-ui.form-field
+                            wrapper-class="mb-2"
+                            type="password"
+                            id="inputPassword2"
+                            name="inputPassword_confirmation"
+                            label="Conferma Password" />
 
-                        <div class="form-check mt-1">
+                        <div class="form-check mb-4">
                             <input class="form-check-input" type="checkbox" onclick="mostraPassword2()" id="showConfirm">
                             <label class="form-check-label" for="showConfirm">
-                                Mostra password
+                                Mostra Password
                             </label>
                         </div>
-                    </div>
 
-                    {{-- regole password --}}
-                    <div class="alert alert-secondary small">
-                        Password: almeno 10 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale (@ #
-                        ! ? . , ; :).
-                        Evitare più di 2 caratteri uguali consecutivi.
-                    </div>
+                        <div class="alert alert-light border rounded-4 small mb-4">
+                            Password: almeno 10 caratteri, una maiuscola, una minuscola, un numero e un carattere speciale
+                            (@ # ! ? . , ; :). Evitare piu di 2 caratteri uguali consecutivi.
+                        </div>
 
-                    <button type="submit" class="btn btn-primary">
-                        Aggiorna Password
-                    </button>
-
-                </form>
+                        <x-ui.primary-button type="submit">
+                            Aggiorna Password
+                        </x-ui.primary-button>
+                    </form>
+                </x-ui.form-card>
             </div>
         </div>
-
-    </div>
+    </x-ui.page-section>
 @endsection
