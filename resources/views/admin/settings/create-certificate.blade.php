@@ -31,7 +31,8 @@
                         method="POST"
                         action="{{ route('admin.account.certificates.uploads.store') }}"
                         enctype="multipart/form-data"
-                        class="mb-4">
+                        class="mb-4"
+                        data-upload-progress-form>
                         @csrf
 
                         <div class="mb-3">
@@ -51,6 +52,8 @@
                                 </div>
                             @enderror
                         </div>
+
+                        <x-ui.upload-progress label="Caricamento certificato" />
 
                         <x-ui.primary-button type="submit">
                             Upload file

@@ -57,7 +57,7 @@
                                         <div class="card-body p-4">
 
                                             <form method="POST" action="{{ route('lesson-requests.files.store') }}"
-                                                enctype="multipart/form-data" id="upload">
+                                                enctype="multipart/form-data" id="upload" data-upload-progress-form>
 
                                                 @csrf
 
@@ -73,6 +73,8 @@
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
+
+                                                <x-ui.upload-progress label="Caricamento file" />
 
                                                 <div class="d-grid">
                                                     <button type="submit" class="btn btn-primary btn-lg rounded-3">

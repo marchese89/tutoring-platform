@@ -69,7 +69,8 @@
                         <form
                             method="POST"
                             action="{{ route('admin.account.certificates.photo.update') }}"
-                            enctype="multipart/form-data">
+                            enctype="multipart/form-data"
+                            data-upload-progress-form>
                             @csrf
 
                             <input type="hidden" name="id" value="{{ $certificate->id }}">
@@ -91,6 +92,8 @@
                                     </div>
                                 @enderror
                             </div>
+
+                            <x-ui.upload-progress label="Caricamento certificato" />
 
                             <x-ui.primary-button type="submit" size="sm">
                                 Upload file
