@@ -21,23 +21,18 @@
         <br>
         <div class="container" style="text-align: center;width:35%">
             <form method="POST" action="{{ route('admin.lessons.presentation.update', $id_lezione) }}" enctype="multipart/form-data"
-                id="upload">
+                id="upload" data-upload-progress-form>
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('file-pres-lez') is-invalid @enderror" id="file-pres-lez"
-                    name="file-pres-lez" />
+                    name="file-pres-lez" required />
                 @error('file-pres-lez')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100" id="progressbar" style="display: none">
-                    <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-                </div>
+                <x-ui.upload-progress label="Caricamento presentazione" />
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file-pres-lez','{{ route('admin.lessons.presentation.update', $id_lezione) }}',1)">Upload</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
 
                 <br>
@@ -54,23 +49,18 @@
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.file.update', $id_lezione) }}" enctype="multipart/form-data" id="upload2">
+            <form method="POST" action="{{ route('admin.lessons.file.update', $id_lezione) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('file-lesson') is-invalid @enderror" id="file-lesson"
-                    name="file-lesson" />
+                    name="file-lesson" required />
                 @error('file-lesson')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100" id="progressbar2" style="display: none">
-                    <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-                </div>
+                <x-ui.upload-progress label="Caricamento svolgimento" />
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload2','file-lesson','{{ route('admin.lessons.file.update', $id_lezione) }}',2)">Upload</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
 
                 <br>

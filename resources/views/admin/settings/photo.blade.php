@@ -24,26 +24,22 @@
                         method="POST"
                         action="{{ route('admin.account.photo.update') }}"
                         enctype="multipart/form-data"
-                        id="upload">
+                        id="upload"
+                        data-upload-progress-form>
                         @csrf
 
                         <div class="mb-3">
                             <label class="form-label fw-semibold" for="file">
                                 Seleziona immagine
                             </label>
-                            <input type="file" class="form-control rounded-3" id="file" name="file">
+                            <input type="file" class="form-control rounded-3" id="file" name="file" required>
                         </div>
 
-                        <div class="progress mb-3" id="progressbar" style="display: none; height: 20px;">
-                            <div class="progress-bar" id="percent" style="width: 0%;">
-                                0%
-                            </div>
-                        </div>
+                        <x-ui.upload-progress label="Caricamento foto" />
 
                         <x-ui.primary-button
                             type="submit"
-                            class="w-100 justify-content-center"
-                            onclick="upload('upload','file','{{ route('admin.account.photo.update') }}',1)">
+                            class="w-100 justify-content-center">
                             Carica foto
                         </x-ui.primary-button>
                     </form>

@@ -20,24 +20,19 @@
             height="400px">
         </iframe>
 
-        <form method="POST" action="{{ route('admin.exercises.trace.upload.store') }}" enctype="multipart/form-data" id="upload">
+        <form method="POST" action="{{ route('admin.exercises.trace.upload.store') }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
             @csrf
             @method('POST')
             <input type="hidden" name="id" value="{{ $id }}" />
             <input type="file" class="form-control @error('file-trace-ex') is-invalid @enderror" id="file-trace-ex"
-                name="file-trace-ex" />
+                name="file-trace-ex" required />
             @error('file-trace-ex')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
-            <p>
-            <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                aria-valuemax="100" id="progressbar" style="display: none">
-                <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-            </div>
+            <x-ui.upload-progress label="Caricamento traccia" />
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary"
-                    onclick="upload('upload','file-trace-ex','{{ route('admin.exercises.trace.upload.store') }}',1)">Upload</button>
+                <button type="submit" class="btn btn-primary">Upload</button>
             </div>
 
             <br>
@@ -65,23 +60,18 @@
                 height="400px">
             </iframe>
 
-            <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2">
+            <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('file-ex') is-invalid @enderror" id="file-ex"
-                    name="file-ex" />
+                    name="file-ex" required />
                 @error('file-ex')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100" id="progressbar2" style="display: none">
-                    <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-                </div>
+                <x-ui.upload-progress label="Caricamento svolgimento" />
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload2','file-ex','{{ route('admin.exercises.execution.upload.store') }}',2)">Upload</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
 
                 <br>

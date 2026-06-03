@@ -35,23 +35,18 @@
             @endif
         @endif
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lesson-requests.solution.store', $richiesta->id) }}" enctype="multipart/form-data" id="upload">
+            <form method="POST" action="{{ route('admin.lesson-requests.solution.store', $richiesta->id) }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
                 @csrf
                 @method('POST')
                 <input type="hidden" name="id" value="{{ $richiesta->id }}" />
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" />
+                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" required />
                 @error('file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
-                <p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100" id="progressbar" style="display: none">
-                    <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-                </div>
+                <x-ui.upload-progress label="Caricamento soluzione" />
 
                 <div class="col-12">
-                    <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file','{{ route('admin.lesson-requests.solution.store', $richiesta->id) }}',1)">Upload</button>
+                    <button type="submit" class="btn btn-primary">Upload</button>
                 </div>
 
                 <br>
