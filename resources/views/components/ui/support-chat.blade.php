@@ -32,6 +32,7 @@
             color: #1f2937;
             padding: .75rem .875rem .5rem;
             position: relative;
+            text-align: left;
         }
 
         .support-chat-bubble-own {
@@ -56,6 +57,7 @@
             line-height: 1.45;
             margin-bottom: .25rem;
             overflow-wrap: anywhere;
+            text-align: left;
             white-space: pre-wrap;
         }
 
@@ -135,7 +137,10 @@
             </div>
         </div>
 
-        <span class="badge bg-light text-secondary border rounded-pill px-3 py-2">
+        <span
+            id="{{ $chatDomId }}-count"
+            class="badge bg-light text-secondary border rounded-pill px-3 py-2"
+            data-message-count="{{ $messageCount }}">
             {{ $messageCount }} {{ $messageCount === 1 ? 'messaggio' : 'messaggi' }}
         </span>
     </div>
@@ -216,6 +221,19 @@
             return escapeHtml(value).replace(/\n/g, "<br>");
         }
 
+        function updateMessageCount() {
+            const badge = document.getElementById(`${chatDomId}-count`);
+
+            if (!badge) {
+                return;
+            }
+
+            const currentCount = Number(badge.dataset.messageCount || 0) + 1;
+
+            badge.dataset.messageCount = currentCount;
+            badge.textContent = `${currentCount} ${currentCount === 1 ? 'messaggio' : 'messaggi'}`;
+        }
+
         function appendMessage(msg) {
             const isOwnMessage = Number(msg.author) === Number(ownAuthor);
             const wrapper = document.createElement("div");
@@ -246,6 +264,7 @@
 
             container.appendChild(wrapper);
             container.scrollTop = container.scrollHeight;
+            updateMessageCount();
         }
 
         function sendMessage() {
