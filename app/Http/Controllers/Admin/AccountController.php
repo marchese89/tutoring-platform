@@ -11,6 +11,13 @@ use App\Models\Certificate;
 
 class AccountController extends Controller
 {
+    public function certificatesIndex()
+    {
+        $certificates = Certificate::orderBy('id')->get();
+
+        return view('admin.settings.certificates', compact('certificates'));
+    }
+
     // =========================
     // FOTO PROFILO
     // =========================
@@ -206,6 +213,12 @@ class AccountController extends Controller
     // =========================
     public function storeCertificate(Request $request)
     {
+        if (!$request->session()->has('uploaded_cert')) {
+            return redirect()
+                ->route('admin.account.certificates.create')
+                ->withErrors(['file' => 'Carica un file prima di salvare il certificato.']);
+        }
+
         $request->validate([
             'nome' => 'required|string|max:255'
         ]);

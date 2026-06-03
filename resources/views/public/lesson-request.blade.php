@@ -68,28 +68,15 @@
 
                                                     <input type="file"
                                                         class="form-control form-control-lg @error('file') is-invalid @enderror"
-                                                        id="file" name="file" />
+                                                        id="file" name="file" required />
                                                     @error('file')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror
                                                 </div>
 
-                                                <div class="progress mb-4" role="progressbar" aria-valuenow="25"
-                                                    aria-valuemin="0" aria-valuemax="100" id="progressbar"
-                                                    style="display: none; height: 24px;">
-
-                                                    <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                                        style="width: 25%" id="percent">
-                                                        25%
-                                                    </div>
-                                                </div>
-
                                                 <div class="d-grid">
-                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3"
-                                                        onclick="upload('upload','file','{{ route('lesson-requests.files.store') }}',1)">
-
+                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3">
                                                         Carica File
-
                                                     </button>
                                                 </div>
 

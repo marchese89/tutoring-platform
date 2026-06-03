@@ -24,7 +24,8 @@ Route::prefix('admin')
         Route::view('account/credentials', 'admin.settings.credentials')->name('account.credentials');
         Route::view('account/photo', 'admin.settings.photo')->name('account.photo');
         Route::view('account/address', 'admin.settings.address')->name('account.address');
-        Route::view('account/certificates', 'admin.settings.certificates')->name('account.certificates.index');
+        Route::get('account/certificates', [AccountController::class, 'certificatesIndex'])
+            ->name('account.certificates.index');
         Route::view('account/certificates/create', 'admin.settings.create-certificate')->name('account.certificates.create');
         Route::view('account/vat-number', 'admin.settings.vat-number')->name('account.vat-number');
 

@@ -5,92 +5,106 @@
 @endsection
 
 @section('inner')
-    <div class="container py-4" style="max-width: 1000px;">
-
-        <div class="text-center mb-4">
-            <button class="btn btn-primary" onclick="location.href='{{ route('admin.account.certificates.create') }}'">
+    <x-ui.page-section>
+        <div class="d-flex justify-content-end mb-4">
+            <x-ui.primary-button href="{{ route('admin.account.certificates.create') }}">
                 Aggiungi certificato
-            </button>
+            </x-ui.primary-button>
         </div>
 
-        @php
-            $certificates = DB::table('certificates')->select('*')->get();
-        @endphp
+        <div class="row g-4">
+            @forelse ($certificates as $certificate)
+                <div class="col-12">
+                    <x-ui.form-card
+                        :title="'Certificato #' . $certificate->id"
+                        description="Modifica nome e file associati al certificato."
+                        icon="bi-award">
+                        <div class="d-flex justify-content-end mb-4">
+                            <form method="POST" action="{{ route('admin.account.certificates.destroy') }}">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="id" value="{{ $certificate->id }}">
 
-        @foreach ($certificates as $item)
-            <div class="card shadow-sm mb-4">
-
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <strong>Certificato #{{ $item->id }}</strong>
-
-                    <form method="POST" action="{{ route('admin.account.certificates.destroy') }}">
-                        @csrf
-                        @method('DELETE')
-                        <input type="hidden" name="id" value="{{ $item->id }}">
-                        <button type="submit" class="btn btn-sm btn-danger">
-                            Elimina
-                        </button>
-                    </form>
-                </div>
-
-                <div class="card-body">
-
-                    {{-- NOME CERTIFICATO --}}
-                    <form method="POST" action="{{ route('admin.account.certificates.name.update') }}" class="mb-4">
-                        @csrf
-                        <input type="hidden" name="id" value="{{ $item->id }}">
-
-                        <label class="form-label">Nome certificato</label>
-
-                        <input class="form-control @error('nome') is-invalid @enderror" type="text"
-                            id="nome_{{ $item->id }}" name="nome" maxlength="255" value="{{ old('nome', $item->nome) }}">
-                        @error('nome')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-
-                        <button type="submit" class="btn btn-primary mt-2">
-                            Modifica nome
-                        </button>
-                    </form>
-
-                    {{-- FILE --}}
-                    <div class="mb-3">
-                        <label class="form-label">File certificato</label>
-
-                        <iframe width="100%" height="350"
-                            @if ($item->percorso_file) src="{{ $item->percorso_file }}#view=FitH" @endif>
-                        </iframe>
-                    </div>
-
-                    {{-- UPLOAD --}}
-                    <form method="POST" action="{{ route('admin.account.certificates.photo.update') }}" enctype="multipart/form-data"
-                        id="upload_{{ $item->id }}">
-
-                        @csrf
-
-                        <input type="hidden" name="id" value="{{ $item->id }}">
-
-                        <div class="mb-2">
-                            <input type="file" class="form-control" id="file_{{ $item->id }}"
-                                name="file_{{ $item->id }}">
+                                <button type="submit" class="btn btn-outline-danger rounded-pill px-3">
+                                    Elimina
+                                </button>
+                            </form>
                         </div>
 
-                        <div class="progress mb-2" id="progressbar_{{ $item->id }}"
-                            style="display:none; height: 18px;">
-                            <div class="progress-bar" id="percent_{{ $item->id }}" style="width: 0%;">
-                                0%
+                        <form method="POST" action="{{ route('admin.account.certificates.name.update') }}" class="mb-4">
+                            @csrf
+                            <input type="hidden" name="id" value="{{ $certificate->id }}">
+
+                            <x-ui.form-field
+                                name="nome"
+                                id="nome_{{ $certificate->id }}"
+                                label="Nome certificato"
+                                maxlength="255"
+                                :value="old('nome', $certificate->nome)" />
+
+                            <x-ui.primary-button type="submit" size="sm">
+                                Modifica nome
+                            </x-ui.primary-button>
+                        </form>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold">
+                                File certificato
+                            </label>
+
+                            <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
+                                @if ($certificate->percorso_file)
+                                    <iframe
+                                        title="Certificato {{ $certificate->id }}"
+                                        src="{{ $certificate->percorso_file }}#view=FitH">
+                                    </iframe>
+                                @else
+                                    <div class="d-flex align-items-center justify-content-center text-muted">
+                                        Nessun file caricato.
+                                    </div>
+                                @endif
                             </div>
                         </div>
 
-                        <button type="submit" class="btn btn-primary"
-                            onclick="upload('upload_{{ $item->id }}','file_{{ $item->id }}','{{ route('admin.account.certificates.photo.update') }}',1)">
-                            Upload file
-                        </button>
-                    </form>
+                        <form
+                            method="POST"
+                            action="{{ route('admin.account.certificates.photo.update') }}"
+                            enctype="multipart/form-data">
+                            @csrf
 
+                            <input type="hidden" name="id" value="{{ $certificate->id }}">
+
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="file_{{ $certificate->id }}">
+                                    Sostituisci file
+                                </label>
+
+                                <input
+                                    type="file"
+                                    class="form-control rounded-3 @error('file') is-invalid @enderror"
+                                    id="file_{{ $certificate->id }}"
+                                    name="file"
+                                    required>
+                                @error('file')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
+                                    </div>
+                                @enderror
+                            </div>
+
+                            <x-ui.primary-button type="submit" size="sm">
+                                Upload file
+                            </x-ui.primary-button>
+                        </form>
+                    </x-ui.form-card>
                 </div>
-            </div>
-        @endforeach
-
-    </div>
+            @empty
+                <div class="col-12">
+                    <x-ui.empty-state
+                        title="Nessun certificato presente"
+                        text="Aggiungi un certificato per mostrarlo nel profilo pubblico." />
+                </div>
+            @endforelse
+        </div>
+    </x-ui.page-section>
 @endsection

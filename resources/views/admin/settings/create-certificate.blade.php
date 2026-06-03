@@ -5,64 +5,92 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center;width:60%">
-        <h2>Aggiungi Certificato</h2>
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <x-ui.form-card
+                    title="File certificato"
+                    description="Carica il file del certificato prima di completare il salvataggio."
+                    icon="bi-file-earmark-arrow-up">
+                    <div class="mb-4">
+                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
+                            @if (session()->has('uploaded_cert'))
+                                <iframe
+                                    title="Anteprima certificato"
+                                    src="{{ session('uploaded_cert') }}#view=FitH">
+                                </iframe>
+                            @else
+                                <div class="d-flex align-items-center justify-content-center text-muted">
+                                    Nessun file caricato.
+                                </div>
+                            @endif
+                        </div>
+                    </div>
 
-        <br>
-        <br>
-        <br>
-        <iframe width="90%" @if (Session::exists('uploaded_cert')) src="{{ Session::get('uploaded_cert') }}#view=FitH" @endif
-            height="400px">
-        </iframe>
-        <br>
-        <div class="container" style="text-align: center;width:60%">
-            <form method="POST" action="{{ route('admin.account.certificates.uploads.store') }}" enctype="multipart/form-data" id="upload">
-                @csrf
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" />
-                @error('file')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-                <p>
-                <div class="progress" role="progressbar" aria-label="Basic example" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100" id="progressbar" style="display: none">
-                    <div class="progress-bar" style="width: 25%" id="percent">25%</div>
-                </div>
-
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary"
-                        onclick="upload('upload','file','{{ route('admin.account.certificates.uploads.store') }}')">Upload</button>
-                </div>
-                <br>
-                <br>
-
-            </form>
-            @if (Session::exists('uploaded_cert'))
-                <div class="col-12">
-                    <form method="POST" action="{{ route('admin.account.certificates.uploads.destroy') }}">
+                    <form
+                        method="POST"
+                        action="{{ route('admin.account.certificates.uploads.store') }}"
+                        enctype="multipart/form-data"
+                        class="mb-4">
                         @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-primary">Elimina File</button>
-                    </form>
-                </div>
-            @endif
 
-            <br>
-            <br>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="file">
+                                Seleziona file
+                            </label>
+
+                            <input
+                                type="file"
+                                class="form-control rounded-3 @error('file') is-invalid @enderror"
+                                id="file"
+                                name="file"
+                                required>
+                            @error('file')
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
+                            @enderror
+                        </div>
+
+                        <x-ui.primary-button type="submit">
+                            Upload file
+                        </x-ui.primary-button>
+                    </form>
+
+                    @if (session()->has('uploaded_cert'))
+                        <form method="POST" action="{{ route('admin.account.certificates.uploads.destroy') }}">
+                            @csrf
+                            @method('DELETE')
+
+                            <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
+                                Elimina file
+                            </button>
+                        </form>
+                    @endif
+                </x-ui.form-card>
+
+                @if (session()->has('uploaded_cert'))
+                    <x-ui.form-card
+                        class="mt-4"
+                        title="Dettagli certificato"
+                        description="Assegna un nome al certificato prima di salvarlo."
+                        icon="bi-award">
+                        <form method="POST" action="{{ route('admin.account.certificates.store') }}">
+                            @csrf
+
+                            <x-ui.form-field
+                                name="nome"
+                                label="Nome certificato"
+                                maxlength="255"
+                                :value="old('nome')" />
+
+                            <x-ui.primary-button type="submit">
+                                Aggiungi certificato
+                            </x-ui.primary-button>
+                        </form>
+                    </x-ui.form-card>
+                @endif
+            </div>
         </div>
-        @if (Session::exists('uploaded_cert') && Session::get('uploaded_cert') != null)
-            <form method="POST" action="{{ route('admin.account.certificates.store') }}">
-                @csrf
-                <input type="hidden" name="id" />
-                <input class="form-control col-4 @error('nome') is-invalid @enderror" maxlength="255" type="text"
-                    name="nome" id="nome" value="{{ old('nome') }}">
-                @error('nome')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-                <br>
-                <button type="submit" class="btn btn-primary">Aggiungi Certificato</button>
-            </form>
-        @endif
-        <br>
-        <br>
-    </div>
+    </x-ui.page-section>
 @endsection

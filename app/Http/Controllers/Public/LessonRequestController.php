@@ -199,6 +199,12 @@ class LessonRequestController extends Controller
 
     public function store(Request $request)
     {
+        if (!$request->session()->has('uploaded_lez_rich')) {
+            return redirect()
+                ->route('lesson-requests.create')
+                ->withErrors(['file' => 'Carica un file prima di inviare la richiesta.']);
+        }
+
         $request->validate([
             'titolo' => ['required', 'string', 'max:255'],
         ]);
