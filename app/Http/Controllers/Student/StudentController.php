@@ -112,12 +112,14 @@ class StudentController extends Controller
         }
 
         $messaggi = $this->chatMessages($chat->id);
+        $enableEcho = true;
 
         return view('student.lesson', compact(
             'corso',
             'lezione',
             'chat',
-            'messaggi'
+            'messaggi',
+            'enableEcho'
         ));
     }
 
