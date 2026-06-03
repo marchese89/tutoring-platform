@@ -132,6 +132,4 @@ Route::prefix('admin')
         Route::get('chats', [LessonRequestController::class, 'studentChats'])->name('chats.index');
         Route::get('chats/{id}', [LessonRequestController::class, 'showChat'])->name('chats.show');
         Route::post('chat/messages', [AjaxController::class, 'sendMessage'])->name('chat.messages.store');
-        Route::get('chats/{id_chat}/messages', [AjaxController::class, 'getMessages'])
-            ->name('chats.messages.index');
     });

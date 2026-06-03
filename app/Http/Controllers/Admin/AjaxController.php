@@ -6,8 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\DateHelper;
 use App\Models\ChatMessage;
-use App\Models\Chat;
-use App\Models\Student;
 use App\Models\Feedback;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -84,45 +82,6 @@ class AjaxController extends Controller
             'success' => true,
             'message' => $messaggio
         ]);
-    }
-
-    public function getMessages(int $id_chat)
-    {
-        return $this->renderMessages($id_chat, true);
-    }
-
-    public function getStudentMessages(int $id_chat)
-    {
-        return $this->renderMessages($id_chat, false);
-    }
-
-    private function renderMessages(int $chatId, bool $adminPerspective): string
-    {
-        $chat = Chat::findOrFail($chatId);
-        $messages = ChatMessage::where('chat_id', $chatId)
-            ->orderBy('date', 'asc')
-            ->get();
-        $student = Student::with('user')->findOrFail($chat->id_studente);
-        $studentName = e($student->user->name . ' ' . $student->user->surname);
-        $html = '';
-
-        foreach ($messages as $item) {
-            $isAdminAuthor = (int) $item->author === 1;
-            $isOwnMessage = $adminPerspective ? $isAdminAuthor : !$isAdminAuthor;
-            $sender = $isOwnMessage ? 'Tu' : ($adminPerspective ? $studentName : 'Insegnante');
-            $alignment = $isOwnMessage ? 'flex-end' : 'flex-start';
-            $contentStyle = $isOwnMessage ? ' style="background-color: #5755c559;"' : '';
-
-            $html .= '<div class="chat-message" style="justify-content: ' . $alignment . ';">
-                        <div class="message-content"' . $contentStyle . '>
-                            <p class="sender-name">' . $sender . '</p>
-                            <p class="message-text">' . e($item->message) . '</p>
-                            <span class="timestamp">' . DateHelper::format($item->date) . '</span>
-                        </div>
-                    </div>';
-        }
-
-        return $html;
     }
 
     public function storeFeedback()

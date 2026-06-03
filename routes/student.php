@@ -65,8 +65,6 @@ Route::middleware(['auth', 'role:student'])->group(function () {
 
     Route::post('student/chat/messages', [AjaxController::class, 'sendMessage'])
         ->name('student.chat.messages.store');
-    Route::get('student/chats/{id_chat}/messages', [AjaxController::class, 'getStudentMessages'])
-        ->name('student.chats.messages.index');
     Route::get('student/review', [ReviewController::class, 'show'])->name('student.review');
     Route::post('student/feedback', [AjaxController::class, 'storeFeedback'])
         ->name('student.feedback.store');
