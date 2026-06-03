@@ -58,7 +58,7 @@
             margin-bottom: .25rem;
             overflow-wrap: anywhere;
             text-align: left;
-            white-space: pre-wrap;
+            white-space: normal;
         }
 
         .support-chat-date {
