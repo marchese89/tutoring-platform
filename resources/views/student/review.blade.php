@@ -39,8 +39,8 @@
             });
         }
 
-        async function invia_feefback(punteggio) {
-            currentRating = punteggio;
+        async function invia_feefback(rating) {
+            currentRating = rating;
             renderStars(currentRating);
 
             await fetch("{{ route('student.feedback.store') }}", {
@@ -49,7 +49,7 @@
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-CSRF-TOKEN': "{{ csrf_token() }}",
                 },
-                body: `punteggio=${encodeURIComponent(punteggio)}`,
+                body: `rating=${encodeURIComponent(rating)}`,
             });
         }
 
@@ -67,13 +67,13 @@
                 body: `testo=${encodeURIComponent(testo)}`,
             });
 
-            document.getElementById('recensione').value = await response.text();
-            countChar(document.getElementById('recensione'));
+            document.getElementById('review').value = await response.text();
+            countChar(document.getElementById('review'));
             document.getElementById('review-status').classList.remove('d-none');
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            const reviewField = document.getElementById('recensione');
+            const reviewField = document.getElementById('review');
 
             renderStars(currentRating);
             countChar(reviewField);
@@ -105,13 +105,13 @@
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label fw-semibold" for="recensione">
+                        <label class="form-label fw-semibold" for="review">
                             Recensione
                         </label>
 
                         <textarea
-                            id="recensione"
-                            name="recensione"
+                            id="review"
+                            name="review"
                             rows="6"
                             maxlength="500"
                             class="form-control rounded-4"
@@ -129,7 +129,7 @@
                                 Recensione salvata.
                             </span>
 
-                            <x-ui.primary-button id="storeReview" onclick="storeReview(document.getElementById('recensione').value)">
+                            <x-ui.primary-button id="storeReview" onclick="storeReview(document.getElementById('review').value)">
                                 Invia
                             </x-ui.primary-button>
                         </div>

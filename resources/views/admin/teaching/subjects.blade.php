@@ -67,7 +67,7 @@
 
                                     <td>{{ $item->id }}</td>
 
-                                    <td>{{ $item->theme_area->name ?? '-' }}</td>
+                                    <td>{{ $item->themeArea->name ?? '-' }}</td>
 
                                     <td>{{ $item->name }}</td>
 

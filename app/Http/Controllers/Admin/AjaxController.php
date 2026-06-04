@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Helpers\DateHelper;
 use App\Models\ChatMessage;
-use App\Models\Feedback;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Events\MessageSent;
@@ -21,16 +21,16 @@ class AjaxController extends Controller
 
         $query = Order::query()
             ->with('student.user')
-            ->leftJoin('order_products', 'orders.id', '=', 'order_products.id_ordine')
+            ->leftJoin('order_items', 'orders.id', '=', 'order_items.order_id')
             ->select(
                 'orders.id',
-                'orders.date',
+                'orders.ordered_at',
                 'orders.student_id',
-                DB::raw('SUM(order_products.price) as totale')
+                DB::raw('SUM(order_items.price) as totale')
             )
-            ->whereMonth('orders.date', $mese)
-            ->whereYear('orders.date', $anno)
-            ->groupBy('orders.id', 'orders.date', 'orders.student_id');
+            ->whereMonth('orders.ordered_at', $mese)
+            ->whereYear('orders.ordered_at', $anno)
+            ->groupBy('orders.id', 'orders.ordered_at', 'orders.student_id');
 
         // filtro studente
         if (auth()->user()->student !== null) {
@@ -38,14 +38,14 @@ class AjaxController extends Controller
         }
 
         $ordini = $query
-            ->orderByDesc('orders.date')
+            ->orderByDesc('orders.ordered_at')
             ->get();
 
         // mapping leggero (niente più calcoli)
         $ordiniMapped = $ordini->map(function ($order) {
             return [
                 'id' => $order->id,
-                'data' => DateHelper::format($order->date),
+                'data' => DateHelper::format($order->ordered_at),
                 'totale' => $order->totale ?? 0,
                 'studente' => $order->student->user->name . ' ' . $order->student->user->surname,
             ];
@@ -73,7 +73,8 @@ class AjaxController extends Controller
         $messaggio = ChatMessage::create([
             'chat_id' => $request->id_chat,
             'message' => $request->testo,
-            'author' => auth()->user()->role === 'admin' ? 1 : 0
+            'sender_role' => auth()->user()->role === 'admin' ? 1 : 0,
+            'sent_at' => now(),
         ]);
 
         broadcast(new MessageSent($messaggio));
@@ -86,42 +87,42 @@ class AjaxController extends Controller
 
     public function storeFeedback()
     {
-        $punteggio = request('punteggio');
-        //cerchiamo per vedere se c'è già un punteggio assegnato
-        $id_studente = auth()->user()->student->id;
-        $feedback = Feedback::where('student_id', '=', $id_studente)->first();
+        $rating = request('rating');
+        //cerchiamo per vedere se c'è già un rating assegnato
+        $student_id = auth()->user()->student->id;
+        $feedback = Review::where('student_id', '=', $student_id)->first();
         if ($feedback != null) {
-            $feedback->punteggio = $punteggio;
+            $feedback->rating = $rating;
         } else {
-            $feedback = new Feedback();
-            $feedback->student_id = $id_studente;
-            $feedback->punteggio = $punteggio;
+            $feedback = new Review();
+            $feedback->student_id = $student_id;
+            $feedback->rating = $rating;
         }
 
         $feedback->save();
 
         $response = '<a ';
-        if ($punteggio > 0) {
+        if ($rating > 0) {
             $response = $response . 'style="opacity: 100%;"';
         }
         $response = $response . ' onclick="invia_feefback(1)">⭐</a>
     <a ';
-        if ($punteggio > 1) {
+        if ($rating > 1) {
             $response = $response . 'style="opacity: 100%;"';
         }
         $response = $response .  ' onclick="invia_feefback(2)">⭐</a>
     <a ';
-        if ($punteggio > 2) {
+        if ($rating > 2) {
             $response = $response . 'style="opacity: 100%;"';
         }
         $response = $response . ' onclick="invia_feefback(3)">⭐</a>
     <a ';
-        if ($punteggio > 3) {
+        if ($rating > 3) {
             $response = $response . 'style="opacity: 100%;"';
         }
         $response = $response . ' onclick="invia_feefback(4)">⭐</a>
     <a ';
-        if ($punteggio > 4) {
+        if ($rating > 4) {
             $response = $response . 'style="opacity: 100%;"';
         }
         $response = $response .   ' onclick="invia_feefback(5)">⭐</a>';
@@ -132,14 +133,14 @@ class AjaxController extends Controller
     public function storeReview()
     {
         $testo = request('testo');
-        $id_studente = auth()->user()->student->id;
-        $feedback = Feedback::where('student_id', '=', $id_studente)->first();
+        $student_id = auth()->user()->student->id;
+        $feedback = Review::where('student_id', '=', $student_id)->first();
         if ($feedback != null) {
-            $feedback->recensione = $testo;
+            $feedback->review = $testo;
         } else {
-            $feedback = new Feedback();
-            $feedback->student_id = $id_studente;
-            $feedback->recensione = $testo;
+            $feedback = new Review();
+            $feedback->student_id = $student_id;
+            $feedback->review = $testo;
         }
 
         $feedback->save();

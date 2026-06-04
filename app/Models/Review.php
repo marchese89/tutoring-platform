@@ -6,16 +6,18 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
-
-class Feedback extends Model
+class Review extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'student_id',
+        'rating',
+        'review',
+    ];
+
     public function student(): BelongsTo
-    {                                      // foreign_key owner_key
-        return $this->belongsTo(Student::class,'student_id', 'id');
+    {
+        return $this->belongsTo(Student::class);
     }
-
-
 }

@@ -33,8 +33,9 @@ class MessageSent implements ShouldBroadcastNow
             'id' => $this->message->id,
             'chat_id' => $this->message->chat_id,
             'message' => $this->message->message,
-            'author' => $this->message->author,
-            'date' => DateHelper::format($this->message->created_at),
+            'author' => $this->message->sender_role,
+            'sender_role' => $this->message->sender_role,
+            'date' => DateHelper::format($this->message->sent_at),
         ];
     }
 }

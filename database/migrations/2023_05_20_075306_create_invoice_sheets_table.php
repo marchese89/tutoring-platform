@@ -14,8 +14,8 @@ return new class extends Migration
     {
         Schema::create('invoice_sheets', function (Blueprint $table) {
             $table->id();
-            $table->string('file')->nullable();
-            $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->string('file_path')->nullable();
+            $table->timestamp('issued_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
         });
     }

@@ -16,11 +16,11 @@
                         @csrf
 
                         <x-ui.form-field
-                            name="piva"
+                            name="vat_number"
                             label="Partita IVA"
                             minlength="11"
                             maxlength="11"
-                            :value="old('piva', auth()->user()->admin->piva)" />
+                            :value="old('vat_number', auth()->user()->admin->vat_number)" />
 
                         <x-ui.primary-button type="submit" class="w-100 justify-content-center">
                             Salva

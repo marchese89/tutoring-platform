@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 
 use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Models\LessonOnRequest;
+use App\Models\LessonRequest;
 use App\Models\Invoice;
 use App\Models\Student;
 use App\Services\PurchaseService;
@@ -30,10 +30,10 @@ class FileAccessController extends Controller
         }
 
         // 🔍 Pre-carico tutto una sola volta
-        $lessonPresentation = Lesson::where('presentation', $path)->first();
-        $lessonFile = Lesson::where('lesson', $path)->first();
-        $exerciseTrace = Exercise::where('trace', $path)->first();
-        $exerciseExecution = Exercise::where('execution', $path)->first();
+        $lessonPresentation = Lesson::where('presentation_file', $path)->first();
+        $lessonFile = Lesson::where('content_file', $path)->first();
+        $exerciseTrace = Exercise::where('prompt_file', $path)->first();
+        $exerciseExecution = Exercise::where('solution_file', $path)->first();
 
         // 👤 GUEST
         if (!Auth::check()) {
@@ -128,19 +128,19 @@ class FileAccessController extends Controller
         }
 
         // 📚 Lezioni su richiesta
-        $lezRichTrace = LessonOnRequest::where('trace', $path)->first();
+        $lezRichTrace = LessonRequest::where('request_file', $path)->first();
         if ($lezRichTrace) {
             return true;
         }
 
-        $lezRichExec = LessonOnRequest::where('execution', $path)->first();
-        if ($lezRichExec && $lezRichExec->paid == 1) {
+        $lezRichExec = LessonRequest::where('solution_file', $path)->first();
+        if ($lezRichExec && $lezRichExec->is_paid == 1) {
             return true;
         }
 
         // 🧾 Fatture
         // $fattura = InvoiceSheet::where('file', $path)->first();
-        $fattura = Invoice::where('path', $path)->first();
+        $fattura = Invoice::where('file_path', $path)->first();
 
         if ($fattura) {
             return true;

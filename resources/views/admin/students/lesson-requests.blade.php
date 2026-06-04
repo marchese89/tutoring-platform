@@ -55,11 +55,11 @@
                                     </td>
 
                                     <td>
-                                        {{ DateHelper::format($item->date) }}
+                                        {{ DateHelper::format($item->requested_at) }}
                                     </td>
 
                                     <td>
-                                        @if ($item->escaped == 0)
+                                        @if ($item->is_fulfilled == 0)
                                             <span class="status-dot bg-danger"></span>
                                         @else
                                             <span class="status-dot bg-success"></span>

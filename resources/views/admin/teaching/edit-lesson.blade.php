@@ -15,7 +15,7 @@
         <br>
         <h4>Presentazione</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $lezione->presentation }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $lezione->presentation_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
@@ -44,7 +44,7 @@
         <br>
         <h4>Svolgimento</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $lezione->lesson }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $lezione->content_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>

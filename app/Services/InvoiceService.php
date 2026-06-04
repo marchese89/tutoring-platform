@@ -20,8 +20,8 @@ class InvoiceService
         $adminData = Admin::where('user_id', $admin->id)->first();
         $student = $order->student;
         $user = $student->user;
-        $order_products = $order->order_products()->get();
-        $total = $order->order_products()->sum('price');
+        $order_items = $order->orderItems()->get();
+        $total = $order->orderItems()->sum('price');
 
         $number = $this->getNextInvoiceNumber();
 
@@ -32,7 +32,7 @@ class InvoiceService
             'studente' => $student,
             'admin' => $admin,
             'adminData' => $adminData,
-            'order_products' => $order_products,
+            'order_items' => $order_items,
             'total' => $total,
             'order' => $order,
             'dataFattura' => $data->format('d/m/Y'),
@@ -56,9 +56,9 @@ class InvoiceService
         // salva record fattura (solo metadata, NON file)
         Invoice::create([
             'number' => $number,
-            'date' => $data,
+            'issued_at' => $data,
             'order_id' => $order->id,
-            'path' => $relativePath,
+            'file_path' => $relativePath,
         ]);
 
         return $pdf;
@@ -73,7 +73,7 @@ class InvoiceService
         }
 
         $currentYear = now()->year;
-        $lastYear = Carbon::parse($last->date)->year;
+        $lastYear = Carbon::parse($last->issued_at)->year;
 
         if ($currentYear === $lastYear) {
             return $last->number + 1;

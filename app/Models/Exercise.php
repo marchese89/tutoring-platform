@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Course;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Exercise extends Model
@@ -14,13 +13,13 @@ class Exercise extends Model
     protected $fillable = [
         'title',
         'course_id',
-        'trace',
-        'execution',
+        'prompt_file',
+        'solution_file',
         'price',
     ];
 
     public function course(): BelongsTo
-    {                                      // foreign_key     owner_key
-        return $this->belongsTo(Course::class, 'course_id', 'id');
+    {
+        return $this->belongsTo(Course::class);
     }
 }

@@ -4,7 +4,7 @@ namespace App\Http\Utility;
 
 use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Models\LessonOnRequest;
+use App\Models\LessonRequest;
 use App\Models\Course;
 
 class CartItem
@@ -46,7 +46,7 @@ class CartItem
                 break;
 
             case self::REQUESTED_LESSON:
-                $request = LessonOnRequest::findOrFail($this->id);
+                $request = LessonRequest::findOrFail($this->id);
                 $this->name = 'Requested lesson: ' . $request->title;
                 $this->price = $request->price;
                 break;

@@ -6,9 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use App\Models\User;
-use App\Models\LessonOnRequest;
-
 class Student extends Model
 {
     use HasFactory;
@@ -22,17 +19,17 @@ class Student extends Model
         'city',
         'province',
         'postal_code',
-        'cf',
+        'tax_code',
         'remember_token',
     ];
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class);
     }
 
-    public function lessonOnRequests(): HasMany
+    public function lessonRequests(): HasMany
     {
-        return $this->hasMany(LessonOnRequest::class);
+        return $this->hasMany(LessonRequest::class);
     }
 }

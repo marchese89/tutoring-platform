@@ -18,7 +18,7 @@ class ThemeAreaController extends Controller
 
     public function publicIndex()
     {
-        $themeAreas = ThemeArea::whereHas('matter')
+        $themeAreas = ThemeArea::whereHas('subjects')
             ->orderBy('name')
             ->get();
         return view('public.theme-areas', compact('themeAreas'));

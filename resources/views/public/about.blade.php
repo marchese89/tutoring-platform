@@ -9,12 +9,12 @@
     @foreach ($certificates as $item)
         <div class="container" style="text-align: center;">
 
-            <h4>{{$item->nome}}</h4>
+            <h4>{{$item->name}}</h4>
             <br>
             <iframe
 				width="90%"
-                @if ($item->percorso_file != null)
-                src="{{$item->percorso_file}}#view=FitH"
+                @if ($item->file_path != null)
+                src="{{$item->file_path}}#view=FitH"
                 @endif
                 style="min-height:1000px">
             </iframe>

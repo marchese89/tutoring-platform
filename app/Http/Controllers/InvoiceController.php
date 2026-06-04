@@ -11,12 +11,12 @@ class InvoiceController extends Controller
     public function showAll()
     {
         $fatture = Invoice::query()
-            ->orderByDesc('date')
+            ->orderByDesc('issued_at')
             ->orderByDesc('id')
             ->get()
             ->map(fn (Invoice $invoice) => (object) [
                 'number' => $invoice->number ?? '-',
-                'date' => $invoice->date ? DateHelper::format($invoice->date) : '-',
+                'date' => $invoice->issued_at ? DateHelper::format($invoice->issued_at) : '-',
                 'showUrl' => $invoice->number ? route('admin.invoices.show', $invoice->number) : null,
             ]);
 

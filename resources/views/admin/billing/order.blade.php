@@ -16,7 +16,7 @@
                         </h4>
 
                         <p class="text-muted mb-0">
-                            Data ordine: {{ $ordine->date }}
+                            Data ordine: {{ $ordine->ordered_at }}
                         </p>
                     </div>
 
@@ -44,11 +44,11 @@
                                 <tr>
 
                                     <td class="fw-semibold">
-                                        #{{ $item->id_prodotto }}
+                                        #{{ $item->product_id }}
                                     </td>
 
                                     <td>
-                                        @switch($item->tipo_prodotto)
+                                        @switch($item->product_type)
                                             @case(0)
                                                 <span class="badge bg-primary-subtle text-primary">
                                                     Lezione

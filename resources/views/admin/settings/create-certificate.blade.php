@@ -82,10 +82,10 @@
                             @csrf
 
                             <x-ui.form-field
-                                name="nome"
+                                name="name"
                                 label="Nome certificato"
                                 maxlength="255"
-                                :value="old('nome')" />
+                                :value="old('name')" />
 
                             <x-ui.primary-button type="submit">
                                 Aggiungi certificato

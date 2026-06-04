@@ -24,7 +24,7 @@
             </div>
 
             <div class="border rounded-4 overflow-hidden bg-light">
-                <iframe class="w-100 border-0" height="800" src="/protected-files/{{ $invoice->path }}#view=FitH">
+                <iframe class="w-100 border-0" height="800" src="/protected-files/{{ $invoice->file_path }}#view=FitH">
                 </iframe>
             </div>
         </x-ui.card>

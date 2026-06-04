@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Public;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use App\Models\LessonOnRequest;
+use App\Models\LessonRequest;
 use App\Models\User;
 use App\Mail\NewStudentRequestMail;
 use App\Mail\LessonRequestFulfilledMail;
@@ -20,13 +20,13 @@ class LessonRequestController extends Controller
 {
     public function index()
     {
-        $lezioni_su_richiesta = LessonOnRequest::with('student.user')->get();
+        $lezioni_su_richiesta = LessonRequest::with('student.user')->get();
         return view('admin.students.lesson-requests', compact('lezioni_su_richiesta'));
     }
 
     public function show(int $id)
     {
-        $richiesta = LessonOnRequest::where('id', '=', $id)->first();
+        $richiesta = LessonRequest::where('id', '=', $id)->first();
         return view('admin.students.lesson-request', compact('richiesta'));
     }
 
@@ -37,26 +37,26 @@ class LessonRequestController extends Controller
         foreach ($chat as $item) {
 
             // TIPO PRODOTTO
-            switch ($item->tipo_prodotto) {
+            switch ($item->product_type) {
 
                 case 0:
                     $item->tipo_stringa = 'Lezione';
 
-                    $lezione = Lesson::find($item->id_prodotto);
+                    $lezione = Lesson::find($item->product_id);
                     $item->nome_prodotto = $lezione?->title;
                     break;
 
                 case 2:
                     $item->tipo_stringa = 'Esercizio';
 
-                    $esercizio = Exercise::find($item->id_prodotto);
+                    $esercizio = Exercise::find($item->product_id);
                     $item->nome_prodotto = $esercizio?->title;
                     break;
 
                 case 5:
                     $item->tipo_stringa = 'Lezione su Richiesta';
 
-                    $lezioneRich = LessonOnRequest::find($item->id_prodotto);
+                    $lezioneRich = LessonRequest::find($item->product_id);
                     $item->nome_prodotto = $lezioneRich?->title;
                     break;
 
@@ -67,7 +67,7 @@ class LessonRequestController extends Controller
             }
 
             // STUDENTE
-            $studente = Student::find($item->id_studente);
+            $studente = Student::find($item->student_id);
 
             if ($studente && $studente->user) {
                 $item->studente_nome =
@@ -78,11 +78,11 @@ class LessonRequestController extends Controller
 
             // STATO CHAT
             $ultimoMessaggio = ChatMessage::where('chat_id', $item->id)
-                ->orderBy('date', 'desc')
+                ->orderBy('sent_at', 'desc')
                 ->first();
 
             $item->non_letta_admin =
-                $ultimoMessaggio && $ultimoMessaggio->author == 0;
+                $ultimoMessaggio && $ultimoMessaggio->sender_role == 0;
         }
 
         return view('admin.students.chats', compact('chat'));
@@ -96,14 +96,14 @@ class LessonRequestController extends Controller
         $exec = '';
         $titolo = '';
 
-        switch ($chat->tipo_prodotto) {
+        switch ($chat->product_type) {
 
             case 0:
 
-                $lezione = Lesson::find($chat->id_prodotto);
+                $lezione = Lesson::find($chat->product_id);
 
-                $pres = $lezione?->presentation;
-                $exec = $lezione?->lesson;
+                $pres = $lezione?->presentation_file;
+                $exec = $lezione?->content_file;
 
                 $titolo =
                     'Lezione n. ' .
@@ -115,10 +115,10 @@ class LessonRequestController extends Controller
 
             case 2:
 
-                $esercizio = Exercise::find($chat->id_prodotto);
+                $esercizio = Exercise::find($chat->product_id);
 
-                $pres = $esercizio?->trace;
-                $exec = $esercizio?->execution;
+                $pres = $esercizio?->prompt_file;
+                $exec = $esercizio?->solution_file;
 
                 $titolo =
                     'Esercizio n. ' .
@@ -130,10 +130,10 @@ class LessonRequestController extends Controller
 
             case 5:
 
-                $lezioneRich = LessonOnRequest::find($chat->id_prodotto);
+                $lezioneRich = LessonRequest::find($chat->product_id);
 
-                $pres = $lezioneRich?->trace;
-                $exec = $lezioneRich?->execution;
+                $pres = $lezioneRich?->request_file;
+                $exec = $lezioneRich?->solution_file;
 
                 $titolo =
                     'Lezione su richiesta n. ' .
@@ -145,10 +145,10 @@ class LessonRequestController extends Controller
         }
 
         $messaggi = ChatMessage::where('chat_id', $chat->id)
-            ->orderBy('date', 'asc')
+            ->orderBy('sent_at', 'asc')
             ->get();
 
-        $studente = Student::find($chat->id_studente);
+        $studente = Student::find($chat->student_id);
 
         $utente = $studente?->user;
 
@@ -182,7 +182,7 @@ class LessonRequestController extends Controller
         $this->deleteFile($request->session()->get('uploaded_lez_rich'));
 
         $file = $request->file('file');
-        $name = $this->saveFile($file, 'lessons_on_request/trace');
+        $name = $this->saveFile($file, 'lesson_requests/request_files');
 
         $request->session()->put('uploaded_lez_rich', $name);
 
@@ -209,10 +209,10 @@ class LessonRequestController extends Controller
             'titolo' => ['required', 'string', 'max:255'],
         ]);
 
-        LessonOnRequest::create([
+        LessonRequest::create([
             'title' => $request->input('titolo'),
             'student_id' => $request->user()->student->id,
-            'trace' => $request->session()->get('uploaded_lez_rich'),
+            'request_file' => $request->session()->get('uploaded_lez_rich'),
         ]);
 
         $request->session()->forget('uploaded_lez_rich');
@@ -231,14 +231,14 @@ class LessonRequestController extends Controller
             'file' => ['required', 'file'],
         ]);
 
-        $lezione = LessonOnRequest::findOrFail($id);
+        $lezione = LessonRequest::findOrFail($id);
 
-        $this->deleteFile($lezione->execution);
+        $this->deleteFile($lezione->solution_file);
 
-        $path = $this->saveFile($request->file('file'), 'lessons_on_request/execution');
+        $path = $this->saveFile($request->file('file'), 'lesson_requests/solution_files');
 
         $lezione->update([
-            'execution' => $path
+            'solution_file' => $path
         ]);
 
         return redirect()->route('admin.lesson-requests.show', $lezione->id);
@@ -246,12 +246,12 @@ class LessonRequestController extends Controller
 
     public function destroySolution(Request $request, int $id)
     {
-        $lezione = LessonOnRequest::findOrFail($id);
+        $lezione = LessonRequest::findOrFail($id);
 
-        $this->deleteFile($lezione->execution);
+        $this->deleteFile($lezione->solution_file);
 
         $lezione->update([
-            'execution' => null
+            'solution_file' => null
         ]);
 
         return redirect()->route('admin.lesson-requests.show', $lezione->id);
@@ -263,11 +263,11 @@ class LessonRequestController extends Controller
             'prezzo' => ['required', 'numeric', 'min:0'],
         ]);
 
-        $lezione = LessonOnRequest::findOrFail($id);
+        $lezione = LessonRequest::findOrFail($id);
 
         $lezione->update([
             'price' => $request->prezzo,
-            'escaped' => 1
+            'is_fulfilled' => 1
         ]);
 
         $user = $lezione->student->user;

@@ -12,7 +12,7 @@ use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Models\Chat;
 use App\Models\ChatMessage;
-use App\Models\LessonOnRequest;
+use App\Models\LessonRequest;
 
 class StudentController extends Controller
 {
@@ -96,18 +96,18 @@ class StudentController extends Controller
 
         $studente = auth()->user()->student;
 
-        $chat = Chat::where('id_prodotto', $id_lezione)
-            ->where('tipo_prodotto', 0)
-            ->where('id_studente', $studente->id)
+        $chat = Chat::where('product_id', $id_lezione)
+            ->where('product_type', 0)
+            ->where('student_id', $studente->id)
             ->first();
 
         // Se la chat non esiste la creo
         if (!$chat) {
 
             $chat = Chat::create([
-                'id_prodotto' => $id_lezione,
-                'tipo_prodotto' => 0,
-                'id_studente' => $studente->id
+                'product_id' => $id_lezione,
+                'product_type' => 0,
+                'student_id' => $studente->id
             ]);
         }
 
@@ -140,9 +140,9 @@ class StudentController extends Controller
         }
 
         $chat = Chat::firstOrCreate([
-            'id_prodotto' => $id_esercizio,
-            'tipo_prodotto' => 2,
-            'id_studente' => $request->user()->student->id,
+            'product_id' => $id_esercizio,
+            'product_type' => 2,
+            'student_id' => $request->user()->student->id,
         ]);
 
         $messaggi = $this->chatMessages($chat->id);
@@ -153,18 +153,18 @@ class StudentController extends Controller
 
     public function showDirectRequest(Request $request, int $id)
     {
-        $richiesta = LessonOnRequest::where('student_id', $request->user()->student->id)->findOrFail($id);
+        $richiesta = LessonRequest::where('student_id', $request->user()->student->id)->findOrFail($id);
 
-        $chat = Chat::where('id_prodotto', $id)
-            ->where('tipo_prodotto', 5)
-            ->where('id_studente', $request->user()->student->id)
+        $chat = Chat::where('product_id', $id)
+            ->where('product_type', 5)
+            ->where('student_id', $request->user()->student->id)
             ->first();
 
-        if (!$chat && (int) $richiesta->paid === 1) {
+        if (!$chat && (int) $richiesta->is_paid === 1) {
             $chat = Chat::create([
-                'id_prodotto' => $id,
-                'tipo_prodotto' => 5,
-                'id_studente' => $request->user()->student->id,
+                'product_id' => $id,
+                'product_type' => 5,
+                'student_id' => $request->user()->student->id,
             ]);
         }
 
@@ -177,14 +177,14 @@ class StudentController extends Controller
     private function chatMessages(int $chatId)
     {
         return ChatMessage::where('chat_id', $chatId)
-            ->orderBy('date', 'asc')
+            ->orderBy('sent_at', 'asc')
             ->get()
             ->map(fn(ChatMessage $message) => [
                 'message' => $message->message,
-                'author' => $message->author,
-                'is_teacher' => (int) $message->author === 1,
-                'sender' => (int) $message->author === 1 ? 'Insegnante' : 'Tu',
-                'date' => DateHelper::format($message->date),
+                'sender_role' => $message->sender_role,
+                'is_teacher' => (int) $message->sender_role === 1,
+                'sender' => (int) $message->sender_role === 1 ? 'Insegnante' : 'Tu',
+                'date' => DateHelper::format($message->sent_at),
             ]);
     }
 }

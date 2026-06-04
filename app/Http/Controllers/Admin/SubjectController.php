@@ -4,21 +4,21 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Matter;
+use App\Models\Subject;
 use App\Models\ThemeArea;
 
 class SubjectController extends Controller
 {
     public function index()
     {
-        $materie = Matter::with('theme_area')->get();
+        $materie = Subject::with('theme_area')->get();
         $aree_t = ThemeArea::all();
         return view('admin.teaching.subjects', compact('materie', 'aree_t'));
     }
 
     public function publicIndex(int $id_at)
     {
-        $materie = Matter::where('theme_area_id', $id_at)->get();
+        $materie = Subject::where('theme_area_id', $id_at)->get();
         return view('public.subjects', compact('materie'));
     }
 
@@ -29,7 +29,7 @@ class SubjectController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        Matter::create([
+        Subject::create([
             'name' => $data['name'],
             'theme_area_id' => $data['theme_area_id'],
         ]);
@@ -43,7 +43,7 @@ class SubjectController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $materia = Matter::findOrFail($id);
+        $materia = Subject::findOrFail($id);
 
         $materia->update([
             'name' => $data['name'],
@@ -54,7 +54,7 @@ class SubjectController extends Controller
 
     public function destroy(int $id)
     {
-        $materia = Matter::findOrFail($id);
+        $materia = Subject::findOrFail($id);
         $materia->delete();
 
         return redirect()->back()->with('success', 'Materia eliminata');

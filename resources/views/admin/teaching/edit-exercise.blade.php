@@ -8,7 +8,7 @@
     <div class="container" style="text-align: center;width:100%">
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $esercizio->trace }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $esercizio->prompt_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
@@ -37,7 +37,7 @@
         <br>
         <h4>Svolgimento</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $esercizio->execution }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $esercizio->solution_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>

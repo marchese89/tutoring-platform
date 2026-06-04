@@ -36,11 +36,11 @@
                             <input type="hidden" name="id" value="{{ $certificate->id }}">
 
                             <x-ui.form-field
-                                name="nome"
-                                id="nome_{{ $certificate->id }}"
+                                name="name"
+                                id="name_{{ $certificate->id }}"
                                 label="Nome certificato"
                                 maxlength="255"
-                                :value="old('nome', $certificate->nome)" />
+                                :value="old('name', $certificate->name)" />
 
                             <x-ui.primary-button type="submit" size="sm">
                                 Modifica nome
@@ -53,10 +53,10 @@
                             </label>
 
                             <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                                @if ($certificate->percorso_file)
+                                @if ($certificate->file_path)
                                     <iframe
                                         title="Certificato {{ $certificate->id }}"
-                                        src="{{ $certificate->percorso_file }}#view=FitH">
+                                        src="{{ $certificate->file_path }}#view=FitH">
                                     </iframe>
                                 @else
                                     <div class="d-flex align-items-center justify-content-center text-muted">
@@ -68,7 +68,7 @@
 
                         <form
                             method="POST"
-                            action="{{ route('admin.account.certificates.photo.update') }}"
+                            action="{{ route('admin.account.certificates.file.update') }}"
                             enctype="multipart/form-data"
                             data-upload-progress-form>
                             @csrf

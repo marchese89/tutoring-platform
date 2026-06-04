@@ -1,8 +1,8 @@
 <?php
 
 use App\Models\Course;
-use App\Models\LessonOnRequest;
-use App\Models\Matter;
+use App\Models\LessonRequest;
+use App\Models\Subject;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
@@ -22,10 +22,10 @@ Breadcrumbs::for('subjects.index', function (BreadcrumbTrail $trail, $id_at) {
 });
 
 Breadcrumbs::for('courses.index', function (BreadcrumbTrail $trail, $id_materia) {
-    $matter = Matter::find($id_materia);
+    $subject = Subject::find($id_materia);
 
-    if ($matter) {
-        $trail->parent('subjects.index', $matter->theme_area_id);
+    if ($subject) {
+        $trail->parent('subjects.index', $subject->theme_area_id);
     } else {
         $trail->parent('theme-areas.index');
     }
@@ -37,7 +37,7 @@ Breadcrumbs::for('courses.show', function (BreadcrumbTrail $trail, $id) {
     $course = Course::find($id);
 
     if ($course) {
-        $trail->parent('courses.index', $course->matter_id);
+        $trail->parent('courses.index', $course->subject_id);
     } else {
         $trail->parent('theme-areas.index');
     }
@@ -345,9 +345,9 @@ Breadcrumbs::for('student.direct-requests.purchased', function (BreadcrumbTrail 
 });
 
 Breadcrumbs::for('student.direct-requests.show', function (BreadcrumbTrail $trail, $id) {
-    $request = LessonOnRequest::find($id);
+    $request = LessonRequest::find($id);
 
-    if ($request?->paid) {
+    if ($request?->is_paid) {
         $trail->parent('student.direct-requests.purchased');
     } else {
         $trail->parent('student.direct-requests.index');

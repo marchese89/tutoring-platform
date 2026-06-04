@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Matter;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class ThemeArea extends Model
@@ -15,8 +14,8 @@ class ThemeArea extends Model
 
     protected $fillable = ['name'];
 
-    public function matter(): HasMany
+    public function subjects(): HasMany
     {
-        return $this->hasMany(Matter::class);
+        return $this->hasMany(Subject::class);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderProduct;
+use App\Models\OrderItem;
 use App\Models\Invoice;
 use App\Helpers\DateHelper;
 
@@ -15,8 +15,8 @@ class BillingController extends Controller
     public function showOrder(int $id)
     {
         $ordine = Order::where('id', '=', $id)->first();
-        $prodotti = OrderProduct::where('id_ordine', '=', request('id'))->get();
-        $tot_ordine = OrderProduct::where('id_ordine', '=', request('id'))->sum('price');
+        $prodotti = OrderItem::where('order_id', '=', request('id'))->get();
+        $tot_ordine = OrderItem::where('order_id', '=', request('id'))->sum('price');
         return View('admin.billing.order', compact('ordine', 'prodotti', 'tot_ordine'));
     }
 
@@ -28,7 +28,7 @@ class BillingController extends Controller
 
     public function sales()
     {
-        $primoOrdine = Order::orderBy('date', 'desc')->first();
+        $primoOrdine = Order::orderByDesc('ordered_at')->first();
 
         if (!$primoOrdine) {
             return view('admin.billing.sales', [
@@ -36,14 +36,14 @@ class BillingController extends Controller
             ]);
         }
 
-        $data = DateHelper::parse($primoOrdine->date);
+        $data = DateHelper::parse($primoOrdine->ordered_at);
 
-        $years = Order::selectRaw('YEAR(date) as year')
+        $years = Order::selectRaw('YEAR(ordered_at) as year')
             ->groupBy('year')
             ->orderBy('year')
             ->get();
 
-        $months = Order::selectRaw('MONTH(date) as month')
+        $months = Order::selectRaw('MONTH(ordered_at) as month')
             ->groupBy('month')
             ->orderBy('month')
             ->get();
@@ -61,23 +61,23 @@ class BillingController extends Controller
         $anno = $request->anno;
         $mese = $request->mese;
 
-        $orders = Order::with(['student.user', 'order_products'])
-            ->whereYear('date', $anno)
-            ->whereMonth('date', $mese)
-            ->orderBy('date', 'desc')
+        $orders = Order::with(['student.user', 'orderItems'])
+            ->whereYear('ordered_at', $anno)
+            ->whereMonth('ordered_at', $mese)
+            ->orderByDesc('ordered_at')
             ->get();
 
         $totale = 0;
 
         $ordini = $orders->map(function ($order) use (&$totale) {
 
-            $orderTotal = $order->order_products->sum('price');
+            $orderTotal = $order->orderItems->sum('price');
             $totale += $orderTotal;
 
             return [
                 'id' => $order->id,
                 'studente' => $order->student->user->name . ' ' . $order->student->user->surname,
-                'data' => DateHelper::format($order->date),
+                'data' => DateHelper::format($order->ordered_at),
                 'totale' => $orderTotal
             ];
         });

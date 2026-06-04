@@ -33,8 +33,8 @@ Route::prefix('admin')
             ->name('account.address.update');
         Route::post('account/photo', [AccountController::class, 'updatePhoto'])
             ->name('account.photo.update');
-        Route::post('account/certificates/photo', [AccountController::class, 'updateCertificateFile'])
-            ->name('account.certificates.photo.update');
+        Route::post('account/certificates/file', [AccountController::class, 'updateCertificateFile'])
+            ->name('account.certificates.file.update');
         Route::post('account/certificates/uploads', [AccountController::class, 'storeCertificateUpload'])
             ->name('account.certificates.uploads.store');
         Route::delete('account/certificates/uploads', [AccountController::class, 'destroyCertificateUpload'])

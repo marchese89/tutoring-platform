@@ -23,9 +23,9 @@
                         <tr>
                             <th scope="row">{{ $course->id }}</th>
 
-                            <td>{{ $course->matter->theme_area->name }}</td>
+                            <td>{{ $course->subject->themeArea->name }}</td>
 
-                            <td>{{ $course->matter->name }}</td>
+                            <td>{{ $course->subject->name }}</td>
 
                             <td>{{ $course->name }}</td>
 

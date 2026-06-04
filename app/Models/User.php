@@ -7,11 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-use App\Models\Student;
-use App\Models\Admin;
 use Laravel\Cashier\Billable;
-use Illuminate\Notifications\Messages\MailMessage;
-
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class User extends Authenticatable
@@ -52,10 +48,13 @@ class User extends Authenticatable
         'name',
         'surname',
         'activation_code',
-        'registration_date',
-        'last_access',
+        'registered_at',
+        'last_login_at',
         'email',
+        'email_verified_at',
         'password',
+        'role',
+        'status',
     ];
 
     /**
@@ -74,16 +73,18 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'registered_at' => 'datetime',
+        'last_login_at' => 'datetime',
         'email_verified_at' => 'datetime',
     ];
 
     public function student(): HasOne
     {
-        return $this->hasOne(Student::class, 'user_id', 'id');
+        return $this->hasOne(Student::class);
     }
 
     public function admin(): HasOne
     {
-        return $this->hasOne(Admin::class, 'user_id', 'id');
+        return $this->hasOne(Admin::class);
     }
 }

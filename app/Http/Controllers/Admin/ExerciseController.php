@@ -116,8 +116,8 @@ class ExerciseController extends Controller
         Exercise::create([
             'title' => $data['titolo'],
             'course_id' => $data['id'],
-            'trace' => $request->session()->get('uploaded_trace_ex'),
-            'execution' => $request->session()->get('uploaded_ex'),
+            'prompt_file' => $request->session()->get('uploaded_trace_ex'),
+            'solution_file' => $request->session()->get('uploaded_ex'),
             'price' => $data['prezzo'],
         ]);
 
@@ -136,12 +136,12 @@ class ExerciseController extends Controller
     {
         $exercise = Exercise::findOrFail($id);
 
-        if ($exercise->trace && Storage::disk('private')->exists($exercise->trace)) {
-            Storage::disk('private')->delete($exercise->trace);
+        if ($exercise->prompt_file && Storage::disk('private')->exists($exercise->prompt_file)) {
+            Storage::disk('private')->delete($exercise->prompt_file);
         }
 
-        if ($exercise->execution && Storage::disk('private')->exists($exercise->execution)) {
-            Storage::disk('private')->delete($exercise->execution);
+        if ($exercise->solution_file && Storage::disk('private')->exists($exercise->solution_file)) {
+            Storage::disk('private')->delete($exercise->solution_file);
         }
         $exercise->delete();
 
@@ -155,13 +155,13 @@ class ExerciseController extends Controller
     {
         $exercise = Exercise::findOrFail($id);
 
-        Storage::disk('private')->delete($exercise->trace);
+        Storage::disk('private')->delete($exercise->prompt_file);
 
         $path = $request->file('file-trace-ex')
             ->store('exercises/trace', 'private');
 
         $exercise->update([
-            'trace' => $path
+            'prompt_file' => $path
         ]);
 
         return back();
@@ -174,13 +174,13 @@ class ExerciseController extends Controller
     {
         $exercise = Exercise::findOrFail($id);
 
-        Storage::disk('private')->delete($exercise->execution);
+        Storage::disk('private')->delete($exercise->solution_file);
 
         $path = $request->file('file-ex')
             ->store('exercises/execution', 'private');
 
         $exercise->update([
-            'execution' => $path
+            'solution_file' => $path
         ]);
 
         return back();

@@ -15,14 +15,14 @@ class InvoiceController extends Controller
 {
     public function index(Request $request): View
     {
-        $invoices = StudentInvoice::with('invoice_sheet')
+        $invoices = StudentInvoice::with('invoiceSheet')
             ->where('student_id', $request->user()->student->id)
             ->orderByDesc('created_at')
             ->get()
             ->map(fn(StudentInvoice $invoice) => [
                 'id' => $invoice->id,
                 'invoice_sheet_id' => $invoice->invoice_sheet_id,
-                'date' => $invoice->invoice_sheet?->date ? DateHelper::format($invoice->invoice_sheet->date) : '-',
+                'date' => $invoice->invoiceSheet?->issued_at ? DateHelper::format($invoice->invoiceSheet->issued_at) : '-',
             ]);
 
         return view('student.invoices', compact('invoices'));

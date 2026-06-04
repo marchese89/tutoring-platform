@@ -16,12 +16,13 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string('surname')->nullable();
-            $table->string('activation_code',6)->nullable();
-            $table->timestamp('registration_date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->date('last_access')->nullable();
+            $table->string('activation_code', 6)->nullable();
+            $table->timestamp('registered_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('last_login_at')->nullable();
             $table->string('email')->unique();
+            $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('role', ['admin','student'])->default('student');
+            $table->enum('role', ['admin', 'student'])->default('student');
             $table->enum('status', ['active', 'inactive'])->default('active');
             $table->rememberToken();
             $table->timestamps();

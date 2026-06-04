@@ -6,7 +6,7 @@ use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\ChatMessage;
-use App\Models\LessonOnRequest;
+use App\Models\LessonRequest;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -14,9 +14,9 @@ class DirectRequestController extends Controller
 {
     public function index(Request $request): View
     {
-        $directRequests = LessonOnRequest::where('student_id', $request->user()->student->id)
-            ->where('paid', 0)
-            ->orderByDesc('date')
+        $directRequests = LessonRequest::where('student_id', $request->user()->student->id)
+            ->where('is_paid', 0)
+            ->orderByDesc('requested_at')
             ->get();
 
         return view('student.direct-requests', compact('directRequests'));
@@ -26,32 +26,32 @@ class DirectRequestController extends Controller
     {
         $studentId = $request->user()->student->id;
 
-        $lessons = LessonOnRequest::where('student_id', $studentId)
-            ->where('paid', 1)
-            ->orderByDesc('date')
+        $lessons = LessonRequest::where('student_id', $studentId)
+            ->where('is_paid', 1)
+            ->orderByDesc('requested_at')
             ->get();
 
-        $chats = Chat::where('tipo_prodotto', 5)
-            ->where('id_studente', $studentId)
-            ->whereIn('id_prodotto', $lessons->pluck('id'))
+        $chats = Chat::where('product_type', 5)
+            ->where('student_id', $studentId)
+            ->whereIn('product_id', $lessons->pluck('id'))
             ->get()
-            ->keyBy('id_prodotto');
+            ->keyBy('product_id');
 
         $latestMessages = ChatMessage::whereIn('chat_id', $chats->pluck('id'))
-            ->orderByDesc('date')
+            ->orderByDesc('sent_at')
             ->get()
             ->unique('chat_id')
             ->keyBy('chat_id');
 
-        $purchasedDirectRequests = $lessons->map(function (LessonOnRequest $lesson) use ($chats, $latestMessages) {
+        $purchasedDirectRequests = $lessons->map(function (LessonRequest $lesson) use ($chats, $latestMessages) {
             $chat = $chats->get($lesson->id);
             $latestMessage = $chat ? $latestMessages->get($chat->id) : null;
 
             return [
                 'id' => $lesson->id,
                 'title' => $lesson->title,
-                'date' => DateHelper::format($lesson->date),
-                'has_unread_message' => $latestMessage?->author === 1,
+                'date' => DateHelper::format($lesson->requested_at),
+                'has_unread_message' => $latestMessage?->sender_role === 1,
             ];
         });
 

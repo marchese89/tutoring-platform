@@ -75,7 +75,7 @@
 
                                     {{-- DELETE --}}
                                     <td>
-                                        @if ($item->matter->count() == 0)
+                                        @if ($item->subjects->count() == 0)
                                             <form method="POST" action="{{ route('admin.theme-areas.destroy', $item->id) }}">
                                                 @csrf
                                                 @method('DELETE')

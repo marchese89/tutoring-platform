@@ -117,8 +117,8 @@ class LessonController extends Controller
             'title' => $request->titolo,
             'number' => $request->numero,
             'course_id' => $request->id,
-            'presentation' => $request->session()->get('uploaded_pres_lez'),
-            'lesson' => $request->session()->get('uploaded_lesson'),
+            'presentation_file' => $request->session()->get('uploaded_pres_lez'),
+            'content_file' => $request->session()->get('uploaded_lesson'),
             'price' => $request->prezzo,
         ]);
 
@@ -138,8 +138,8 @@ class LessonController extends Controller
         $lesson = Lesson::findOrFail($id);
 
         Storage::disk('private')->delete([
-            $lesson->presentation,
-            $lesson->lesson
+            $lesson->presentation_file,
+            $lesson->content_file
         ]);
 
         $courseId = $lesson->course_id;
@@ -160,12 +160,12 @@ class LessonController extends Controller
 
         $lesson = Lesson::findOrFail($id);
 
-        Storage::disk('private')->delete($lesson->presentation);
+        Storage::disk('private')->delete($lesson->presentation_file);
 
         $path = $request->file('file-pres-lez')
             ->store('lessons/presentations', 'private');
 
-        $lesson->presentation = $path;
+        $lesson->presentation_file = $path;
         $lesson->save();
 
         return back();
@@ -182,12 +182,12 @@ class LessonController extends Controller
 
         $lesson = Lesson::findOrFail($id);
 
-        Storage::disk('private')->delete($lesson->lesson);
+        Storage::disk('private')->delete($lesson->content_file);
 
         $path = $request->file('file-lesson')
             ->store('lessons/files', 'private');
 
-        $lesson->lesson = $path;
+        $lesson->content_file = $path;
         $lesson->save();
 
         return back();

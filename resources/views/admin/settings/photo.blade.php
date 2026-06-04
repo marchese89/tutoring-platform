@@ -15,7 +15,7 @@
                     <div class="text-center mb-4">
                         <img
                             alt="Nessuna foto caricata"
-                            src="{{ auth()->user()->admin->photo }}"
+                            src="{{ auth()->user()->admin->photo_path }}"
                             class="img-fluid rounded-4 shadow-sm border"
                             style="max-width: 300px; height: auto;">
                     </div>

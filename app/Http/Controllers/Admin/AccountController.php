@@ -30,8 +30,8 @@ class AccountController extends Controller
         $admin = auth()->user()->admin;
 
         // elimina vecchia foto
-        if ($admin->photo) {
-            $oldPath = public_path($admin->photo);
+        if ($admin->photo_path) {
+            $oldPath = public_path($admin->photo_path);
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -44,7 +44,7 @@ class AccountController extends Controller
 
         $path = '/files/photo_admin/' . $name;
 
-        $admin->photo = $path;
+        $admin->photo_path = $path;
         $admin->save();
 
         return redirect()->route('admin.account.photo');
@@ -62,8 +62,8 @@ class AccountController extends Controller
 
         $certificate = Certificate::findOrFail($request->id);
 
-        if ($certificate->percorso_file) {
-            $oldPath = public_path($certificate->percorso_file);
+        if ($certificate->file_path) {
+            $oldPath = public_path($certificate->file_path);
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -76,7 +76,7 @@ class AccountController extends Controller
 
         $path = '/files/cert_admin/' . $name;
 
-        $certificate->percorso_file = $path;
+        $certificate->file_path = $path;
         $certificate->save();
 
         return redirect()->route('admin.account.certificates.index');
@@ -117,11 +117,11 @@ class AccountController extends Controller
     {
         $request->validate([
             'id' => 'required|exists:certificates,id',
-            'nome' => 'required|string|max:255'
+            'name' => 'required|string|max:255'
         ]);
 
         $certificate = Certificate::findOrFail($request->id);
-        $certificate->nome = $request->nome;
+        $certificate->name = $request->name;
         $certificate->save();
 
         return redirect()->route('admin.account.certificates.index');
@@ -133,11 +133,11 @@ class AccountController extends Controller
     public function updateVatNumber(Request $request)
     {
         $request->validate([
-            'piva' => 'required|string|max:20'
+            'vat_number' => 'required|string|max:20'
         ]);
 
         $admin = auth()->user()->admin;
-        $admin->piva = $request->piva;
+        $admin->vat_number = $request->vat_number;
         $admin->save();
 
         return redirect()->route('admin.account.vat-number');
@@ -180,8 +180,8 @@ class AccountController extends Controller
 
         $certificate = Certificate::findOrFail($request->id);
 
-        if ($certificate->percorso_file) {
-            $oldPath = public_path($certificate->percorso_file);
+        if ($certificate->file_path) {
+            $oldPath = public_path($certificate->file_path);
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -220,12 +220,12 @@ class AccountController extends Controller
         }
 
         $request->validate([
-            'nome' => 'required|string|max:255'
+            'name' => 'required|string|max:255'
         ]);
 
         $cert = new Certificate();
-        $cert->nome = $request->nome;
-        $cert->percorso_file = $request->session()->get('uploaded_cert');
+        $cert->name = $request->name;
+        $cert->file_path = $request->session()->get('uploaded_cert');
 
         $request->session()->forget('uploaded_cert');
 

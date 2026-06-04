@@ -4,26 +4,31 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Student;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class LessonOnRequest extends Model
+class LessonRequest extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'title',
         'student_id',
-        'trace',
-        'execution',
+        'request_file',
+        'solution_file',
         'price',
-        'escaped',
-        'paid'
+        'is_fulfilled',
+        'is_paid',
+        'requested_at',
     ];
 
+    protected $casts = [
+        'is_fulfilled' => 'boolean',
+        'is_paid' => 'boolean',
+        'requested_at' => 'datetime',
+    ];
 
     public function student(): BelongsTo
     {
-        return $this->belongsTo(Student::class, 'student_id', 'id');
+        return $this->belongsTo(Student::class);
     }
 }

@@ -10,17 +10,17 @@
         <h3 style="color: blue">{{ $richiesta->title }}</h3>
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $richiesta->trace }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $richiesta->request_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
-        @if ($richiesta->execution != null)
+        @if ($richiesta->solution_file != null)
             <h4>Soluzione</h4>
-            <iframe width="90%" src="/protected-files/{{ $richiesta->execution }}#view=FitH" height="800px">
+            <iframe width="90%" src="/protected-files/{{ $richiesta->solution_file }}#view=FitH" height="800px">
             </iframe>
             <br>
             <br>
-            @if ($richiesta->escaped == 0)
+            @if ($richiesta->is_fulfilled == 0)
                 <div class="col-12">
                     <form action="{{ route('admin.lesson-requests.solution.destroy', $richiesta->id) }}" method="POST">
                         @csrf

@@ -20,10 +20,10 @@
                             @csrf
 
                             <label class="form-label">Materia</label>
-                            <select class="form-select mb-3" name="matter_id">
+                            <select class="form-select mb-3" name="subject_id">
                                 @foreach ($materie as $item)
                                     <option value="{{ $item->id }}">
-                                        {{ $item->theme_area->name }} - {{ $item->name }}
+                                        {{ $item->themeArea->name }} - {{ $item->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -69,9 +69,9 @@
 
                                     <td>{{ $item->id }}</td>
 
-                                    <td>{{ $item->matter->theme_area->name ?? '-' }}</td>
+                                    <td>{{ $item->subject->themeArea->name ?? '-' }}</td>
 
-                                    <td>{{ $item->matter->name ?? '-' }}</td>
+                                    <td>{{ $item->subject->name ?? '-' }}</td>
 
                                     <td>{{ $item->name }}</td>
 

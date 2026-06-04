@@ -5,56 +5,56 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Course;
-use App\Models\Matter;
+use App\Models\Subject;
 use App\Models\Lesson;
 use App\Models\Exercise;
 use App\Models\Order;
-use App\Models\OrderProduct;
+use App\Models\OrderItem;
 use App\Services\PurchaseService;
 
 class CourseController extends Controller
 {
     public function index()
     {
-        $materie = Matter::with('theme_area')->get();
-        $corsi = Course::with('matter.theme_area')->get();
+        $materie = Subject::with('themeArea')->get();
+        $corsi = Course::with('subject.themeArea')->get();
         return view('admin.teaching.create-course', compact('materie', 'corsi'));
     }
 
     public function publicIndex(int $id_materia)
     {
-        $corsi = Course::where('matter_id', $id_materia)->get();
+        $corsi = Course::where('subject_id', $id_materia)->get();
 
         return view('public.courses', compact('corsi'));
     }
 
     public function list()
     {
-        $corsi = Course::with('matter.theme_area')->get();
+        $corsi = Course::with('subject.themeArea')->get();
 
         return view('admin.teaching.courses', compact('corsi'));
     }
 
     public function mieiCorsi(Request $request)
     {
-        $userId = $request->user()->id;
+        $studentId = $request->user()->student->id;
 
-        $orderIds = Order::where('student_id', $userId)->pluck('id');
+        $orderIds = Order::where('student_id', $studentId)->pluck('id');
 
-        $productRows = OrderProduct::whereIn('id_ordine', $orderIds)->get();
+        $productRows = OrderItem::whereIn('order_id', $orderIds)->get();
 
         $courseIds = [];
 
         foreach ($productRows as $row) {
-            if ($row->tipo_prodotto == 0) {
-                $lesson = Lesson::find($row->id_prodotto);
+            if ($row->product_type == 0) {
+                $lesson = Lesson::find($row->product_id);
                 if ($lesson) {
                     $courseIds[] = $lesson->course_id;
                 }
             }
 
-            if ($row->tipo_prodotto == 2) {
-                $exercise = Exercise::find($row->id_prodotto);
+            if ($row->product_type == 2) {
+                $exercise = Exercise::find($row->product_id);
                 if ($exercise) {
                     $courseIds[] = $exercise->course_id;
                 }
@@ -63,7 +63,7 @@ class CourseController extends Controller
 
         $courseIds = array_unique($courseIds);
 
-        $courses = Course::with('matter.theme_area')
+        $courses = Course::with('subject.themeArea')
             ->whereIn('id', $courseIds)
             ->get();
 
@@ -83,12 +83,12 @@ class CourseController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'matter_id' => 'required|exists:matters,id',
+            'subject_id' => 'required|exists:subjects,id',
             'name' => 'required|string|max:255',
         ]);
         Course::create([
             'name' => $data['name'],
-            'matter_id' => $data['matter_id'],
+            'subject_id' => $data['subject_id'],
         ]);
 
         return back()->with('success', 'Corso creato');

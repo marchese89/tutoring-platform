@@ -43,14 +43,14 @@
 
         <tr style="height:30px">
             <td align="left">
-                <font size="4">PARTITA IVA: {{ $adminData->piva }}</font>
+                <font size="4">PARTITA IVA: {{ $adminData->vat_number }}</font>
             </td>
             <td></td>
         </tr>
 
         <tr style="height:30px">
             <td align="left">
-                <font size="4">COD. FISC: {{ $adminData->cf }}</font>
+                <font size="4">COD. FISC: {{ $adminData->tax_code }}</font>
             </td>
             <td></td>
         </tr>
@@ -89,7 +89,7 @@
         <tr style="height:30px">
             <td></td>
             <td align="right">
-                <font size="4">CF: {{ $studente->cf }}</font>
+                <font size="4">CF: {{ $studente->tax_code }}</font>
             </td>
         </tr>
 
@@ -121,7 +121,7 @@
                         <td align="center"><b>IMPORTO</b></td>
                     </tr>
 
-                    @foreach ($order_products as $row)
+                    @foreach ($order_items as $row)
                         <tr>
                             <td align="center">{{ $row['description'] }}</td>
                             <td align="center">{{ $row['price'] }} €</td>

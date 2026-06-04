@@ -3,17 +3,17 @@
 namespace App\Services;
 
 use App\Models\Order;
-use App\Models\OrderProduct;
+use App\Models\OrderItem;
 
 class PurchaseService
 {
-    public static function prodotto_acquistato($id_studente, $id, $tipo): bool
+    public static function prodotto_acquistato($student_id, $id, $tipo): bool
     {
-        $ordini = Order::where('student_id', '=', $id_studente)->get();
+        $ordini = Order::where('student_id', '=', $student_id)->get();
         foreach ($ordini as $ordine) {
-            $prodotti_ordine = OrderProduct::where('id_ordine', '=', $ordine->id)->get();
+            $prodotti_ordine = OrderItem::where('order_id', '=', $ordine->id)->get();
             foreach ($prodotti_ordine as $prodotto) {
-                if ($prodotto->id_prodotto == $id && $prodotto->tipo_prodotto == $tipo) {
+                if ($prodotto->product_id == $id && $prodotto->product_type == $tipo) {
                     return true;
                 }
             }
@@ -22,11 +22,11 @@ class PurchaseService
         return false;
     }
 
-    public static function get_totale_ordine($id_ordine): int
+    public static function get_totale_ordine($order_id): int
     {
         $tot = 0;
 
-        $prodotti_ordine = OrderProduct::where('id_ordine', '=', $id_ordine)->get();
+        $prodotti_ordine = OrderItem::where('order_id', '=', $order_id)->get();
         foreach ($prodotti_ordine as $prodotto) {
             $tot += $prodotto->price;
         }

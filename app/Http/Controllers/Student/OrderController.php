@@ -16,7 +16,7 @@ class OrderController extends Controller
     {
         $student = $request->user()->student;
         $firstOrder = Order::where('student_id', $student->id)
-            ->orderByDesc('date')
+            ->orderByDesc('ordered_at')
             ->first();
 
         if (!$firstOrder) {
@@ -25,16 +25,16 @@ class OrderController extends Controller
             ]);
         }
 
-        $firstOrderDate = DateHelper::parse($firstOrder->date);
+        $firstOrderDate = DateHelper::parse($firstOrder->ordered_at);
 
         $years = Order::where('student_id', $student->id)
-            ->selectRaw('YEAR(date) as year')
+            ->selectRaw('YEAR(ordered_at) as year')
             ->groupBy('year')
             ->orderBy('year')
             ->pluck('year');
 
         $months = Order::where('student_id', $student->id)
-            ->selectRaw('MONTH(date) as month')
+            ->selectRaw('MONTH(ordered_at) as month')
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('month')
@@ -56,21 +56,21 @@ class OrderController extends Controller
     public function table(Request $request): JsonResponse
     {
         $student = $request->user()->student;
-        $orders = Order::with('order_products')
+        $orders = Order::with('orderItems')
             ->where('student_id', $student->id)
-            ->whereYear('date', $request->input('anno'))
-            ->whereMonth('date', $request->input('mese'))
-            ->orderByDesc('date')
+            ->whereYear('ordered_at', $request->input('anno'))
+            ->whereMonth('ordered_at', $request->input('mese'))
+            ->orderByDesc('ordered_at')
             ->get();
 
         $total = 0;
         $mappedOrders = $orders->map(function (Order $order) use (&$total) {
-            $orderTotal = $order->order_products->sum('price');
+            $orderTotal = $order->orderItems->sum('price');
             $total += $orderTotal;
 
             return [
                 'id' => $order->id,
-                'data' => DateHelper::format($order->date),
+                'data' => DateHelper::format($order->ordered_at),
                 'totale' => $orderTotal,
             ];
         });
@@ -83,20 +83,20 @@ class OrderController extends Controller
 
     public function show(Request $request, int $id): View
     {
-        $order = Order::with('order_products')
+        $order = Order::with('orderItems')
             ->where('student_id', $request->user()->student->id)
             ->findOrFail($id);
-        $products = $order->order_products->map(fn($product) => [
-            'id' => $product->id_prodotto,
-            'type' => $this->productTypeLabel((int) $product->tipo_prodotto),
+        $products = $order->orderItems->map(fn($product) => [
+            'id' => $product->product_id,
+            'type' => $this->productTypeLabel((int) $product->product_type),
             'price' => $product->price,
         ]);
 
         return view('student.order', [
             'ordine' => $order,
-            'orderDate' => DateHelper::format($order->date),
+            'orderDate' => DateHelper::format($order->ordered_at),
             'prodotti' => $products,
-            'tot_ordine' => $order->order_products->sum('price'),
+            'tot_ordine' => $order->orderItems->sum('price'),
         ]);
     }
 

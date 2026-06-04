@@ -33,7 +33,7 @@
         {{-- PROFILO --}}
         <div class="row align-items-center mb-5">
             <div class="col-md-5">
-                <img src=".{{ $admin->photo }}" class="img-fluid rounded-3 shadow-sm">
+                <img src=".{{ $admin->photo_path }}" class="img-fluid rounded-3 shadow-sm">
             </div>
 
             <div class="col-md-7">
@@ -103,8 +103,8 @@
                 <div class="col-md-8">
 
                     @foreach ($feedbacks as $feed)
-                        @if ($feed->recensione)
-                            <x-testimonial-card :name="$feed->student->user->name . ' ' . $feed->student->user->surname" :text="$feed->recensione" />
+                        @if ($feed->review)
+                            <x-testimonial-card :name="$feed->student->user->name . ' ' . $feed->student->user->surname" :text="$feed->review" />
                         @endif
                     @endforeach
 

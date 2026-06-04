@@ -151,13 +151,13 @@
                 $isArrayMessage = is_array($item);
                 $isOwnMessage = $isArrayMessage
                     ? !($item['is_teacher'] ?? false)
-                    : (int) $item->author === (int) $ownAuthor;
+                    : (int) $item->sender_role === (int) $ownAuthor;
                 $sender = $isArrayMessage
                     ? $item['sender']
                     : ($isOwnMessage ? $ownSender : $otherSender);
                 $date = $isArrayMessage
                     ? $item['date']
-                    : \App\Helpers\DateHelper::format($item->date);
+                    : \App\Helpers\DateHelper::format($item->sent_at);
                 $message = $isArrayMessage ? $item['message'] : $item->message;
             @endphp
 
@@ -235,7 +235,7 @@
         }
 
         function appendMessage(msg) {
-            const isOwnMessage = Number(msg.author) === Number(ownAuthor);
+            const isOwnMessage = Number(msg.sender_role ?? msg.author) === Number(ownAuthor);
             const wrapper = document.createElement("div");
             const emptyState = document.getElementById(`${chatDomId}-empty`);
 

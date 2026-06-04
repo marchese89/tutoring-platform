@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('title')->nullable();
             $table->integer('number')->nullable();
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->string('presentation')->nullable();
-            $table->string('lesson')->nullable();
+            $table->string('presentation_file')->nullable();
+            $table->string('content_file')->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
         });

@@ -26,12 +26,12 @@
                                 {{ $item->title }}
                             </td>
                             <td>
-                                {{ $item->date }}
+                                {{ $item->requested_at }}
                             </td>
                             <td class="text-center">
                                 <x-ui.status-dot
-                                    :variant="$item->escaped == 0 ? 'danger' : 'success'"
-                                    :label="$item->escaped == 0 ? 'Da svolgere' : 'Svolta'"
+                                    :variant="$item->is_fulfilled == 0 ? 'danger' : 'success'"
+                                    :label="$item->is_fulfilled == 0 ? 'Da svolgere' : 'Svolta'"
                                 />
                             </td>
                             <td>

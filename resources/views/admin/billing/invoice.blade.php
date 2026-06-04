@@ -25,7 +25,7 @@
                         </div>
 
                         <div class="mt-3 mt-md-0">
-                            <a href="/protected-files/{{ $invoice->path }}" target="_blank"
+                            <a href="/protected-files/{{ $invoice->file_path }}" target="_blank"
                                 class="btn btn-outline-primary px-4">
                                 Apri in nuova scheda
                             </a>
@@ -36,7 +36,7 @@
                     <div class="border rounded overflow-hidden bg-body-tertiary">
 
                         <iframe width="100%" height="850px" style="border: none"
-                            src="/protected-files/{{ $invoice->path }}#view=FitH">
+                            src="/protected-files/{{ $invoice->file_path }}#view=FitH">
                         </iframe>
 
                     </div>

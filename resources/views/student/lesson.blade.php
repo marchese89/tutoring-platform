@@ -37,7 +37,7 @@
                 </h4>
 
                 <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lezione->presentation }}#view=FitH"></iframe>
+                    <iframe src="/protected-files/{{ $lezione->presentation_file }}#view=FitH"></iframe>
                 </div>
             </x-ui.card>
         </div>
@@ -49,7 +49,7 @@
                 </h4>
 
                 <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lezione->lesson }}#view=FitH"></iframe>
+                    <iframe src="/protected-files/{{ $lezione->content_file }}#view=FitH"></iframe>
                 </div>
             </x-ui.card>
         </div>

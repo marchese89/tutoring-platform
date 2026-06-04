@@ -20,8 +20,8 @@
 
                 <div class="text-lg-end">
                     <span
-                        class="badge {{ $richiesta->paid ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }} rounded-pill px-3 py-2 mb-2">
-                        {{ $richiesta->paid ? 'Acquistata' : 'Da acquistare' }}
+                        class="badge {{ $richiesta->is_paid ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }} rounded-pill px-3 py-2 mb-2">
+                        {{ $richiesta->is_paid ? 'Acquistata' : 'Da acquistare' }}
                     </span>
 
                     @if ($richiesta->price)
@@ -40,12 +40,12 @@
                 </h4>
 
                 <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $richiesta->trace }}#view=FitH"></iframe>
+                    <iframe src="/protected-files/{{ $richiesta->request_file }}#view=FitH"></iframe>
                 </div>
             </x-ui.card>
         </div>
 
-        @if ($richiesta->price != null && $richiesta->price != 0 && $richiesta->paid == 0)
+        @if ($richiesta->price != null && $richiesta->price != 0 && $richiesta->is_paid == 0)
             <div class="mt-4">
                 <x-ui.card>
                     <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
@@ -67,7 +67,7 @@
             </div>
         @endif
 
-        @if ($richiesta->paid == 1)
+        @if ($richiesta->is_paid == 1)
             <div class="mt-4">
                 <x-ui.card>
                     <h4 class="fw-bold mb-3">
@@ -75,7 +75,7 @@
                     </h4>
 
                     <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                        <iframe src="/protected-files/{{ $richiesta->execution }}#view=FitH"></iframe>
+                        <iframe src="/protected-files/{{ $richiesta->solution_file }}#view=FitH"></iframe>
                     </div>
                 </x-ui.card>
             </div>

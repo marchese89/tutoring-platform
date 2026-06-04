@@ -23,7 +23,7 @@
 
                 <div class="ratio" style="height: 800px;">
 
-                    <iframe src="/protected-files/{{ $fattura->path }}#view=FitH"
+                    <iframe src="/protected-files/{{ $fattura->file_path }}#view=FitH"
                         style="width: 100%; height: 100%; border: 0; border-radius: 12px;">
                     </iframe>
 

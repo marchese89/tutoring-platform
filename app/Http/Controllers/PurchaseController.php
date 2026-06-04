@@ -113,9 +113,9 @@ class PurchaseController extends Controller
             Mail::to($user->email)->send(
                 new OrderCompletedMail(
                     $user,
-                    $invoice->path,
+                    $invoice->file_path,
                     now()->format('d/m/Y'),
-                    Order::find($orderId)->order_products()->sum('price')
+                    Order::find($orderId)->orderItems()->sum('price')
                 )
             );
 
@@ -171,11 +171,11 @@ class PurchaseController extends Controller
                 'postal_code' => $validated['inputCAP'],
                 'city' => $validated['inputCitta'],
                 'province' => $validated['inputProvincia'],
-                'cf' => $validated['inputCF'],
+                'tax_code' => $validated['inputCF'],
             ],
             'admin' => $admin,
             'adminData' => $adminData,
-            'order_products' => [[
+            'order_items' => [[
                 'description' => $validated['descrizione'],
                 'price' => $price,
                 'quantity' => $quantity,
@@ -197,9 +197,9 @@ class PurchaseController extends Controller
 
         Invoice::create([
             'number' => $invoiceNumber,
-            'date' => $date,
+            'issued_at' => $date,
             'order_id' => null,
-            'path' => $path,
+            'file_path' => $path,
         ]);
 
         return redirect()->route('admin.invoices.created');
@@ -248,13 +248,13 @@ class PurchaseController extends Controller
 
     private function getNextInvoiceNumber(): int
     {
-        $lastInvoice = Invoice::orderByDesc('date')->orderByDesc('number')->first();
+        $lastInvoice = Invoice::orderByDesc('issued_at')->orderByDesc('number')->first();
 
-        if (!$lastInvoice || !$lastInvoice->date) {
+        if (!$lastInvoice || !$lastInvoice->issued_at) {
             return 1;
         }
 
-        if (Carbon::parse($lastInvoice->date)->year !== now()->year) {
+        if (Carbon::parse($lastInvoice->issued_at)->year !== now()->year) {
             return 1;
         }
 

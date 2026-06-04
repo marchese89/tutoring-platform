@@ -35,9 +35,9 @@
 
                                     <td>{{ $item->id }}</td>
 
-                                    <td>{{ $item->matter->theme_area->name ?? '-' }}</td>
+                                    <td>{{ $item->subject->themeArea->name ?? '-' }}</td>
 
-                                    <td>{{ $item->matter->name ?? '-' }}</td>
+                                    <td>{{ $item->subject->name ?? '-' }}</td>
 
                                     <td>{{ $item->name }}</td>
 

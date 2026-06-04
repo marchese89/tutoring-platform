@@ -31,7 +31,7 @@
                     </div>
 
                     <div class="ratio ratio-16x9">
-                        <iframe src="/protected-files/{{ $lezione->lesson }}#view=FitH" class="rounded border" allowfullscreen>
+                        <iframe src="/protected-files/{{ $lezione->content_file }}#view=FitH" class="rounded border" allowfullscreen>
                         </iframe>
                     </div>
 

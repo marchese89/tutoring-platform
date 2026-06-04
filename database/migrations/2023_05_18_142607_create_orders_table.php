@@ -15,8 +15,7 @@ return new class extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
-            $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->string('invoice')->nullable();
+            $table->timestamp('ordered_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
         });
     }

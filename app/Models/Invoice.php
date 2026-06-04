@@ -12,13 +12,17 @@ class Invoice extends Model
 
     protected $fillable = [
         'number',
-        'date',
+        'issued_at',
         'order_id',
-        'path',
+        'file_path',
+    ];
+
+    protected $casts = [
+        'issued_at' => 'datetime',
     ];
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'id');
+        return $this->belongsTo(Order::class);
     }
 }

@@ -14,7 +14,9 @@ return new class extends Migration
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
             $table->integer('number')->nullable();
-            $table->timestamp('date')->nullable();
+            $table->timestamp('issued_at')->nullable();
+            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('file_path')->nullable();
             $table->timestamps();
         });
     }
