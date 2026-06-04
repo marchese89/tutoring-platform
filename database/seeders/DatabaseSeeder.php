@@ -28,12 +28,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $adminPassword = env('SEED_ADMIN_PASSWORD', 'password');
+        $studentPassword = env('SEED_STUDENT_PASSWORD', 'password');
+        $secondStudentPassword = env('SEED_STUDENT_2_PASSWORD', $studentPassword);
+
         $adminUser = User::create([
-            'name' => 'Mario',
-            'surname' => 'Rossi',
-            'email' => 'admin@example.com',
+            'name' => env('SEED_ADMIN_NAME', 'Mario'),
+            'surname' => env('SEED_ADMIN_SURNAME', 'Rossi'),
+            'email' => env('SEED_ADMIN_EMAIL', 'admin@example.com'),
             'email_verified_at' => now(),
-            'password' => Hash::make('password'),
+            'password' => Hash::make($adminPassword),
             'role' => 'admin',
             'status' => 'active',
         ]);
@@ -50,15 +54,27 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $students = collect([
-            ['name' => 'Giulia', 'surname' => 'Bianchi', 'email' => 'student@example.com', 'tax_code' => 'BNCGLI90A41H501K'],
-            ['name' => 'Luca', 'surname' => 'Verdi', 'email' => 'student2@example.com', 'tax_code' => 'VRDLCU91B12F205Z'],
+            [
+                'name' => env('SEED_STUDENT_NAME', 'Giulia'),
+                'surname' => env('SEED_STUDENT_SURNAME', 'Bianchi'),
+                'email' => env('SEED_STUDENT_EMAIL', 'student@example.com'),
+                'password' => $studentPassword,
+                'tax_code' => env('SEED_STUDENT_TAX_CODE', 'BNCGLI90A41H501K'),
+            ],
+            [
+                'name' => env('SEED_STUDENT_2_NAME', 'Luca'),
+                'surname' => env('SEED_STUDENT_2_SURNAME', 'Verdi'),
+                'email' => env('SEED_STUDENT_2_EMAIL', 'student2@example.com'),
+                'password' => $secondStudentPassword,
+                'tax_code' => env('SEED_STUDENT_2_TAX_CODE', 'VRDLCU91B12F205Z'),
+            ],
         ])->map(function (array $data) {
             $user = User::create([
                 'name' => $data['name'],
                 'surname' => $data['surname'],
                 'email' => $data['email'],
                 'email_verified_at' => now(),
-                'password' => Hash::make('password'),
+                'password' => Hash::make($data['password']),
                 'role' => 'student',
                 'status' => 'active',
             ]);
