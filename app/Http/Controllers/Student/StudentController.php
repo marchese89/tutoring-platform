@@ -85,10 +85,10 @@ class StudentController extends Controller
         return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
     }
 
-    public function showLesson($id_corso, $id_lezione)
+    public function showLesson($course, $lesson)
     {
-        $corso = Course::find($id_corso);
-        $lezione = Lesson::find($id_lezione);
+        $corso = Course::find($course);
+        $lezione = Lesson::find($lesson);
 
         if (!$corso || !$lezione) {
             abort(404);
@@ -96,7 +96,7 @@ class StudentController extends Controller
 
         $studente = auth()->user()->student;
 
-        $chat = Chat::where('product_id', $id_lezione)
+        $chat = Chat::where('product_id', $lesson)
             ->where('product_type', 0)
             ->where('student_id', $studente->id)
             ->first();
@@ -105,7 +105,7 @@ class StudentController extends Controller
         if (!$chat) {
 
             $chat = Chat::create([
-                'product_id' => $id_lezione,
+                'product_id' => $lesson,
                 'product_type' => 0,
                 'student_id' => $studente->id
             ]);
@@ -123,10 +123,10 @@ class StudentController extends Controller
         ));
     }
 
-    public function showExercise(Request $request, $id_corso, $id_esercizio)
+    public function showExercise(Request $request, $course, $exercise)
     {
-        $corso = Course::find($id_corso);
-        $esercizio = Exercise::find($id_esercizio);
+        $corso = Course::find($course);
+        $esercizio = Exercise::find($exercise);
 
         // Controlli base
         if (!$corso || !$esercizio) {
@@ -140,7 +140,7 @@ class StudentController extends Controller
         }
 
         $chat = Chat::firstOrCreate([
-            'product_id' => $id_esercizio,
+            'product_id' => $exercise,
             'product_type' => 2,
             'student_id' => $request->user()->student->id,
         ]);

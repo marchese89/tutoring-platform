@@ -13,10 +13,10 @@
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.exercises.trace.update', $id_esercizio) }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
+            <form method="POST" action="{{ route('admin.exercises.trace.update', $exercise) }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
                 @csrf
-                <input type="hidden" name="id" value="{{ $id_esercizio }}" />
-                <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
+                <input type="hidden" name="id" value="{{ $exercise }}" />
+                <input type="hidden" name="course" value="{{ $course }}" />
                 <input type="file" class="form-control @error('file-trace-ex') is-invalid @enderror" id="file-trace-ex"
                     name="file-trace-ex" required />
                 @error('file-trace-ex')
@@ -42,10 +42,10 @@
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.exercises.execution.update', $id_esercizio) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
+            <form method="POST" action="{{ route('admin.exercises.execution.update', $exercise) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
-                <input type="hidden" name="id" value="{{ $id_esercizio }}" />
-                <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
+                <input type="hidden" name="id" value="{{ $exercise }}" />
+                <input type="hidden" name="course" value="{{ $course }}" />
                 <input type="file" class="form-control @error('file-ex') is-invalid @enderror" id="file-ex"
                     name="file-ex" required />
                 @error('file-ex')
@@ -62,7 +62,7 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.exercises.update', $id_esercizio) }}" id="delete">
+            <form method="POST" action="{{ route('admin.exercises.update', $exercise) }}" id="delete">
                 @csrf
                 @method('PUT')
                 <div class="col-md-12">

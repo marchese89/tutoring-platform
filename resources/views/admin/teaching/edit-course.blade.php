@@ -45,7 +45,7 @@
 
                             <td>
                                 <a class="btn btn-primary btn-sm"
-                                    href="{{ route('admin.lessons.edit', ['id_corso' => $corso->id, 'id_lezione' => $item->id]) }}">
+                                    href="{{ route('admin.lessons.edit', ['course' => $corso->id, 'lesson' => $item->id]) }}">
                                     Modifica
                                 </a>
 

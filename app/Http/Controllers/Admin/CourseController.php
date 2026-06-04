@@ -21,9 +21,9 @@ class CourseController extends Controller
         return view('admin.teaching.create-course', compact('materie', 'corsi'));
     }
 
-    public function publicIndex(int $id_materia)
+    public function publicIndex(int $subject)
     {
-        $corsi = Course::where('subject_id', $id_materia)->get();
+        $corsi = Course::where('subject_id', $subject)->get();
 
         return view('public.courses', compact('corsi'));
     }

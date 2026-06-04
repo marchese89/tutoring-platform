@@ -58,13 +58,13 @@
 
                                 <div class="mt-auto d-grid gap-2">
 
-                                    <a href="{{ route('lessons.presentation', ['id_corso' => $item->course_id, 'id_lezione' => $item->id]) }}"
+                                    <a href="{{ route('lessons.presentation', ['course' => $item->course_id, 'lesson' => $item->id]) }}"
                                         class="btn btn-outline-primary rounded-3">
                                         Anteprima
                                     </a>
 
                                     @if ($item->price == 0 || $item->can_show)
-                                        <a href="{{ route('lessons.show', ['id_corso' => $item->course_id, 'id_lezione' => $item->id]) }}"
+                                        <a href="{{ route('lessons.show', ['course' => $item->course_id, 'lesson' => $item->id]) }}"
                                             class="btn btn-primary rounded-3">
                                             Contenuto
                                         </a>
@@ -125,7 +125,7 @@
 
                                 <div class="mt-auto d-grid gap-2">
 
-                                    <a href="{{ route('exercises.trace', ['id_corso' => $course->id, 'id_esercizio' => $item->id]) }}"
+                                    <a href="{{ route('exercises.trace', ['course' => $course->id, 'exercise' => $item->id]) }}"
                                         class="btn btn-outline-primary rounded-3">
                                         Anteprima
                                     </a>

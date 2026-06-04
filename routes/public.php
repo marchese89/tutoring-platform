@@ -19,15 +19,15 @@ Route::view('cookie-policy', 'public.cookie-policy')->name('cookie-policy');
 Route::view('about', 'public.about')->name('about');
 
 Route::get('theme-areas', [ThemeAreaController::class, 'publicIndex'])->name('theme-areas.index');
-Route::get('theme-areas/{id_at}/subjects', [SubjectController::class, 'publicIndex'])->name('subjects.index');
-Route::get('subjects/{id_materia}/courses', [CourseController::class, 'publicIndex'])->name('courses.index');
+Route::get('theme-areas/{themeArea}/subjects', [SubjectController::class, 'publicIndex'])->name('subjects.index');
+Route::get('subjects/{subject}/courses', [CourseController::class, 'publicIndex'])->name('courses.index');
 Route::get('courses/{id}', [CourseController::class, 'show'])->name('courses.show');
 
-Route::get('courses/{id_corso}/lessons/{id_lezione}/presentation', [LessonController::class, 'viewPresentation'])
+Route::get('courses/{course}/lessons/{lesson}/presentation', [LessonController::class, 'viewPresentation'])
     ->name('lessons.presentation');
-Route::get('courses/{id_corso}/lessons/{id_lezione}', [LessonController::class, 'view'])
+Route::get('courses/{course}/lessons/{lesson}', [LessonController::class, 'view'])
     ->name('lessons.show');
-Route::get('courses/{id_corso}/exercises/{id_esercizio}/trace', [ExerciseController::class, 'viewTrace'])
+Route::get('courses/{course}/exercises/{exercise}/trace', [ExerciseController::class, 'viewTrace'])
     ->name('exercises.trace');
 
 Route::view('lesson-requests/create', 'public.lesson-request')->name('lesson-requests.create');

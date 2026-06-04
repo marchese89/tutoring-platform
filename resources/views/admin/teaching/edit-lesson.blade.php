@@ -20,7 +20,7 @@
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.presentation.update', $id_lezione) }}" enctype="multipart/form-data"
+            <form method="POST" action="{{ route('admin.lessons.presentation.update', $lesson) }}" enctype="multipart/form-data"
                 id="upload" data-upload-progress-form>
                 @csrf
                 @method('POST')
@@ -49,7 +49,7 @@
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.file.update', $id_lezione) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
+            <form method="POST" action="{{ route('admin.lessons.file.update', $lesson) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('file-lesson') is-invalid @enderror" id="file-lesson"
@@ -68,11 +68,11 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.update', $id_lezione) }}" id="modifica-lezione">
+            <form method="POST" action="{{ route('admin.lessons.update', $lesson) }}" id="modifica-lezione">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="id_lezione" value="{{ $id_lezione }}" />
-                <input type="hidden" name="id_corso" value="{{ $id_corso }}" />
+                <input type="hidden" name="lesson" value="{{ $lesson }}" />
+                <input type="hidden" name="course" value="{{ $course }}" />
                 <div class="col-md-12">
                     <h5>Numero</h5>
                     <input type="text" class="form-control @error('numero') is-invalid @enderror" id="numero"

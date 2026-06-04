@@ -26,9 +26,9 @@ Route::middleware(['auth', 'role:student'])->group(function () {
 
     Route::get('student/courses', [CourseController::class, 'mieiCorsi'])->name('student.courses.index');
     Route::get('student/courses/{id}', [RouteController::class, 'show'])->name('student.courses.show');
-    Route::get('student/courses/{id_corso}/lessons/{id_lezione}', [StudentController::class, 'showLesson'])
+    Route::get('student/courses/{course}/lessons/{lesson}', [StudentController::class, 'showLesson'])
         ->name('student.lessons.show');
-    Route::get('student/courses/{id_corso}/exercises/{id_esercizio}', [StudentController::class, 'showExercise'])
+    Route::get('student/courses/{course}/exercises/{exercise}', [StudentController::class, 'showExercise'])
         ->name('student.exercises.show');
 
     Route::view('cart', 'public.cart')->name('cart.show');

@@ -72,7 +72,7 @@ Route::prefix('admin')
         Route::delete('courses/{id}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
         Route::get('courses/{id}/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
-        Route::get('courses/{id_corso}/lessons/{id_lezione}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
+        Route::get('courses/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])->name('lessons.edit');
         Route::post('lessons', [LessonController::class, 'store'])->name('lessons.store');
         Route::put('lessons/{id}', [LessonController::class, 'update'])->name('lessons.update');
         Route::delete('lessons/{id}', [LessonController::class, 'destroy'])->name('lessons.destroy');

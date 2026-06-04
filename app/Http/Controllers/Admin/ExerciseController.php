@@ -22,16 +22,16 @@ class ExerciseController extends Controller
     {
         $corso = Course::findOrFail($course);
         $esercizio = Exercise::where('course_id', $course)->findOrFail($exercise);
-        $id_corso = $corso->id;
-        $id_esercizio = $esercizio->id;
+        $course = $corso->id;
+        $exercise = $esercizio->id;
 
-        return view('admin.teaching.edit-exercise', compact('id_corso', 'id_esercizio', 'corso', 'esercizio'));
+        return view('admin.teaching.edit-exercise', compact('course', 'exercise', 'corso', 'esercizio'));
     }
 
-    public function viewTrace($id_corso, $id_esercizio)
+    public function viewTrace($course, $exercise)
     {
-        $corso = Course::where('id', '=', $id_corso)->first();
-        $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
+        $corso = Course::where('id', '=', $course)->first();
+        $esercizio = Exercise::where('id', '=', $exercise)->first();
 
         return view('public.exercise-trace', compact('esercizio', 'corso'));
     }

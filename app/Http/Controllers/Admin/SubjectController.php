@@ -16,9 +16,9 @@ class SubjectController extends Controller
         return view('admin.teaching.subjects', compact('materie', 'aree_t'));
     }
 
-    public function publicIndex(int $id_at)
+    public function publicIndex(int $themeArea)
     {
-        $materie = Subject::where('theme_area_id', $id_at)->get();
+        $materie = Subject::where('theme_area_id', $themeArea)->get();
         return view('public.subjects', compact('materie'));
     }
 
