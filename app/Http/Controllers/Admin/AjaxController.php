@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\MessageSent;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
-use App\Models\ChatMessage;
+use App\Models\Chat;
 use App\Models\Order;
 use App\Models\Review;
 use Illuminate\Http\Request;
@@ -44,7 +44,7 @@ class AjaxController extends Controller
                 'id' => $order->id,
                 'date' => DateHelper::format($order->ordered_at),
                 'total' => $order->total ?? 0,
-                'student' => $order->student->user->name . ' ' . $order->student->user->surname,
+                'student' => $order->student->user->name.' '.$order->student->user->surname,
             ];
         });
 
@@ -63,8 +63,11 @@ class AjaxController extends Controller
             'message' => 'required|string',
         ]);
 
-        $message = ChatMessage::create([
-            'chat_id' => $validated['chat_id'],
+        $chat = Chat::findOrFail($validated['chat_id']);
+
+        $this->authorize('sendMessage', $chat);
+
+        $message = $chat->messages()->create([
             'message' => $validated['message'],
             'sender_role' => $request->user()->role === 'admin' ? 1 : 0,
             'sent_at' => now(),

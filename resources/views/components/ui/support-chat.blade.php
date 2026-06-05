@@ -313,7 +313,7 @@
             }
 
             window.Echo
-                .channel("chat." + chatId)
+                .private("chat." + chatId)
                 .listen(".MessageSent", function(e) {
                     appendMessage(e);
                 });

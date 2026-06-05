@@ -2,12 +2,9 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
-//use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use App\Services\Auth\JwtGuard;
-use Illuminate\Contracts\Foundation\Application;
+use App\Models\Chat;
+use App\Policies\ChatPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -17,7 +14,7 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Chat::class => ChatPolicy::class,
     ];
 
     /**
@@ -25,6 +22,6 @@ class AuthServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+        $this->registerPolicies();
     }
 }
