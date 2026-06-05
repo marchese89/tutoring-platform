@@ -96,14 +96,14 @@
 
                                     <option selected value="{{ $dataPrimo['mese'] }}">
 
-                                        {{ App\Services\PurchaseService::stringa_mese(intval($dataPrimo['mese'])) }}
+                                        {{ App\Services\PurchaseService::monthName(intval($dataPrimo['mese'])) }}
 
                                     </option>
 
                                     @foreach ($months as $item)
                                         <option value="{{ $item->month }}">
 
-                                            {{ App\Services\PurchaseService::stringa_mese(intval($item->month)) }}
+                                            {{ App\Services\PurchaseService::monthName(intval($item->month)) }}
 
                                         </option>
                                     @endforeach

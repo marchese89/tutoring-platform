@@ -23,7 +23,7 @@ class RouteController extends Controller
             ->orderBy('number')
             ->get()
             ->filter(function ($lezione) use ($student) {
-                return PurchaseService::prodotto_acquistato($student->id, $lezione->id, 0);
+                return PurchaseService::isProductPurchased($student->id, $lezione->id, 0);
             })
             ->values();
 
@@ -32,7 +32,7 @@ class RouteController extends Controller
             ->orderBy('id')
             ->get()
             ->filter(function ($esercizio) use ($student) {
-                return PurchaseService::prodotto_acquistato($student->id, $esercizio->id, 2);
+                return PurchaseService::isProductPurchased($student->id, $esercizio->id, 2);
             })
             ->values();
 

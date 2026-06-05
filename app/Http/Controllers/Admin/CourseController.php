@@ -130,7 +130,7 @@ class CourseController extends Controller
             $purchased = false;
 
             if ($studentId) {
-                $purchased = PurchaseService::prodotto_acquistato(
+                $purchased = PurchaseService::isProductPurchased(
                     $studentId,
                     $lesson->id,
                     0
@@ -150,7 +150,7 @@ class CourseController extends Controller
             $purchased = false;
 
             if ($studentId) {
-                $purchased = PurchaseService::prodotto_acquistato(
+                $purchased = PurchaseService::isProductPurchased(
                     $studentId,
                     $exercise->id,
                     2

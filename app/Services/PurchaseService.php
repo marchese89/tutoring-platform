@@ -7,13 +7,13 @@ use App\Models\OrderItem;
 
 class PurchaseService
 {
-    public static function prodotto_acquistato($student_id, $id, $tipo): bool
+    public static function isProductPurchased($studentId, $productId, $productType): bool
     {
-        $ordini = Order::where('student_id', '=', $student_id)->get();
-        foreach ($ordini as $ordine) {
-            $prodotti_ordine = OrderItem::where('order_id', '=', $ordine->id)->get();
-            foreach ($prodotti_ordine as $prodotto) {
-                if ($prodotto->product_id == $id && $prodotto->product_type == $tipo) {
+        $orders = Order::where('student_id', '=', $studentId)->get();
+        foreach ($orders as $order) {
+            $orderItems = OrderItem::where('order_id', '=', $order->id)->get();
+            foreach ($orderItems as $item) {
+                if ($item->product_id == $productId && $item->product_type == $productType) {
                     return true;
                 }
             }
@@ -22,21 +22,21 @@ class PurchaseService
         return false;
     }
 
-    public static function get_totale_ordine($order_id): int
+    public static function orderTotal($orderId): int
     {
-        $tot = 0;
+        $total = 0;
 
-        $prodotti_ordine = OrderItem::where('order_id', '=', $order_id)->get();
-        foreach ($prodotti_ordine as $prodotto) {
-            $tot += $prodotto->price;
+        $orderItems = OrderItem::where('order_id', '=', $orderId)->get();
+        foreach ($orderItems as $item) {
+            $total += $item->price;
         }
 
-        return $tot;
+        return $total;
     }
 
-    public static function stringa_mese($mese)
+    public static function monthName($month)
     {
-        switch ($mese) {
+        switch ($month) {
             case 1:
                 return 'Gennaio';
             case 2:

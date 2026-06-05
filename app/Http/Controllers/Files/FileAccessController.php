@@ -102,7 +102,7 @@ class FileAccessController extends Controller
                 return true;
             }
 
-            if (PurchaseService::prodotto_acquistato($studente->id, $lessonFile->id, 0)) {
+            if (PurchaseService::isProductPurchased($studente->id, $lessonFile->id, 0)) {
                 return true;
             }
         }
@@ -117,7 +117,7 @@ class FileAccessController extends Controller
                 return true;
             }
 
-            if (PurchaseService::prodotto_acquistato($studente->id, $exerciseExecution->id, 2)) {
+            if (PurchaseService::isProductPurchased($studente->id, $exerciseExecution->id, 2)) {
                 return true;
             }
         }

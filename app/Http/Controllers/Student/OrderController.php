@@ -40,14 +40,14 @@ class OrderController extends Controller
             ->pluck('month')
             ->map(fn($month) => [
                 'value' => $month,
-                'label' => PurchaseService::stringa_mese((int) $month),
+                'label' => PurchaseService::monthName((int) $month),
             ]);
 
         return view('student.orders', [
             'hasOrders' => true,
             'selectedYear' => $firstOrderDate['anno'],
             'selectedMonth' => $firstOrderDate['mese'],
-            'selectedMonthLabel' => PurchaseService::stringa_mese((int) $firstOrderDate['mese']),
+            'selectedMonthLabel' => PurchaseService::monthName((int) $firstOrderDate['mese']),
             'years' => $years,
             'months' => $months,
         ]);
