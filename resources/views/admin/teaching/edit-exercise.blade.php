@@ -17,9 +17,9 @@
                 @csrf
                 <input type="hidden" name="id" value="{{ $exercise->id }}" />
                 <input type="hidden" name="course" value="{{ $course->id }}" />
-                <input type="file" class="form-control @error('file-trace-ex') is-invalid @enderror" id="file-trace-ex"
-                    name="file-trace-ex" required />
-                @error('file-trace-ex')
+                <input type="file" class="form-control @error('prompt_file') is-invalid @enderror" id="prompt_file"
+                    name="prompt_file" required />
+                @error('prompt_file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 <x-ui.upload-progress label="Caricamento traccia" />
@@ -46,9 +46,9 @@
                 @csrf
                 <input type="hidden" name="id" value="{{ $exercise->id }}" />
                 <input type="hidden" name="course" value="{{ $course->id }}" />
-                <input type="file" class="form-control @error('file-ex') is-invalid @enderror" id="file-ex"
-                    name="file-ex" required />
-                @error('file-ex')
+                <input type="file" class="form-control @error('solution_file') is-invalid @enderror" id="solution_file"
+                    name="solution_file" required />
+                @error('solution_file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 <x-ui.upload-progress label="Caricamento svolgimento" />
@@ -67,17 +67,17 @@
                 @method('PUT')
                 <div class="col-md-12">
                     <h5>Titolo</h5>
-                    <input type="text" class="form-control @error('titolo') is-invalid @enderror" id="titolo"
-                        name="titolo" value="{{ old('titolo', $exercise->title) }}" maxlength="255">
-                    @error('titolo')
+                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
+                        name="title" value="{{ old('title', $exercise->title) }}" maxlength="255">
+                    @error('title')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
-                        name="prezzo" value="{{ old('prezzo', $exercise->price) }}" maxlength="5" style="display: inline">
-                    @error('prezzo')
+                    <input type="text" class="form-control @error('price') is-invalid @enderror" id="price"
+                        name="price" value="{{ old('price', $exercise->price) }}" maxlength="5" style="display: inline">
+                    @error('price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

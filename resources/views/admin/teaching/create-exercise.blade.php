@@ -14,7 +14,7 @@
         <h4>Traccia</h4>
 
         <iframe width="90%"
-            @if (Session::exists('uploaded_trace_ex')) src="/protected-files/{{ session()->get('uploaded_trace_ex') }}#view=FitH"
+            @if (Session::exists('uploaded_exercise_prompt')) src="/protected-files/{{ session()->get('uploaded_exercise_prompt') }}#view=FitH"
                 @else
                     src="" @endif
             height="400px">
@@ -23,10 +23,10 @@
         <form method="POST" action="{{ route('admin.exercises.trace.upload.store') }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
             @csrf
             @method('POST')
-            <input type="hidden" name="id" value="{{ $id }}" />
-            <input type="file" class="form-control @error('file-trace-ex') is-invalid @enderror" id="file-trace-ex"
-                name="file-trace-ex" required />
-            @error('file-trace-ex')
+            <input type="hidden" name="course_id" value="{{ $id }}" />
+            <input type="file" class="form-control @error('prompt_file') is-invalid @enderror" id="prompt_file"
+                name="prompt_file" required />
+            @error('prompt_file')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
             <x-ui.upload-progress label="Caricamento traccia" />
@@ -38,7 +38,7 @@
             <br>
             <br>
         </form>
-        @if (Session::exists('uploaded_trace_ex'))
+        @if (Session::exists('uploaded_exercise_prompt'))
             <div class="col-12">
                 <form action="{{ route('admin.exercises.trace.session.destroy') }}" method="POST">
                     @csrf
@@ -50,11 +50,11 @@
         <br>
 
         <br>
-        @if (Session::exists('uploaded_trace_ex'))
+        @if (Session::exists('uploaded_exercise_prompt'))
             <h4>Svolgimento</h4>
 
             <iframe width="90%"
-                @if (Session::exists('uploaded_ex')) src="/protected-files/{{ session()->get('uploaded_ex') }}#view=FitH"
+                @if (Session::exists('uploaded_exercise_solution')) src="/protected-files/{{ session()->get('uploaded_exercise_solution') }}#view=FitH"
                     @else
                         src="" @endif
                 height="400px">
@@ -63,9 +63,9 @@
             <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
                 @method('POST')
-                <input type="file" class="form-control @error('file-ex') is-invalid @enderror" id="file-ex"
-                    name="file-ex" required />
-                @error('file-ex')
+                <input type="file" class="form-control @error('solution_file') is-invalid @enderror" id="solution_file"
+                    name="solution_file" required />
+                @error('solution_file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
                 <x-ui.upload-progress label="Caricamento svolgimento" />
@@ -77,7 +77,7 @@
                 <br>
                 <br>
             </form>
-            @if (Session::exists('uploaded_ex'))
+            @if (Session::exists('uploaded_exercise_solution'))
                 <div class="col-12">
                     <form action="{{ route('admin.exercises.execution.session.destroy') }}" method="POST">
                         @csrf
@@ -88,24 +88,24 @@
             @endif
         @endif
 
-        @if (Session::exists('uploaded_trace_ex') && Session::exists('uploaded_ex'))
+        @if (Session::exists('uploaded_exercise_prompt') && Session::exists('uploaded_exercise_solution'))
             <form method="POST" action="{{ route('admin.exercises.store') }}">
                 @csrf
                 @method('POST')
-                <input type="hidden" name="id" value="{{ $id }}" />
+                <input type="hidden" name="course_id" value="{{ $id }}" />
                 <div class="col-md-12">
                     <h5>Titolo</h5>
-                    <input type="text" class="form-control @error('titolo') is-invalid @enderror" id="titolo"
-                        name="titolo" maxlength="255" value="{{ old('titolo') }}">
-                    @error('titolo')
+                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
+                        name="title" maxlength="255" value="{{ old('title') }}">
+                    @error('title')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
-                        name="prezzo" maxlength="5" value="{{ old('prezzo') }}" style="display: inline">
-                    @error('prezzo')
+                    <input type="text" class="form-control @error('price') is-invalid @enderror" id="price"
+                        name="price" maxlength="5" value="{{ old('price') }}" style="display: inline">
+                    @error('price')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>

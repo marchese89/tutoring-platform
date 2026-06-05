@@ -3,33 +3,33 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Lesson;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Course;
+use App\Models\Lesson;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LessonController extends Controller
 {
-
     public function viewPresentation(int $courseId, int $lessonId)
     {
-        $course = Course::where('id', '=', $courseId)->first();
-        $lesson = Lesson::where('id', '=', $lessonId)->first();
+        $course = Course::find($courseId);
+        $lesson = Lesson::find($lessonId);
 
         return view('public.lesson-presentation', compact('course', 'lesson'));
     }
 
     public function view(int $courseId, int $lessonId)
     {
-        $course = Course::where('id', '=', $courseId)->first();
-        $lesson = Lesson::where('id', '=', $lessonId)->first();
+        $course = Course::find($courseId);
+        $lesson = Lesson::find($lessonId);
 
         return view('public.lesson-content', compact('course', 'lesson'));
     }
 
     public function create(int $id)
     {
-        $course = Course::where('id', '=', $id)->first();
+        $course = Course::find($id);
+
         return view('admin.teaching.create-lesson', compact('id', 'course'));
     }
 
@@ -41,176 +41,160 @@ class LessonController extends Controller
         return view('admin.teaching.edit-lesson', compact('course', 'lesson'));
     }
 
-    // ===============================
-    // 📤 Upload presentazione (sessione)
-    // ===============================
     public function uploadPresentation(Request $request)
     {
         $request->validate([
-            'file-pres-lez' => 'required|file',
+            'presentation_file' => 'required|file',
         ]);
 
-        if ($old = $request->session()->pull('uploaded_pres_lez')) {
-            Storage::disk('private')->delete($old);
+        if ($oldPath = $request->session()->pull('uploaded_lesson_presentation')) {
+            Storage::disk('private')->delete($oldPath);
         }
 
-        $path = $request->file('file-pres-lez')
+        $path = $request->file('presentation_file')
             ->store('lessons/presentations', 'private');
 
-        $request->session()->put('uploaded_pres_lez', $path);
+        $request->session()->put('uploaded_lesson_presentation', $path);
 
         return back();
     }
 
     public function deletePresentationSession(Request $request)
     {
-        if ($path = $request->session()->pull('uploaded_pres_lez')) {
+        if ($path = $request->session()->pull('uploaded_lesson_presentation')) {
             Storage::disk('private')->delete($path);
         }
 
         return back();
     }
 
-    // ===============================
-    // 📤 Upload file lezione (sessione)
-    // ===============================
     public function uploadLessonFile(Request $request)
     {
         $request->validate([
-            'file-lesson' => 'required|file',
+            'content_file' => 'required|file',
         ]);
 
-        if ($old = $request->session()->pull('uploaded_lesson')) {
-            Storage::disk('private')->delete($old);
+        if ($oldPath = $request->session()->pull('uploaded_lesson_content')) {
+            Storage::disk('private')->delete($oldPath);
         }
 
-        $path = $request->file('file-lesson')
+        $path = $request->file('content_file')
             ->store('lessons/files', 'private');
 
-        $request->session()->put('uploaded_lesson', $path);
+        $request->session()->put('uploaded_lesson_content', $path);
 
         return back();
     }
 
     public function deleteLessonSession(Request $request)
     {
-        if ($path = $request->session()->pull('uploaded_lesson')) {
+        if ($path = $request->session()->pull('uploaded_lesson_content')) {
             Storage::disk('private')->delete($path);
         }
 
         return back();
     }
 
-    // ===============================
-    // 💾 Store lezione
-    // ===============================
     public function store(Request $request)
     {
-        $request->validate([
-            'id' => 'required|exists:courses,id',
-            'numero' => 'required|integer',
-            'titolo' => 'required|string',
-            'prezzo' => 'required|numeric',
-        ]);
+        $validated = $request->validate(
+            [
+                'course_id' => 'required|exists:courses,id',
+                'number' => 'required|integer',
+                'title' => 'required|string',
+                'price' => 'required|numeric',
+            ],
+            [],
+            [
+                'number' => 'numero',
+                'title' => 'titolo',
+                'price' => 'prezzo',
+            ]
+        );
 
         Lesson::create([
-            'title' => $request->titolo,
-            'number' => $request->numero,
-            'course_id' => $request->id,
-            'presentation_file' => $request->session()->get('uploaded_pres_lez'),
-            'content_file' => $request->session()->get('uploaded_lesson'),
-            'price' => $request->prezzo,
+            'title' => $validated['title'],
+            'number' => $validated['number'],
+            'course_id' => $validated['course_id'],
+            'presentation_file' => $request->session()->get('uploaded_lesson_presentation'),
+            'content_file' => $request->session()->get('uploaded_lesson_content'),
+            'price' => $validated['price'],
         ]);
 
         $request->session()->forget([
-            'uploaded_pres_lez',
-            'uploaded_lesson'
+            'uploaded_lesson_presentation',
+            'uploaded_lesson_content',
         ]);
 
-        return redirect()->route('admin.courses.edit', $request->id);
+        return redirect()->route('admin.courses.edit', $validated['course_id']);
     }
 
-    // ===============================
-    // ❌ Delete
-    // ===============================
-    public function destroy(Request $request, int $id)
+    public function destroy(int $id)
     {
         $lesson = Lesson::findOrFail($id);
 
         Storage::disk('private')->delete([
             $lesson->presentation_file,
-            $lesson->content_file
+            $lesson->content_file,
         ]);
 
         $courseId = $lesson->course_id;
-
         $lesson->delete();
 
         return redirect()->route('admin.courses.edit', $courseId);
     }
 
-    // ===============================
-    // 🔄 Update file presentazione
-    // ===============================
     public function updatePresentation(Request $request, int $id)
     {
         $request->validate([
-            'file-pres-lez' => 'required|file',
+            'presentation_file' => 'required|file',
         ]);
 
         $lesson = Lesson::findOrFail($id);
 
         Storage::disk('private')->delete($lesson->presentation_file);
 
-        $path = $request->file('file-pres-lez')
+        $lesson->presentation_file = $request->file('presentation_file')
             ->store('lessons/presentations', 'private');
-
-        $lesson->presentation_file = $path;
         $lesson->save();
 
         return back();
     }
 
-    // ===============================
-    // 🔄 Update file lezione
-    // ===============================
     public function updateLessonFile(Request $request, int $id)
     {
         $request->validate([
-            'file-lesson' => 'required|file',
+            'content_file' => 'required|file',
         ]);
 
         $lesson = Lesson::findOrFail($id);
 
         Storage::disk('private')->delete($lesson->content_file);
 
-        $path = $request->file('file-lesson')
+        $lesson->content_file = $request->file('content_file')
             ->store('lessons/files', 'private');
-
-        $lesson->content_file = $path;
         $lesson->save();
 
         return back();
     }
 
-    // ===============================
-    // ✏️ Update dati
-    // ===============================
     public function update(Request $request, int $id)
     {
-        $request->validate([
-            'numero' => 'required|integer',
-            'titolo' => 'required|string',
-            'prezzo' => 'required|numeric',
-        ]);
+        $validated = $request->validate(
+            [
+                'number' => 'required|integer',
+                'title' => 'required|string',
+                'price' => 'required|numeric',
+            ],
+            [],
+            [
+                'number' => 'numero',
+                'title' => 'titolo',
+                'price' => 'prezzo',
+            ]
+        );
 
-        $lesson = Lesson::findOrFail($id);
-
-        $lesson->update([
-            'title' => $request->titolo,
-            'number' => $request->numero,
-            'price' => $request->prezzo,
-        ]);
+        Lesson::findOrFail($id)->update($validated);
 
         return back();
     }
