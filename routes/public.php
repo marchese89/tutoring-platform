@@ -31,10 +31,14 @@ Route::get('courses/{course}/exercises/{exercise}/trace', [ExerciseController::c
     ->name('exercises.trace');
 
 Route::view('lesson-requests/create', 'public.lesson-request')->name('lesson-requests.create');
-Route::post('lesson-requests/files', [LessonRequestController::class, 'storeRequestFile'])
-    ->name('lesson-requests.files.store');
-Route::delete('lesson-requests/files', [LessonRequestController::class, 'destroyRequestFile'])
-    ->name('lesson-requests.files.destroy');
-Route::post('lesson-requests', [LessonRequestController::class, 'store'])
-    ->name('lesson-requests.store');
+
+Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::post('lesson-requests/files', [LessonRequestController::class, 'storeRequestFile'])
+        ->name('lesson-requests.files.store');
+    Route::delete('lesson-requests/files', [LessonRequestController::class, 'destroyRequestFile'])
+        ->name('lesson-requests.files.destroy');
+    Route::post('lesson-requests', [LessonRequestController::class, 'store'])
+        ->name('lesson-requests.store');
+});
+
 Route::view('lesson-requests/success', 'public.lesson-request-success')->name('lesson-requests.success');
