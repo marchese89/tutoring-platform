@@ -39,7 +39,7 @@ Branch: `security/authorization-policies`
 
 ### 3. File handling
 
-Planned branch: `security/file-uploads`
+Branch in progress: `security/file-uploads`
 
 - Define accepted MIME types and upload size limits.
 - Store certificates and other private documents outside the public directory.
@@ -119,20 +119,21 @@ Planned branch: `maintenance/dependency-upgrade`
 
 ## Current progress
 
-- Current branch: `security/authorization-policies`
-- Base commit: `02e0ac5 Update payment refactoring handoff`
+- Current branch: `security/file-uploads`
+- Base commit: `515ee41 Record authorization progress`
 - Completed commits:
-  - `312d5b5 Authorize private chat access`
-  - `a7ea03f Authorize purchased content access`
-  - `bdd0a66 Protect lesson request mutations`
-- Verification: the full suite passes with 29 tests and 66 assertions; Pint
-  passes on every file touched by the authorization work.
-- Authorization coverage:
-  - chat sends and broadcast subscriptions use the same ownership policy
-  - chat events use private channels
-  - lesson and exercise pages require a free or purchased product
-  - direct lesson requests require ownership and cannot be repurchased
-  - request upload, deletion, and submission require a student account
+  - `975c66b Restrict uploaded file types and sizes`
+  - `8e229eb Store public uploads with generated names`
+  - `a5f2a9f Serve protected files from private disk`
+- Verification: the full suite passes with 40 tests and 103 assertions; Pint
+  passes on the new upload support, tests, and protected-file controller.
+- File-handling coverage:
+  - PDFs are limited to 50 MB and profile images to 5 MB
+  - accepted upload types are centralized and configurable
+  - public photo and certificate names are generated instead of user-controlled
+  - legacy `/files/...` deletion remains supported
+  - protected files are read explicitly from the private disk
+  - guest, purchase, and student ownership checks have feature coverage
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
@@ -140,6 +141,7 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: publish the authorization branch, then create
-  `security/file-uploads` and centralize validation, private storage, file
-  authorization, and deletion.
+- Next action: publish the current upload commits, then make every file
+  replacement store the new file before deleting the previous one. After that,
+  add input accept hints, audit temporary upload cleanup, and complete the
+  branch.
