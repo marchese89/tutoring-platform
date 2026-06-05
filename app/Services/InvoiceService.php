@@ -6,12 +6,13 @@ use App\Models\Admin;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\User;
-use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceService
 {
+    public function __construct(private readonly InvoiceNumberService $numbers) {}
+
     public function generatePdf(int $orderId): Invoice
     {
         $existingInvoice = Invoice::where('order_id', $orderId)->first();
@@ -28,7 +29,7 @@ class InvoiceService
         $orderItems = $order->orderItems()->get();
         $total = $order->orderItems()->sum('price');
 
-        $number = $this->getNextInvoiceNumber();
+        $number = $this->numbers->next($order->created_at->year);
 
         $data = $order->created_at;
 
@@ -51,7 +52,7 @@ class InvoiceService
 
         $pdf = $dompdf->output();
 
-        $relativePath = "invoices/invoice_{$number}.pdf";
+        $relativePath = "invoices/{$data->year}/invoice_{$number}.pdf";
 
         Storage::disk('private')->put(
             $relativePath,
@@ -64,23 +65,5 @@ class InvoiceService
             'order_id' => $order->id,
             'file_path' => $relativePath,
         ]);
-    }
-
-    private function getNextInvoiceNumber(): int
-    {
-        $last = Invoice::latest()->first();
-
-        if (! $last) {
-            return 1;
-        }
-
-        $currentYear = now()->year;
-        $lastYear = Carbon::parse($last->issued_at)->year;
-
-        if ($currentYear === $lastYear) {
-            return $last->number + 1;
-        }
-
-        return 1;
     }
 }

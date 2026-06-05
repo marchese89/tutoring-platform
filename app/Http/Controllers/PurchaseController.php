@@ -14,6 +14,7 @@ use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\PaymentTransaction;
 use App\Models\User;
+use App\Services\InvoiceNumberService;
 use App\Services\InvoiceService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
@@ -155,8 +156,10 @@ class PurchaseController extends Controller
         return redirect()->route('payment.complete');
     }
 
-    public function createExtraInvoice(Request $request)
-    {
+    public function createExtraInvoice(
+        Request $request,
+        InvoiceNumberService $numbers
+    ) {
         $validated = $request->validate(
             [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -192,7 +195,7 @@ class PurchaseController extends Controller
         $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
 
         $date = Carbon::now();
-        $invoiceNumber = $this->getNextInvoiceNumber();
+        $invoiceNumber = $numbers->next($date->year);
         $price = (float) $validated['price'];
         $quantity = (float) $validated['quantity'];
         $total = $price * $quantity;
@@ -229,7 +232,7 @@ class PurchaseController extends Controller
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
 
-        $path = "extra-invoices/invoice_{$invoiceNumber}.pdf";
+        $path = "extra-invoices/{$date->year}/invoice_{$invoiceNumber}.pdf";
         Storage::disk('private')->put($path, $dompdf->output());
 
         Invoice::create([
@@ -298,21 +301,6 @@ class PurchaseController extends Controller
         return response()->json([
             'clientSecret' => $payment->clientSecret,
         ]);
-    }
-
-    private function getNextInvoiceNumber(): int
-    {
-        $lastInvoice = Invoice::orderByDesc('issued_at')->orderByDesc('number')->first();
-
-        if (! $lastInvoice || ! $lastInvoice->issued_at) {
-            return 1;
-        }
-
-        if (Carbon::parse($lastInvoice->issued_at)->year !== now()->year) {
-            return 1;
-        }
-
-        return ((int) $lastInvoice->number) + 1;
     }
 
     private function cart(Request $request): Cart
