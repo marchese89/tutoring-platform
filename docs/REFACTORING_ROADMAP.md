@@ -125,7 +125,8 @@ Planned branch: `maintenance/dependency-upgrade`
   - `975c66b Restrict uploaded file types and sizes`
   - `8e229eb Store public uploads with generated names`
   - `a5f2a9f Serve protected files from private disk`
-- Verification: the full suite passes with 40 tests and 103 assertions; Pint
+  - `e3fb414 Preserve files during upload replacement`
+- Verification: the full suite passes with 41 tests and 107 assertions; Pint
   passes on the new upload support, tests, and protected-file controller.
 - File-handling coverage:
   - PDFs are limited to 50 MB and profile images to 5 MB
@@ -134,6 +135,7 @@ Planned branch: `maintenance/dependency-upgrade`
   - legacy `/files/...` deletion remains supported
   - protected files are read explicitly from the private disk
   - guest, purchase, and student ownership checks have feature coverage
+  - replacement uploads persist the new path before deleting the old file
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
@@ -141,7 +143,5 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: publish the current upload commits, then make every file
-  replacement store the new file before deleting the previous one. After that,
-  add input accept hints, audit temporary upload cleanup, and complete the
-  branch.
+- Next action: publish the replacement commit, add input accept hints, audit
+  abandoned temporary uploads, and complete the branch.
