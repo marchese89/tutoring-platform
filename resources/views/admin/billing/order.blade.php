@@ -16,7 +16,7 @@
                         </h4>
 
                         <p class="text-muted mb-0">
-                            Data ordine: {{ $ordine->ordered_at }}
+                            Data ordine: {{ $order->ordered_at }}
                         </p>
                     </div>
 
@@ -40,7 +40,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($prodotti as $item)
+                            @foreach ($products as $item)
                                 <tr>
 
                                     <td class="fw-semibold">
@@ -84,7 +84,7 @@
                                 </td>
 
                                 <td class="text-end fw-bold border-0 pt-4">
-                                    {{ number_format($tot_ordine, 2, ',', '.') }} €
+                                    {{ number_format($orderTotal, 2, ',', '.') }} €
                                 </td>
                             </tr>
                         </tfoot>

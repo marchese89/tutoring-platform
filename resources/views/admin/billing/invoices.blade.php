@@ -7,7 +7,7 @@
 @section('inner')
     <x-ui.page-section>
 
-        @if ($fatture->count() > 0)
+        @if ($invoices->count() > 0)
             <x-ui.table-card title="Fatture">
                 <table class="table align-middle">
 
@@ -21,7 +21,7 @@
 
                     <tbody>
 
-                        @foreach ($fatture as $item)
+                        @foreach ($invoices as $item)
                             <tr>
 
                                 <td>

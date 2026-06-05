@@ -6,14 +6,14 @@
 
 @section('inner')
     <script>
-        async function aggiorna_tabella(anno, mese) {
-            const response = await fetch(`{{ route('student.orders.table') }}?anno=${anno}&mese=${mese}`);
+        async function aggiorna_tabella(year, month) {
+            const response = await fetch(`{{ route('student.orders.table') }}?year=${year}&month=${month}`);
             const data = await response.json();
             const orderShowUrl = "{{ route('student.orders.show', ['id' => '__ORDER_ID__']) }}";
             const tableBody = document.getElementById('tabella-body');
-            const totalCell = document.getElementById('totale-ordini');
+            const totalCell = document.getElementById('orders-total');
 
-            if (!data.ordini.length) {
+            if (!data.orders.length) {
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="4" class="text-center text-muted py-4">
@@ -25,14 +25,14 @@
                 return;
             }
 
-            tableBody.innerHTML = data.ordini.map((ordine) => {
-                const url = orderShowUrl.replace('__ORDER_ID__', ordine.id);
+            tableBody.innerHTML = data.orders.map((order) => {
+                const url = orderShowUrl.replace('__ORDER_ID__', order.id);
 
                 return `
                     <tr>
-                        <td class="fw-semibold">${ordine.id}</td>
-                        <td>${ordine.data}</td>
-                        <td class="fw-semibold text-success">${ordine.totale}&euro;</td>
+                        <td class="fw-semibold">${order.id}</td>
+                        <td>${order.date}</td>
+                        <td class="fw-semibold text-success">${order.total}&euro;</td>
                         <td>
                             <a href="${url}" class="btn btn-primary btn-sm rounded-pill px-3 py-1">
                                 Visualizza
@@ -42,7 +42,7 @@
                 `;
             }).join('');
 
-            totalCell.innerHTML = `Totale ordini: ${data.totale}&euro;`;
+            totalCell.innerHTML = `Totale ordini: ${data.total}&euro;`;
         }
 
         window.onload = function() {
@@ -121,7 +121,7 @@
 
                     <tfoot>
                         <tr>
-                            <td colspan="4" class="text-end pt-4 fw-bold" id="totale-ordini">
+                            <td colspan="4" class="text-end pt-4 fw-bold" id="orders-total">
                             </td>
                         </tr>
                     </tfoot>

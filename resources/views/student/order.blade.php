@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Ordine #' . $ordine->id" />
+    <x-ui.section-header :title="'Ordine #' . $order->id" />
 @endsection
 
 @section('inner')
@@ -10,7 +10,7 @@
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
                 <div>
                     <h4 class="fw-bold mb-1">
-                        Ordine #{{ $ordine->id }}
+                        Ordine #{{ $order->id }}
                     </h4>
 
                     <p class="text-muted mb-0">
@@ -18,7 +18,7 @@
                     </p>
                 </div>
 
-                <x-ui.primary-button href="{{ route('student.invoices.show', $ordine->id) }}">
+                <x-ui.primary-button href="{{ route('student.invoices.show', $order->id) }}">
                     Visualizza fattura
                 </x-ui.primary-button>
             </div>
@@ -35,7 +35,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($prodotti as $item)
+                    @foreach ($products as $item)
                         <tr>
                             <td class="fw-semibold">
                                 {{ $item['id'] }}
@@ -59,7 +59,7 @@
                         </th>
 
                         <th class="text-end">
-                            {{ number_format($tot_ordine, 2, ',', '.') }}&euro;
+                            {{ number_format($orderTotal, 2, ',', '.') }}&euro;
                         </th>
                     </tr>
                 </tfoot>

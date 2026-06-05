@@ -45,9 +45,9 @@ class OrderController extends Controller
 
         return view('student.orders', [
             'hasOrders' => true,
-            'selectedYear' => $firstOrderDate['anno'],
-            'selectedMonth' => $firstOrderDate['mese'],
-            'selectedMonthLabel' => PurchaseService::monthName((int) $firstOrderDate['mese']),
+            'selectedYear' => $firstOrderDate['year'],
+            'selectedMonth' => $firstOrderDate['month'],
+            'selectedMonthLabel' => PurchaseService::monthName((int) $firstOrderDate['month']),
             'years' => $years,
             'months' => $months,
         ]);
@@ -58,8 +58,8 @@ class OrderController extends Controller
         $student = $request->user()->student;
         $orders = Order::with('orderItems')
             ->where('student_id', $student->id)
-            ->whereYear('ordered_at', $request->input('anno'))
-            ->whereMonth('ordered_at', $request->input('mese'))
+            ->whereYear('ordered_at', $request->input('year'))
+            ->whereMonth('ordered_at', $request->input('month'))
             ->orderByDesc('ordered_at')
             ->get();
 
@@ -70,14 +70,14 @@ class OrderController extends Controller
 
             return [
                 'id' => $order->id,
-                'data' => DateHelper::format($order->ordered_at),
-                'totale' => $orderTotal,
+                'date' => DateHelper::format($order->ordered_at),
+                'total' => $orderTotal,
             ];
         });
 
         return response()->json([
-            'ordini' => $mappedOrders,
-            'totale' => $total,
+            'orders' => $mappedOrders,
+            'total' => $total,
         ]);
     }
 
@@ -93,10 +93,10 @@ class OrderController extends Controller
         ]);
 
         return view('student.order', [
-            'ordine' => $order,
+            'order' => $order,
             'orderDate' => DateHelper::format($order->ordered_at),
-            'prodotti' => $products,
-            'tot_ordine' => $order->orderItems->sum('price'),
+            'products' => $products,
+            'orderTotal' => $order->orderItems->sum('price'),
         ]);
     }
 

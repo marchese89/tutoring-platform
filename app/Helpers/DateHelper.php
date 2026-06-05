@@ -6,31 +6,31 @@ use Carbon\Carbon;
 
 class DateHelper
 {
-    public static function parse($data): array
+    public static function parse($value): array
     {
-        $date = Carbon::parse($data);
+        $date = Carbon::parse($value);
 
         return [
-            'anno' => $date->year,
-            'mese' => $date->month,
-            'giorno' => $date->day,
-            'ora' => $date->format('H:i'),
+            'year' => $date->year,
+            'month' => $date->month,
+            'day' => $date->day,
+            'time' => $date->format('H:i'),
         ];
     }
 
-    public static function format($data): string
+    public static function format($value): string
     {
-        return Carbon::parse($data)->format('d-m-Y H:i');
+        return Carbon::parse($value)->format('d-m-Y H:i');
     }
 
-    public static function formatItalianDate($data): string
+    public static function formatItalianDate($value): string
     {
-        return Carbon::parse($data)->format('d/m/Y');
+        return Carbon::parse($value)->format('d/m/Y');
     }
 
-    public static function monthName(int $mese): string
+    public static function monthName(int $month): string
     {
-        return match ($mese) {
+        return match ($month) {
             1 => 'Gennaio',
             2 => 'Febbraio',
             3 => 'Marzo',

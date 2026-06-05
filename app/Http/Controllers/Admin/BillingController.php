@@ -14,10 +14,10 @@ class BillingController extends Controller
 {
     public function showOrder(int $id)
     {
-        $ordine = Order::where('id', '=', $id)->first();
-        $prodotti = OrderItem::where('order_id', '=', request('id'))->get();
-        $tot_ordine = OrderItem::where('order_id', '=', request('id'))->sum('price');
-        return View('admin.billing.order', compact('ordine', 'prodotti', 'tot_ordine'));
+        $order = Order::where('id', '=', $id)->first();
+        $products = OrderItem::where('order_id', '=', request('id'))->get();
+        $orderTotal = OrderItem::where('order_id', '=', request('id'))->sum('price');
+        return View('admin.billing.order', compact('order', 'products', 'orderTotal'));
     }
 
     public function showInvoice(int $id)
@@ -28,15 +28,15 @@ class BillingController extends Controller
 
     public function sales()
     {
-        $primoOrdine = Order::orderByDesc('ordered_at')->first();
+        $firstOrder = Order::orderByDesc('ordered_at')->first();
 
-        if (!$primoOrdine) {
+        if (!$firstOrder) {
             return view('admin.billing.sales', [
                 'hasOrders' => false
             ]);
         }
 
-        $data = DateHelper::parse($primoOrdine->ordered_at);
+        $firstOrderDate = DateHelper::parse($firstOrder->ordered_at);
 
         $years = Order::selectRaw('YEAR(ordered_at) as year')
             ->groupBy('year')
@@ -50,7 +50,7 @@ class BillingController extends Controller
 
         return view('admin.billing.sales', [
             'hasOrders' => true,
-            'dataPrimo' => $data,
+            'firstOrderDate' => $firstOrderDate,
             'years' => $years,
             'months' => $months
         ]);
@@ -58,33 +58,33 @@ class BillingController extends Controller
 
     public function ordersTable(Request $request)
     {
-        $anno = $request->anno;
-        $mese = $request->mese;
+        $year = $request->year;
+        $month = $request->month;
 
         $orders = Order::with(['student.user', 'orderItems'])
-            ->whereYear('ordered_at', $anno)
-            ->whereMonth('ordered_at', $mese)
+            ->whereYear('ordered_at', $year)
+            ->whereMonth('ordered_at', $month)
             ->orderByDesc('ordered_at')
             ->get();
 
-        $totale = 0;
+        $total = 0;
 
-        $ordini = $orders->map(function ($order) use (&$totale) {
+        $mappedOrders = $orders->map(function ($order) use (&$total) {
 
             $orderTotal = $order->orderItems->sum('price');
-            $totale += $orderTotal;
+            $total += $orderTotal;
 
             return [
                 'id' => $order->id,
-                'studente' => $order->student->user->name . ' ' . $order->student->user->surname,
-                'data' => DateHelper::format($order->ordered_at),
-                'totale' => $orderTotal
+                'student' => $order->student->user->name . ' ' . $order->student->user->surname,
+                'date' => DateHelper::format($order->ordered_at),
+                'total' => $orderTotal
             ];
         });
 
         return response()->json([
-            'ordini' => $ordini,
-            'totale' => $totale
+            'orders' => $mappedOrders,
+            'total' => $total
         ]);
     }
 }

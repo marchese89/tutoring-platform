@@ -7,20 +7,20 @@
 @section('inner')
 
     <script>
-        async function aggiorna_tabella(anno, mese) {
-            const response = await fetch(`{{ route('admin.orders.table') }}?anno=${anno}&mese=${mese}`);
+        async function aggiorna_tabella(year, month) {
+            const response = await fetch(`{{ route('admin.orders.table') }}?year=${year}&month=${month}`);
             const data = await response.json();
             const orderShowUrl = "{{ route('admin.orders.show', ['id' => '__ORDER_ID__']) }}";
 
-            const rows = data.ordini.map((ordine) => {
-                const url = orderShowUrl.replace('__ORDER_ID__', ordine.id);
+            const rows = data.orders.map((order) => {
+                const url = orderShowUrl.replace('__ORDER_ID__', order.id);
 
                 return `
                     <tr>
-                        <td class="fw-semibold">${ordine.id}</td>
-                        <td>${ordine.studente}</td>
-                        <td>${ordine.data}</td>
-                        <td class="fw-semibold text-success">${ordine.totale}&euro;</td>
+                        <td class="fw-semibold">${order.id}</td>
+                        <td>${order.student}</td>
+                        <td>${order.date}</td>
+                        <td class="fw-semibold text-success">${order.total}&euro;</td>
                         <td>
                             <a href="${url}" class="btn btn-primary btn-sm rounded-pill px-3">
                                 Visualizza
@@ -31,7 +31,7 @@
             }).join('');
 
             document.getElementById('tabella-body').innerHTML = rows;
-            document.getElementById('totale').innerHTML = `Totale Vendite: ${data.totale}&euro;`;
+            document.getElementById('total').innerHTML = `Totale Vendite: ${data.total}&euro;`;
         }
 
         window.onload = function() {
@@ -66,9 +66,9 @@
                                         document.getElementById('floatingSelect2').value
                                     )">
 
-                                    <option selected value="{{ $dataPrimo['anno'] }}">
+                                    <option selected value="{{ $firstOrderDate['year'] }}">
 
-                                        {{ $dataPrimo['anno'] }}
+                                        {{ $firstOrderDate['year'] }}
 
                                     </option>
 
@@ -94,9 +94,9 @@
                                         document.getElementById('floatingSelect2').value
                                     )">
 
-                                    <option selected value="{{ $dataPrimo['mese'] }}">
+                                    <option selected value="{{ $firstOrderDate['month'] }}">
 
-                                        {{ App\Services\PurchaseService::monthName(intval($dataPrimo['mese'])) }}
+                                        {{ App\Services\PurchaseService::monthName(intval($firstOrderDate['month'])) }}
 
                                     </option>
 
@@ -152,7 +152,7 @@
 
                                     <tr>
 
-                                        <td colspan="5" class="text-end pt-4 fw-bold" id="totale">
+                                        <td colspan="5" class="text-end pt-4 fw-bold" id="total">
                                         </td>
 
                                     </tr>

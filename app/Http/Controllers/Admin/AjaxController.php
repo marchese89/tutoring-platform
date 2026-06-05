@@ -16,8 +16,8 @@ class AjaxController extends Controller
 
     public function getOrders(Request $request)
     {
-        $anno = $request->input('anno');
-        $mese = $request->input('mese');
+        $year = $request->input('year');
+        $month = $request->input('month');
 
         $query = Order::query()
             ->with('student.user')
@@ -26,40 +26,34 @@ class AjaxController extends Controller
                 'orders.id',
                 'orders.ordered_at',
                 'orders.student_id',
-                DB::raw('SUM(order_items.price) as totale')
+                DB::raw('SUM(order_items.price) as total')
             )
-            ->whereMonth('orders.ordered_at', $mese)
-            ->whereYear('orders.ordered_at', $anno)
+            ->whereMonth('orders.ordered_at', $month)
+            ->whereYear('orders.ordered_at', $year)
             ->groupBy('orders.id', 'orders.ordered_at', 'orders.student_id');
 
-        // filtro studente
         if (auth()->user()->student !== null) {
             $query->where('orders.student_id', auth()->user()->student->id);
         }
 
-        $ordini = $query
+        $orders = $query
             ->orderByDesc('orders.ordered_at')
             ->get();
 
-        // mapping leggero (niente più calcoli)
-        $ordiniMapped = $ordini->map(function ($order) {
+        $mappedOrders = $orders->map(function ($order) {
             return [
                 'id' => $order->id,
-                'data' => DateHelper::format($order->ordered_at),
-                'totale' => $order->totale ?? 0,
-                'studente' => $order->student->user->name . ' ' . $order->student->user->surname,
+                'date' => DateHelper::format($order->ordered_at),
+                'total' => $order->total ?? 0,
+                'student' => $order->student->user->name . ' ' . $order->student->user->surname,
             ];
         });
 
-        // return response()->json([
-        //     'ordini' => $ordiniMapped,
-        //     'totale' => $ordiniMapped->sum('totale'),
-        // ]);
         return response()->json([
             'html' => view('admin.partials.order-rows', [
-                'ordini' => $ordiniMapped
+                'orders' => $mappedOrders
             ])->render(),
-            'totale' => $ordiniMapped->sum('totale')
+            'total' => $mappedOrders->sum('total')
         ]);
     }
 

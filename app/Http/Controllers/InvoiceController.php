@@ -10,7 +10,7 @@ class InvoiceController extends Controller
 {
     public function showAll()
     {
-        $fatture = Invoice::query()
+        $invoices = Invoice::query()
             ->orderByDesc('issued_at')
             ->orderByDesc('id')
             ->get()
@@ -20,13 +20,13 @@ class InvoiceController extends Controller
                 'showUrl' => $invoice->number ? route('admin.invoices.show', $invoice->number) : null,
             ]);
 
-        return view('admin.billing.invoices', compact('fatture'));
+        return view('admin.billing.invoices', compact('invoices'));
     }
 
     public function show($number)
     {
-        $fattura = Invoice::where('number', $number)->firstOrFail();
+        $invoice = Invoice::where('number', $number)->firstOrFail();
 
-        return view('admin.billing.invoice-details', compact('fattura'));
+        return view('admin.billing.invoice-details', compact('invoice'));
     }
 }

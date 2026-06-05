@@ -1,17 +1,17 @@
-@foreach ($ordini as $ordine)
+@foreach ($orders as $order)
     <tr>
-        <td class="fw-semibold">{{ $ordine['id'] }}</td>
+        <td class="fw-semibold">{{ $order['id'] }}</td>
 
-        <td>{{ $ordine['studente'] }}</td>
+        <td>{{ $order['student'] }}</td>
 
-        <td>{{ $ordine['data'] }}</td>
+        <td>{{ $order['date'] }}</td>
 
         <td class="fw-semibold text-success">
-            {{ $ordine['totale'] }}€
+            {{ $order['total'] }}€
         </td>
 
         <td>
-            <a href="{{ route('admin.orders.show', $ordine['id']) }}" class="btn btn-primary btn-sm rounded-pill px-3">
+            <a href="{{ route('admin.orders.show', $order['id']) }}" class="btn btn-primary btn-sm rounded-pill px-3">
                 Visualizza
             </a>
         </td>
