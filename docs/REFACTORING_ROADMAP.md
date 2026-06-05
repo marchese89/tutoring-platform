@@ -28,7 +28,7 @@ Branch: `security/payment-and-access-foundation`
 
 ### 2. Authorization
 
-Planned branch: `security/authorization-policies`
+Branch: `security/authorization-policies`
 
 - Authorize chat reads, writes, and broadcast subscriptions.
 - Use private chat channels.
@@ -119,25 +119,27 @@ Planned branch: `maintenance/dependency-upgrade`
 
 ## Current progress
 
-- Current branch: `security/payment-and-access-foundation`
-- Base commit: `6d2c958 Complete internal English cleanup`
+- Current branch: `security/authorization-policies`
+- Base commit: `02e0ac5 Update payment refactoring handoff`
 - Completed commits:
-  - `363f948 Document refactoring roadmap`
-  - `630e939 Use safe HTTP methods for state changes`
-  - `054d801 Record payment safety progress`
-  - `5d9eded Persist Stripe payment intents safely`
-  - `62fbb40 Verify Stripe payments before fulfillment`
-  - `d173ac0 Serialize annual invoice numbering`
-- Verification: the full suite passes with 14 tests and 34 assertions; Pint
-  passes on all files touched by the payment work.
-- Applied migrations:
+  - `312d5b5 Authorize private chat access`
+  - `a7ea03f Authorize purchased content access`
+  - `bdd0a66 Protect lesson request mutations`
+- Verification: the full suite passes with 29 tests and 66 assertions; Pint
+  passes on every file touched by the authorization work.
+- Authorization coverage:
+  - chat sends and broadcast subscriptions use the same ownership policy
+  - chat events use private channels
+  - lesson and exercise pages require a free or purchased product
+  - direct lesson requests require ownership and cannot be repurchased
+  - request upload, deletion, and submission require a student account
+- Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
   - `2026_06_05_020000_create_invoice_sequences_table`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
-  2026. The new sequence starts at `11` and prevents new duplicates, but
-  historical invoices were intentionally not renumbered.
-- Known baseline issue: Pint fails across about 50 files.
-- Next action: publish the completed payment branch, run a browser smoke test
-  with configured Stripe test credentials, then create
-  `security/authorization-policies` from this branch.
+  2026. Existing invoices were intentionally not renumbered.
+- Known baseline issue: Pint fails across about 50 untouched files.
+- Next action: publish the authorization branch, then create
+  `security/file-uploads` and centralize validation, private storage, file
+  authorization, and deletion.
