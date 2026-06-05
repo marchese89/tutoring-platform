@@ -10,7 +10,7 @@
         {{-- HEADER --}}
         <div class="mb-4 text-center">
             <h2>Modifica Corso</h2>
-            <h3 class="text-muted">{{ $corso->name }}</h3>
+            <h3 class="text-muted">{{ $course->name }}</h3>
         </div>
 
         {{-- LEZIONI --}}
@@ -19,7 +19,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Lezioni</h3>
 
-                <a href="{{ route('admin.lessons.create', $corso->id) }}" class="btn btn-primary">
+                <a href="{{ route('admin.lessons.create', $course->id) }}" class="btn btn-primary">
                     Nuova Lezione
                 </a>
             </div>
@@ -36,7 +36,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($lezioni as $item)
+                    @foreach ($lessons as $item)
                         <tr>
 
                             <td>{{ $item->number }}</td>
@@ -45,7 +45,7 @@
 
                             <td>
                                 <a class="btn btn-primary btn-sm"
-                                    href="{{ route('admin.lessons.edit', ['course' => $corso->id, 'lesson' => $item->id]) }}">
+                                    href="{{ route('admin.lessons.edit', ['course' => $course->id, 'lesson' => $item->id]) }}">
                                     Modifica
                                 </a>
 
@@ -72,7 +72,7 @@
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h3>Esercizi</h3>
 
-                <a href="{{ route('admin.exercises.create', $corso->id) }}" class="btn btn-primary">
+                <a href="{{ route('admin.exercises.create', $course->id) }}" class="btn btn-primary">
                     Nuovo Esercizio
                 </a>
             </div>
@@ -89,7 +89,7 @@
                 </thead>
 
                 <tbody>
-                    @foreach ($esercizi as $item)
+                    @foreach ($exercises as $item)
                         <tr>
 
                             <td>{{ $item->id }}</td>
@@ -98,7 +98,7 @@
 
                             <td>
                                 <a class="btn btn-primary btn-sm"
-                                    href="{{ route('admin.exercises.edit', ['course' => $corso->id, 'exercise' => $item->id]) }}">
+                                    href="{{ route('admin.exercises.edit', ['course' => $course->id, 'exercise' => $item->id]) }}">
                                     Modifica
                                 </a>
 

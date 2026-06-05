@@ -14,32 +14,32 @@ class RouteController extends Controller
 {
     public function show(Request $request, int $id): View
     {
-        $corso = Course::query()->findOrFail($id);
+        $course = Course::query()->findOrFail($id);
 
         $student = $request->user()->student;
 
-        $lezioni = Lesson::query()
-            ->where('course_id', $corso->id)
+        $lessons = Lesson::query()
+            ->where('course_id', $course->id)
             ->orderBy('number')
             ->get()
-            ->filter(function ($lezione) use ($student) {
-                return PurchaseService::isProductPurchased($student->id, $lezione->id, 0);
+            ->filter(function ($lesson) use ($student) {
+                return PurchaseService::isProductPurchased($student->id, $lesson->id, 0);
             })
             ->values();
 
-        $esercizi = Exercise::query()
-            ->where('course_id', $corso->id)
+        $exercises = Exercise::query()
+            ->where('course_id', $course->id)
             ->orderBy('id')
             ->get()
-            ->filter(function ($esercizio) use ($student) {
-                return PurchaseService::isProductPurchased($student->id, $esercizio->id, 2);
+            ->filter(function ($exercise) use ($student) {
+                return PurchaseService::isProductPurchased($student->id, $exercise->id, 2);
             })
             ->values();
 
         return view('student.course', compact(
-            'corso',
-            'lezioni',
-            'esercizi'
+            'course',
+            'lessons',
+            'exercises'
         ));
     }
 }

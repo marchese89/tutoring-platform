@@ -29,8 +29,8 @@ class LessonController extends Controller
 
     public function create(int $id)
     {
-        $corso = Course::where('id', '=', $id)->first();
-        return view('admin.teaching.create-lesson', compact('id', 'corso'));
+        $course = Course::where('id', '=', $id)->first();
+        return view('admin.teaching.create-lesson', compact('id', 'course'));
     }
 
     public function edit(int $courseId, int $lessonId)

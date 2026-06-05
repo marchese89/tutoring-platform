@@ -11,15 +11,15 @@ class SubjectController extends Controller
 {
     public function index()
     {
-        $materie = Subject::with('theme_area')->get();
-        $aree_t = ThemeArea::all();
-        return view('admin.teaching.subjects', compact('materie', 'aree_t'));
+        $subjects = Subject::with('theme_area')->get();
+        $themeAreas = ThemeArea::all();
+        return view('admin.teaching.subjects', compact('subjects', 'themeAreas'));
     }
 
     public function publicIndex(int $themeArea)
     {
-        $materie = Subject::where('theme_area_id', $themeArea)->get();
-        return view('public.subjects', compact('materie'));
+        $subjects = Subject::where('theme_area_id', $themeArea)->get();
+        return view('public.subjects', compact('subjects'));
     }
 
     public function store(Request $request)
@@ -43,9 +43,9 @@ class SubjectController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $materia = Subject::findOrFail($id);
+        $subject = Subject::findOrFail($id);
 
-        $materia->update([
+        $subject->update([
             'name' => $data['name'],
         ]);
 
@@ -54,8 +54,8 @@ class SubjectController extends Controller
 
     public function destroy(int $id)
     {
-        $materia = Subject::findOrFail($id);
-        $materia->delete();
+        $subject = Subject::findOrFail($id);
+        $subject->delete();
 
         return redirect()->back()->with('success', 'Materia eliminata');
     }

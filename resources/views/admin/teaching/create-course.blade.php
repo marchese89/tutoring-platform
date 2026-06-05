@@ -21,7 +21,7 @@
 
                             <label class="form-label">Materia</label>
                             <select class="form-select mb-3" name="subject_id">
-                                @foreach ($materie as $item)
+                                @foreach ($subjects as $item)
                                     <option value="{{ $item->id }}">
                                         {{ $item->themeArea->name }} - {{ $item->name }}
                                     </option>
@@ -64,7 +64,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($corsi as $item)
+                            @foreach ($courses as $item)
                                 <tr>
 
                                     <td>{{ $item->id }}</td>

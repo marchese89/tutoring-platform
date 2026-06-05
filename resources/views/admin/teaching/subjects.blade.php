@@ -22,7 +22,7 @@
 
                             <label class="form-label">Area Tematica</label>
                             <select class="form-select mb-3" name="theme_area_id">
-                                @foreach ($aree_t as $item)
+                                @foreach ($themeAreas as $item)
                                     <option value="{{ $item->id }}">{{ $item->name }}</option>
                                 @endforeach
                             </select>
@@ -62,7 +62,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($materie as $item)
+                            @foreach ($subjects as $item)
                                 <tr>
 
                                     <td>{{ $item->id }}</td>

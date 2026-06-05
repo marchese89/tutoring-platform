@@ -30,7 +30,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($corsi as $item)
+                            @foreach ($courses as $item)
                                 <tr>
 
                                     <td>{{ $item->id }}</td>

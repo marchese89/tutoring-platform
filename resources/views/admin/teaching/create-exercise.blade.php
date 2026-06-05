@@ -7,7 +7,7 @@
 @section('inner')
     <div class="container" style="text-align: center;width:35%">
         <h2>Nuovo Esercizio Corso di</h2>
-        <h2>"{{ $corso->name }}"</h2>
+        <h2>"{{ $course->name }}"</h2>
         <br>
 
         <br>

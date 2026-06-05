@@ -24,7 +24,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::post('student/account/password', [StudentController::class, 'updatePassword'])
         ->name('student.account.password.update');
 
-    Route::get('student/courses', [CourseController::class, 'mieiCorsi'])->name('student.courses.index');
+    Route::get('student/courses', [CourseController::class, 'purchasedCourses'])->name('student.courses.index');
     Route::get('student/courses/{id}', [RouteController::class, 'show'])->name('student.courses.show');
     Route::get('student/courses/{course}/lessons/{lesson}', [StudentController::class, 'showLesson'])
         ->name('student.lessons.show');

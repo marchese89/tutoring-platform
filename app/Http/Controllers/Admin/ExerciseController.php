@@ -12,10 +12,10 @@ class ExerciseController extends Controller
 {
     public function create(int $course)
     {
-        $corso = Course::findOrFail($course);
-        $id = $corso->id;
+        $course = Course::findOrFail($course);
+        $id = $course->id;
 
-        return view('admin.teaching.create-exercise', compact('id', 'corso'));
+        return view('admin.teaching.create-exercise', compact('id', 'course'));
     }
 
     public function edit(int $courseId, int $exerciseId)

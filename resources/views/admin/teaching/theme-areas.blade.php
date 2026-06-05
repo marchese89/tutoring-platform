@@ -51,7 +51,7 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($aree_t as $item)
+                            @foreach ($themeAreas as $item)
                                 <tr>
 
                                     <td>{{ $item->id }}</td>

@@ -16,26 +16,26 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $materie = Subject::with('themeArea')->get();
-        $corsi = Course::with('subject.themeArea')->get();
-        return view('admin.teaching.create-course', compact('materie', 'corsi'));
+        $subjects = Subject::with('themeArea')->get();
+        $courses = Course::with('subject.themeArea')->get();
+        return view('admin.teaching.create-course', compact('subjects', 'courses'));
     }
 
     public function publicIndex(int $subject)
     {
-        $corsi = Course::where('subject_id', $subject)->get();
+        $courses = Course::where('subject_id', $subject)->get();
 
-        return view('public.courses', compact('corsi'));
+        return view('public.courses', compact('courses'));
     }
 
     public function list()
     {
-        $corsi = Course::with('subject.themeArea')->get();
+        $courses = Course::with('subject.themeArea')->get();
 
-        return view('admin.teaching.courses', compact('corsi'));
+        return view('admin.teaching.courses', compact('courses'));
     }
 
-    public function mieiCorsi(Request $request)
+    public function purchasedCourses(Request $request)
     {
         $studentId = $request->user()->student->id;
 
@@ -72,12 +72,12 @@ class CourseController extends Controller
 
     public function edit(int $id)
     {
-        $corso = Course::findOrFail($id);
+        $course = Course::findOrFail($id);
 
-        $lezioni = Lesson::where('course_id', $id)->orderBy('number')->get();
-        $esercizi = Exercise::where('course_id', $id)->orderBy('id')->get();
+        $lessons = Lesson::where('course_id', $id)->orderBy('number')->get();
+        $exercises = Exercise::where('course_id', $id)->orderBy('id')->get();
 
-        return view('admin.teaching.edit-course', compact('corso', 'lezioni', 'esercizi'));
+        return view('admin.teaching.edit-course', compact('course', 'lessons', 'exercises'));
     }
 
     public function store(Request $request)

@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Corso: ' . $corso->name" />
+    <x-ui.section-header :title="'Corso: ' . $course->name" />
 @endsection
 
 @section('inner')
@@ -15,7 +15,7 @@
                     </span>
 
                     <h3 class="fw-bold mb-0">
-                        {{ $corso->name }}
+                        {{ $course->name }}
                     </h3>
                 </div>
 
@@ -36,7 +36,7 @@
                     </h4>
 
                     <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-                        {{ $lezioni->count() }} disponibili
+                        {{ $lessons->count() }} disponibili
                     </span>
                 </div>
 
@@ -52,22 +52,22 @@
                         </thead>
 
                         <tbody>
-                            @forelse ($lezioni as $lezione)
+                            @forelse ($lessons as $lesson)
                                 <tr>
                                     <td class="fw-semibold">
-                                        {{ $lezione->id }}
+                                        {{ $lesson->id }}
                                     </td>
 
                                     <td>
-                                        {{ $lezione->number }}
+                                        {{ $lesson->number }}
                                     </td>
 
                                     <td class="fw-semibold">
-                                        {{ $lezione->title }}
+                                        {{ $lesson->title }}
                                     </td>
 
                                     <td class="text-end">
-                                        <a href="{{ route('student.lessons.show', ['course' => $corso->id, 'lesson' => $lezione->id]) }}"
+                                        <a href="{{ route('student.lessons.show', ['course' => $course->id, 'lesson' => $lesson->id]) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>
@@ -94,7 +94,7 @@
                     </h4>
 
                     <span class="badge bg-light text-dark rounded-pill px-3 py-2">
-                        {{ $esercizi->count() }} disponibili
+                        {{ $exercises->count() }} disponibili
                     </span>
                 </div>
 
@@ -109,18 +109,18 @@
                         </thead>
 
                         <tbody>
-                            @forelse ($esercizi as $esercizio)
+                            @forelse ($exercises as $exercise)
                                 <tr>
                                     <td class="fw-semibold">
-                                        {{ $esercizio->id }}
+                                        {{ $exercise->id }}
                                     </td>
 
                                     <td class="fw-semibold">
-                                        {{ $esercizio->title }}
+                                        {{ $exercise->title }}
                                     </td>
 
                                     <td class="text-end">
-                                        <a href="{{ route('student.exercises.show', ['course' => $corso->id, 'exercise' => $esercizio->id]) }}"
+                                        <a href="{{ route('student.exercises.show', ['course' => $course->id, 'exercise' => $exercise->id]) }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>

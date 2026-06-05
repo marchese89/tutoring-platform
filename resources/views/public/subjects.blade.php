@@ -11,7 +11,7 @@
 
         <div class="row g-4">
 
-            @foreach ($materie as $item)
+            @foreach ($subjects as $item)
                 <x-ui.card-item :title="$item->name" text="Materia del percorso selezionato" :url="route('courses.index', $item->id)" button="Accedi" />
             @endforeach
 

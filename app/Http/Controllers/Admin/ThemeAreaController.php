@@ -11,9 +11,9 @@ class ThemeAreaController extends Controller
 
     public function index()
     {
-        $aree_t = ThemeArea::all();
+        $themeAreas = ThemeArea::all();
 
-        return view('admin.teaching.theme-areas', compact('aree_t'));
+        return view('admin.teaching.theme-areas', compact('themeAreas'));
     }
 
     public function publicIndex()
@@ -24,7 +24,6 @@ class ThemeAreaController extends Controller
         return view('public.theme-areas', compact('themeAreas'));
     }
 
-    // CREATE
     public function store(Request $request)
     {
         $data = $request->validate([
@@ -38,7 +37,6 @@ class ThemeAreaController extends Controller
         return back()->with('success', 'Area tematica creata');
     }
 
-    // UPDATE
     public function update(Request $request, int $id)
     {
         $data = $request->validate([
@@ -54,7 +52,6 @@ class ThemeAreaController extends Controller
         return back()->with('success', 'Area tematica aggiornata');
     }
 
-    // DELETE
     public function destroy(int $id)
     {
         ThemeArea::findOrFail($id)->delete();
