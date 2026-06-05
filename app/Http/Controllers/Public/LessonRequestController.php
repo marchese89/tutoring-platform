@@ -20,145 +20,122 @@ class LessonRequestController extends Controller
 {
     public function index()
     {
-        $lezioni_su_richiesta = LessonRequest::with('student.user')->get();
-        return view('admin.students.lesson-requests', compact('lezioni_su_richiesta'));
+        $lessonRequests = LessonRequest::with('student.user')->get();
+
+        return view('admin.students.lesson-requests', compact('lessonRequests'));
     }
 
     public function show(int $id)
     {
-        $richiesta = LessonRequest::where('id', '=', $id)->first();
-        return view('admin.students.lesson-request', compact('richiesta'));
+        $lessonRequest = LessonRequest::findOrFail($id);
+
+        return view('admin.students.lesson-request', compact('lessonRequest'));
     }
 
     public function studentChats()
     {
-        $chat = Chat::orderBy('created_at', 'desc')->get();
+        $chats = Chat::with(['student.user', 'latestMessage'])
+            ->orderByDesc('created_at')
+            ->get();
 
-        foreach ($chat as $item) {
+        $lessonTitles = Lesson::whereIn(
+            'id',
+            $chats->where('product_type', 0)->pluck('product_id')
+        )->pluck('title', 'id');
 
-            // TIPO PRODOTTO
-            switch ($item->product_type) {
+        $exerciseTitles = Exercise::whereIn(
+            'id',
+            $chats->where('product_type', 2)->pluck('product_id')
+        )->pluck('title', 'id');
 
-                case 0:
-                    $item->tipo_stringa = 'Lezione';
+        $lessonRequestTitles = LessonRequest::whereIn(
+            'id',
+            $chats->where('product_type', 5)->pluck('product_id')
+        )->pluck('title', 'id');
 
-                    $lezione = Lesson::find($item->product_id);
-                    $item->nome_prodotto = $lezione?->title;
-                    break;
+        $chats->each(function (Chat $chat) use ($lessonTitles, $exerciseTitles, $lessonRequestTitles) {
+            $chat->product_type_label = match ((int) $chat->product_type) {
+                0 => 'Lezione',
+                2 => 'Esercizio',
+                5 => 'Lezione su Richiesta',
+                default => '-',
+            };
 
-                case 2:
-                    $item->tipo_stringa = 'Esercizio';
+            $chat->product_name = match ((int) $chat->product_type) {
+                0 => $lessonTitles->get($chat->product_id, '-'),
+                2 => $exerciseTitles->get($chat->product_id, '-'),
+                5 => $lessonRequestTitles->get($chat->product_id, '-'),
+                default => '-',
+            };
 
-                    $esercizio = Exercise::find($item->product_id);
-                    $item->nome_prodotto = $esercizio?->title;
-                    break;
+            $chat->student_name = $chat->student?->user
+                ? trim($chat->student->user->name . ' ' . $chat->student->user->surname)
+                : '-';
 
-                case 5:
-                    $item->tipo_stringa = 'Lezione su Richiesta';
+            $chat->has_unread_admin_message =
+                $chat->latestMessage && (int) $chat->latestMessage->sender_role === 0;
+        });
 
-                    $lezioneRich = LessonRequest::find($item->product_id);
-                    $item->nome_prodotto = $lezioneRich?->title;
-                    break;
-
-                default:
-                    $item->tipo_stringa = '-';
-                    $item->nome_prodotto = '-';
-                    break;
-            }
-
-            // STUDENTE
-            $studente = Student::find($item->student_id);
-
-            if ($studente && $studente->user) {
-                $item->studente_nome =
-                    $studente->user->name . ' ' . $studente->user->surname;
-            } else {
-                $item->studente_nome = '-';
-            }
-
-            // STATO CHAT
-            $ultimoMessaggio = ChatMessage::where('chat_id', $item->id)
-                ->orderBy('sent_at', 'desc')
-                ->first();
-
-            $item->non_letta_admin =
-                $ultimoMessaggio && $ultimoMessaggio->sender_role == 0;
-        }
-
-        return view('admin.students.chats', compact('chat'));
+        return view('admin.students.chats', compact('chats'));
     }
 
     public function showChat($id)
     {
         $chat = Chat::findOrFail($id);
 
-        $pres = '';
-        $exec = '';
-        $titolo = '';
+        $presentationFile = '';
+        $contentFile = '';
+        $title = '';
 
         switch ($chat->product_type) {
-
             case 0:
-
-                $lezione = Lesson::find($chat->product_id);
-
-                $pres = $lezione?->presentation_file;
-                $exec = $lezione?->content_file;
-
-                $titolo =
+                $lesson = Lesson::find($chat->product_id);
+                $presentationFile = $lesson?->presentation_file;
+                $contentFile = $lesson?->content_file;
+                $title =
                     'Lezione n. ' .
-                    $lezione?->id .
+                    $lesson?->id .
                     ', ' .
-                    $lezione?->title;
-
+                    $lesson?->title;
                 break;
 
             case 2:
-
-                $esercizio = Exercise::find($chat->product_id);
-
-                $pres = $esercizio?->prompt_file;
-                $exec = $esercizio?->solution_file;
-
-                $titolo =
+                $exercise = Exercise::find($chat->product_id);
+                $presentationFile = $exercise?->prompt_file;
+                $contentFile = $exercise?->solution_file;
+                $title =
                     'Esercizio n. ' .
-                    $esercizio?->id .
+                    $exercise?->id .
                     ', ' .
-                    $esercizio?->title;
-
+                    $exercise?->title;
                 break;
 
             case 5:
-
-                $lezioneRich = LessonRequest::find($chat->product_id);
-
-                $pres = $lezioneRich?->request_file;
-                $exec = $lezioneRich?->solution_file;
-
-                $titolo =
+                $lessonRequest = LessonRequest::find($chat->product_id);
+                $presentationFile = $lessonRequest?->request_file;
+                $contentFile = $lessonRequest?->solution_file;
+                $title =
                     'Lezione su richiesta n. ' .
-                    $lezioneRich?->id .
+                    $lessonRequest?->id .
                     ', ' .
-                    $lezioneRich?->title;
-
+                    $lessonRequest?->title;
                 break;
         }
 
-        $messaggi = ChatMessage::where('chat_id', $chat->id)
+        $messages = ChatMessage::where('chat_id', $chat->id)
             ->orderBy('sent_at', 'asc')
             ->get();
 
-        $studente = Student::find($chat->student_id);
-
-        $utente = $studente?->user;
+        $student = Student::find($chat->student_id);
+        $user = $student?->user;
 
         return view('admin.students.chat', compact(
             'chat',
-            'pres',
-            'exec',
-            'titolo',
-            'messaggi',
-            'utente'
+            'presentationFile',
+            'contentFile',
+            'title',
+            'messages',
+            'user'
         ));
     }
 
@@ -179,43 +156,45 @@ class LessonRequestController extends Controller
             'file' => ['required', 'file'],
         ]);
 
-        $this->deleteFile($request->session()->get('uploaded_lez_rich'));
+        $this->deleteFile($request->session()->get('uploaded_lesson_request_file'));
 
         $file = $request->file('file');
         $name = $this->saveFile($file, 'lesson_requests/request_files');
 
-        $request->session()->put('uploaded_lez_rich', $name);
+        $request->session()->put('uploaded_lesson_request_file', $name);
 
         return redirect()->route('lesson-requests.create');
     }
 
     public function destroyRequestFile(Request $request)
     {
-        $this->deleteFile($request->session()->get('uploaded_lez_rich'));
-        $request->session()->forget('uploaded_lez_rich');
+        $this->deleteFile($request->session()->get('uploaded_lesson_request_file'));
+        $request->session()->forget('uploaded_lesson_request_file');
 
         return redirect()->route('lesson-requests.create');
     }
 
     public function store(Request $request)
     {
-        if (!$request->session()->has('uploaded_lez_rich')) {
+        if (!$request->session()->has('uploaded_lesson_request_file')) {
             return redirect()
                 ->route('lesson-requests.create')
                 ->withErrors(['file' => 'Carica un file prima di inviare la richiesta.']);
         }
 
-        $request->validate([
-            'titolo' => ['required', 'string', 'max:255'],
-        ]);
+        $request->validate(
+            ['title' => ['required', 'string', 'max:255']],
+            [],
+            ['title' => 'titolo']
+        );
 
         LessonRequest::create([
-            'title' => $request->input('titolo'),
+            'title' => $request->input('title'),
             'student_id' => $request->user()->student->id,
-            'request_file' => $request->session()->get('uploaded_lez_rich'),
+            'request_file' => $request->session()->get('uploaded_lesson_request_file'),
         ]);
 
-        $request->session()->forget('uploaded_lez_rich');
+        $request->session()->forget('uploaded_lesson_request_file');
 
         $admin = User::where('role', 'admin')->first();
 
@@ -231,50 +210,52 @@ class LessonRequestController extends Controller
             'file' => ['required', 'file'],
         ]);
 
-        $lezione = LessonRequest::findOrFail($id);
+        $lessonRequest = LessonRequest::findOrFail($id);
 
-        $this->deleteFile($lezione->solution_file);
+        $this->deleteFile($lessonRequest->solution_file);
 
         $path = $this->saveFile($request->file('file'), 'lesson_requests/solution_files');
 
-        $lezione->update([
+        $lessonRequest->update([
             'solution_file' => $path
         ]);
 
-        return redirect()->route('admin.lesson-requests.show', $lezione->id);
+        return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
 
     public function destroySolution(Request $request, int $id)
     {
-        $lezione = LessonRequest::findOrFail($id);
+        $lessonRequest = LessonRequest::findOrFail($id);
 
-        $this->deleteFile($lezione->solution_file);
+        $this->deleteFile($lessonRequest->solution_file);
 
-        $lezione->update([
+        $lessonRequest->update([
             'solution_file' => null
         ]);
 
-        return redirect()->route('admin.lesson-requests.show', $lezione->id);
+        return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
 
     public function storePrice(Request $request, int $id)
     {
-        $request->validate([
-            'prezzo' => ['required', 'numeric', 'min:0'],
-        ]);
+        $request->validate(
+            ['price' => ['required', 'numeric', 'min:0']],
+            [],
+            ['price' => 'prezzo']
+        );
 
-        $lezione = LessonRequest::findOrFail($id);
+        $lessonRequest = LessonRequest::findOrFail($id);
 
-        $lezione->update([
-            'price' => $request->prezzo,
+        $lessonRequest->update([
+            'price' => $request->price,
             'is_fulfilled' => 1
         ]);
 
-        $user = $lezione->student->user;
+        $user = $lessonRequest->student->user;
 
         Mail::to($user->email)
             ->send(new LessonRequestFulfilledMail());
 
-        return redirect()->route('admin.lesson-requests.show', $lezione->id);
+        return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
 }

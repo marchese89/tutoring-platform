@@ -43,7 +43,7 @@
 
                         <tbody>
 
-                            @forelse ($lezioni_su_richiesta as $item)
+                            @forelse ($lessonRequests as $item)
                                 <tr>
 
                                     <td>

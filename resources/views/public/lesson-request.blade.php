@@ -50,7 +50,7 @@
 
                             </div>
                         @else
-                            @if (!Session::exists('uploaded_lez_rich'))
+                            @if (!Session::exists('uploaded_lesson_request_file'))
                                 <div class="mx-auto" style="max-width: 600px;">
 
                                     <div class="card bg-light border-0 rounded-4">
@@ -102,7 +102,7 @@
                                         <div class="card-body p-3">
 
                                             <iframe class="w-100 rounded-3 border" style="height: 600px;"
-                                                src="/protected-files/{{ session('uploaded_lez_rich') }}#view=FitH">
+                                                src="/protected-files/{{ session('uploaded_lesson_request_file') }}#view=FitH">
                                             </iframe>
 
                                         </div>
@@ -134,18 +134,18 @@
 
                                                     <div class="mb-4 text-start">
 
-                                                        <label for="titolo" class="form-label fw-semibold">
+                                                        <label for="title" class="form-label fw-semibold">
 
                                                             Titolo / Descrizione
 
                                                         </label>
 
                                                         <input type="text"
-                                                            class="form-control form-control-lg @error('titolo') is-invalid @enderror"
-                                                            id="titolo" name="titolo" maxlength="255"
-                                                            value="{{ old('titolo') }}"
+                                                            class="form-control form-control-lg @error('title') is-invalid @enderror"
+                                                            id="title" name="title" maxlength="255"
+                                                            value="{{ old('title') }}"
                                                             placeholder="Inserisci una breve descrizione della richiesta">
-                                                        @error('titolo')
+                                                        @error('title')
                                                             <div class="invalid-feedback">{{ $message }}</div>
                                                         @enderror
 

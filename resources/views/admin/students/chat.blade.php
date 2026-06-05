@@ -7,14 +7,14 @@
 @section('inner')
     @php
         $enableEcho = true;
-        $studentName = trim(($utente?->name ?? '') . ' ' . ($utente?->surname ?? '')) ?: 'Studente';
+        $studentName = trim(($user?->name ?? '') . ' ' . ($user?->surname ?? '')) ?: 'Studente';
     @endphp
 
     <div class="container">
         <x-ui.card class="mb-4">
             <div class="text-center">
                 <h3 class="fw-bold mb-4">
-                    {{ $titolo }}
+                    {{ $title }}
                 </h3>
 
                 <div class="mb-5">
@@ -22,7 +22,7 @@
                         Presentazione
                     </h5>
 
-                    <iframe class="w-100 rounded-4 border-0" height="700" src="/protected-files/{{ $pres }}#view=FitH">
+                    <iframe class="w-100 rounded-4 border-0" height="700" src="/protected-files/{{ $presentationFile }}#view=FitH">
                     </iframe>
                 </div>
 
@@ -31,7 +31,7 @@
                         Svolgimento
                     </h5>
 
-                    <iframe class="w-100 rounded-4 border-0" height="700" src="/protected-files/{{ $exec }}#view=FitH">
+                    <iframe class="w-100 rounded-4 border-0" height="700" src="/protected-files/{{ $contentFile }}#view=FitH">
                     </iframe>
                 </div>
             </div>
@@ -39,7 +39,7 @@
 
         <x-ui.support-chat
             :chat="$chat"
-            :messages="$messaggi"
+            :messages="$messages"
             :post-route="route('admin.chat.messages.store')"
             :own-author="1"
             own-sender="Tu"

@@ -188,7 +188,7 @@
             Messaggio
         </label>
 
-        <textarea id="{{ $chatDomId }}-input" name="messaggio" rows="4" class="support-chat-input form-control rounded-4 mb-3"
+        <textarea id="{{ $chatDomId }}-input" name="message" rows="4" class="support-chat-input form-control rounded-4 mb-3"
             placeholder="Scrivi un messaggio..."></textarea>
 
         <div class="d-flex justify-content-end">
@@ -284,8 +284,8 @@
                     "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                 },
                 body: new URLSearchParams({
-                    id_chat: chatId,
-                    testo: text
+                    chat_id: chatId,
+                    message: text
                 })
             });
         }

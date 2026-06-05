@@ -20,16 +20,16 @@
                 </thead>
 
                 <tbody>
-                    @forelse ($chat as $item)
+                    @forelse ($chats as $item)
                         <tr>
                             <td>{{ $item->id }}</td>
-                            <td>{{ $item->tipo_stringa }}</td>
-                            <td>{{ $item->nome_prodotto }}</td>
-                            <td>{{ $item->studente_nome }}</td>
+                            <td>{{ $item->product_type_label }}</td>
+                            <td>{{ $item->product_name }}</td>
+                            <td>{{ $item->student_name }}</td>
                             <td class="text-center">
                                 <x-ui.status-dot
-                                    :variant="$item->non_letta_admin ? 'danger' : 'success'"
-                                    :label="$item->non_letta_admin ? 'Da leggere' : 'Letta'"
+                                    :variant="$item->has_unread_admin_message ? 'danger' : 'success'"
+                                    :label="$item->has_unread_admin_message ? 'Da leggere' : 'Letta'"
                                 />
                             </td>
                             <td>

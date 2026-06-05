@@ -123,7 +123,7 @@ class FileAccessController extends Controller
         }
 
         // 📥 Upload temporaneo (sessione)
-        if ($request->session()->exists('uploaded_lez_rich')) {
+        if ($request->session()->exists('uploaded_lesson_request_file')) {
             return true;
         }
 

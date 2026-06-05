@@ -152,14 +152,14 @@ class StudentController extends Controller
 
     public function showDirectRequest(Request $request, int $id)
     {
-        $richiesta = LessonRequest::where('student_id', $request->user()->student->id)->findOrFail($id);
+        $lessonRequest = LessonRequest::where('student_id', $request->user()->student->id)->findOrFail($id);
 
         $chat = Chat::where('product_id', $id)
             ->where('product_type', 5)
             ->where('student_id', $request->user()->student->id)
             ->first();
 
-        if (!$chat && (int) $richiesta->is_paid === 1) {
+        if (!$chat && (int) $lessonRequest->is_paid === 1) {
             $chat = Chat::create([
                 'product_id' => $id,
                 'product_type' => 5,
@@ -167,10 +167,10 @@ class StudentController extends Controller
             ]);
         }
 
-        $messaggi = $chat ? $this->chatMessages($chat->id) : collect();
+        $messages = $chat ? $this->chatMessages($chat->id) : collect();
         $enableEcho = (bool) $chat;
 
-        return view('student.direct-request', compact('richiesta', 'chat', 'messaggi', 'enableEcho'));
+        return view('student.direct-request', compact('lessonRequest', 'chat', 'messages', 'enableEcho'));
     }
 
     private function chatMessages(int $chatId)

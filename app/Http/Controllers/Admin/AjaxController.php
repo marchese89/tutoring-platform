@@ -60,22 +60,22 @@ class AjaxController extends Controller
     public function sendMessage(Request $request)
     {
         $request->validate([
-            'id_chat' => 'required|integer|exists:chats,id',
-            'testo' => 'required|string'
+            'chat_id' => 'required|integer|exists:chats,id',
+            'message' => 'required|string'
         ]);
 
-        $messaggio = ChatMessage::create([
-            'chat_id' => $request->id_chat,
-            'message' => $request->testo,
+        $message = ChatMessage::create([
+            'chat_id' => $request->chat_id,
+            'message' => $request->message,
             'sender_role' => auth()->user()->role === 'admin' ? 1 : 0,
             'sent_at' => now(),
         ]);
 
-        broadcast(new MessageSent($messaggio));
+        broadcast(new MessageSent($message));
 
         return response()->json([
             'success' => true,
-            'message' => $messaggio
+            'message' => $message
         ]);
     }
 
