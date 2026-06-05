@@ -11,6 +11,7 @@ use App\Models\Admin;
 use App\Models\Exercise;
 use App\Models\Invoice;
 use App\Models\Lesson;
+use App\Models\LessonRequest;
 use App\Models\Order;
 use App\Models\PaymentTransaction;
 use App\Models\User;
@@ -28,6 +29,10 @@ class PurchaseController extends Controller
 {
     public function addToCart(Request $request, int $id, int $type)
     {
+        if ($type === CartItem::REQUESTED_LESSON) {
+            $this->authorize('purchase', LessonRequest::findOrFail($id));
+        }
+
         $cart = $this->cart($request);
 
         $item = new CartItem($id, $type);

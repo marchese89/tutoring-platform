@@ -3,7 +3,13 @@
 namespace App\Providers;
 
 use App\Models\Chat;
+use App\Models\Exercise;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
 use App\Policies\ChatPolicy;
+use App\Policies\ExercisePolicy;
+use App\Policies\LessonPolicy;
+use App\Policies\LessonRequestPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 
 class AuthServiceProvider extends ServiceProvider
@@ -15,6 +21,9 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Chat::class => ChatPolicy::class,
+        Exercise::class => ExercisePolicy::class,
+        Lesson::class => LessonPolicy::class,
+        LessonRequest::class => LessonRequestPolicy::class,
     ];
 
     /**

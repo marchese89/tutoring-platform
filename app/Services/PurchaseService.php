@@ -2,24 +2,17 @@
 
 namespace App\Services;
 
-use App\Models\Order;
 use App\Models\OrderItem;
 
 class PurchaseService
 {
     public static function isProductPurchased($studentId, $productId, $productType): bool
     {
-        $orders = Order::where('student_id', '=', $studentId)->get();
-        foreach ($orders as $order) {
-            $orderItems = OrderItem::where('order_id', '=', $order->id)->get();
-            foreach ($orderItems as $item) {
-                if ($item->product_id == $productId && $item->product_type == $productType) {
-                    return true;
-                }
-            }
-        }
-
-        return false;
+        return OrderItem::query()
+            ->where('product_id', $productId)
+            ->where('product_type', $productType)
+            ->whereHas('order', fn ($query) => $query->where('student_id', $studentId))
+            ->exists();
     }
 
     public static function orderTotal($orderId): int

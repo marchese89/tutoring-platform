@@ -2,17 +2,17 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Chat;
+use App\Models\ChatMessage;
+use App\Models\Course;
+use App\Models\Exercise;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
-use App\Helpers\DateHelper;
-use App\Models\Course;
-use App\Models\Lesson;
-use App\Models\Exercise;
-use App\Models\Chat;
-use App\Models\ChatMessage;
-use App\Models\LessonRequest;
 
 class StudentController extends Controller
 {
@@ -43,7 +43,7 @@ class StudentController extends Controller
         return redirect()->route('student.account.profile');
     }
 
-    function updateEmail(Request $request)
+    public function updateEmail(Request $request)
     {
         $validated = $request->validate([
             'email' => [
@@ -61,7 +61,7 @@ class StudentController extends Controller
         return redirect()->route('student.account.credentials');
     }
 
-    function updatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
         $validated = $request->validate(
             [
@@ -84,7 +84,7 @@ class StudentController extends Controller
             ]
         );
 
-        if (!Hash::check($validated['current_password'], $request->user()->password)) {
+        if (! Hash::check($validated['current_password'], $request->user()->password)) {
             return back()->withErrors([
                 'current_password' => 'La password non corrisponde a quella gia inserita',
             ]);
@@ -97,16 +97,16 @@ class StudentController extends Controller
         return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
     }
 
-    public function showLesson($courseId, $lessonId)
+    public function showLesson(Request $request, int $courseId, int $lessonId)
     {
-        $course = Course::find($courseId);
-        $lesson = Lesson::find($lessonId);
+        $course = Course::findOrFail($courseId);
+        $lesson = Lesson::findOrFail($lessonId);
 
-        if (!$course || !$lesson) {
-            abort(404);
-        }
+        abort_unless($lesson->course_id === $course->id, 404);
 
-        $student = auth()->user()->student;
+        $this->authorize('view', $lesson);
+
+        $student = $request->user()->student;
 
         $chat = Chat::where('product_id', $lessonId)
             ->where('product_type', 0)
@@ -114,12 +114,12 @@ class StudentController extends Controller
             ->first();
 
         // Create the support chat on first access.
-        if (!$chat) {
+        if (! $chat) {
 
             $chat = Chat::create([
                 'product_id' => $lessonId,
                 'product_type' => 0,
-                'student_id' => $student->id
+                'student_id' => $student->id,
             ]);
         }
 
@@ -135,20 +135,14 @@ class StudentController extends Controller
         ));
     }
 
-    public function showExercise(Request $request, $courseId, $exerciseId)
+    public function showExercise(Request $request, int $courseId, int $exerciseId)
     {
-        $course = Course::find($courseId);
-        $exercise = Exercise::find($exerciseId);
+        $course = Course::findOrFail($courseId);
+        $exercise = Exercise::findOrFail($exerciseId);
 
-        // Basic integrity checks.
-        if (!$course || !$exercise) {
-            abort(404);
-        }
+        abort_unless($exercise->course_id === $course->id, 404);
 
-        // Ensure the exercise belongs to the requested course.
-        if ($exercise->course_id != $course->id) {
-            abort(404);
-        }
+        $this->authorize('view', $exercise);
 
         $chat = Chat::firstOrCreate([
             'product_id' => $exerciseId,
@@ -164,14 +158,16 @@ class StudentController extends Controller
 
     public function showDirectRequest(Request $request, int $id)
     {
-        $lessonRequest = LessonRequest::where('student_id', $request->user()->student->id)->findOrFail($id);
+        $lessonRequest = LessonRequest::findOrFail($id);
+
+        $this->authorize('view', $lessonRequest);
 
         $chat = Chat::where('product_id', $id)
             ->where('product_type', 5)
             ->where('student_id', $request->user()->student->id)
             ->first();
 
-        if (!$chat && (int) $lessonRequest->is_paid === 1) {
+        if (! $chat && (int) $lessonRequest->is_paid === 1) {
             $chat = Chat::create([
                 'product_id' => $id,
                 'product_type' => 5,
@@ -190,7 +186,7 @@ class StudentController extends Controller
         return ChatMessage::where('chat_id', $chatId)
             ->orderBy('sent_at', 'asc')
             ->get()
-            ->map(fn(ChatMessage $message) => [
+            ->map(fn (ChatMessage $message) => [
                 'message' => $message->message,
                 'sender_role' => $message->sender_role,
                 'is_teacher' => (int) $message->sender_role === 1,
