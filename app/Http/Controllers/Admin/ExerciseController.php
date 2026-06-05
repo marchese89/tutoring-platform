@@ -18,22 +18,20 @@ class ExerciseController extends Controller
         return view('admin.teaching.create-exercise', compact('id', 'corso'));
     }
 
-    public function edit(int $course, int $exercise)
+    public function edit(int $courseId, int $exerciseId)
     {
-        $corso = Course::findOrFail($course);
-        $esercizio = Exercise::where('course_id', $course)->findOrFail($exercise);
-        $course = $corso->id;
-        $exercise = $esercizio->id;
+        $course = Course::findOrFail($courseId);
+        $exercise = Exercise::where('course_id', $courseId)->findOrFail($exerciseId);
 
-        return view('admin.teaching.edit-exercise', compact('course', 'exercise', 'corso', 'esercizio'));
+        return view('admin.teaching.edit-exercise', compact('course', 'exercise'));
     }
 
-    public function viewTrace($course, $exercise)
+    public function viewTrace($courseId, $exerciseId)
     {
-        $corso = Course::where('id', '=', $course)->first();
-        $esercizio = Exercise::where('id', '=', $exercise)->first();
+        $course = Course::where('id', '=', $courseId)->first();
+        $exercise = Exercise::where('id', '=', $exerciseId)->first();
 
-        return view('public.exercise-trace', compact('esercizio', 'corso'));
+        return view('public.exercise-trace', compact('exercise', 'course'));
     }
 
     // =========================

@@ -85,70 +85,69 @@ class StudentController extends Controller
         return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
     }
 
-    public function showLesson($course, $lesson)
+    public function showLesson($courseId, $lessonId)
     {
-        $corso = Course::find($course);
-        $lezione = Lesson::find($lesson);
+        $course = Course::find($courseId);
+        $lesson = Lesson::find($lessonId);
 
-        if (!$corso || !$lezione) {
+        if (!$course || !$lesson) {
             abort(404);
         }
 
-        $studente = auth()->user()->student;
+        $student = auth()->user()->student;
 
-        $chat = Chat::where('product_id', $lesson)
+        $chat = Chat::where('product_id', $lessonId)
             ->where('product_type', 0)
-            ->where('student_id', $studente->id)
+            ->where('student_id', $student->id)
             ->first();
 
-        // Se la chat non esiste la creo
+        // Create the support chat on first access.
         if (!$chat) {
 
             $chat = Chat::create([
-                'product_id' => $lesson,
+                'product_id' => $lessonId,
                 'product_type' => 0,
-                'student_id' => $studente->id
+                'student_id' => $student->id
             ]);
         }
 
-        $messaggi = $this->chatMessages($chat->id);
+        $messages = $this->chatMessages($chat->id);
         $enableEcho = true;
 
         return view('student.lesson', compact(
-            'corso',
-            'lezione',
+            'course',
+            'lesson',
             'chat',
-            'messaggi',
+            'messages',
             'enableEcho'
         ));
     }
 
-    public function showExercise(Request $request, $course, $exercise)
+    public function showExercise(Request $request, $courseId, $exerciseId)
     {
-        $corso = Course::find($course);
-        $esercizio = Exercise::find($exercise);
+        $course = Course::find($courseId);
+        $exercise = Exercise::find($exerciseId);
 
-        // Controlli base
-        if (!$corso || !$esercizio) {
+        // Basic integrity checks.
+        if (!$course || !$exercise) {
             abort(404);
         }
 
-        // 🔴 MIGLIORIA rispetto a prima
-        // Verifica che l'esercizio appartenga al corso
-        if ($esercizio->course_id != $corso->id) {
+        // Ensure the exercise belongs to the requested course.
+        if ($exercise->course_id != $course->id) {
             abort(404);
         }
 
         $chat = Chat::firstOrCreate([
-            'product_id' => $exercise,
+            'product_id' => $exerciseId,
             'product_type' => 2,
             'student_id' => $request->user()->student->id,
         ]);
 
-        $messaggi = $this->chatMessages($chat->id);
+        $messages = $this->chatMessages($chat->id);
         $enableEcho = true;
 
-        return view('student.exercise', compact('corso', 'esercizio', 'chat', 'messaggi', 'enableEcho'));
+        return view('student.exercise', compact('course', 'exercise', 'chat', 'messages', 'enableEcho'));
     }
 
     public function showDirectRequest(Request $request, int $id)

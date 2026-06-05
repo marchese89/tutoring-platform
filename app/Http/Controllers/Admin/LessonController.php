@@ -11,20 +11,20 @@ use App\Models\Course;
 class LessonController extends Controller
 {
 
-    public function viewPresentation(int $course, int $lesson)
+    public function viewPresentation(int $courseId, int $lessonId)
     {
-        $corso = Course::where('id', '=', $course)->first();
-        $lezione = Lesson::where('id', '=', $lesson)->first();
+        $course = Course::where('id', '=', $courseId)->first();
+        $lesson = Lesson::where('id', '=', $lessonId)->first();
 
-        return view('public.lesson-presentation', compact('corso', 'lezione'));
+        return view('public.lesson-presentation', compact('course', 'lesson'));
     }
 
-    public function view(int $course, int $lesson)
+    public function view(int $courseId, int $lessonId)
     {
-        $corso = Course::where('id', '=', $course)->first();
-        $lezione = Lesson::where('id', '=', $lesson)->first();
+        $course = Course::where('id', '=', $courseId)->first();
+        $lesson = Lesson::where('id', '=', $lessonId)->first();
 
-        return view('public.lesson-content', compact('corso', 'lezione'));
+        return view('public.lesson-content', compact('course', 'lesson'));
     }
 
     public function create(int $id)
@@ -33,12 +33,12 @@ class LessonController extends Controller
         return view('admin.teaching.create-lesson', compact('id', 'corso'));
     }
 
-    public function edit(int $course, int $lesson)
+    public function edit(int $courseId, int $lessonId)
     {
-        $corso = Course::findOrFail($course);
-        $lezione = Lesson::where('course_id', $course)->findOrFail($lesson);
+        $course = Course::findOrFail($courseId);
+        $lesson = Lesson::where('course_id', $courseId)->findOrFail($lessonId);
 
-        return view('admin.teaching.edit-lesson', compact('course', 'lesson', 'corso', 'lezione'));
+        return view('admin.teaching.edit-lesson', compact('course', 'lesson'));
     }
 
     // ===============================

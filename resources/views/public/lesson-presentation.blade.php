@@ -23,7 +23,7 @@
                     </span>
 
                     <h3 class="mb-2">
-                        <strong>Corso:</strong> {{ $corso->name }}
+                        <strong>Corso:</strong> {{ $course->name }}
                     </h3>
 
                     <p class="text-muted mb-0">
@@ -38,7 +38,7 @@
                     </h5>
 
                     <h4 class="fw-semibold mb-0">
-                        {{ $lezione->title }}
+                        {{ $lesson->title }}
                     </h4>
 
                 </div>
@@ -51,7 +51,7 @@
 
                     <div class="rounded-4 overflow-hidden shadow-sm border bg-dark">
 
-                        <iframe width="100%" height="800px" src="/protected-files/{{ $lezione->presentation_file }}#view=FitH"
+                        <iframe width="100%" height="800px" src="/protected-files/{{ $lesson->presentation_file }}#view=FitH"
                             style="border: none;">
                         </iframe>
 

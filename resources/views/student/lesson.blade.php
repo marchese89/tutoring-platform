@@ -14,7 +14,7 @@
                     </span>
 
                     <h3 class="fw-bold mb-0">
-                        {{ $corso->name }}
+                        {{ $course->name }}
                     </h3>
                 </div>
 
@@ -24,7 +24,7 @@
                     </span>
 
                     <h5 class="fw-semibold mb-0">
-                        {{ $lezione->title }}
+                        {{ $lesson->title }}
                     </h5>
                 </div>
             </div>
@@ -37,7 +37,7 @@
                 </h4>
 
                 <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lezione->presentation_file }}#view=FitH"></iframe>
+                    <iframe src="/protected-files/{{ $lesson->presentation_file }}#view=FitH"></iframe>
                 </div>
             </x-ui.card>
         </div>
@@ -49,7 +49,7 @@
                 </h4>
 
                 <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lezione->content_file }}#view=FitH"></iframe>
+                    <iframe src="/protected-files/{{ $lesson->content_file }}#view=FitH"></iframe>
                 </div>
             </x-ui.card>
         </div>
@@ -57,7 +57,7 @@
         <div class="mt-4">
             <x-ui.support-chat
                 :chat="$chat"
-                :messages="$messaggi"
+                :messages="$messages"
                 description="Scrivi qui per ricevere supporto sulla lezione."
             />
         </div>

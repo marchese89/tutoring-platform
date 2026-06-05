@@ -7,20 +7,20 @@
 @section('inner')
     <div class="container" style="text-align: center;">
         <h2>Modifica Lezione Corso di</h2>
-        <h2>"{{ $corso->name }}"</h2>
+        <h2>"{{ $course->name }}"</h2>
         <h3>Titolo Lezione</h3>
-        <h3>"{{ $lezione->title }}"</h3>
+        <h3>"{{ $lesson->title }}"</h3>
         <br>
 
         <br>
         <h4>Presentazione</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $lezione->presentation_file }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $lesson->presentation_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.presentation.update', $lesson) }}" enctype="multipart/form-data"
+            <form method="POST" action="{{ route('admin.lessons.presentation.update', $lesson->id) }}" enctype="multipart/form-data"
                 id="upload" data-upload-progress-form>
                 @csrf
                 @method('POST')
@@ -44,12 +44,12 @@
         <br>
         <h4>Svolgimento</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $lezione->content_file }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $lesson->content_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.file.update', $lesson) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
+            <form method="POST" action="{{ route('admin.lessons.file.update', $lesson->id) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('file-lesson') is-invalid @enderror" id="file-lesson"
@@ -68,15 +68,15 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lessons.update', $lesson) }}" id="modifica-lezione">
+            <form method="POST" action="{{ route('admin.lessons.update', $lesson->id) }}" id="modifica-lezione">
                 @csrf
                 @method('PUT')
-                <input type="hidden" name="lesson" value="{{ $lesson }}" />
-                <input type="hidden" name="course" value="{{ $course }}" />
+                <input type="hidden" name="lesson" value="{{ $lesson->id }}" />
+                <input type="hidden" name="course" value="{{ $course->id }}" />
                 <div class="col-md-12">
                     <h5>Numero</h5>
                     <input type="text" class="form-control @error('numero') is-invalid @enderror" id="numero"
-                        name="numero" value="{{ old('numero', $lezione->number) }}" maxlength="5">
+                        name="numero" value="{{ old('numero', $lesson->number) }}" maxlength="5">
                     @error('numero')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -84,7 +84,7 @@
                 <div class="col-md-12">
                     <h5>Titolo</h5>
                     <input type="text" class="form-control @error('titolo') is-invalid @enderror" id="titolo"
-                        name="titolo" value="{{ old('titolo', $lezione->title) }}" maxlength="255">
+                        name="titolo" value="{{ old('titolo', $lesson->title) }}" maxlength="255">
                     @error('titolo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -92,7 +92,7 @@
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
                     <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
-                        name="prezzo" value="{{ old('prezzo', $lezione->price) }}" maxlength="5" style="display: inline">
+                        name="prezzo" value="{{ old('prezzo', $lesson->price) }}" maxlength="5" style="display: inline">
                     @error('prezzo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror

@@ -8,15 +8,15 @@
     <div class="container" style="text-align: center;width:100%">
         <h4>Traccia</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $esercizio->prompt_file }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $exercise->prompt_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.exercises.trace.update', $exercise) }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
+            <form method="POST" action="{{ route('admin.exercises.trace.update', $exercise->id) }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
                 @csrf
-                <input type="hidden" name="id" value="{{ $exercise }}" />
-                <input type="hidden" name="course" value="{{ $course }}" />
+                <input type="hidden" name="id" value="{{ $exercise->id }}" />
+                <input type="hidden" name="course" value="{{ $course->id }}" />
                 <input type="file" class="form-control @error('file-trace-ex') is-invalid @enderror" id="file-trace-ex"
                     name="file-trace-ex" required />
                 @error('file-trace-ex')
@@ -37,15 +37,15 @@
         <br>
         <h4>Svolgimento</h4>
 
-        <iframe width="90%" src="/protected-files/{{ $esercizio->solution_file }}#view=FitH" height="800px">
+        <iframe width="90%" src="/protected-files/{{ $exercise->solution_file }}#view=FitH" height="800px">
         </iframe>
         <br>
         <br>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.exercises.execution.update', $exercise) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
+            <form method="POST" action="{{ route('admin.exercises.execution.update', $exercise->id) }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
                 @csrf
-                <input type="hidden" name="id" value="{{ $exercise }}" />
-                <input type="hidden" name="course" value="{{ $course }}" />
+                <input type="hidden" name="id" value="{{ $exercise->id }}" />
+                <input type="hidden" name="course" value="{{ $course->id }}" />
                 <input type="file" class="form-control @error('file-ex') is-invalid @enderror" id="file-ex"
                     name="file-ex" required />
                 @error('file-ex')
@@ -62,13 +62,13 @@
             </form>
         </div>
         <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.exercises.update', $exercise) }}" id="delete">
+            <form method="POST" action="{{ route('admin.exercises.update', $exercise->id) }}" id="delete">
                 @csrf
                 @method('PUT')
                 <div class="col-md-12">
                     <h5>Titolo</h5>
                     <input type="text" class="form-control @error('titolo') is-invalid @enderror" id="titolo"
-                        name="titolo" value="{{ old('titolo', $esercizio->title) }}" maxlength="255">
+                        name="titolo" value="{{ old('titolo', $exercise->title) }}" maxlength="255">
                     @error('titolo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
@@ -76,7 +76,7 @@
                 <div class="col-md-12">
                     <h5>Prezzo (&euro;)</h5>
                     <input type="text" class="form-control @error('prezzo') is-invalid @enderror" id="prezzo"
-                        name="prezzo" value="{{ old('prezzo', $esercizio->price) }}" maxlength="5" style="display: inline">
+                        name="prezzo" value="{{ old('prezzo', $exercise->price) }}" maxlength="5" style="display: inline">
                     @error('prezzo')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
