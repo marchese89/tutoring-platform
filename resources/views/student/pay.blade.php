@@ -19,7 +19,7 @@
                         <p class="text-muted mb-0">
                             Paga
                             <span class="fw-bold text-success">
-                                {{ number_format(session()->get('prezzo') * session()->get('qta'), 2, ',', '.') }}&euro;
+                                {{ number_format(session()->get('extra_payment_price') * session()->get('extra_payment_quantity'), 2, ',', '.') }}&euro;
                             </span>
                             tramite Stripe.
                         </p>

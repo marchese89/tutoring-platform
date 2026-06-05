@@ -7,8 +7,8 @@
 @section('inner')
     <script>
         function updatePaymentTotal() {
-            const price = Number(document.getElementById('prezzo').value.replace(',', '.')) || 0;
-            const quantity = Number(document.getElementById('qta').value.replace(',', '.')) || 0;
+            const price = Number(document.getElementById('price').value.replace(',', '.')) || 0;
+            const quantity = Number(document.getElementById('quantity').value.replace(',', '.')) || 0;
             const total = price * quantity;
 
             document.getElementById('payment-total').innerHTML = `${total.toFixed(2)}&euro;`;
@@ -41,57 +41,57 @@
                         @csrf
 
                         <div class="col-md-8">
-                            <label class="form-label fw-semibold" for="descrizione">
+                            <label class="form-label fw-semibold" for="description">
                                 Descrizione
                             </label>
                             <input
                                 type="text"
-                                class="form-control rounded-3 @error('descrizione') is-invalid @enderror"
-                                id="descrizione"
-                                name="descrizione"
-                                value="{{ old('descrizione') }}"
+                                class="form-control rounded-3 @error('description') is-invalid @enderror"
+                                id="description"
+                                name="description"
+                                value="{{ old('description') }}"
                                 maxlength="255"
                                 placeholder="Esempio: lezione privata"
                             >
-                            @error('descrizione')
+                            @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold" for="prezzo">
+                            <label class="form-label fw-semibold" for="price">
                                 Prezzo
                             </label>
                             <input
                                 type="text"
-                                class="form-control rounded-3 @error('prezzo') is-invalid @enderror"
-                                id="prezzo"
-                                name="prezzo"
-                                value="{{ old('prezzo') }}"
+                                class="form-control rounded-3 @error('price') is-invalid @enderror"
+                                id="price"
+                                name="price"
+                                value="{{ old('price') }}"
                                 maxlength="12"
                                 inputmode="decimal"
                                 oninput="updatePaymentTotal()"
                             >
-                            @error('prezzo')
+                            @error('price')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="col-md-2">
-                            <label class="form-label fw-semibold" for="qta">
+                            <label class="form-label fw-semibold" for="quantity">
                                 Qta
                             </label>
                             <input
                                 type="text"
-                                class="form-control rounded-3 @error('qta') is-invalid @enderror"
-                                id="qta"
-                                name="qta"
-                                value="{{ old('qta') }}"
+                                class="form-control rounded-3 @error('quantity') is-invalid @enderror"
+                                id="quantity"
+                                name="quantity"
+                                value="{{ old('quantity') }}"
                                 maxlength="5"
                                 inputmode="numeric"
                                 oninput="updatePaymentTotal()"
                             >
-                            @error('qta')
+                            @error('quantity')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

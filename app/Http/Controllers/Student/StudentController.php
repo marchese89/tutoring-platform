@@ -18,23 +18,27 @@ class StudentController extends Controller
 {
     public function updateAddress(Request $request)
     {
-        $validated = $request->validate([
-            'inputIndirizzo' => ['required', 'string', 'max:255'],
-            'inputNumeroCivico' => ['required', 'string', 'max:6'],
-            'inputCitta' => ['required', 'string', 'max:255'],
-            'inputProvincia' => ['required', 'string', 'max:2'],
-            'inputCAP' => ['required', 'string', 'max:5'],
-        ]);
+        $validated = $request->validate(
+            [
+                'street' => ['required', 'string', 'max:255'],
+                'house_number' => ['required', 'string', 'max:6'],
+                'city' => ['required', 'string', 'max:255'],
+                'province' => ['required', 'string', 'max:2'],
+                'postal_code' => ['required', 'string', 'max:5'],
+            ],
+            [],
+            [
+                'street' => 'indirizzo',
+                'house_number' => 'numero civico',
+                'city' => 'città',
+                'province' => 'provincia',
+                'postal_code' => 'CAP',
+            ]
+        );
 
         $student = $request->user()->student;
 
-        $student->street = $validated['inputIndirizzo'];
-        $student->house_number = $validated['inputNumeroCivico'];
-        $student->city = $validated['inputCitta'];
-        $student->province = $validated['inputProvincia'];
-        $student->postal_code = $validated['inputCAP'];
-
-        $student->save();
+        $student->update($validated);
 
         return redirect()->route('student.account.profile');
     }

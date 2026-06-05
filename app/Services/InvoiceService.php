@@ -13,14 +13,14 @@ use Illuminate\Support\Facades\Storage;
 
 class InvoiceService
 {
-    public function generatePdf(int $order_id)
+    public function generatePdf(int $orderId)
     {
-        $order = Order::where('id', $order_id)->first();
+        $order = Order::findOrFail($orderId);
         $admin = User::where('role', 'admin')->first();
         $adminData = Admin::where('user_id', $admin->id)->first();
         $student = $order->student;
         $user = $student->user;
-        $order_items = $order->orderItems()->get();
+        $orderItems = $order->orderItems()->get();
         $total = $order->orderItems()->sum('price');
 
         $number = $this->getNextInvoiceNumber();
@@ -29,14 +29,14 @@ class InvoiceService
 
         $html = view('invoices.invoice', [
             'user' => $user,
-            'studente' => $student,
+            'customer' => $student,
             'admin' => $admin,
             'adminData' => $adminData,
-            'order_items' => $order_items,
+            'orderItems' => $orderItems,
             'total' => $total,
             'order' => $order,
-            'dataFattura' => $data->format('d/m/Y'),
-            'numeroFattura' => $number,
+            'invoiceDate' => $data->format('d/m/Y'),
+            'invoiceNumber' => $number,
         ])->render();
 
         $dompdf = new Dompdf();
@@ -53,7 +53,6 @@ class InvoiceService
             $pdf
         );
 
-        // salva record fattura (solo metadata, NON file)
         Invoice::create([
             'number' => $number,
             'issued_at' => $data,

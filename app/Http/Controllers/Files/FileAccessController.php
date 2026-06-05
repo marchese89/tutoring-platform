@@ -3,22 +3,20 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-
-use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Models\LessonRequest;
 use App\Models\Invoice;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
 use App\Models\Student;
 use App\Services\PurchaseService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FileAccessController extends Controller
 {
     public function __invoke(Request $request, string $path)
     {
-        // 🔒 Protezione base path traversal
         if (str_contains($path, '..')) {
             abort(403);
         }
@@ -29,129 +27,123 @@ class FileAccessController extends Controller
             abort(404);
         }
 
-        // 🔍 Pre-carico tutto una sola volta
         $lessonPresentation = Lesson::where('presentation_file', $path)->first();
-        $lessonFile = Lesson::where('content_file', $path)->first();
-        $exerciseTrace = Exercise::where('prompt_file', $path)->first();
-        $exerciseExecution = Exercise::where('solution_file', $path)->first();
+        $lessonContent = Lesson::where('content_file', $path)->first();
+        $exercisePrompt = Exercise::where('prompt_file', $path)->first();
+        $exerciseSolution = Exercise::where('solution_file', $path)->first();
 
-        // 👤 GUEST
         if (!Auth::check()) {
-            if ($this->canAccessGuest($lessonPresentation, $lessonFile, $exerciseTrace, $exerciseExecution)) {
+            if ($this->canAccessGuest(
+                $lessonPresentation,
+                $lessonContent,
+                $exercisePrompt,
+                $exerciseSolution
+            )) {
                 return $this->serve($fullPath);
             }
 
             abort(404);
         }
 
-        // 👤 USER
-        $user = auth()->user();
+        $user = $request->user();
 
-        // 🟢 ADMIN
         if ($user->role === 'admin') {
             return $this->serve($fullPath);
         }
 
-        // 🟡 STUDENT
-        if ($user->role === 'student') {
-            if ($this->canAccessStudent(
+        if (
+            $user->role === 'student'
+            && $this->canAccessStudent(
                 $request,
                 $user->student,
                 $path,
                 $lessonPresentation,
-                $lessonFile,
-                $exerciseTrace,
-                $exerciseExecution
-            )) {
-                return $this->serve($fullPath);
-            }
+                $lessonContent,
+                $exercisePrompt,
+                $exerciseSolution
+            )
+        ) {
+            return $this->serve($fullPath);
         }
 
         abort(404);
     }
 
-    // =========================
-    // 🔓 ACCESS LOGIC
-    // =========================
-
-    private function canAccessGuest($lessonPresentation, $lessonFile, $exerciseTrace, $exerciseExecution)
-    {
+    private function canAccessGuest(
+        ?Lesson $lessonPresentation,
+        ?Lesson $lessonContent,
+        ?Exercise $exercisePrompt,
+        ?Exercise $exerciseSolution
+    ): bool {
         return
-            $lessonPresentation !== null ||
-            ($lessonFile !== null && $lessonFile->price === 0) ||
-            $exerciseTrace !== null ||
-            ($exerciseExecution !== null && $exerciseExecution->price === 0);
+            $lessonPresentation !== null
+            || ($lessonContent !== null && $lessonContent->price == 0)
+            || $exercisePrompt !== null
+            || ($exerciseSolution !== null && $exerciseSolution->price == 0);
     }
 
     private function canAccessStudent(
-        $request,
-        $studente,
-        $path,
-        $lessonPresentation,
-        $lessonFile,
-        $exerciseTrace,
-        $exerciseExecution
-    ) {
-        // 📘 Lezioni
+        Request $request,
+        Student $student,
+        string $path,
+        ?Lesson $lessonPresentation,
+        ?Lesson $lessonContent,
+        ?Exercise $exercisePrompt,
+        ?Exercise $exerciseSolution
+    ): bool {
         if ($lessonPresentation) {
             return true;
         }
 
-        if ($lessonFile) {
-            if ($lessonFile->price === 0) {
-                return true;
-            }
-
-            if (PurchaseService::isProductPurchased($studente->id, $lessonFile->id, 0)) {
-                return true;
-            }
-        }
-
-        // 🧪 Esercizi
-        if ($exerciseTrace) {
+        if (
+            $lessonContent
+            && (
+                $lessonContent->price == 0
+                || PurchaseService::isProductPurchased($student->id, $lessonContent->id, 0)
+            )
+        ) {
             return true;
         }
 
-        if ($exerciseExecution) {
-            if ($exerciseExecution->price === 0) {
-                return true;
-            }
-
-            if (PurchaseService::isProductPurchased($studente->id, $exerciseExecution->id, 2)) {
-                return true;
-            }
-        }
-
-        // 📥 Upload temporaneo (sessione)
-        if ($request->session()->exists('uploaded_lesson_request_file')) {
+        if ($exercisePrompt) {
             return true;
         }
 
-        // 📚 Lezioni su richiesta
-        $lezRichTrace = LessonRequest::where('request_file', $path)->first();
-        if ($lezRichTrace) {
+        if (
+            $exerciseSolution
+            && (
+                $exerciseSolution->price == 0
+                || PurchaseService::isProductPurchased($student->id, $exerciseSolution->id, 2)
+            )
+        ) {
             return true;
         }
 
-        $lezRichExec = LessonRequest::where('solution_file', $path)->first();
-        if ($lezRichExec && $lezRichExec->is_paid == 1) {
+        if ($request->session()->get('uploaded_lesson_request_file') === $path) {
             return true;
         }
 
-        // 🧾 Fatture
-        // $fattura = InvoiceSheet::where('file', $path)->first();
-        $fattura = Invoice::where('file_path', $path)->first();
-
-        if ($fattura) {
+        if (
+            LessonRequest::where('student_id', $student->id)
+                ->where('request_file', $path)
+                ->exists()
+        ) {
             return true;
         }
 
-        return false;
+        if (
+            LessonRequest::where('student_id', $student->id)
+                ->where('solution_file', $path)
+                ->where('is_paid', true)
+                ->exists()
+        ) {
+            return true;
+        }
+
+        return Invoice::where('file_path', $path)
+            ->whereHas('order', fn($query) => $query->where('student_id', $student->id))
+            ->exists();
     }
-
-    // =========================
-    // 📁 FILE RESPONSE
-    // =========================
 
     private function serve(string $path)
     {

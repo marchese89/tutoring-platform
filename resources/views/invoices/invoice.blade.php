@@ -17,7 +17,7 @@
             </td>
         </tr>
 
-        {{-- MITTENTE --}}
+        {{-- Sender --}}
         <tr style="height:30px">
             <td align="left">
                 <font size="4">{{ $admin->name }} {{ $admin->surname }}</font>
@@ -55,7 +55,7 @@
             <td></td>
         </tr>
 
-        {{-- CLIENTE --}}
+        {{-- Customer --}}
         <tr style="height:30px">
             <td></td>
             <td align="right">
@@ -73,7 +73,7 @@
         <tr style="height:30px">
             <td></td>
             <td align="right">
-                <font size="4">{{ $studente->street }}, {{ $studente->house_number }}</font>
+                <font size="4">{{ $customer->street }}, {{ $customer->house_number }}</font>
             </td>
         </tr>
 
@@ -81,7 +81,7 @@
             <td></td>
             <td align="right">
                 <font size="4">
-                    {{ $studente->postal_code }} - {{ $studente->city }} ({{ $studente->province }})
+                    {{ $customer->postal_code }} - {{ $customer->city }} ({{ $customer->province }})
                 </font>
             </td>
         </tr>
@@ -89,26 +89,26 @@
         <tr style="height:30px">
             <td></td>
             <td align="right">
-                <font size="4">CF: {{ $studente->tax_code }}</font>
+                <font size="4">CF: {{ $customer->tax_code }}</font>
             </td>
         </tr>
 
-        {{-- DATA / NUMERO --}}
+        {{-- Date and number --}}
         <tr style="height:30px">
             <td align="left">
-                <font size="4"><b>DATA:</b></font> {{ $dataFattura }}
+                <font size="4"><b>DATA:</b></font> {{ $invoiceDate }}
             </td>
             <td></td>
         </tr>
 
         <tr style="height:100px">
             <td align="left" style="vertical-align:top">
-                <font size="4"><b>FATTURA:</b></font> {{ $numeroFattura }}
+                <font size="4"><b>FATTURA:</b></font> {{ $invoiceNumber }}
             </td>
             <td></td>
         </tr>
 
-        {{-- TABELLA --}}
+        {{-- Items --}}
         <tr>
             <td colspan="2">
 
@@ -121,7 +121,7 @@
                         <td align="center"><b>IMPORTO</b></td>
                     </tr>
 
-                    @foreach ($order_items as $row)
+                    @foreach ($orderItems as $row)
                         <tr>
                             <td align="center">{{ $row['description'] }}</td>
                             <td align="center">{{ $row['price'] }} €</td>
@@ -135,7 +135,7 @@
             </td>
         </tr>
 
-        {{-- TOTALI --}}
+        {{-- Totals --}}
         <tr style="height:50px">
             <td></td>
             <td align="right">
@@ -162,7 +162,7 @@
             </td>
         </tr>
 
-        {{-- NOTE --}}
+        {{-- Notes --}}
         <tr>
             <td>
                 <font size="3">Imposta di bollo € 2,00 su originale</font>
@@ -187,7 +187,7 @@
             </td>
         </tr>
 
-        {{-- FOOTER --}}
+        {{-- Footer --}}
         <tr align="center" style="height:200px">
             <td colspan="2"></td>
         </tr>

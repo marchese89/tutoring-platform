@@ -68,9 +68,9 @@ class PurchaseController extends Controller
             return response()->json(['error' => 'Cart empty'], 400);
         }
 
-        $tot = $cart->total() * 100;
+        $amountInCents = $cart->total() * 100;
 
-        $payment = $user->pay($tot);
+        $payment = $user->pay($amountInCents);
 
         return response()->json([
             'clientSecret' => $payment->client_secret
@@ -136,54 +136,70 @@ class PurchaseController extends Controller
 
     public function createExtraInvoice(Request $request)
     {
-        $validated = $request->validate([
-            'inputNome' => ['required', 'string', 'max:255'],
-            'inputCognome' => ['required', 'string', 'max:255'],
-            'inputIndirizzo' => ['required', 'string', 'max:255'],
-            'inputNumeroCivico' => ['required', 'string', 'max:6'],
-            'inputCitta' => ['required', 'string', 'max:255'],
-            'inputProvincia' => ['required', 'string', 'max:2'],
-            'inputCAP' => ['required', 'string', 'max:5'],
-            'inputCF' => ['required', 'string', 'max:16'],
-            'descrizione' => ['required', 'string', 'max:255'],
-            'prezzo' => ['required', 'numeric', 'min:0'],
-            'qta' => ['required', 'numeric', 'min:1'],
-            'note' => ['nullable', 'string', 'max:255'],
-        ]);
+        $validated = $request->validate(
+            [
+                'first_name' => ['required', 'string', 'max:255'],
+                'last_name' => ['required', 'string', 'max:255'],
+                'street' => ['required', 'string', 'max:255'],
+                'house_number' => ['required', 'string', 'max:6'],
+                'city' => ['required', 'string', 'max:255'],
+                'province' => ['required', 'string', 'max:2'],
+                'postal_code' => ['required', 'string', 'max:5'],
+                'tax_code' => ['required', 'string', 'max:16'],
+                'description' => ['required', 'string', 'max:255'],
+                'price' => ['required', 'numeric', 'min:0'],
+                'quantity' => ['required', 'numeric', 'min:1'],
+                'note' => ['nullable', 'string', 'max:255'],
+            ],
+            [],
+            [
+                'first_name' => 'nome',
+                'last_name' => 'cognome',
+                'street' => 'indirizzo',
+                'house_number' => 'numero civico',
+                'city' => 'città',
+                'province' => 'provincia',
+                'postal_code' => 'CAP',
+                'tax_code' => 'codice fiscale',
+                'description' => 'descrizione',
+                'price' => 'prezzo',
+                'quantity' => 'quantità',
+            ]
+        );
 
         $admin = User::where('role', 'admin')->firstOrFail();
         $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
 
         $date = Carbon::now();
         $invoiceNumber = $this->getNextInvoiceNumber();
-        $price = (float) $validated['prezzo'];
-        $quantity = (float) $validated['qta'];
+        $price = (float) $validated['price'];
+        $quantity = (float) $validated['quantity'];
         $total = $price * $quantity;
 
         $html = view('invoices.invoice', [
             'user' => (object) [
-                'name' => $validated['inputNome'],
-                'surname' => $validated['inputCognome'],
+                'name' => $validated['first_name'],
+                'surname' => $validated['last_name'],
             ],
-            'studente' => (object) [
-                'street' => $validated['inputIndirizzo'],
-                'house_number' => $validated['inputNumeroCivico'],
-                'postal_code' => $validated['inputCAP'],
-                'city' => $validated['inputCitta'],
-                'province' => $validated['inputProvincia'],
-                'tax_code' => $validated['inputCF'],
+            'customer' => (object) [
+                'street' => $validated['street'],
+                'house_number' => $validated['house_number'],
+                'postal_code' => $validated['postal_code'],
+                'city' => $validated['city'],
+                'province' => $validated['province'],
+                'tax_code' => $validated['tax_code'],
             ],
             'admin' => $admin,
             'adminData' => $adminData,
-            'order_items' => [[
-                'description' => $validated['descrizione'],
+            'orderItems' => [[
+                'description' => $validated['description'],
                 'price' => $price,
                 'quantity' => $quantity,
                 'total' => $total,
             ]],
             'total' => $total,
-            'dataFattura' => $date->format('d/m/Y'),
-            'numeroFattura' => $invoiceNumber,
+            'invoiceDate' => $date->format('d/m/Y'),
+            'invoiceNumber' => $invoiceNumber,
             'note' => $validated['note'] ?? '',
         ])->render();
 
@@ -208,23 +224,28 @@ class PurchaseController extends Controller
     public function preparePayment(Request $request)
     {
         $request->merge([
-            'prezzo' => str_replace(',', '.', (string) $request->input('prezzo')),
+            'price' => str_replace(',', '.', (string) $request->input('price')),
         ]);
 
-        $validated = $request->validate([
-            'descrizione' => ['required', 'string', 'max:255'],
-            'prezzo' => ['required', 'numeric', 'min:0.01'],
-            'qta' => ['required', 'integer', 'min:1'],
-        ]);
+        $validated = $request->validate(
+            [
+                'description' => ['required', 'string', 'max:255'],
+                'price' => ['required', 'numeric', 'min:0.01'],
+                'quantity' => ['required', 'integer', 'min:1'],
+            ],
+            [],
+            [
+                'description' => 'descrizione',
+                'price' => 'prezzo',
+                'quantity' => 'quantità',
+            ]
+        );
 
-        $prezzo = $validated['prezzo'];
-        $qta = $validated['qta'];
+        session()->put('extra_payment_description', $validated['description']);
+        session()->put('extra_payment_price', $validated['price']);
+        session()->put('extra_payment_quantity', $validated['quantity']);
 
-        session()->put('descrizione', $validated['descrizione']);
-        session()->put('prezzo', $prezzo);
-        session()->put('qta', $qta);
-
-        if (($prezzo * $qta) > 77.47) {
+        if (($validated['price'] * $validated['quantity']) > 77.47) {
             return back()->withError('Importo superiore a 77.47 € (max consentito)');
         }
 
@@ -237,9 +258,11 @@ class PurchaseController extends Controller
 
         $user->createOrGetStripeCustomer();
 
-        $tot = session()->get('prezzo') * session()->get('qta') * 100;
+        $amountInCents = session()->get('extra_payment_price')
+            * session()->get('extra_payment_quantity')
+            * 100;
 
-        $payment = $user->pay($tot);
+        $payment = $user->pay($amountInCents);
 
         return response()->json([
             'clientSecret' => $payment->client_secret

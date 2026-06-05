@@ -143,28 +143,29 @@ class AccountController extends Controller
         return redirect()->route('admin.account.vat-number');
     }
 
-    // =========================
-    // INDIRIZZO
-    // =========================
     public function updateAddress(Request $request)
     {
-        $request->validate([
-            'inputIndirizzo' => 'required|string|max:255',
-            'inputNumeroCivico' => 'required|string|max:10',
-            'inputCitta' => 'required|string|max:100',
-            'inputProvincia' => 'required|string|max:100',
-            'inputCAP' => 'required|string|max:10'
-        ]);
+        $validated = $request->validate(
+            [
+                'street' => 'required|string|max:255',
+                'house_number' => 'required|string|max:10',
+                'city' => 'required|string|max:100',
+                'province' => 'required|string|max:100',
+                'postal_code' => 'required|string|max:10',
+            ],
+            [],
+            [
+                'street' => 'indirizzo',
+                'house_number' => 'numero civico',
+                'city' => 'città',
+                'province' => 'provincia',
+                'postal_code' => 'CAP',
+            ]
+        );
 
         $admin = auth()->user()->admin;
 
-        $admin->street = $request->inputIndirizzo;
-        $admin->house_number = $request->inputNumeroCivico;
-        $admin->city = $request->inputCitta;
-        $admin->province = $request->inputProvincia;
-        $admin->postal_code = $request->inputCAP;
-
-        $admin->save();
+        $admin->update($validated);
 
         return redirect()->route('admin.account.address');
     }

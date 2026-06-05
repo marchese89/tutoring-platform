@@ -15,38 +15,38 @@
 
                 <x-ui.form-field
                     wrapper-class="col-md-5"
-                    name="inputIndirizzo"
+                    name="street"
                     label="Indirizzo (via/piazza)"
                     maxlength="255"
-                    :value="old('inputIndirizzo', auth()->user()->admin->street)" />
+                    :value="old('street', auth()->user()->admin->street)" />
 
                 <x-ui.form-field
                     wrapper-class="col-md-2"
-                    name="inputNumeroCivico"
+                    name="house_number"
                     label="N. Civico"
                     maxlength="6"
-                    :value="old('inputNumeroCivico', auth()->user()->admin->house_number)" />
+                    :value="old('house_number', auth()->user()->admin->house_number)" />
 
                 <x-ui.form-field
                     wrapper-class="col-md-3"
-                    name="inputCitta"
+                    name="city"
                     label="Città"
                     maxlength="255"
-                    :value="old('inputCitta', auth()->user()->admin->city)" />
+                    :value="old('city', auth()->user()->admin->city)" />
 
                 <x-ui.form-field
                     wrapper-class="col-md-1"
-                    name="inputProvincia"
+                    name="province"
                     label="Prov."
                     maxlength="2"
-                    :value="old('inputProvincia', auth()->user()->admin->province)" />
+                    :value="old('province', auth()->user()->admin->province)" />
 
                 <x-ui.form-field
                     wrapper-class="col-md-1"
-                    name="inputCAP"
+                    name="postal_code"
                     label="CAP"
                     maxlength="5"
-                    :value="old('inputCAP', auth()->user()->admin->postal_code)" />
+                    :value="old('postal_code', auth()->user()->admin->postal_code)" />
 
                 <div class="col-12 pt-2">
                     <x-ui.primary-button type="submit">

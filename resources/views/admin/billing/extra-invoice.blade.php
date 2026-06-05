@@ -23,175 +23,175 @@
 
                             @csrf
 
-                            {{-- NOME --}}
+                            {{-- First name --}}
                             <div class="col-md-6">
 
                                 <label class="form-label fw-semibold">
                                     Nome
                                 </label>
 
-                                <input type="text" class="form-control @error('inputNome') is-invalid @enderror"
-                                    id="inputNome" name="inputNome" maxlength="255" value="{{ old('inputNome') }}">
-                                @error('inputNome')
+                                <input type="text" class="form-control @error('first_name') is-invalid @enderror"
+                                    id="first_name" name="first_name" maxlength="255" value="{{ old('first_name') }}">
+                                @error('first_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- COGNOME --}}
+                            {{-- Last name --}}
                             <div class="col-md-6">
 
                                 <label class="form-label fw-semibold">
                                     Cognome
                                 </label>
 
-                                <input type="text" class="form-control @error('inputCognome') is-invalid @enderror"
-                                    id="inputCognome" name="inputCognome" maxlength="255" value="{{ old('inputCognome') }}">
-                                @error('inputCognome')
+                                <input type="text" class="form-control @error('last_name') is-invalid @enderror"
+                                    id="last_name" name="last_name" maxlength="255" value="{{ old('last_name') }}">
+                                @error('last_name')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- INDIRIZZO --}}
+                            {{-- Street --}}
                             <div class="col-md-5">
 
                                 <label class="form-label fw-semibold">
                                     Indirizzo
                                 </label>
 
-                                <input type="text" class="form-control @error('inputIndirizzo') is-invalid @enderror"
-                                    id="inputIndirizzo" name="inputIndirizzo" maxlength="255"
-                                    value="{{ old('inputIndirizzo') }}">
-                                @error('inputIndirizzo')
+                                <input type="text" class="form-control @error('street') is-invalid @enderror"
+                                    id="street" name="street" maxlength="255"
+                                    value="{{ old('street') }}">
+                                @error('street')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- CIVICO --}}
+                            {{-- House number --}}
                             <div class="col-md-2">
 
                                 <label class="form-label fw-semibold">
                                     N. Civico
                                 </label>
 
-                                <input type="text" class="form-control @error('inputNumeroCivico') is-invalid @enderror"
-                                    id="inputNumeroCivico" name="inputNumeroCivico" maxlength="6"
-                                    value="{{ old('inputNumeroCivico') }}">
-                                @error('inputNumeroCivico')
+                                <input type="text" class="form-control @error('house_number') is-invalid @enderror"
+                                    id="house_number" name="house_number" maxlength="6"
+                                    value="{{ old('house_number') }}">
+                                @error('house_number')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- CITTA --}}
+                            {{-- City --}}
                             <div class="col-md-3">
 
                                 <label class="form-label fw-semibold">
                                     Città
                                 </label>
 
-                                <input type="text" class="form-control @error('inputCitta') is-invalid @enderror"
-                                    id="inputCitta" name="inputCitta" maxlength="255" value="{{ old('inputCitta') }}">
-                                @error('inputCitta')
+                                <input type="text" class="form-control @error('city') is-invalid @enderror"
+                                    id="city" name="city" maxlength="255" value="{{ old('city') }}">
+                                @error('city')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- PROVINCIA --}}
+                            {{-- Province --}}
                             <div class="col-md-2">
 
                                 <label class="form-label fw-semibold">
                                     Provincia
                                 </label>
 
-                                <input type="text" class="form-control @error('inputProvincia') is-invalid @enderror"
-                                    id="inputProvincia" name="inputProvincia" maxlength="2"
-                                    value="{{ old('inputProvincia') }}">
-                                @error('inputProvincia')
+                                <input type="text" class="form-control @error('province') is-invalid @enderror"
+                                    id="province" name="province" maxlength="2"
+                                    value="{{ old('province') }}">
+                                @error('province')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- CAP --}}
+                            {{-- Postal code --}}
                             <div class="col-md-2">
 
                                 <label class="form-label fw-semibold">
                                     CAP
                                 </label>
 
-                                <input type="text" class="form-control @error('inputCAP') is-invalid @enderror"
-                                    id="inputCAP" name="inputCAP" maxlength="5" value="{{ old('inputCAP') }}">
-                                @error('inputCAP')
+                                <input type="text" class="form-control @error('postal_code') is-invalid @enderror"
+                                    id="postal_code" name="postal_code" maxlength="5" value="{{ old('postal_code') }}">
+                                @error('postal_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- CODICE FISCALE --}}
+                            {{-- Tax code --}}
                             <div class="col-md-4">
 
                                 <label class="form-label fw-semibold">
                                     Codice Fiscale
                                 </label>
 
-                                <input type="text" class="form-control @error('inputCF') is-invalid @enderror"
-                                    id="inputCF" name="inputCF" maxlength="16" value="{{ old('inputCF') }}">
-                                @error('inputCF')
+                                <input type="text" class="form-control @error('tax_code') is-invalid @enderror"
+                                    id="tax_code" name="tax_code" maxlength="16" value="{{ old('tax_code') }}">
+                                @error('tax_code')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- DESCRIZIONE --}}
+                            {{-- Description --}}
                             <div class="col-md-8">
 
                                 <label class="form-label fw-semibold">
                                     Descrizione
                                 </label>
 
-                                <input type="text" class="form-control @error('descrizione') is-invalid @enderror"
-                                    id="descrizione" name="descrizione" maxlength="255" value="{{ old('descrizione') }}">
-                                @error('descrizione')
+                                <input type="text" class="form-control @error('description') is-invalid @enderror"
+                                    id="description" name="description" maxlength="255" value="{{ old('description') }}">
+                                @error('description')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- PREZZO --}}
+                            {{-- Price --}}
                             <div class="col-md-2">
 
                                 <label class="form-label fw-semibold">
                                     Prezzo
                                 </label>
 
-                                <input type="text" class="form-control @error('prezzo') is-invalid @enderror"
-                                    id="prezzo" name="prezzo" maxlength="12" value="{{ old('prezzo') }}">
-                                @error('prezzo')
+                                <input type="text" class="form-control @error('price') is-invalid @enderror"
+                                    id="price" name="price" maxlength="12" value="{{ old('price') }}">
+                                @error('price')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- QUANTITA --}}
+                            {{-- Quantity --}}
                             <div class="col-md-2">
 
                                 <label class="form-label fw-semibold">
                                     Qta
                                 </label>
 
-                                <input type="text" class="form-control @error('qta') is-invalid @enderror" id="qta"
-                                    name="qta" maxlength="5" value="{{ old('qta') }}">
-                                @error('qta')
+                                <input type="text" class="form-control @error('quantity') is-invalid @enderror" id="quantity"
+                                    name="quantity" maxlength="5" value="{{ old('quantity') }}">
+                                @error('quantity')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
 
                             </div>
 
-                            {{-- NOTE --}}
+                            {{-- Notes --}}
                             <div class="col-12">
 
                                 <label class="form-label fw-semibold">
@@ -206,7 +206,7 @@
 
                             </div>
 
-                            {{-- SUBMIT --}}
+                            {{-- Submit --}}
                             <div class="col-12 text-center mt-4">
 
                                 <button type="submit" class="btn btn-primary rounded-pill px-5">
