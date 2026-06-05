@@ -9,12 +9,12 @@ use App\Models\LessonRequest;
 use App\Models\User;
 use App\Mail\NewStudentRequestMail;
 use App\Mail\LessonRequestFulfilledMail;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\Student;
 use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Support\PrivateUploadStorage;
 use App\Support\UploadRules;
 
 class LessonRequestController extends Controller
@@ -140,36 +140,29 @@ class LessonRequestController extends Controller
         ));
     }
 
-    private function deleteFile($path = null)
-    {
-        !empty($path) && Storage::disk('private')->delete($path);
-    }
-
-    private function saveFile($file, $path)
-    {
-        $name = $file->store($path, 'private');
-        return $name;
-    }
-
     public function storeRequestFile(Request $request)
     {
         $request->validate([
             'file' => UploadRules::pdf(),
         ]);
 
-        $this->deleteFile($request->session()->get('uploaded_lesson_request_file'));
-
-        $file = $request->file('file');
-        $name = $this->saveFile($file, 'lesson_requests/request_files');
+        $oldPath = $request->session()->get('uploaded_lesson_request_file');
+        $name = PrivateUploadStorage::store(
+            $request->file('file'),
+            'lesson_requests/request_files'
+        );
 
         $request->session()->put('uploaded_lesson_request_file', $name);
+        PrivateUploadStorage::delete($oldPath);
 
         return redirect()->route('lesson-requests.create');
     }
 
     public function destroyRequestFile(Request $request)
     {
-        $this->deleteFile($request->session()->get('uploaded_lesson_request_file'));
+        PrivateUploadStorage::delete(
+            $request->session()->get('uploaded_lesson_request_file')
+        );
         $request->session()->forget('uploaded_lesson_request_file');
 
         return redirect()->route('lesson-requests.create');
@@ -213,13 +206,17 @@ class LessonRequestController extends Controller
 
         $lessonRequest = LessonRequest::findOrFail($id);
 
-        $this->deleteFile($lessonRequest->solution_file);
-
-        $path = $this->saveFile($request->file('file'), 'lesson_requests/solution_files');
+        $oldPath = $lessonRequest->solution_file;
+        $path = PrivateUploadStorage::store(
+            $request->file('file'),
+            'lesson_requests/solution_files'
+        );
 
         $lessonRequest->update([
             'solution_file' => $path
         ]);
+
+        PrivateUploadStorage::delete($oldPath);
 
         return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
@@ -228,7 +225,7 @@ class LessonRequestController extends Controller
     {
         $lessonRequest = LessonRequest::findOrFail($id);
 
-        $this->deleteFile($lessonRequest->solution_file);
+        PrivateUploadStorage::delete($lessonRequest->solution_file);
 
         $lessonRequest->update([
             'solution_file' => null

@@ -29,13 +29,14 @@ class AccountController extends Controller
 
         $admin = auth()->user()->admin;
 
-        PublicUploadStorage::delete($admin->photo_path);
-
+        $oldPath = $admin->photo_path;
         $admin->photo_path = PublicUploadStorage::store(
             $request->file('file'),
             'admin/photos'
         );
         $admin->save();
+
+        PublicUploadStorage::delete($oldPath);
 
         return redirect()->route('admin.account.photo');
     }
@@ -49,13 +50,14 @@ class AccountController extends Controller
 
         $certificate = Certificate::findOrFail($request->id);
 
-        PublicUploadStorage::delete($certificate->file_path);
-
+        $oldPath = $certificate->file_path;
         $certificate->file_path = PublicUploadStorage::store(
             $request->file('file'),
             'certificates'
         );
         $certificate->save();
+
+        PublicUploadStorage::delete($oldPath);
 
         return redirect()->route('admin.account.certificates.index');
     }
@@ -66,18 +68,15 @@ class AccountController extends Controller
             'file' => UploadRules::pdf(),
         ]);
 
-        if ($request->session()->has('uploaded_certificate_file')) {
-            PublicUploadStorage::delete(
-                $request->session()->get('uploaded_certificate_file')
-            );
-        }
-
+        $oldPath = $request->session()->get('uploaded_certificate_file');
         $path = PublicUploadStorage::store(
             $request->file('file'),
             'certificates'
         );
 
         $request->session()->put('uploaded_certificate_file', $path);
+
+        PublicUploadStorage::delete($oldPath);
 
         return redirect()->route('admin.account.certificates.create');
     }

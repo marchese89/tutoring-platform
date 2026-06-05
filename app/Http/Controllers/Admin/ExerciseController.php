@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Exercise;
+use App\Support\PrivateUploadStorage;
 use App\Support\UploadRules;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class ExerciseController extends Controller
 {
@@ -41,14 +41,14 @@ class ExerciseController extends Controller
             'prompt_file' => UploadRules::pdf(),
         ]);
 
-        if ($oldPath = $request->session()->pull('uploaded_exercise_prompt')) {
-            Storage::disk('private')->delete($oldPath);
-        }
-
-        $path = $request->file('prompt_file')
-            ->store('exercises/trace', 'private');
+        $oldPath = $request->session()->get('uploaded_exercise_prompt');
+        $path = PrivateUploadStorage::store(
+            $request->file('prompt_file'),
+            'exercises/trace'
+        );
 
         $request->session()->put('uploaded_exercise_prompt', $path);
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
@@ -56,7 +56,7 @@ class ExerciseController extends Controller
     public function clearTraceSession(Request $request)
     {
         if ($path = $request->session()->pull('uploaded_exercise_prompt')) {
-            Storage::disk('private')->delete($path);
+            PrivateUploadStorage::delete($path);
         }
 
         return back();
@@ -68,14 +68,14 @@ class ExerciseController extends Controller
             'solution_file' => UploadRules::pdf(),
         ]);
 
-        if ($oldPath = $request->session()->pull('uploaded_exercise_solution')) {
-            Storage::disk('private')->delete($oldPath);
-        }
-
-        $path = $request->file('solution_file')
-            ->store('exercises/execution', 'private');
+        $oldPath = $request->session()->get('uploaded_exercise_solution');
+        $path = PrivateUploadStorage::store(
+            $request->file('solution_file'),
+            'exercises/execution'
+        );
 
         $request->session()->put('uploaded_exercise_solution', $path);
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
@@ -83,7 +83,7 @@ class ExerciseController extends Controller
     public function clearExecutionSession(Request $request)
     {
         if ($path = $request->session()->pull('uploaded_exercise_solution')) {
-            Storage::disk('private')->delete($path);
+            PrivateUploadStorage::delete($path);
         }
 
         return back();
@@ -124,13 +124,10 @@ class ExerciseController extends Controller
     {
         $exercise = Exercise::findOrFail($id);
 
-        if ($exercise->prompt_file && Storage::disk('private')->exists($exercise->prompt_file)) {
-            Storage::disk('private')->delete($exercise->prompt_file);
-        }
-
-        if ($exercise->solution_file && Storage::disk('private')->exists($exercise->solution_file)) {
-            Storage::disk('private')->delete($exercise->solution_file);
-        }
+        PrivateUploadStorage::delete([
+            $exercise->prompt_file,
+            $exercise->solution_file,
+        ]);
 
         $exercise->delete();
 
@@ -145,12 +142,15 @@ class ExerciseController extends Controller
 
         $exercise = Exercise::findOrFail($id);
 
-        Storage::disk('private')->delete($exercise->prompt_file);
-
+        $oldPath = $exercise->prompt_file;
         $exercise->update([
-            'prompt_file' => $request->file('prompt_file')
-                ->store('exercises/trace', 'private'),
+            'prompt_file' => PrivateUploadStorage::store(
+                $request->file('prompt_file'),
+                'exercises/trace'
+            ),
         ]);
+
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
@@ -163,12 +163,15 @@ class ExerciseController extends Controller
 
         $exercise = Exercise::findOrFail($id);
 
-        Storage::disk('private')->delete($exercise->solution_file);
-
+        $oldPath = $exercise->solution_file;
         $exercise->update([
-            'solution_file' => $request->file('solution_file')
-                ->store('exercises/execution', 'private'),
+            'solution_file' => PrivateUploadStorage::store(
+                $request->file('solution_file'),
+                'exercises/execution'
+            ),
         ]);
+
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }

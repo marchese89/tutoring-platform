@@ -5,9 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Support\PrivateUploadStorage;
 use App\Support\UploadRules;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class LessonController extends Controller
 {
@@ -48,14 +48,14 @@ class LessonController extends Controller
             'presentation_file' => UploadRules::pdf(),
         ]);
 
-        if ($oldPath = $request->session()->pull('uploaded_lesson_presentation')) {
-            Storage::disk('private')->delete($oldPath);
-        }
-
-        $path = $request->file('presentation_file')
-            ->store('lessons/presentations', 'private');
+        $oldPath = $request->session()->get('uploaded_lesson_presentation');
+        $path = PrivateUploadStorage::store(
+            $request->file('presentation_file'),
+            'lessons/presentations'
+        );
 
         $request->session()->put('uploaded_lesson_presentation', $path);
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
@@ -63,7 +63,7 @@ class LessonController extends Controller
     public function deletePresentationSession(Request $request)
     {
         if ($path = $request->session()->pull('uploaded_lesson_presentation')) {
-            Storage::disk('private')->delete($path);
+            PrivateUploadStorage::delete($path);
         }
 
         return back();
@@ -75,14 +75,14 @@ class LessonController extends Controller
             'content_file' => UploadRules::pdf(),
         ]);
 
-        if ($oldPath = $request->session()->pull('uploaded_lesson_content')) {
-            Storage::disk('private')->delete($oldPath);
-        }
-
-        $path = $request->file('content_file')
-            ->store('lessons/files', 'private');
+        $oldPath = $request->session()->get('uploaded_lesson_content');
+        $path = PrivateUploadStorage::store(
+            $request->file('content_file'),
+            'lessons/files'
+        );
 
         $request->session()->put('uploaded_lesson_content', $path);
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
@@ -90,7 +90,7 @@ class LessonController extends Controller
     public function deleteLessonSession(Request $request)
     {
         if ($path = $request->session()->pull('uploaded_lesson_content')) {
-            Storage::disk('private')->delete($path);
+            PrivateUploadStorage::delete($path);
         }
 
         return back();
@@ -134,7 +134,7 @@ class LessonController extends Controller
     {
         $lesson = Lesson::findOrFail($id);
 
-        Storage::disk('private')->delete([
+        PrivateUploadStorage::delete([
             $lesson->presentation_file,
             $lesson->content_file,
         ]);
@@ -153,11 +153,14 @@ class LessonController extends Controller
 
         $lesson = Lesson::findOrFail($id);
 
-        Storage::disk('private')->delete($lesson->presentation_file);
-
-        $lesson->presentation_file = $request->file('presentation_file')
-            ->store('lessons/presentations', 'private');
+        $oldPath = $lesson->presentation_file;
+        $lesson->presentation_file = PrivateUploadStorage::store(
+            $request->file('presentation_file'),
+            'lessons/presentations'
+        );
         $lesson->save();
+
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
@@ -170,11 +173,14 @@ class LessonController extends Controller
 
         $lesson = Lesson::findOrFail($id);
 
-        Storage::disk('private')->delete($lesson->content_file);
-
-        $lesson->content_file = $request->file('content_file')
-            ->store('lessons/files', 'private');
+        $oldPath = $lesson->content_file;
+        $lesson->content_file = PrivateUploadStorage::store(
+            $request->file('content_file'),
+            'lessons/files'
+        );
         $lesson->save();
+
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
