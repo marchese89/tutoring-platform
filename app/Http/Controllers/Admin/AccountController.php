@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Certificate;
+use App\Support\PublicUploadStorage;
 use App\Support\UploadRules;
 
 class AccountController extends Controller
@@ -28,21 +29,12 @@ class AccountController extends Controller
 
         $admin = auth()->user()->admin;
 
-        if ($admin->photo_path) {
-            $oldPath = public_path($admin->photo_path);
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
-        }
+        PublicUploadStorage::delete($admin->photo_path);
 
-        $file = $request->file('file');
-        $name = uniqid() . '.' . $file->getClientOriginalExtension();
-
-        $file->move(public_path('files/photo_admin'), $name);
-
-        $path = '/files/photo_admin/' . $name;
-
-        $admin->photo_path = $path;
+        $admin->photo_path = PublicUploadStorage::store(
+            $request->file('file'),
+            'admin/photos'
+        );
         $admin->save();
 
         return redirect()->route('admin.account.photo');
@@ -57,21 +49,12 @@ class AccountController extends Controller
 
         $certificate = Certificate::findOrFail($request->id);
 
-        if ($certificate->file_path) {
-            $oldPath = public_path($certificate->file_path);
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
-        }
+        PublicUploadStorage::delete($certificate->file_path);
 
-        $file = $request->file('file');
-        $name = uniqid() . '.' . $file->getClientOriginalExtension();
-
-        $file->move(public_path('files/cert_admin'), $name);
-
-        $path = '/files/cert_admin/' . $name;
-
-        $certificate->file_path = $path;
+        $certificate->file_path = PublicUploadStorage::store(
+            $request->file('file'),
+            'certificates'
+        );
         $certificate->save();
 
         return redirect()->route('admin.account.certificates.index');
@@ -84,18 +67,15 @@ class AccountController extends Controller
         ]);
 
         if ($request->session()->has('uploaded_certificate_file')) {
-            $oldPath = public_path($request->session()->get('uploaded_certificate_file'));
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
+            PublicUploadStorage::delete(
+                $request->session()->get('uploaded_certificate_file')
+            );
         }
 
-        $file = $request->file('file');
-        $name = uniqid() . '.' . $file->getClientOriginalExtension();
-
-        $file->move(public_path('files/cert_admin'), $name);
-
-        $path = '/files/cert_admin/' . $name;
+        $path = PublicUploadStorage::store(
+            $request->file('file'),
+            'certificates'
+        );
 
         $request->session()->put('uploaded_certificate_file', $path);
 
@@ -164,12 +144,7 @@ class AccountController extends Controller
 
         $certificate = Certificate::findOrFail($request->id);
 
-        if ($certificate->file_path) {
-            $oldPath = public_path($certificate->file_path);
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
-        }
+        PublicUploadStorage::delete($certificate->file_path);
 
         $certificate->delete();
 
@@ -179,10 +154,9 @@ class AccountController extends Controller
     public function destroyCertificateUpload(Request $request)
     {
         if ($request->session()->has('uploaded_certificate_file')) {
-            $oldPath = public_path($request->session()->get('uploaded_certificate_file'));
-            if (file_exists($oldPath)) {
-                unlink($oldPath);
-            }
+            PublicUploadStorage::delete(
+                $request->session()->get('uploaded_certificate_file')
+            );
             $request->session()->forget('uploaded_certificate_file');
         }
 

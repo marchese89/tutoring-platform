@@ -33,7 +33,7 @@
         {{-- Profile --}}
         <div class="row align-items-center mb-5">
             <div class="col-md-5">
-                <img src=".{{ $admin->photo_path }}" class="img-fluid rounded-3 shadow-sm">
+                <img src="{{ $admin->photo_path }}" class="img-fluid rounded-3 shadow-sm">
             </div>
 
             <div class="col-md-7">

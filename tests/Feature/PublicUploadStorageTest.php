@@ -1,0 +1,97 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Admin;
+use App\Models\Certificate;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
+use Tests\TestCase;
+
+class PublicUploadStorageTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_admin_photo_uses_generated_image_extension(): void
+    {
+        Storage::fake('public');
+        $adminUser = $this->createAdmin();
+
+        $response = $this->actingAs($adminUser)
+            ->post(route('admin.account.photo.update'), [
+                'file' => UploadedFile::fake()->image('profile.jpg'),
+            ]);
+
+        $response->assertRedirect(route('admin.account.photo'));
+
+        $photoPath = $adminUser->admin->fresh()->photo_path;
+
+        $this->assertStringStartsWith('/storage/admin/photos/', $photoPath);
+        $this->assertStringNotContainsString('profile.jpg', $photoPath);
+        $this->assertStringEndsWith('.jpg', $photoPath);
+        Storage::disk('public')->assertExists(substr($photoPath, 9));
+    }
+
+    public function test_certificate_uses_generated_pdf_extension(): void
+    {
+        Storage::fake('public');
+        $adminUser = $this->createAdmin();
+
+        $response = $this->actingAs($adminUser)
+            ->post(route('admin.account.certificates.uploads.store'), [
+                'file' => UploadedFile::fake()->create(
+                    'certificate.pdf',
+                    10,
+                    'application/pdf'
+                ),
+            ]);
+
+        $response->assertRedirect(route('admin.account.certificates.create'));
+
+        $certificatePath = session('uploaded_certificate_file');
+
+        $this->assertStringStartsWith('/storage/certificates/', $certificatePath);
+        $this->assertStringNotContainsString('certificate.pdf', $certificatePath);
+        $this->assertStringEndsWith('.pdf', $certificatePath);
+        Storage::disk('public')->assertExists(substr($certificatePath, 9));
+    }
+
+    public function test_replacing_certificate_deletes_previous_public_file(): void
+    {
+        Storage::fake('public');
+        Storage::disk('public')->put('certificates/old.pdf', 'old');
+        $adminUser = $this->createAdmin();
+        $certificate = Certificate::create([
+            'name' => 'Existing certificate',
+            'file_path' => '/storage/certificates/old.pdf',
+        ]);
+
+        $response = $this->actingAs($adminUser)
+            ->post(route('admin.account.certificates.file.update'), [
+                'id' => $certificate->id,
+                'file' => UploadedFile::fake()->create(
+                    'replacement.pdf',
+                    10,
+                    'application/pdf'
+                ),
+            ]);
+
+        $response->assertRedirect(route('admin.account.certificates.index'));
+        Storage::disk('public')->assertMissing('certificates/old.pdf');
+
+        $newPath = $certificate->fresh()->file_path;
+
+        Storage::disk('public')->assertExists(substr($newPath, 9));
+    }
+
+    private function createAdmin(): User
+    {
+        $user = User::factory()->create(['role' => 'admin']);
+
+        Admin::create(['user_id' => $user->id]);
+
+        return $user;
+    }
+}
