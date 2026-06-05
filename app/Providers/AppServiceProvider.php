@@ -2,8 +2,9 @@
 
 namespace App\Providers;
 
+use App\Payments\CashierPaymentGateway;
+use App\Payments\PaymentGateway;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,14 +13,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(PaymentGateway::class, CashierPaymentGateway::class);
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
-    {
-
-    }
+    public function boot(): void {}
 }

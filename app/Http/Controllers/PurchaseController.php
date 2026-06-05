@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Enums\PaymentPurpose;
 use App\Http\Utility\Cart;
 use App\Http\Utility\CartItem;
-use App\Models\Exercise;
-use App\Models\Lesson;
-use App\Models\Student;
-use App\Models\Admin;
-use App\Models\User;
-use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
-use App\Services\OrderService;
-use App\Services\InvoiceService;
 use App\Mail\OrderCompletedMail;
-use App\Models\Order;
+use App\Models\Admin;
+use App\Models\Exercise;
 use App\Models\Invoice;
+use App\Models\Lesson;
+use App\Models\Order;
+use App\Models\Student;
+use App\Models\User;
+use App\Services\InvoiceService;
+use App\Services\OrderService;
+use App\Services\PaymentService;
+use Carbon\Carbon;
+use Dompdf\Dompdf;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
-use Dompdf\Dompdf;
 
 class PurchaseController extends Controller
 {
@@ -56,24 +58,31 @@ class PurchaseController extends Controller
         return redirect()->route('cart.show');
     }
 
-    public function processPayment(Request $request)
+    public function processPayment(Request $request, PaymentService $payments)
     {
         $user = $request->user();
-
-        $user->createOrGetStripeCustomer();
-
         $cart = $this->cart($request);
 
         if ($cart->count() === 0) {
             return response()->json(['error' => 'Cart empty'], 400);
         }
 
-        $amountInCents = $cart->total() * 100;
+        $items = array_map(fn (CartItem $item) => [
+            'id' => $item->id(),
+            'type' => $item->type(),
+            'price' => $item->price(),
+            'name' => $item->name(),
+        ], $cart->items());
 
-        $payment = $user->pay($amountInCents);
+        $payment = $payments->createIntent(
+            $user,
+            PaymentPurpose::CHECKOUT,
+            $cart->total() * 100,
+            ['items' => $items]
+        );
 
         return response()->json([
-            'clientSecret' => $payment->client_secret
+            'clientSecret' => $payment->clientSecret,
         ]);
     }
 
@@ -203,7 +212,7 @@ class PurchaseController extends Controller
             'note' => $validated['note'] ?? '',
         ])->render();
 
-        $dompdf = new Dompdf();
+        $dompdf = new Dompdf;
         $dompdf->loadHtml($html);
         $dompdf->setPaper('A4', 'portrait');
         $dompdf->render();
@@ -252,20 +261,30 @@ class PurchaseController extends Controller
         return redirect()->route('payment.pay');
     }
 
-    public function createExtraPaymentIntent(Request $request)
+    public function createExtraPaymentIntent(Request $request, PaymentService $payments)
     {
         $user = $request->user();
+        $description = $request->session()->get('extra_payment_description');
+        $price = $request->session()->get('extra_payment_price');
+        $quantity = $request->session()->get('extra_payment_quantity');
 
-        $user->createOrGetStripeCustomer();
+        if (! $description || ! is_numeric($price) || ! is_numeric($quantity)) {
+            return response()->json(['error' => 'Extra payment details are missing.'], 422);
+        }
 
-        $amountInCents = session()->get('extra_payment_price')
-            * session()->get('extra_payment_quantity')
-            * 100;
-
-        $payment = $user->pay($amountInCents);
+        $payment = $payments->createIntent(
+            $user,
+            PaymentPurpose::EXTRA,
+            (int) round(((float) $price) * ((int) $quantity) * 100),
+            [
+                'description' => $description,
+                'unit_price' => (float) $price,
+                'quantity' => (int) $quantity,
+            ]
+        );
 
         return response()->json([
-            'clientSecret' => $payment->client_secret
+            'clientSecret' => $payment->clientSecret,
         ]);
     }
 
@@ -273,7 +292,7 @@ class PurchaseController extends Controller
     {
         $lastInvoice = Invoice::orderByDesc('issued_at')->orderByDesc('number')->first();
 
-        if (!$lastInvoice || !$lastInvoice->issued_at) {
+        if (! $lastInvoice || ! $lastInvoice->issued_at) {
             return 1;
         }
 
@@ -288,8 +307,8 @@ class PurchaseController extends Controller
     {
         $cart = $request->session()->get('cart');
 
-        if (!$cart instanceof Cart) {
-            $cart = new Cart();
+        if (! $cart instanceof Cart) {
+            $cart = new Cart;
             $request->session()->put('cart', $cart);
         }
 
