@@ -101,3 +101,31 @@ Planned branch: `feature/localization-foundation`
 
 Planned branch: `ui/global-consistency`
 
+- Audit all public, student, admin, authentication, email, and invoice views.
+- Complete adoption of shared page, table, form, feedback, and upload components.
+- Remove page-specific inline styling where a shared pattern applies.
+- Consolidate duplicated checkout and payment JavaScript.
+- Verify responsive behavior and primary workflows in the browser.
+
+### 10. Dependencies and release verification
+
+Planned branch: `maintenance/dependency-upgrade`
+
+- Upgrade Laravel and Symfony packages to supported, non-vulnerable versions.
+- Run Composer audit with no known advisories.
+- Run the complete automated suite and formatting checks.
+- Perform a seeded installation and end-to-end browser verification.
+- Update setup and testing documentation.
+
+## Current progress
+
+- Current branch: `security/payment-and-access-foundation`
+- Base commit: `6d2c958 Complete internal English cleanup`
+- Completed commits:
+  - `363f948 Document refactoring roadmap`
+  - `630e939 Use safe HTTP methods for state changes`
+- Verification: PHP lint and route registration pass; the full suite passes with
+  6 tests and 6 assertions.
+- Known baseline issue: Pint fails across about 50 files.
+- Next action: introduce persisted payment state and tests for server-side Stripe
+  verification and idempotent checkout completion.
