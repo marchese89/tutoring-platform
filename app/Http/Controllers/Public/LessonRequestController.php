@@ -15,6 +15,7 @@ use App\Models\ChatMessage;
 use App\Models\Student;
 use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Support\UploadRules;
 
 class LessonRequestController extends Controller
 {
@@ -153,7 +154,7 @@ class LessonRequestController extends Controller
     public function storeRequestFile(Request $request)
     {
         $request->validate([
-            'file' => ['required', 'file'],
+            'file' => UploadRules::pdf(),
         ]);
 
         $this->deleteFile($request->session()->get('uploaded_lesson_request_file'));
@@ -207,7 +208,7 @@ class LessonRequestController extends Controller
     public function storeSolution(Request $request, int $id)
     {
         $request->validate([
-            'file' => ['required', 'file'],
+            'file' => UploadRules::pdf(),
         ]);
 
         $lessonRequest = LessonRequest::findOrFail($id);

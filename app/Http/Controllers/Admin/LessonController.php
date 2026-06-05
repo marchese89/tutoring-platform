@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Lesson;
+use App\Support\UploadRules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -44,7 +45,7 @@ class LessonController extends Controller
     public function uploadPresentation(Request $request)
     {
         $request->validate([
-            'presentation_file' => 'required|file',
+            'presentation_file' => UploadRules::pdf(),
         ]);
 
         if ($oldPath = $request->session()->pull('uploaded_lesson_presentation')) {
@@ -71,7 +72,7 @@ class LessonController extends Controller
     public function uploadLessonFile(Request $request)
     {
         $request->validate([
-            'content_file' => 'required|file',
+            'content_file' => UploadRules::pdf(),
         ]);
 
         if ($oldPath = $request->session()->pull('uploaded_lesson_content')) {
@@ -147,7 +148,7 @@ class LessonController extends Controller
     public function updatePresentation(Request $request, int $id)
     {
         $request->validate([
-            'presentation_file' => 'required|file',
+            'presentation_file' => UploadRules::pdf(),
         ]);
 
         $lesson = Lesson::findOrFail($id);
@@ -164,7 +165,7 @@ class LessonController extends Controller
     public function updateLessonFile(Request $request, int $id)
     {
         $request->validate([
-            'content_file' => 'required|file',
+            'content_file' => UploadRules::pdf(),
         ]);
 
         $lesson = Lesson::findOrFail($id);

@@ -9,6 +9,7 @@ use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Certificate;
+use App\Support\UploadRules;
 
 class AccountController extends Controller
 {
@@ -22,7 +23,7 @@ class AccountController extends Controller
     public function updatePhoto(Request $request)
     {
         $request->validate([
-            'file' => 'required|image'
+            'file' => UploadRules::image(),
         ]);
 
         $admin = auth()->user()->admin;
@@ -51,7 +52,7 @@ class AccountController extends Controller
     {
         $request->validate([
             'id' => 'required|exists:certificates,id',
-            'file' => 'required|file'
+            'file' => UploadRules::pdf(),
         ]);
 
         $certificate = Certificate::findOrFail($request->id);
@@ -79,7 +80,7 @@ class AccountController extends Controller
     public function storeCertificateUpload(Request $request)
     {
         $request->validate([
-            'file' => 'required|file'
+            'file' => UploadRules::pdf(),
         ]);
 
         if ($request->session()->has('uploaded_certificate_file')) {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Course;
 use App\Models\Exercise;
+use App\Support\UploadRules;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -37,7 +38,7 @@ class ExerciseController extends Controller
     public function uploadTrace(Request $request)
     {
         $request->validate([
-            'prompt_file' => 'required|file',
+            'prompt_file' => UploadRules::pdf(),
         ]);
 
         if ($oldPath = $request->session()->pull('uploaded_exercise_prompt')) {
@@ -64,7 +65,7 @@ class ExerciseController extends Controller
     public function uploadExecution(Request $request)
     {
         $request->validate([
-            'solution_file' => 'required|file',
+            'solution_file' => UploadRules::pdf(),
         ]);
 
         if ($oldPath = $request->session()->pull('uploaded_exercise_solution')) {
@@ -139,7 +140,7 @@ class ExerciseController extends Controller
     public function updateTrace(Request $request, $id)
     {
         $request->validate([
-            'prompt_file' => 'required|file',
+            'prompt_file' => UploadRules::pdf(),
         ]);
 
         $exercise = Exercise::findOrFail($id);
@@ -157,7 +158,7 @@ class ExerciseController extends Controller
     public function updateExecution(Request $request, $id)
     {
         $request->validate([
-            'solution_file' => 'required|file',
+            'solution_file' => UploadRules::pdf(),
         ]);
 
         $exercise = Exercise::findOrFail($id);
