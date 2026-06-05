@@ -75,10 +75,11 @@
 
             const {
                 clientSecret
-            } = await fetch("{{ route('payment.process.legacy') }}", {
-                method: "GET",
+            } = await fetch("{{ route('payment.extra.intent') }}", {
+                method: "POST",
                 headers: {
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "X-CSRF-TOKEN": document.querySelector('meta[name="csrf-token"]').getAttribute("content")
                 },
             }).then((r) => r.json());
 

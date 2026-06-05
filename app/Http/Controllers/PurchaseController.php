@@ -252,7 +252,7 @@ class PurchaseController extends Controller
         return redirect()->route('payment.pay');
     }
 
-    public function processIndividualPayment(Request $request)
+    public function createExtraPaymentIntent(Request $request)
     {
         $user = $request->user();
 

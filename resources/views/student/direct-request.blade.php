@@ -59,9 +59,13 @@
                             </p>
                         </div>
 
-                        <x-ui.primary-button href="{{ route('cart.items.store', ['id' => $lessonRequest->id, 'type' => 5]) }}">
-                            Acquista
-                        </x-ui.primary-button>
+                        <form method="POST"
+                            action="{{ route('cart.items.store', ['id' => $lessonRequest->id, 'type' => 5]) }}">
+                            @csrf
+                            <x-ui.primary-button type="submit">
+                                Acquista
+                            </x-ui.primary-button>
+                        </form>
                     </div>
                 </x-ui.card>
             </div>

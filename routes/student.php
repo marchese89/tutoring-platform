@@ -32,7 +32,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('student.exercises.show');
 
     Route::view('cart', 'public.cart')->name('cart.show');
-    Route::get('cart/items/{id}/{type}', [PurchaseController::class, 'addToCart'])
+    Route::post('cart/items/{id}/{type}', [PurchaseController::class, 'addToCart'])
         ->name('cart.items.store');
     Route::delete('cart/items/{id}/{type}', [PurchaseController::class, 'removeFromCart'])
         ->name('cart.items.destroy');
@@ -42,8 +42,8 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('checkout.payment.prepare');
     Route::post('payment/process', [PurchaseController::class, 'processPayment'])
         ->name('payment.process');
-    Route::get('payment/process', [PurchaseController::class, 'processIndividualPayment'])
-        ->name('payment.process.legacy');
+    Route::post('payment/extra/intent', [PurchaseController::class, 'createExtraPaymentIntent'])
+        ->name('payment.extra.intent');
     Route::get('payment/success', [PurchaseController::class, 'completePurchase'])
         ->name('payment.success');
     Route::view('payment/complete', 'public.purchase-complete')->name('payment.complete');

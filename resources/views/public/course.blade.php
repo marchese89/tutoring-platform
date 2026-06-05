@@ -69,10 +69,13 @@
                                             Contenuto
                                         </a>
                                     @elseif(auth()->check() && auth()->user()->role === 'student')
-                                        <a href="{{ route('cart.items.store', ['id' => $item->id, 'type' => 0]) }}"
-                                            class="btn btn-primary rounded-3">
-                                            Acquista
-                                        </a>
+                                        <form method="POST"
+                                            action="{{ route('cart.items.store', ['id' => $item->id, 'type' => 0]) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary rounded-3 w-100">
+                                                Acquista
+                                            </button>
+                                        </form>
                                     @endif
 
                                 </div>
@@ -135,10 +138,13 @@
                                             Contenuto
                                         </button>
                                     @elseif(auth()->check() && auth()->user()->role === 'student')
-                                        <a href="{{ route('cart.items.store', ['id' => $item->id, 'type' => 2]) }}"
-                                            class="btn btn-primary rounded-3">
-                                            Acquista
-                                        </a>
+                                        <form method="POST"
+                                            action="{{ route('cart.items.store', ['id' => $item->id, 'type' => 2]) }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary rounded-3 w-100">
+                                                Acquista
+                                            </button>
+                                        </form>
                                     @endif
 
                                 </div>
