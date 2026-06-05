@@ -124,8 +124,20 @@ Planned branch: `maintenance/dependency-upgrade`
 - Completed commits:
   - `363f948 Document refactoring roadmap`
   - `630e939 Use safe HTTP methods for state changes`
-- Verification: PHP lint and route registration pass; the full suite passes with
-  6 tests and 6 assertions.
+  - `054d801 Record payment safety progress`
+  - `5d9eded Persist Stripe payment intents safely`
+  - `62fbb40 Verify Stripe payments before fulfillment`
+  - `d173ac0 Serialize annual invoice numbering`
+- Verification: the full suite passes with 14 tests and 34 assertions; Pint
+  passes on all files touched by the payment work.
+- Applied migrations:
+  - `2026_06_05_000000_create_payment_transactions_table`
+  - `2026_06_05_010000_add_payment_completion_constraints`
+  - `2026_06_05_020000_create_invoice_sequences_table`
+- Existing demo-data issue: invoice number `2` is duplicated three times in
+  2026. The new sequence starts at `11` and prevents new duplicates, but
+  historical invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 files.
-- Next action: introduce persisted payment state and tests for server-side Stripe
-  verification and idempotent checkout completion.
+- Next action: publish the completed payment branch, run a browser smoke test
+  with configured Stripe test credentials, then create
+  `security/authorization-policies` from this branch.
