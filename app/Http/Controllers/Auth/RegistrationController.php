@@ -14,7 +14,6 @@ class RegistrationController extends Controller
 {
     public function store(RegisterUserRequest $request)
     {
-        // Validazione
         $data = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',

@@ -46,7 +46,7 @@ class StudentController extends Controller
     function updateEmail(Request $request)
     {
         $validated = $request->validate([
-            'inputEmail' => [
+            'email' => [
                 'required',
                 'email',
                 'max:255',
@@ -55,7 +55,7 @@ class StudentController extends Controller
         ]);
 
         $user = $request->user();
-        $user->email = $validated['inputEmail'];
+        $user->email = $validated['email'];
         $user->save();
 
         return redirect()->route('student.account.credentials');
@@ -63,27 +63,35 @@ class StudentController extends Controller
 
     function updatePassword(Request $request)
     {
-        $validated = $request->validate([
-            'inputPassword_old' => ['required'],
-            'inputPassword' => [
-                'required',
-                'min:10',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'regex:/[@#!?.:,;]/',
+        $validated = $request->validate(
+            [
+                'current_password' => ['required'],
+                'password' => [
+                    'required',
+                    'min:10',
+                    'regex:/[A-Z]/',
+                    'regex:/[a-z]/',
+                    'regex:/[0-9]/',
+                    'regex:/[@#!?.:,;]/',
+                ],
+                'password_confirmation' => ['required', 'same:password'],
             ],
-            'inputPassword2' => ['required', 'same:inputPassword'],
-        ]);
+            [],
+            [
+                'current_password' => 'password attuale',
+                'password' => 'nuova password',
+                'password_confirmation' => 'conferma password',
+            ]
+        );
 
-        if (!Hash::check($validated['inputPassword_old'], $request->user()->password)) {
+        if (!Hash::check($validated['current_password'], $request->user()->password)) {
             return back()->withErrors([
-                'inputPassword_old' => 'La password non corrisponde a quella gia inserita',
+                'current_password' => 'La password non corrisponde a quella gia inserita',
             ]);
         }
 
         $user = $request->user();
-        $user->password = Hash::make($validated['inputPassword']);
+        $user->password = Hash::make($validated['password']);
         $user->save();
 
         return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');

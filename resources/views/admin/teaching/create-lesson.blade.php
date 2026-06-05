@@ -7,7 +7,7 @@
 @section('inner')
     <div class="container text-center" style="width: 40%">
 
-        {{-- PRESENTAZIONE --}}
+        {{-- Presentation --}}
         <h5 class="mt-4">Presentazione</h5>
 
         <iframe width="90%" height="400"
@@ -33,7 +33,7 @@
             <button class="btn btn-danger">Cancella file</button>
         </form>
 
-        {{-- SVOLGIMENTO --}}
+        {{-- Content --}}
         @if (session()->has('uploaded_lesson_presentation'))
             <h5 class="mt-5">Svolgimento</h5>
 
@@ -62,7 +62,7 @@
         @endif
 
 
-        {{-- SALVATAGGIO LEZIONE --}}
+        {{-- Lesson form --}}
         @if (session()->has('uploaded_lesson_presentation') && session()->has('uploaded_lesson_content'))
             <form method="POST" action="{{ route('admin.lessons.store') }}" class="mt-4">
                 @csrf

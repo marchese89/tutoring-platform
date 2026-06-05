@@ -47,7 +47,7 @@
         <div class="container">
 
             @if ($hasOrders)
-                {{-- FILTRI --}}
+                {{-- Filters --}}
                 <div class="card border-0 shadow-sm rounded-4 mb-4">
 
                     <div class="card-body p-4">
@@ -118,7 +118,7 @@
 
                 </div>
 
-                {{-- TABELLA --}}
+                {{-- Table --}}
                 <div class="card border-0 shadow-sm rounded-4">
 
                     <div class="card-body p-4">

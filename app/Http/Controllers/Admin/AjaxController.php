@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use App\Events\MessageSent;
 use App\Helpers\DateHelper;
+use App\Http\Controllers\Controller;
 use App\Models\ChatMessage;
+use App\Models\Order;
 use App\Models\Review;
 use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Events\MessageSent;
+use Illuminate\Support\Facades\DB;
 
 class AjaxController extends Controller
 {
-
     public function getOrders(Request $request)
     {
         $year = $request->input('year');
@@ -51,23 +50,23 @@ class AjaxController extends Controller
 
         return response()->json([
             'html' => view('admin.partials.order-rows', [
-                'orders' => $mappedOrders
+                'orders' => $mappedOrders,
             ])->render(),
-            'total' => $mappedOrders->sum('total')
+            'total' => $mappedOrders->sum('total'),
         ]);
     }
 
     public function sendMessage(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'chat_id' => 'required|integer|exists:chats,id',
-            'message' => 'required|string'
+            'message' => 'required|string',
         ]);
 
         $message = ChatMessage::create([
-            'chat_id' => $request->chat_id,
-            'message' => $request->message,
-            'sender_role' => auth()->user()->role === 'admin' ? 1 : 0,
+            'chat_id' => $validated['chat_id'],
+            'message' => $validated['message'],
+            'sender_role' => $request->user()->role === 'admin' ? 1 : 0,
             'sent_at' => now(),
         ]);
 
@@ -75,69 +74,39 @@ class AjaxController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => $message
+            'message' => $message,
         ]);
     }
 
-    public function storeFeedback()
+    public function storeFeedback(Request $request)
     {
-        $rating = request('rating');
-        //cerchiamo per vedere se c'è già un rating assegnato
-        $student_id = auth()->user()->student->id;
-        $feedback = Review::where('student_id', '=', $student_id)->first();
-        if ($feedback != null) {
-            $feedback->rating = $rating;
-        } else {
-            $feedback = new Review();
-            $feedback->student_id = $student_id;
-            $feedback->rating = $rating;
-        }
+        $validated = $request->validate([
+            'rating' => ['required', 'integer', 'between:1,5'],
+        ]);
 
-        $feedback->save();
+        Review::updateOrCreate(
+            ['student_id' => $request->user()->student->id],
+            ['rating' => $validated['rating']]
+        );
 
-        $response = '<a ';
-        if ($rating > 0) {
-            $response = $response . 'style="opacity: 100%;"';
-        }
-        $response = $response . ' onclick="invia_feefback(1)">⭐</a>
-    <a ';
-        if ($rating > 1) {
-            $response = $response . 'style="opacity: 100%;"';
-        }
-        $response = $response .  ' onclick="invia_feefback(2)">⭐</a>
-    <a ';
-        if ($rating > 2) {
-            $response = $response . 'style="opacity: 100%;"';
-        }
-        $response = $response . ' onclick="invia_feefback(3)">⭐</a>
-    <a ';
-        if ($rating > 3) {
-            $response = $response . 'style="opacity: 100%;"';
-        }
-        $response = $response . ' onclick="invia_feefback(4)">⭐</a>
-    <a ';
-        if ($rating > 4) {
-            $response = $response . 'style="opacity: 100%;"';
-        }
-        $response = $response .   ' onclick="invia_feefback(5)">⭐</a>';
-
-        return $response;
+        return response()->json([
+            'rating' => $validated['rating'],
+        ]);
     }
 
-    public function storeReview()
+    public function storeReview(Request $request)
     {
-        $testo = request('testo');
-        $student_id = auth()->user()->student->id;
-        $feedback = Review::where('student_id', '=', $student_id)->first();
-        if ($feedback != null) {
-            $feedback->review = $testo;
-        } else {
-            $feedback = new Review();
-            $feedback->student_id = $student_id;
-            $feedback->review = $testo;
-        }
+        $validated = $request->validate([
+            'review' => ['nullable', 'string', 'max:500'],
+        ]);
 
-        $feedback->save();
-        return $testo;
+        Review::updateOrCreate(
+            ['student_id' => $request->user()->student->id],
+            ['review' => $validated['review'] ?? null]
+        );
+
+        return response()->json([
+            'review' => $validated['review'] ?? '',
+        ]);
     }
 }

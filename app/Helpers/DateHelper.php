@@ -23,11 +23,6 @@ class DateHelper
         return Carbon::parse($value)->format('d-m-Y H:i');
     }
 
-    public static function formatItalianDate($value): string
-    {
-        return Carbon::parse($value)->format('d/m/Y');
-    }
-
     public static function monthName(int $month): string
     {
         return match ($month) {

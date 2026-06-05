@@ -41,22 +41,22 @@
         }
 
         :root {
-            /* 1. Definisci qui i tuoi colori personalizzati una sola volta */
+            /* 1. Define the custom palette once. */
             --my-primary: #22c4ff;
             --my-primary-rgb: 255, 87, 34;
             --my-primary-hover: #19e3e6;
-            /* Tono più scuro per l'effetto hover */
+            /* Darker hover tone. */
             --my-primary-active: #15d8c8;
-            /* Tono ancora più scuro per il click */
+            /* Darker active tone. */
 
-            /* 2. Mappa le variabili globali di Bootstrap */
+            /* 2. Map the global Bootstrap variables. */
             --bs-primary: var(--my-primary);
             --bs-primary-rgb: var(--my-primary-rgb);
             --bs-link-color: var(--my-primary);
             --bs-link-hover-color: var(--my-primary-hover);
         }
 
-        /* 3. Aggiorna il bottone pieno (.btn-primary) */
+        /* 3. Customize the solid primary button. */
         .btn-primary {
             --bs-btn-bg: var(--my-primary);
             --bs-btn-border-color: var(--my-primary);
@@ -69,7 +69,7 @@
             --bs-btn-disabled-border-color: var(--my-primary);
         }
 
-        /* 4. Aggiorna il bottone outline (.btn-outline-primary) */
+        /* 4. Customize the outlined primary button. */
         .btn-outline-primary {
             --bs-btn-color: var(--my-primary);
             --bs-btn-border-color: var(--my-primary);
@@ -100,7 +100,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{{ asset('custom_javascript/utility.js') }}"></script>
 
-    {{-- Echo (solo se serve) --}}
+    {{-- Load Echo only when required. --}}
     @if (isset($enableEcho) && $enableEcho)
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
         <script src="https://unpkg.com/laravel-echo@1.16.1/dist/echo.iife.js"></script>

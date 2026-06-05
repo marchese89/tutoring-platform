@@ -18,10 +18,10 @@
 
                         <x-ui.form-field
                             type="email"
-                            name="inputEmail"
+                            name="email"
                             label="Nuova Email"
                             maxlength="255"
-                            :value="old('inputEmail', auth()->user()->email)" />
+                            :value="old('email', auth()->user()->email)" />
 
                         <x-ui.primary-button type="submit">
                             Aggiorna Email
@@ -48,12 +48,12 @@
                         <x-ui.form-field
                             wrapper-class="mb-2"
                             type="password"
-                            name="inputPassword_old"
+                            name="current_password"
                             label="Vecchia Password"
-                            error-name="pass0" />
+                            error-name="current_password" />
 
                         <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" onclick="mostraPassword_old()" id="showOld">
+                            <input class="form-check-input" type="checkbox" onclick="toggleCurrentPassword()" id="showOld">
                             <label class="form-check-label" for="showOld">
                                 Mostra Password
                             </label>
@@ -62,11 +62,11 @@
                         <x-ui.form-field
                             wrapper-class="mb-2"
                             type="password"
-                            name="inputPassword"
+                            name="password"
                             label="Nuova Password" />
 
                         <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" onclick="mostraPassword1()" id="showNew">
+                            <input class="form-check-input" type="checkbox" onclick="toggleNewPassword()" id="showNew">
                             <label class="form-check-label" for="showNew">
                                 Mostra Password
                             </label>
@@ -75,12 +75,12 @@
                         <x-ui.form-field
                             wrapper-class="mb-2"
                             type="password"
-                            id="inputPassword2"
-                            name="inputPassword_confirmation"
+                            id="password_confirmation"
+                            name="password_confirmation"
                             label="Conferma Password" />
 
                         <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" onclick="mostraPassword2()" id="showConfirm">
+                            <input class="form-check-input" type="checkbox" onclick="togglePasswordConfirmation()" id="showConfirm">
                             <label class="form-check-label" for="showConfirm">
                                 Mostra Password
                             </label>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use App\Models\User;
 use App\Models\Admin;
 use App\Models\Certificate;
@@ -18,9 +19,6 @@ class AccountController extends Controller
         return view('admin.settings.certificates', compact('certificates'));
     }
 
-    // =========================
-    // FOTO PROFILO
-    // =========================
     public function updatePhoto(Request $request)
     {
         $request->validate([
@@ -29,7 +27,6 @@ class AccountController extends Controller
 
         $admin = auth()->user()->admin;
 
-        // elimina vecchia foto
         if ($admin->photo_path) {
             $oldPath = public_path($admin->photo_path);
             if (file_exists($oldPath)) {
@@ -50,9 +47,6 @@ class AccountController extends Controller
         return redirect()->route('admin.account.photo');
     }
 
-    // =========================
-    // UPLOAD CERTIFICATO
-    // =========================
     public function updateCertificateFile(Request $request)
     {
         $request->validate([
@@ -82,17 +76,14 @@ class AccountController extends Controller
         return redirect()->route('admin.account.certificates.index');
     }
 
-    // =========================
-    // UPLOAD CERTIFICATO (SESSIONE)
-    // =========================
     public function storeCertificateUpload(Request $request)
     {
         $request->validate([
             'file' => 'required|file'
         ]);
 
-        if ($request->session()->has('uploaded_cert')) {
-            $oldPath = public_path($request->session()->get('uploaded_cert'));
+        if ($request->session()->has('uploaded_certificate_file')) {
+            $oldPath = public_path($request->session()->get('uploaded_certificate_file'));
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
@@ -105,14 +96,11 @@ class AccountController extends Controller
 
         $path = '/files/cert_admin/' . $name;
 
-        $request->session()->put('uploaded_cert', $path);
+        $request->session()->put('uploaded_certificate_file', $path);
 
         return redirect()->route('admin.account.certificates.create');
     }
 
-    // =========================
-    // MODIFICA NOME CERTIFICATO
-    // =========================
     public function updateCertificateName(Request $request)
     {
         $request->validate([
@@ -127,9 +115,6 @@ class AccountController extends Controller
         return redirect()->route('admin.account.certificates.index');
     }
 
-    // =========================
-    // PARTITA IVA
-    // =========================
     public function updateVatNumber(Request $request)
     {
         $request->validate([
@@ -170,9 +155,6 @@ class AccountController extends Controller
         return redirect()->route('admin.account.address');
     }
 
-    // =========================
-    // ELIMINA CERTIFICATO
-    // =========================
     public function destroyCertificate(Request $request)
     {
         $request->validate([
@@ -193,28 +175,22 @@ class AccountController extends Controller
         return redirect()->route('admin.account.certificates.index');
     }
 
-    // =========================
-    // ELIMINA CERTIFICATO SESSIONE
-    // =========================
     public function destroyCertificateUpload(Request $request)
     {
-        if ($request->session()->has('uploaded_cert')) {
-            $oldPath = public_path($request->session()->get('uploaded_cert'));
+        if ($request->session()->has('uploaded_certificate_file')) {
+            $oldPath = public_path($request->session()->get('uploaded_certificate_file'));
             if (file_exists($oldPath)) {
                 unlink($oldPath);
             }
-            $request->session()->forget('uploaded_cert');
+            $request->session()->forget('uploaded_certificate_file');
         }
 
         return redirect()->route('admin.account.certificates.create');
     }
 
-    // =========================
-    // AGGIUNGI CERTIFICATO
-    // =========================
     public function storeCertificate(Request $request)
     {
-        if (!$request->session()->has('uploaded_cert')) {
+        if (!$request->session()->has('uploaded_certificate_file')) {
             return redirect()
                 ->route('admin.account.certificates.create')
                 ->withErrors(['file' => 'Carica un file prima di salvare il certificato.']);
@@ -224,52 +200,58 @@ class AccountController extends Controller
             'name' => 'required|string|max:255'
         ]);
 
-        $cert = new Certificate();
-        $cert->name = $request->name;
-        $cert->file_path = $request->session()->get('uploaded_cert');
+        $certificate = new Certificate();
+        $certificate->name = $request->name;
+        $certificate->file_path = $request->session()->get('uploaded_certificate_file');
 
-        $request->session()->forget('uploaded_cert');
+        $request->session()->forget('uploaded_certificate_file');
 
-        $cert->save();
+        $certificate->save();
 
         return redirect()->route('admin.account.certificates.index');
     }
 
-    // =========================
-    // EMAIL
-    // =========================
     public function updateEmail(Request $request)
     {
-        $request->validate([
-            'inputEmail' => 'required|email|unique:users,email'
+        $validated = $request->validate([
+            'email' => [
+                'required',
+                'email',
+                Rule::unique('users', 'email')->ignore($request->user()->id),
+            ],
         ]);
 
-        $user = auth()->user();
-        $user->email = $request->input('inputEmail');
+        $user = $request->user();
+        $user->email = $validated['email'];
         $user->save();
 
         return redirect()->route('admin.account.credentials');
     }
 
-    // =========================
-    // PASSWORD
-    // =========================
     public function updatePassword(Request $request)
     {
-        $request->validate([
-            'inputPassword_old' => 'required',
-            'inputPassword' => 'required|min:6|confirmed'
-        ]);
+        $validated = $request->validate(
+            [
+                'current_password' => 'required',
+                'password' => 'required|min:6|confirmed',
+            ],
+            [],
+            [
+                'current_password' => 'password attuale',
+                'password' => 'nuova password',
+                'password_confirmation' => 'conferma password',
+            ]
+        );
 
-        $user = auth()->user();
+        $user = $request->user();
 
-        if (!Hash::check($request->input('inputPassword_old'), $user->password)) {
+        if (!Hash::check($validated['current_password'], $user->password)) {
             return back()->withErrors([
-                'pass0' => 'Password attuale errata'
+                'current_password' => 'Password attuale errata',
             ]);
         }
 
-        $user->password = Hash::make($request->input('inputPassword'));
+        $user->password = Hash::make($validated['password']);
         $user->save();
 
         return redirect()->route('admin.account.credentials')->withSuccess('Password modificata con successo');

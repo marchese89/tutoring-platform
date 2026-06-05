@@ -39,7 +39,7 @@
             });
         }
 
-        async function invia_feefback(rating) {
+        async function saveRating(rating) {
             currentRating = rating;
             renderStars(currentRating);
 
@@ -57,17 +57,19 @@
             document.getElementById('current').innerHTML = field.value.length;
         }
 
-        async function storeReview(testo) {
+        async function storeReview(review) {
             const response = await fetch("{{ route('student.review.store') }}", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
                     'X-CSRF-TOKEN': "{{ csrf_token() }}",
                 },
-                body: `testo=${encodeURIComponent(testo)}`,
+                body: `review=${encodeURIComponent(review)}`,
             });
 
-            document.getElementById('review').value = await response.text();
+            const data = await response.json();
+
+            document.getElementById('review').value = data.review;
             countChar(document.getElementById('review'));
             document.getElementById('review-status').classList.remove('d-none');
         }
@@ -95,7 +97,7 @@
                                     type="button"
                                     class="review-star"
                                     data-review-star="{{ $value }}"
-                                    onclick="invia_feefback({{ $value }})"
+                                    onclick="saveRating({{ $value }})"
                                     aria-label="{{ $value }} stelle"
                                 >
                                     <i class="bi bi-star-fill"></i>

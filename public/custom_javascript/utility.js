@@ -1,29 +1,29 @@
-function mostraPassword1() {
-    var x = document.getElementById("inputPassword");
+function toggleNewPassword() {
+    const field = document.getElementById("password");
 
-    if (x.type === "password") {
-        x.type = "text";
+    if (field.type === "password") {
+        field.type = "text";
     } else {
-        x.type = "password";
+        field.type = "password";
     }
 }
 
-function mostraPassword2() {
-    var x = document.getElementById("inputPassword2");
+function togglePasswordConfirmation() {
+    const field = document.getElementById("password_confirmation");
 
-    if (x.type === "password") {
-        x.type = "text";
+    if (field.type === "password") {
+        field.type = "text";
     } else {
-        x.type = "password";
+        field.type = "password";
     }
 }
 
-function mostraPassword_old() {
-    var x = document.getElementById("inputPassword_old");
+function toggleCurrentPassword() {
+    const field = document.getElementById("current_password");
 
-    if (x.type === "password") {
-        x.type = "text";
+    if (field.type === "password") {
+        field.type = "text";
     } else {
-        x.type = "password";
+        field.type = "password";
     }
 }

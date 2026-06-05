@@ -18,7 +18,7 @@
                             </p>
                         </div>
 
-                        {{-- ALERT GLOBALI --}}
+                        {{-- Global alerts --}}
                         @if (session('success'))
                             <div class="alert alert-success">
                                 {{ session('success') }}
@@ -81,7 +81,7 @@
 
                             </div>
 
-                            {{-- RECUPERO PASSWORD --}}
+                            {{-- Password recovery --}}
                             <div class="text-end mb-4">
 
                                 <a href="{{ route('password.request') }}" class="text-decoration-none small">

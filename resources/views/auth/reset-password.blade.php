@@ -4,7 +4,7 @@
 
     <div class="container py-5">
 
-        {{-- ERRORI --}}
+        {{-- Errors --}}
         @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">

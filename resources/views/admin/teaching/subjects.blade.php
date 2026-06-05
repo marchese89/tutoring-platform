@@ -8,7 +8,7 @@
 @section('inner')
     <div class="container">
 
-        {{-- FORM --}}
+        {{-- Form --}}
         <div class="row justify-content-center mb-5">
             <div class="col-lg-6">
 

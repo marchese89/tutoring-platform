@@ -7,7 +7,7 @@
 @section('inner')
     <div class="container">
 
-        {{-- FORM INSERIMENTO --}}
+        {{-- Create form --}}
         <div class="row justify-content-center mb-5">
             <div class="col-lg-6">
 
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        {{-- LISTA --}}
+        {{-- List --}}
         <div class="card border-0 shadow-sm rounded-4">
             <div class="card-body p-4">
 

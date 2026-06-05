@@ -15,7 +15,7 @@
             </div>
         @endguest
 
-        {{-- LEZIONI --}}
+        {{-- Lessons --}}
         <div class="mb-5">
 
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -88,7 +88,7 @@
 
         </div>
 
-        {{-- ESERCIZI --}}
+        {{-- Exercises --}}
         <div>
 
             <div class="d-flex align-items-center justify-content-between mb-4">

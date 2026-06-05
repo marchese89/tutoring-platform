@@ -12,9 +12,9 @@
 
         @php
             $cart = session()->get('cart');
-            $tot = $cart instanceof \App\Http\Utility\Cart ? $cart->total() : 0;
+            $total = $cart instanceof \App\Http\Utility\Cart ? $cart->total() : 0;
         @endphp
-        <h3>Pay <strong>{{ $tot }}&euro;</strong> securely with Stripe</h3>
+        <h3>Pay <strong>{{ $total }}&euro;</strong> securely with Stripe</h3>
         <br>
         @if (session('success'))
             <div class="alert alert-success">

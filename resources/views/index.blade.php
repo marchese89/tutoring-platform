@@ -30,7 +30,7 @@
         <x-hero title="Lezioni private di Ingegneria Informatica" subtitle="Metodo pratico per superare esami e verifiche"
             ctaText="Contattami su WhatsApp" ctaLink="https://api.whatsapp.com/send?phone=3272991334" />
 
-        {{-- PROFILO --}}
+        {{-- Profile --}}
         <div class="row align-items-center mb-5">
             <div class="col-md-5">
                 <img src=".{{ $admin->photo_path }}" class="img-fluid rounded-3 shadow-sm">
@@ -46,7 +46,7 @@
             </div>
         </div>
 
-        {{-- SERVIZI --}}
+        {{-- Services --}}
         <x-section-title>Servizi</x-section-title>
 
         <div class="row mb-5">
@@ -61,7 +61,7 @@
             </div>
         </div>
 
-        {{-- PREZZI --}}
+        {{-- Pricing --}}
         <x-section-title>Tariffe</x-section-title>
 
         <div class="row mb-5 justify-content-center">
@@ -74,7 +74,7 @@
             </div>
         </div>
 
-        {{-- CONTATTI --}}
+        {{-- Contacts --}}
         <div class="card soft-card p-4 text-center mb-5">
             <h4>Contatti</h4>
 
@@ -91,7 +91,7 @@
             </a>
         </div>
 
-        {{-- RECENSIONI --}}
+        {{-- Reviews --}}
         @if ($feedbacks->count())
             <x-section-title>Recensioni</x-section-title>
 

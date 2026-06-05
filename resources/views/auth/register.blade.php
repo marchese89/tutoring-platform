@@ -15,7 +15,7 @@
 
                             <div class="row g-3">
 
-                                {{-- DATI ANAGRAFICI --}}
+                                {{-- Personal details --}}
                                 <div class="col-md-6">
                                     <label class="form-label">Nome</label>
                                     <input type="text" name="first_name" value="{{ old('first_name') }}"
