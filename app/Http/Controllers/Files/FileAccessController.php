@@ -17,13 +17,11 @@ class FileAccessController extends Controller
 {
     public function __invoke(Request $request, string $path)
     {
-        if (str_contains($path, '..')) {
+        if ($this->isUnsafePath($path)) {
             abort(403);
         }
 
-        $fullPath = "private/$path";
-
-        if (!Storage::exists($fullPath)) {
+        if (! Storage::disk('private')->exists($path)) {
             abort(404);
         }
 
@@ -32,14 +30,14 @@ class FileAccessController extends Controller
         $exercisePrompt = Exercise::where('prompt_file', $path)->first();
         $exerciseSolution = Exercise::where('solution_file', $path)->first();
 
-        if (!Auth::check()) {
+        if (! Auth::check()) {
             if ($this->canAccessGuest(
                 $lessonPresentation,
                 $lessonContent,
                 $exercisePrompt,
                 $exerciseSolution
             )) {
-                return $this->serve($fullPath);
+                return $this->serve($path);
             }
 
             abort(404);
@@ -48,7 +46,7 @@ class FileAccessController extends Controller
         $user = $request->user();
 
         if ($user->role === 'admin') {
-            return $this->serve($fullPath);
+            return $this->serve($path);
         }
 
         if (
@@ -63,7 +61,7 @@ class FileAccessController extends Controller
                 $exerciseSolution
             )
         ) {
-            return $this->serve($fullPath);
+            return $this->serve($path);
         }
 
         abort(404);
@@ -141,12 +139,27 @@ class FileAccessController extends Controller
         }
 
         return Invoice::where('file_path', $path)
-            ->whereHas('order', fn($query) => $query->where('student_id', $student->id))
+            ->whereHas('order', fn ($query) => $query->where('student_id', $student->id))
             ->exists();
     }
 
     private function serve(string $path)
     {
-        return Storage::response($path);
+        return Storage::disk('private')->response($path);
+    }
+
+    private function isUnsafePath(string $path): bool
+    {
+        if ($path === '' || str_contains($path, "\0") || str_contains($path, '\\')) {
+            return true;
+        }
+
+        foreach (explode('/', $path) as $segment) {
+            if ($segment === '.' || $segment === '..') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
