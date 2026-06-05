@@ -19,7 +19,7 @@
                         </h4>
 
                         <p class="text-muted mb-4">
-                            Il pagamento e la generazione della fattura sono stati completati correttamente.
+                            Il pagamento è stato completato correttamente.
                         </p>
 
                         <x-ui.primary-button href="{{ route('student.dashboard') }}">

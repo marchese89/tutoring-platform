@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\PaymentPurpose;
+use App\Exceptions\PaymentVerificationException;
 use App\Http\Utility\Cart;
 use App\Http\Utility\CartItem;
 use App\Mail\OrderCompletedMail;
@@ -11,7 +12,7 @@ use App\Models\Exercise;
 use App\Models\Invoice;
 use App\Models\Lesson;
 use App\Models\Order;
-use App\Models\Student;
+use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Services\InvoiceService;
 use App\Services\OrderService;
@@ -19,7 +20,6 @@ use App\Services\PaymentService;
 use Carbon\Carbon;
 use Dompdf\Dompdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
@@ -89,58 +89,70 @@ class PurchaseController extends Controller
     public function completePurchase(
         Request $request,
         OrderService $orderService,
-        InvoiceService $invoiceService
+        InvoiceService $invoiceService,
+        PaymentService $payments
     ) {
-        DB::beginTransaction();
-
         try {
             $user = $request->user();
+            $paymentIntentId = $request->string('payment_intent')->toString();
 
-            $student = Student::where('user_id', $user->id)->first();
-
-            $cart = $this->cart($request);
-
-            if ($cart->count() === 0) {
-                throw new \Exception('Cart empty');
+            if ($paymentIntentId === '') {
+                throw new PaymentVerificationException('Missing payment intent.');
             }
 
-            /*
-             * 1. Create order and rows
-             */
-            $orderId = $orderService->process($student, $cart);
+            $transaction = $payments->complete(
+                $user,
+                $paymentIntentId,
+                function (PaymentTransaction $transaction) use ($user, $orderService) {
+                    if ($transaction->purpose === PaymentPurpose::EXTRA) {
+                        return null;
+                    }
 
-            /*
-             * 2. Generate PDF
-             */
-            $invoiceService->generatePdf($orderId);
+                    $items = $transaction->context['items'] ?? [];
 
-            $invoice = Invoice::where('order_id', $orderId)->first();
+                    if ($items === []) {
+                        throw new PaymentVerificationException('Checkout items are missing.');
+                    }
 
-            /*
-             * 3. Send email
-             */
+                    return $orderService->processSnapshot($user->student, $items);
+                }
+            );
+        } catch (PaymentVerificationException $exception) {
+            return redirect()
+                ->route('checkout.show')
+                ->withErrors(['payment' => $exception->getMessage()]);
+        }
+
+        if ($transaction->purpose === PaymentPurpose::EXTRA) {
+            $request->session()->forget([
+                'extra_payment_description',
+                'extra_payment_price',
+                'extra_payment_quantity',
+            ]);
+
+            return redirect()->route('payment.ok');
+        }
+
+        $invoice = $invoiceService->generatePdf($transaction->order_id);
+
+        if (! $transaction->receipt_sent_at) {
             Mail::to($user->email)->send(
                 new OrderCompletedMail(
                     $user,
                     $invoice->file_path,
                     now()->format('d/m/Y'),
-                    Order::find($orderId)->orderItems()->sum('price')
+                    Order::findOrFail($transaction->order_id)->orderItems()->sum('price')
                 )
             );
 
-            /*
-             * 4. Clear cart
-             */
-            $cart->clear();
-            $request->session()->put('cart', $cart);
-
-            DB::commit();
-
-            return redirect()->route('payment.complete');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            throw $e;
+            $transaction->update(['receipt_sent_at' => now()]);
         }
+
+        $cart = $this->cart($request);
+        $cart->clear();
+        $request->session()->put('cart', $cart);
+
+        return redirect()->route('payment.complete');
     }
 
     public function createExtraInvoice(Request $request)

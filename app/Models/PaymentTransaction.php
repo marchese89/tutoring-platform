@@ -21,12 +21,14 @@ class PaymentTransaction extends Model
         'status',
         'context',
         'completed_at',
+        'receipt_sent_at',
     ];
 
     protected $casts = [
         'purpose' => PaymentPurpose::class,
         'context' => 'array',
         'completed_at' => 'datetime',
+        'receipt_sent_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

@@ -3,11 +3,15 @@
 namespace App\Services;
 
 use App\Enums\PaymentPurpose;
+use App\Exceptions\PaymentVerificationException;
 use App\Models\PaymentTransaction;
 use App\Models\User;
 use App\Payments\PaymentGateway;
 use App\Payments\PaymentIntentData;
+use Closure;
+use Illuminate\Support\Facades\DB;
 use InvalidArgumentException;
+use RuntimeException;
 use Throwable;
 
 class PaymentService
@@ -51,5 +55,69 @@ class PaymentService
         ]);
 
         return $intent;
+    }
+
+    public function complete(
+        User $user,
+        string $paymentIntentId,
+        Closure $fulfill
+    ): PaymentTransaction {
+        $transaction = PaymentTransaction::query()
+            ->where('user_id', $user->id)
+            ->where('stripe_payment_intent_id', $paymentIntentId)
+            ->first();
+
+        if (! $transaction) {
+            throw new PaymentVerificationException('Payment transaction not found.');
+        }
+
+        if ($transaction->isCompleted()) {
+            return $transaction;
+        }
+
+        $intent = $this->gateway->retrieve($user, $paymentIntentId);
+
+        $this->verifyIntent($transaction, $intent);
+
+        return DB::transaction(function () use ($transaction, $intent, $fulfill) {
+            $lockedTransaction = PaymentTransaction::query()
+                ->lockForUpdate()
+                ->findOrFail($transaction->id);
+
+            if ($lockedTransaction->isCompleted()) {
+                return $lockedTransaction;
+            }
+
+            $orderId = $fulfill($lockedTransaction);
+
+            if ($orderId !== null && ! is_int($orderId)) {
+                throw new RuntimeException('Payment fulfillment must return an order ID or null.');
+            }
+
+            $lockedTransaction->update([
+                'order_id' => $orderId,
+                'status' => $intent->status,
+                'completed_at' => now(),
+            ]);
+
+            return $lockedTransaction->fresh();
+        });
+    }
+
+    private function verifyIntent(
+        PaymentTransaction $transaction,
+        PaymentIntentData $intent
+    ): void {
+        if (! $intent->succeeded()) {
+            throw new PaymentVerificationException('Payment has not succeeded.');
+        }
+
+        if ($intent->amount !== $transaction->amount) {
+            throw new PaymentVerificationException('Payment amount does not match.');
+        }
+
+        if (strtolower($intent->currency) !== strtolower($transaction->currency)) {
+            throw new PaymentVerificationException('Payment currency does not match.');
+        }
     }
 }
