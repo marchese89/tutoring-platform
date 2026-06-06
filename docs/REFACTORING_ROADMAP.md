@@ -139,7 +139,9 @@ Planned branch: `maintenance/dependency-upgrade`
     `invoices` and removed from the fresh schema
   - invoices now persist source, total amount in cents, currency, customer
     snapshot, line items, and note metadata
-- Verification: the full suite passes with 50 tests and 151 assertions.
+  - admin upload session routes are constrained so they are not captured by
+    generic numeric resource routes
+- Verification: the full suite passes with 52 tests and 155 assertions.
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
