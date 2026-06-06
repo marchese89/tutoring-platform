@@ -308,7 +308,7 @@ Breadcrumbs::for('student.invoices.index', function (BreadcrumbTrail $trail) {
 });
 
 Breadcrumbs::for('student.invoices.show', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('student.orders.show', $id);
+    $trail->parent('student.invoices.index');
     $trail->push('Fattura', route('student.invoices.show', $id));
 });
 

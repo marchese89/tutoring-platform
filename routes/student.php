@@ -54,7 +54,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('student/orders', [OrderController::class, 'index'])->name('student.orders.index');
     Route::get('student/orders/{id}', [OrderController::class, 'show'])->name('student.orders.show');
     Route::get('student/invoices', [InvoiceController::class, 'index'])->name('student.invoices.index');
-    Route::get('student/invoices/{id}', [InvoiceController::class, 'showOrderInvoice'])->name('student.invoices.show');
+    Route::get('student/invoices/{id}', [InvoiceController::class, 'show'])->name('student.invoices.show');
 
     Route::get('student/direct-requests', [DirectRequestController::class, 'index'])->name('student.direct-requests.index');
     Route::get('student/direct-requests/purchased', [DirectRequestController::class, 'purchased'])

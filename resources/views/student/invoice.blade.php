@@ -10,7 +10,7 @@
             <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
                 <div>
                     <h4 class="fw-bold mb-1">
-                        Fattura ordine #{{ $id }}
+                        {{ $title }}
                     </h4>
 
                     <p class="text-muted mb-0">
@@ -18,8 +18,8 @@
                     </p>
                 </div>
 
-                <x-ui.primary-button href="{{ route('student.orders.show', $id) }}" size="sm">
-                    Torna all'ordine
+                <x-ui.primary-button href="{{ $backUrl }}" size="sm">
+                    Indietro
                 </x-ui.primary-button>
             </div>
 

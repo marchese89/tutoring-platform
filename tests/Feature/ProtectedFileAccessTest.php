@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Utility\CartItem;
 use App\Models\Course;
+use App\Models\Invoice;
 use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\OrderItem;
@@ -77,6 +78,31 @@ class ProtectedFileAccessTest extends TestCase
             ->get(route('protected-files.show', ['path' => $path]))
             ->assertOk()
             ->assertStreamedContent('purchased content');
+
+        $this->actingAs($otherStudent->user)
+            ->get(route('protected-files.show', ['path' => $path]))
+            ->assertNotFound();
+    }
+
+    public function test_only_owner_can_read_direct_student_invoice(): void
+    {
+        Storage::fake('private');
+        $owner = $this->createStudent();
+        $otherStudent = $this->createStudent();
+        $path = 'extra-invoices/2026/invoice_303.pdf';
+        Storage::disk('private')->put($path, 'extra invoice');
+
+        Invoice::create([
+            'number' => 303,
+            'issued_at' => now(),
+            'student_id' => $owner->id,
+            'file_path' => $path,
+        ]);
+
+        $this->actingAs($owner->user)
+            ->get(route('protected-files.show', ['path' => $path]))
+            ->assertOk()
+            ->assertStreamedContent('extra invoice');
 
         $this->actingAs($otherStudent->user)
             ->get(route('protected-files.show', ['path' => $path]))

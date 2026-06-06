@@ -139,7 +139,10 @@ class FileAccessController extends Controller
         }
 
         return Invoice::where('file_path', $path)
-            ->whereHas('order', fn ($query) => $query->where('student_id', $student->id))
+            ->where(function ($query) use ($student) {
+                $query->where('student_id', $student->id)
+                    ->orWhereHas('order', fn ($order) => $order->where('student_id', $student->id));
+            })
             ->exists();
     }
 

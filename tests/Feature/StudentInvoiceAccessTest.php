@@ -21,14 +21,14 @@ class StudentInvoiceAccessTest extends TestCase
         $ownOrder = $this->createOrder($student);
         $otherOrder = $this->createOrder($otherStudent);
 
-        Invoice::create([
+        $ownInvoice = Invoice::create([
             'number' => 101,
             'issued_at' => now(),
             'order_id' => $ownOrder->id,
             'file_path' => 'invoices/2026/invoice_101.pdf',
         ]);
 
-        Invoice::create([
+        $otherInvoice = Invoice::create([
             'number' => 999,
             'issued_at' => now(),
             'order_id' => $otherOrder->id,
@@ -41,7 +41,8 @@ class StudentInvoiceAccessTest extends TestCase
             ->assertSee('101')
             ->assertSee('#' . $ownOrder->id)
             ->assertDontSee('999')
-            ->assertDontSee(route('student.invoices.show', $otherOrder->id), false);
+            ->assertSee(route('student.invoices.show', $ownInvoice->id), false)
+            ->assertDontSee(route('student.invoices.show', $otherInvoice->id), false);
     }
 
     public function test_student_cannot_open_another_students_order_invoice(): void
@@ -50,7 +51,7 @@ class StudentInvoiceAccessTest extends TestCase
         $otherStudent = $this->createStudent();
         $otherOrder = $this->createOrder($otherStudent);
 
-        Invoice::create([
+        $invoice = Invoice::create([
             'number' => 999,
             'issued_at' => now(),
             'order_id' => $otherOrder->id,
@@ -58,7 +59,41 @@ class StudentInvoiceAccessTest extends TestCase
         ]);
 
         $this->actingAs($student->user)
-            ->get(route('student.invoices.show', $otherOrder->id))
+            ->get(route('student.invoices.show', $invoice->id))
+            ->assertNotFound();
+    }
+
+    public function test_student_can_open_own_direct_invoice(): void
+    {
+        $student = $this->createStudent();
+
+        $invoice = Invoice::create([
+            'number' => 303,
+            'issued_at' => now(),
+            'student_id' => $student->id,
+            'file_path' => 'extra-invoices/2026/invoice_303.pdf',
+        ]);
+
+        $this->actingAs($student->user)
+            ->get(route('student.invoices.show', $invoice->id))
+            ->assertOk()
+            ->assertSee('Fattura pagamento extra');
+    }
+
+    public function test_student_cannot_open_another_students_direct_invoice(): void
+    {
+        $student = $this->createStudent();
+        $otherStudent = $this->createStudent();
+
+        $invoice = Invoice::create([
+            'number' => 404,
+            'issued_at' => now(),
+            'student_id' => $otherStudent->id,
+            'file_path' => 'extra-invoices/2026/invoice_404.pdf',
+        ]);
+
+        $this->actingAs($student->user)
+            ->get(route('student.invoices.show', $invoice->id))
             ->assertNotFound();
     }
 

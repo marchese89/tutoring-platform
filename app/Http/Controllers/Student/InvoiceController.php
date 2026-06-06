@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Student;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
-use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -16,7 +15,10 @@ class InvoiceController extends Controller
         $studentId = $request->user()->student->id;
 
         $invoices = Invoice::query()
-            ->whereHas('order', fn ($query) => $query->where('student_id', $studentId))
+            ->where(function ($query) use ($studentId) {
+                $query->where('student_id', $studentId)
+                    ->orWhereHas('order', fn ($order) => $order->where('student_id', $studentId));
+            })
             ->orderByDesc('issued_at')
             ->orderByDesc('id')
             ->get()
@@ -25,17 +27,30 @@ class InvoiceController extends Controller
                 'number' => $invoice->number,
                 'order_id' => $invoice->order_id,
                 'date' => $invoice->issued_at ? DateHelper::format($invoice->issued_at) : '-',
+                'show_url' => route('student.invoices.show', $invoice->id),
             ]);
 
         return view('student.invoices', compact('invoices'));
     }
 
-    public function showOrderInvoice(Request $request, int $id): View
+    public function show(Request $request, int $id): View
     {
-        Order::where('student_id', $request->user()->student->id)->findOrFail($id);
+        $studentId = $request->user()->student->id;
 
-        $invoice = Invoice::where('order_id', $id)->firstOrFail();
+        $invoice = Invoice::query()
+            ->where('id', $id)
+            ->where(function ($query) use ($studentId) {
+                $query->where('student_id', $studentId)
+                    ->orWhereHas('order', fn ($order) => $order->where('student_id', $studentId));
+            })
+            ->firstOrFail();
 
-        return view('student.invoice', compact('id', 'invoice'));
+        return view('student.invoice', [
+            'invoice' => $invoice,
+            'title' => $invoice->order_id ? "Fattura ordine #{$invoice->order_id}" : 'Fattura pagamento extra',
+            'backUrl' => $invoice->order_id
+                ? route('student.orders.show', $invoice->order_id)
+                : route('student.invoices.index'),
+        ]);
     }
 }

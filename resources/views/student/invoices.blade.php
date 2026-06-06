@@ -23,14 +23,14 @@
                             <tr>
                                 <th scope="row">{{ $item['number'] ?? $item['id'] }}</th>
                                 <td>
-                                    #{{ $item['order_id'] }}
+                                    {{ $item['order_id'] ? '#' . $item['order_id'] : 'Pagamento extra' }}
                                 </td>
                                 <td>
                                     {{ $item['date'] }}
                                 </td>
                                 <td>
                                     <x-ui.primary-button
-                                        href="{{ route('student.invoices.show', $item['order_id']) }}"
+                                        href="{{ $item['show_url'] }}"
                                         size="sm"
                                     >
                                         Visualizza

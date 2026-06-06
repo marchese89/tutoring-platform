@@ -18,9 +18,11 @@
                     </p>
                 </div>
 
-                <x-ui.primary-button href="{{ route('student.invoices.show', $order->id) }}">
-                    Visualizza fattura
-                </x-ui.primary-button>
+                @if ($order->invoice)
+                    <x-ui.primary-button href="{{ route('student.invoices.show', $order->invoice->id) }}">
+                        Visualizza fattura
+                    </x-ui.primary-button>
+                @endif
             </div>
         </x-ui.card>
 

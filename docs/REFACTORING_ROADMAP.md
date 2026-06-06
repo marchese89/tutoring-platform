@@ -129,16 +129,24 @@ Planned branch: `maintenance/dependency-upgrade`
   - order-to-invoice relationship added to the `Order` model
   - feature coverage verifies that students only see and open their own order
     invoices
-- Verification: the full suite passes with 46 tests and 125 assertions.
+  - invoices can now be linked directly to a student and to the payment
+    transaction that generated them
+  - extra student payments now generate idempotent invoices after verified
+    Stripe completion
+  - protected invoice PDFs authorize both order-backed and direct
+    student-linked invoices
+- Verification: the full suite passes with 49 tests and 136 assertions.
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
   - `2026_06_05_020000_create_invoice_sequences_table`
+  - `2026_06_06_000000_link_invoices_to_students_and_payments`
 - Legacy billing tables still exist and still need a migration decision:
   - `invoice_sheets`
   - `student_invoices`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: decide how extra invoices should be linked to a customer or
-  student, then migrate/remove `invoice_sheets` and `student_invoices`.
+- Next action: migrate/remove `invoice_sheets` and `student_invoices` after
+  deciding whether admin-created extra invoices should stay standalone or also
+  point to a student/customer record.

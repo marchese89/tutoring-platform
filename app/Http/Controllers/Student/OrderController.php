@@ -83,7 +83,7 @@ class OrderController extends Controller
 
     public function show(Request $request, int $id): View
     {
-        $order = Order::with('orderItems')
+        $order = Order::with(['invoice', 'orderItems'])
             ->where('student_id', $request->user()->student->id)
             ->findOrFail($id);
         $products = $order->orderItems->map(fn($product) => [

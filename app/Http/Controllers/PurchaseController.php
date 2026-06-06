@@ -130,6 +130,8 @@ class PurchaseController extends Controller
         }
 
         if ($transaction->purpose === PaymentPurpose::EXTRA) {
+            $invoiceService->generateExtraPaymentPdf($user, $transaction);
+
             $request->session()->forget([
                 'extra_payment_description',
                 'extra_payment_price',
@@ -139,7 +141,7 @@ class PurchaseController extends Controller
             return redirect()->route('payment.ok');
         }
 
-        $invoice = $invoiceService->generatePdf($transaction->order_id);
+        $invoice = $invoiceService->generatePdf($transaction->order_id, $transaction->id);
 
         if (! $transaction->receipt_sent_at) {
             Mail::to($user->email)->send(

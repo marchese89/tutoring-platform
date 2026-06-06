@@ -3,12 +3,15 @@
 namespace Tests\Feature;
 
 use App\Enums\PaymentPurpose;
+use App\Models\Admin;
+use App\Models\Invoice;
 use App\Models\PaymentTransaction;
 use App\Models\Student;
 use App\Models\User;
 use App\Payments\PaymentGateway;
 use App\Payments\PaymentIntentData;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
 class PaymentCallbackTest extends TestCase
@@ -29,6 +32,9 @@ class PaymentCallbackTest extends TestCase
     public function test_extra_payment_completion_does_not_fulfill_the_cart(): void
     {
         $user = $this->studentUser();
+        $this->createAdmin();
+        Storage::fake('private');
+
         $this->app->instance(
             PaymentGateway::class,
             new CallbackPaymentGateway(
@@ -63,6 +69,18 @@ class PaymentCallbackTest extends TestCase
         $response->assertRedirect(route('payment.ok'));
         $this->assertDatabaseCount('orders', 0);
         $this->assertTrue($transaction->fresh()->isCompleted());
+
+        $invoice = Invoice::firstOrFail();
+
+        $this->assertSame($user->student->id, $invoice->student_id);
+        $this->assertSame($transaction->id, $invoice->payment_transaction_id);
+        Storage::disk('private')->assertExists($invoice->file_path);
+
+        $this->actingAs($user)->get(route('payment.success', [
+            'payment_intent' => 'pi_extra',
+        ]));
+
+        $this->assertDatabaseCount('invoices', 1);
     }
 
     private function studentUser(): User
@@ -82,6 +100,24 @@ class PaymentCallbackTest extends TestCase
         ]);
 
         return $user;
+    }
+
+    private function createAdmin(): void
+    {
+        $user = User::factory()->create([
+            'role' => 'admin',
+        ]);
+
+        Admin::create([
+            'user_id' => $user->id,
+            'street' => 'Via Admin',
+            'house_number' => '1',
+            'city' => 'Roma',
+            'province' => 'RM',
+            'postal_code' => '00100',
+            'tax_code' => 'ADMADM80A01H501U',
+            'vat_number' => 'IT12345678901',
+        ]);
     }
 }
 
