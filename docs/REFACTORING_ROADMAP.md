@@ -49,7 +49,7 @@ Branch: `security/file-uploads`
 
 ### 4. Billing schema
 
-Planned branch: `refactor/billing-schema`
+Branch: `refactor/billing-schema`
 
 - Decide and document the single invoice model.
 - Remove the duplicate invoice-sheet workflow.
@@ -119,34 +119,26 @@ Planned branch: `maintenance/dependency-upgrade`
 
 ## Current progress
 
-- Current branch: `security/file-uploads`
-- Base commit: `515ee41 Record authorization progress`
-- Completed commits:
-  - `975c66b Restrict uploaded file types and sizes`
-  - `8e229eb Store public uploads with generated names`
-  - `a5f2a9f Serve protected files from private disk`
-  - `e3fb414 Preserve files during upload replacement`
-  - `fb550d1 Add upload input accept hints`
-  - `6cfacd9 Prune abandoned upload files`
-- Verification: the full suite passes with 44 tests and 119 assertions; Pint
-  passes on the new upload support, tests, protected-file controller, and
-  pruning command.
-- File-handling coverage:
-  - PDFs are limited to 50 MB and profile images to 5 MB
-  - accepted upload types are centralized and configurable
-  - public photo and certificate names are generated instead of user-controlled
-  - legacy `/files/...` deletion remains supported
-  - protected files are read explicitly from the private disk
-  - guest, purchase, and student ownership checks have feature coverage
-  - replacement uploads persist the new path before deleting the old file
-  - every file input has a matching `accept` hint
-  - old unreferenced uploads are pruned daily after a 24-hour grace window
+- Current branch: `refactor/billing-schema`
+- Base commit: `ab9049c Complete file upload handoff`
+- Completed billing-schema work:
+  - student invoice listing now reads from the real `invoices` table through
+    owned orders
+  - the old `student/invoice-sheets/{id}` runtime route, breadcrumb, controller
+    action, and Blade view were removed
+  - order-to-invoice relationship added to the `Order` model
+  - feature coverage verifies that students only see and open their own order
+    invoices
+- Verification: the full suite passes with 46 tests and 125 assertions.
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
   - `2026_06_05_020000_create_invoice_sequences_table`
+- Legacy billing tables still exist and still need a migration decision:
+  - `invoice_sheets`
+  - `student_invoices`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: publish the completed upload branch, then create
-  `refactor/billing-schema` from this branch.
+- Next action: decide how extra invoices should be linked to a customer or
+  student, then migrate/remove `invoice_sheets` and `student_invoices`.

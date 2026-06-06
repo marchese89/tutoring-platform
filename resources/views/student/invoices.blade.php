@@ -12,6 +12,7 @@
                     <thead class="table-light">
                         <tr>
                             <th scope="col">#</th>
+                            <th scope="col">Ordine</th>
                             <th scope="col">Data</th>
                             <th scope="col">Operazioni</th>
                         </tr>
@@ -20,13 +21,16 @@
                     <tbody>
                         @foreach ($invoices as $item)
                             <tr>
-                                <th scope="row">{{ $item['id'] }}</th>
+                                <th scope="row">{{ $item['number'] ?? $item['id'] }}</th>
+                                <td>
+                                    #{{ $item['order_id'] }}
+                                </td>
                                 <td>
                                     {{ $item['date'] }}
                                 </td>
                                 <td>
                                     <x-ui.primary-button
-                                        href="{{ route('student.invoice-sheets.show', $item['invoice_sheet_id']) }}"
+                                        href="{{ route('student.invoices.show', $item['order_id']) }}"
                                         size="sm"
                                     >
                                         Visualizza
