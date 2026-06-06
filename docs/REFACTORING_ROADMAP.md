@@ -39,7 +39,7 @@ Branch: `security/authorization-policies`
 
 ### 3. File handling
 
-Branch in progress: `security/file-uploads`
+Branch: `security/file-uploads`
 
 - Define accepted MIME types and upload size limits.
 - Store certificates and other private documents outside the public directory.
@@ -126,8 +126,11 @@ Planned branch: `maintenance/dependency-upgrade`
   - `8e229eb Store public uploads with generated names`
   - `a5f2a9f Serve protected files from private disk`
   - `e3fb414 Preserve files during upload replacement`
-- Verification: the full suite passes with 41 tests and 107 assertions; Pint
-  passes on the new upload support, tests, and protected-file controller.
+  - `fb550d1 Add upload input accept hints`
+  - `6cfacd9 Prune abandoned upload files`
+- Verification: the full suite passes with 44 tests and 119 assertions; Pint
+  passes on the new upload support, tests, protected-file controller, and
+  pruning command.
 - File-handling coverage:
   - PDFs are limited to 50 MB and profile images to 5 MB
   - accepted upload types are centralized and configurable
@@ -136,6 +139,8 @@ Planned branch: `maintenance/dependency-upgrade`
   - protected files are read explicitly from the private disk
   - guest, purchase, and student ownership checks have feature coverage
   - replacement uploads persist the new path before deleting the old file
+  - every file input has a matching `accept` hint
+  - old unreferenced uploads are pruned daily after a 24-hour grace window
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
@@ -143,5 +148,5 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: publish the replacement commit, add input accept hints, audit
-  abandoned temporary uploads, and complete the branch.
+- Next action: publish the completed upload branch, then create
+  `refactor/billing-schema` from this branch.
