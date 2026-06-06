@@ -8,15 +8,12 @@ use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\Course;
 use App\Models\Exercise;
-use App\Models\Invoice;
-use App\Models\InvoiceSheet;
 use App\Models\Lesson;
 use App\Models\LessonRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Review;
 use App\Models\Student;
-use App\Models\StudentInvoice;
 use App\Models\Subject;
 use App\Models\ThemeArea;
 use App\Models\User;
@@ -313,17 +310,6 @@ class DatabaseSeeder extends Seeder
             }
 
             $invoiceService->generatePdf($order->id);
-            $invoice = Invoice::where('order_id', $order->id)->firstOrFail();
-
-            $invoiceSheet = InvoiceSheet::create([
-                'issued_at' => $invoice->issued_at,
-                'file_path' => $invoice->file_path,
-            ]);
-
-            StudentInvoice::create([
-                'student_id' => $order->student_id,
-                'invoice_sheet_id' => $invoiceSheet->id,
-            ]);
         }
 
         $chat = Chat::create([
