@@ -71,6 +71,16 @@ class InvoiceService
             'order_id' => $order->id,
             'student_id' => $student->id,
             'payment_transaction_id' => $paymentTransactionId,
+            'source' => 'order',
+            'total_amount' => (int) round($total * 100),
+            'currency' => 'eur',
+            'customer_snapshot' => $this->customerSnapshot($user, $student),
+            'line_items' => $orderItems->map(fn ($item) => [
+                'description' => $item->description,
+                'unit_price' => (int) round($item->price * 100),
+                'quantity' => 1,
+                'total' => (int) round($item->price * 100),
+            ])->values()->all(),
             'file_path' => $relativePath,
         ]);
     }
@@ -135,7 +145,32 @@ class InvoiceService
             'issued_at' => $issuedAt,
             'student_id' => $student->id,
             'payment_transaction_id' => $transaction->id,
+            'source' => 'extra',
+            'total_amount' => $transaction->amount,
+            'currency' => $transaction->currency,
+            'customer_snapshot' => $this->customerSnapshot($user, $student),
+            'line_items' => [[
+                'description' => $description,
+                'unit_price' => (int) round($unitPrice * 100),
+                'quantity' => $quantity,
+                'total' => $transaction->amount,
+            ]],
+            'note' => '',
             'file_path' => $relativePath,
         ]);
+    }
+
+    private function customerSnapshot(User $user, object $customer): array
+    {
+        return [
+            'name' => $user->name,
+            'surname' => $user->surname,
+            'street' => $customer->street,
+            'house_number' => $customer->house_number,
+            'postal_code' => $customer->postal_code,
+            'city' => $customer->city,
+            'province' => $customer->province,
+            'tax_code' => $customer->tax_code,
+        ];
     }
 }

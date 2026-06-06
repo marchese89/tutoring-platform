@@ -16,12 +16,21 @@ class Invoice extends Model
         'order_id',
         'student_id',
         'payment_transaction_id',
+        'source',
+        'total_amount',
+        'currency',
+        'customer_snapshot',
+        'line_items',
+        'note',
         'file_path',
     ];
 
     protected $casts = [
         'number' => 'integer',
+        'total_amount' => 'integer',
         'issued_at' => 'datetime',
+        'customer_snapshot' => 'array',
+        'line_items' => 'array',
     ];
 
     public function order(): BelongsTo

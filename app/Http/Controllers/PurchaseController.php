@@ -246,6 +246,26 @@ class PurchaseController extends Controller
             'number' => $invoiceNumber,
             'issued_at' => $date,
             'order_id' => null,
+            'source' => 'extra',
+            'total_amount' => (int) round($total * 100),
+            'currency' => 'eur',
+            'customer_snapshot' => [
+                'name' => $validated['first_name'],
+                'surname' => $validated['last_name'],
+                'street' => $validated['street'],
+                'house_number' => $validated['house_number'],
+                'postal_code' => $validated['postal_code'],
+                'city' => $validated['city'],
+                'province' => $validated['province'],
+                'tax_code' => $validated['tax_code'],
+            ],
+            'line_items' => [[
+                'description' => $validated['description'],
+                'unit_price' => (int) round($price * 100),
+                'quantity' => $quantity,
+                'total' => (int) round($total * 100),
+            ]],
+            'note' => $validated['note'] ?? null,
             'file_path' => $path,
         ]);
 

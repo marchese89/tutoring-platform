@@ -74,6 +74,10 @@ class PaymentCallbackTest extends TestCase
 
         $this->assertSame($user->student->id, $invoice->student_id);
         $this->assertSame($transaction->id, $invoice->payment_transaction_id);
+        $this->assertSame('extra', $invoice->source);
+        $this->assertSame(2500, $invoice->total_amount);
+        $this->assertSame('eur', $invoice->currency);
+        $this->assertSame('Private lesson', $invoice->line_items[0]['description']);
         Storage::disk('private')->assertExists($invoice->file_path);
 
         $this->actingAs($user)->get(route('payment.success', [

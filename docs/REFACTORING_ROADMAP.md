@@ -137,14 +137,18 @@ Planned branch: `maintenance/dependency-upgrade`
     student-linked invoices
   - legacy `invoice_sheets` and `student_invoices` are migrated into
     `invoices` and removed from the fresh schema
-- Verification: the full suite passes with 49 tests and 136 assertions.
+  - invoices now persist source, total amount in cents, currency, customer
+    snapshot, line items, and note metadata
+- Verification: the full suite passes with 50 tests and 151 assertions.
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
   - `2026_06_05_020000_create_invoice_sequences_table`
   - `2026_06_06_000000_link_invoices_to_students_and_payments`
+  - `2026_06_06_010000_migrate_legacy_student_invoice_sheets`
+  - `2026_06_06_020000_add_metadata_to_invoices_table`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: decide whether admin-created extra invoices should stay
-  standalone or also point to a student/customer record.
+- Next action: continue normalizing order and invoice monetary fields, then
+  replace numeric product types with explicit enums.
