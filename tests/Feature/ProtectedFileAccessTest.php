@@ -109,6 +109,20 @@ class ProtectedFileAccessTest extends TestCase
             ->assertNotFound();
     }
 
+    public function test_student_can_preview_lesson_request_file_stored_in_session(): void
+    {
+        Storage::fake('private');
+        $student = $this->createStudent();
+        $path = 'lesson_requests/request_files/draft.pdf';
+        Storage::disk('private')->put($path, 'draft request');
+
+        $this->actingAs($student->user)
+            ->withSession(['uploaded_lesson_request_file' => $path])
+            ->get(route('protected-files.show', ['path' => $path]))
+            ->assertOk()
+            ->assertStreamedContent('draft request');
+    }
+
     private function createStudent(): Student
     {
         $user = User::factory()->create(['role' => 'student']);

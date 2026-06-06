@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Admin;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -90,6 +91,49 @@ class UploadValidationTest extends TestCase
             ]);
 
         $response->assertSessionHasErrors('file');
+    }
+
+    public function test_admin_photo_upload_stores_public_image(): void
+    {
+        Storage::fake('public');
+        $admin = User::factory()->create(['role' => 'admin']);
+        $adminProfile = Admin::create(['user_id' => $admin->id]);
+
+        $response = $this->actingAs($admin)
+            ->post(route('admin.account.photo.update'), [
+                'file' => UploadedFile::fake()->image('photo.jpg'),
+            ]);
+
+        $response->assertRedirect(route('admin.account.photo'));
+
+        $adminProfile->refresh();
+        $this->assertStringStartsWith('/storage/admin/photos/', $adminProfile->photo_path);
+        Storage::disk('public')->assertExists(substr($adminProfile->photo_path, 9));
+    }
+
+    public function test_student_request_file_upload_stores_private_pdf_in_session(): void
+    {
+        Storage::fake('private');
+        $student = $this->createStudent();
+
+        $response = $this->actingAs($student->user)
+            ->from(route('lesson-requests.create'))
+            ->post(route('lesson-requests.files.store'), [
+                'file' => UploadedFile::fake()->create(
+                    'request.pdf',
+                    10,
+                    'application/pdf'
+                ),
+            ]);
+
+        $response->assertRedirect(route('lesson-requests.create'));
+        $response->assertSessionHasNoErrors();
+
+        $path = session('uploaded_lesson_request_file');
+
+        $this->assertIsString($path);
+        $this->assertStringStartsWith('lesson_requests/request_files/', $path);
+        Storage::disk('private')->assertExists($path);
     }
 
     public function test_pdf_larger_than_configured_limit_is_rejected(): void

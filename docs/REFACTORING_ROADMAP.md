@@ -141,7 +141,8 @@ Planned branch: `maintenance/dependency-upgrade`
     snapshot, line items, and note metadata
   - admin upload session routes are constrained so they are not captured by
     generic numeric resource routes
-- Verification: the full suite passes with 52 tests and 155 assertions.
+  - admin photo uploads and lesson-request draft previews have feature coverage
+- Verification: the full suite passes with 55 tests and 167 assertions.
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
