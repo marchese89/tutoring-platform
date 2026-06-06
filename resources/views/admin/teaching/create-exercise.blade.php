@@ -25,7 +25,7 @@
             @method('POST')
             <input type="hidden" name="course_id" value="{{ $id }}" />
             <input type="file" class="form-control @error('prompt_file') is-invalid @enderror" id="prompt_file"
-                name="prompt_file" required />
+                name="prompt_file" accept="application/pdf" required />
             @error('prompt_file')
                 <div class="invalid-feedback">{{ $message }}</div>
             @enderror
@@ -64,7 +64,7 @@
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('solution_file') is-invalid @enderror" id="solution_file"
-                    name="solution_file" required />
+                    name="solution_file" accept="application/pdf" required />
                 @error('solution_file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

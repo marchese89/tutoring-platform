@@ -68,7 +68,7 @@
 
                                                     <input type="file"
                                                         class="form-control form-control-lg @error('file') is-invalid @enderror"
-                                                        id="file" name="file" required />
+                                                        id="file" name="file" accept="application/pdf" required />
                                                     @error('file')
                                                         <div class="invalid-feedback">{{ $message }}</div>
                                                     @enderror

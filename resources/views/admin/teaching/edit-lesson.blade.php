@@ -25,7 +25,7 @@
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('presentation_file') is-invalid @enderror" id="presentation_file"
-                    name="presentation_file" required />
+                    name="presentation_file" accept="application/pdf" required />
                 @error('presentation_file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
@@ -53,7 +53,7 @@
                 @csrf
                 @method('POST')
                 <input type="file" class="form-control @error('content_file') is-invalid @enderror" id="content_file"
-                    name="content_file" required />
+                    name="content_file" accept="application/pdf" required />
                 @error('content_file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

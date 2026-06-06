@@ -32,7 +32,7 @@
                             <label class="form-label fw-semibold" for="file">
                                 Seleziona immagine
                             </label>
-                            <input type="file" class="form-control rounded-3" id="file" name="file" required>
+                            <input type="file" class="form-control rounded-3" id="file" name="file" accept="image/jpeg,image/png,image/webp" required>
                         </div>
 
                         <x-ui.upload-progress label="Caricamento foto" />

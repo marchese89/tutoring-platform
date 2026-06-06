@@ -18,7 +18,7 @@
             @csrf
             <input type="hidden" name="course_id" value="{{ $id }}">
 
-            <input type="file" class="form-control" name="presentation_file" required>
+            <input type="file" class="form-control" name="presentation_file" accept="application/pdf" required>
 
             <x-ui.upload-progress label="Caricamento presentazione" />
 
@@ -45,7 +45,7 @@
                 @csrf
                 <input type="hidden" name="course_id" value="{{ $id }}">
 
-                <input type="file" class="form-control" name="content_file" required>
+                <input type="file" class="form-control" name="content_file" accept="application/pdf" required>
 
                 <x-ui.upload-progress label="Caricamento svolgimento" />
 

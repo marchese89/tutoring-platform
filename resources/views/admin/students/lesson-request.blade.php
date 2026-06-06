@@ -39,7 +39,7 @@
                 @csrf
                 @method('POST')
                 <input type="hidden" name="id" value="{{ $lessonRequest->id }}" />
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" required />
+                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="application/pdf" required />
                 @error('file')
                     <div class="invalid-feedback">{{ $message }}</div>
                 @enderror

@@ -45,7 +45,7 @@
                                 class="form-control rounded-3 @error('file') is-invalid @enderror"
                                 id="file"
                                 name="file"
-                                required>
+                                accept="application/pdf" required>
                             @error('file')
                                 <div class="invalid-feedback">
                                     {{ $message }}
