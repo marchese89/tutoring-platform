@@ -160,6 +160,80 @@ class InvoiceService
         ]);
     }
 
+    public function generateManualExtraPdf(array $data): Invoice
+    {
+        $admin = User::where('role', 'admin')->firstOrFail();
+        $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
+        $issuedAt = now();
+        $number = $this->numbers->next($issuedAt->year);
+        $price = (float) $data['price'];
+        $quantity = (float) $data['quantity'];
+        $total = $price * $quantity;
+
+        $html = view('invoices.invoice', [
+            'user' => (object) [
+                'name' => $data['first_name'],
+                'surname' => $data['last_name'],
+            ],
+            'customer' => (object) [
+                'street' => $data['street'],
+                'house_number' => $data['house_number'],
+                'postal_code' => $data['postal_code'],
+                'city' => $data['city'],
+                'province' => $data['province'],
+                'tax_code' => $data['tax_code'],
+            ],
+            'admin' => $admin,
+            'adminData' => $adminData,
+            'orderItems' => [[
+                'description' => $data['description'],
+                'price' => $price,
+                'quantity' => $quantity,
+                'total' => $total,
+            ]],
+            'total' => $total,
+            'invoiceDate' => $issuedAt->format('d/m/Y'),
+            'invoiceNumber' => $number,
+            'note' => $data['note'] ?? '',
+        ])->render();
+
+        $dompdf = new Dompdf;
+        $dompdf->loadHtml($html);
+        $dompdf->setPaper('A4', 'portrait');
+        $dompdf->render();
+
+        $relativePath = "extra-invoices/{$issuedAt->year}/invoice_{$number}.pdf";
+
+        Storage::disk('private')->put($relativePath, $dompdf->output());
+
+        return Invoice::create([
+            'number' => $number,
+            'issued_at' => $issuedAt,
+            'order_id' => null,
+            'source' => 'extra',
+            'total_amount' => (int) round($total * 100),
+            'currency' => 'eur',
+            'customer_snapshot' => [
+                'name' => $data['first_name'],
+                'surname' => $data['last_name'],
+                'street' => $data['street'],
+                'house_number' => $data['house_number'],
+                'postal_code' => $data['postal_code'],
+                'city' => $data['city'],
+                'province' => $data['province'],
+                'tax_code' => $data['tax_code'],
+            ],
+            'line_items' => [[
+                'description' => $data['description'],
+                'unit_price' => (int) round($price * 100),
+                'quantity' => $quantity,
+                'total' => (int) round($total * 100),
+            ]],
+            'note' => $data['note'] ?? null,
+            'file_path' => $relativePath,
+        ]);
+    }
+
     private function customerSnapshot(User $user, object $customer): array
     {
         return [

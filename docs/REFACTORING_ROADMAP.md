@@ -131,6 +131,8 @@ Planned branch: `maintenance/dependency-upgrade`
   - replaced per-item purchase checks in course listings with batched purchased
     product ID lookups
   - added feature coverage for purchased student course listings
+  - moved manual extra-invoice PDF generation out of `PurchaseController` and
+    into `InvoiceService`
 - Verification: the full suite passes with 59 tests and 181 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.

@@ -7,23 +7,16 @@ use App\Exceptions\PaymentVerificationException;
 use App\Http\Utility\Cart;
 use App\Http\Utility\CartItem;
 use App\Mail\OrderCompletedMail;
-use App\Models\Admin;
 use App\Models\Exercise;
-use App\Models\Invoice;
 use App\Models\Lesson;
 use App\Models\LessonRequest;
 use App\Models\Order;
 use App\Models\PaymentTransaction;
-use App\Models\User;
-use App\Services\InvoiceNumberService;
 use App\Services\InvoiceService;
 use App\Services\OrderService;
 use App\Services\PaymentService;
-use Carbon\Carbon;
-use Dompdf\Dompdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Storage;
 
 class PurchaseController extends Controller
 {
@@ -163,10 +156,8 @@ class PurchaseController extends Controller
         return redirect()->route('payment.complete');
     }
 
-    public function createExtraInvoice(
-        Request $request,
-        InvoiceNumberService $numbers
-    ) {
+    public function createExtraInvoice(Request $request, InvoiceService $invoiceService)
+    {
         $validated = $request->validate(
             [
                 'first_name' => ['required', 'string', 'max:255'],
@@ -198,76 +189,7 @@ class PurchaseController extends Controller
             ]
         );
 
-        $admin = User::where('role', 'admin')->firstOrFail();
-        $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
-
-        $date = Carbon::now();
-        $invoiceNumber = $numbers->next($date->year);
-        $price = (float) $validated['price'];
-        $quantity = (float) $validated['quantity'];
-        $total = $price * $quantity;
-
-        $html = view('invoices.invoice', [
-            'user' => (object) [
-                'name' => $validated['first_name'],
-                'surname' => $validated['last_name'],
-            ],
-            'customer' => (object) [
-                'street' => $validated['street'],
-                'house_number' => $validated['house_number'],
-                'postal_code' => $validated['postal_code'],
-                'city' => $validated['city'],
-                'province' => $validated['province'],
-                'tax_code' => $validated['tax_code'],
-            ],
-            'admin' => $admin,
-            'adminData' => $adminData,
-            'orderItems' => [[
-                'description' => $validated['description'],
-                'price' => $price,
-                'quantity' => $quantity,
-                'total' => $total,
-            ]],
-            'total' => $total,
-            'invoiceDate' => $date->format('d/m/Y'),
-            'invoiceNumber' => $invoiceNumber,
-            'note' => $validated['note'] ?? '',
-        ])->render();
-
-        $dompdf = new Dompdf;
-        $dompdf->loadHtml($html);
-        $dompdf->setPaper('A4', 'portrait');
-        $dompdf->render();
-
-        $path = "extra-invoices/{$date->year}/invoice_{$invoiceNumber}.pdf";
-        Storage::disk('private')->put($path, $dompdf->output());
-
-        Invoice::create([
-            'number' => $invoiceNumber,
-            'issued_at' => $date,
-            'order_id' => null,
-            'source' => 'extra',
-            'total_amount' => (int) round($total * 100),
-            'currency' => 'eur',
-            'customer_snapshot' => [
-                'name' => $validated['first_name'],
-                'surname' => $validated['last_name'],
-                'street' => $validated['street'],
-                'house_number' => $validated['house_number'],
-                'postal_code' => $validated['postal_code'],
-                'city' => $validated['city'],
-                'province' => $validated['province'],
-                'tax_code' => $validated['tax_code'],
-            ],
-            'line_items' => [[
-                'description' => $validated['description'],
-                'unit_price' => (int) round($price * 100),
-                'quantity' => $quantity,
-                'total' => (int) round($total * 100),
-            ]],
-            'note' => $validated['note'] ?? null,
-            'file_path' => $path,
-        ]);
+        $invoiceService->generateManualExtraPdf($validated);
 
         return redirect()->route('admin.invoices.created');
     }
