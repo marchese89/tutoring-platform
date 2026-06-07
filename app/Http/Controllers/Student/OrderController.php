@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Student;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
-use App\Services\PurchaseService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -40,14 +39,14 @@ class OrderController extends Controller
             ->pluck('month')
             ->map(fn($month) => [
                 'value' => $month,
-                'label' => PurchaseService::monthName((int) $month),
+                'label' => DateHelper::monthName((int) $month),
             ]);
 
         return view('student.orders', [
             'hasOrders' => true,
             'selectedYear' => $firstOrderDate['year'],
             'selectedMonth' => $firstOrderDate['month'],
-            'selectedMonthLabel' => PurchaseService::monthName((int) $firstOrderDate['month']),
+            'selectedMonthLabel' => DateHelper::monthName((int) $firstOrderDate['month']),
             'years' => $years,
             'months' => $months,
         ]);

@@ -96,14 +96,14 @@
 
                                     <option selected value="{{ $firstOrderDate['month'] }}">
 
-                                        {{ App\Services\PurchaseService::monthName(intval($firstOrderDate['month'])) }}
+                                        {{ $firstOrderMonthLabel }}
 
                                     </option>
 
                                     @foreach ($months as $item)
-                                        <option value="{{ $item->month }}">
+                                        <option value="{{ $item['value'] }}">
 
-                                            {{ App\Services\PurchaseService::monthName(intval($item->month)) }}
+                                            {{ $item['label'] }}
 
                                         </option>
                                     @endforeach

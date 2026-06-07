@@ -133,7 +133,9 @@ Planned branch: `maintenance/dependency-upgrade`
   - added feature coverage for purchased student course listings
   - moved manual extra-invoice PDF generation out of `PurchaseController` and
     into `InvoiceService`
-- Verification: the full suite passes with 59 tests and 181 assertions.
+  - consolidated month label formatting through `DateHelper` and removed the
+    duplicate `PurchaseService::monthName`
+- Verification: the full suite passes with 60 tests and 183 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

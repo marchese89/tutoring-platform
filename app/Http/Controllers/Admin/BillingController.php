@@ -55,11 +55,16 @@ class BillingController extends Controller
         $months = Order::selectRaw('MONTH(ordered_at) as month')
             ->groupBy('month')
             ->orderBy('month')
-            ->get();
+            ->pluck('month')
+            ->map(fn ($month) => [
+                'value' => $month,
+                'label' => DateHelper::monthName((int) $month),
+            ]);
 
         return view('admin.billing.sales', [
             'hasOrders' => true,
             'firstOrderDate' => $firstOrderDate,
+            'firstOrderMonthLabel' => DateHelper::monthName((int) $firstOrderDate['month']),
             'years' => $years,
             'months' => $months
         ]);

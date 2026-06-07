@@ -29,33 +29,4 @@ class PurchaseService
         return OrderItem::where('order_id', $orderId)->sum('price');
     }
 
-    public static function monthName($month)
-    {
-        switch ($month) {
-            case 1:
-                return 'Gennaio';
-            case 2:
-                return 'Febbraio';
-            case 3:
-                return 'Marzo';
-            case 4:
-                return 'Aprile';
-            case 5:
-                return 'Maggio';
-            case 6:
-                return 'Giugno';
-            case 7:
-                return 'Luglio';
-            case 8:
-                return 'Agosto';
-            case 9:
-                return 'Settembre';
-            case 10:
-                return 'Ottobre';
-            case 11:
-                return 'Novembre';
-            case 12:
-                return 'Dicembre';
-        }
-    }
 }
