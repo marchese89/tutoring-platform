@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Certificate;
 use App\Models\User;
 use App\Models\Review;
 
@@ -17,5 +17,12 @@ class HomeController extends Controller
         $avg = $feedbacks->avg('rating');
 
         return view('index', compact('admin', 'feedbacks', 'avg'));
+    }
+
+    public function about()
+    {
+        $certificates = Certificate::orderBy('id')->get();
+
+        return view('public.about', compact('certificates'));
     }
 }

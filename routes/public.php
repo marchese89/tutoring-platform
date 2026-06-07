@@ -16,7 +16,7 @@ Route::view('registration/error', 'auth.registration-error')->name('registration
 
 Route::view('privacy-policy', 'public.privacy-policy')->name('privacy-policy');
 Route::view('cookie-policy', 'public.cookie-policy')->name('cookie-policy');
-Route::view('about', 'public.about')->name('about');
+Route::get('about', [HomeController::class, 'about'])->name('about');
 
 Route::get('theme-areas', [ThemeAreaController::class, 'publicIndex'])->name('theme-areas.index');
 Route::get('theme-areas/{themeArea}/subjects', [SubjectController::class, 'publicIndex'])->name('subjects.index');

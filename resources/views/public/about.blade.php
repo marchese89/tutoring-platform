@@ -3,9 +3,6 @@
 @section('content')
 
 <div class="container"  style="text-align: center;width:60%;min-height:900px">
-    @php
-    $certificates = DB::table('certificates')->select('*')->get();
-    @endphp
     @foreach ($certificates as $item)
         <div class="container" style="text-align: center;">
 

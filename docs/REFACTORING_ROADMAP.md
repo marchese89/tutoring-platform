@@ -61,7 +61,7 @@ Branch: `refactor/billing-schema`
 
 ### 5. Queries and controllers
 
-Planned branch: `refactor/query-and-controller-cleanup`
+Branch: `refactor/query-controller-cleanup`
 
 - Replace purchase N+1 queries with `exists` or eager-loaded queries.
 - Remove the remaining database query from `public/about.blade.php`.
@@ -119,8 +119,15 @@ Planned branch: `maintenance/dependency-upgrade`
 
 ## Current progress
 
-- Current branch: `refactor/billing-schema`
-- Base commit: `ab9049c Complete file upload handoff`
+- Current branch: `refactor/query-controller-cleanup`
+- Base commit: `e787967 Cover upload success flows`
+- Completed query/controller work:
+  - moved certificate loading for the public about page from Blade to
+    `HomeController`
+  - added feature coverage for the public about page
+- Verification: the full suite passes with 56 tests and 169 assertions.
+- Previous billing-schema branch is published through
+  `e787967 Cover upload success flows`.
 - Completed billing-schema work:
   - student invoice listing now reads from the real `invoices` table through
     owned orders
@@ -142,7 +149,8 @@ Planned branch: `maintenance/dependency-upgrade`
   - admin upload session routes are constrained so they are not captured by
     generic numeric resource routes
   - admin photo uploads and lesson-request draft previews have feature coverage
-- Verification: the full suite passes with 55 tests and 167 assertions.
+- Billing-schema verification: the full suite passes with 55 tests and 167
+  assertions.
 - Payment migrations remain applied locally:
   - `2026_06_05_000000_create_payment_transactions_table`
   - `2026_06_05_010000_add_payment_completion_constraints`
@@ -153,5 +161,5 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: continue normalizing order and invoice monetary fields, then
-  replace numeric product types with explicit enums.
+- Next action: continue moving display preparation out of Blade files and
+  reduce duplicated query code in controllers.
