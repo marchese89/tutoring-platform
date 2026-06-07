@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
-use App\Models\OrderItem;
 use App\Models\Invoice;
 use App\Helpers\DateHelper;
 
@@ -14,10 +13,20 @@ class BillingController extends Controller
 {
     public function showOrder(int $id)
     {
-        $order = Order::where('id', '=', $id)->first();
-        $products = OrderItem::where('order_id', '=', request('id'))->get();
-        $orderTotal = OrderItem::where('order_id', '=', request('id'))->sum('price');
-        return View('admin.billing.order', compact('order', 'products', 'orderTotal'));
+        $order = Order::with('orderItems')->findOrFail($id);
+        $products = $order->orderItems->map(fn ($item) => [
+            'product_id' => $item->product_id,
+            'product_type_label' => $this->productTypeLabel((int) $item->product_type),
+            'product_type_class' => $this->productTypeBadgeClass((int) $item->product_type),
+            'price' => $item->price,
+        ]);
+
+        return view('admin.billing.order', [
+            'order' => $order,
+            'orderDate' => DateHelper::format($order->ordered_at),
+            'products' => $products,
+            'orderTotal' => $order->orderItems->sum('price'),
+        ]);
     }
 
     public function showInvoice(int $id)
@@ -86,5 +95,25 @@ class BillingController extends Controller
             'orders' => $mappedOrders,
             'total' => $total
         ]);
+    }
+
+    private function productTypeLabel(int $type): string
+    {
+        return match ($type) {
+            0 => 'Lezione',
+            2 => 'Esercizio',
+            5 => 'Lezione su richiesta',
+            default => 'Prodotto',
+        };
+    }
+
+    private function productTypeBadgeClass(int $type): string
+    {
+        return match ($type) {
+            0 => 'bg-primary-subtle text-primary',
+            2 => 'bg-success-subtle text-success',
+            5 => 'bg-warning-subtle text-dark',
+            default => 'bg-secondary-subtle text-secondary',
+        };
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Ordine #' . request('id')" />
+    <x-ui.section-header :title="'Ordine #' . $order->id" />
 @endsection
 
 @section('inner')
@@ -12,17 +12,17 @@
                 <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
                     <div class="text-start">
                         <h4 class="fw-bold mb-1">
-                            Ordine #{{ request('id') }}
+                            Ordine #{{ $order->id }}
                         </h4>
 
                         <p class="text-muted mb-0">
-                            Data ordine: {{ $order->ordered_at }}
+                            Data ordine: {{ $orderDate }}
                         </p>
                     </div>
 
                     <div class="mt-3 mt-md-0">
                         <button class="btn btn-primary px-4"
-                            onclick="location.href='{{ route('admin.orders.invoice', request('id')) }}'">
+                            onclick="location.href='{{ route('admin.orders.invoice', $order->id) }}'">
                             Visualizza Fattura
                         </button>
                     </div>
@@ -44,33 +44,17 @@
                                 <tr>
 
                                     <td class="fw-semibold">
-                                        #{{ $item->product_id }}
+                                        #{{ $item['product_id'] }}
                                     </td>
 
                                     <td>
-                                        @switch($item->product_type)
-                                            @case(0)
-                                                <span class="badge bg-primary-subtle text-primary">
-                                                    Lezione
-                                                </span>
-                                            @break
-
-                                            @case(2)
-                                                <span class="badge bg-success-subtle text-success">
-                                                    Esercizio
-                                                </span>
-                                            @break
-
-                                            @case(5)
-                                                <span class="badge bg-warning-subtle text-dark">
-                                                    Lezione su richiesta
-                                                </span>
-                                            @break
-                                        @endswitch
+                                        <span class="badge {{ $item['product_type_class'] }}">
+                                            {{ $item['product_type_label'] }}
+                                        </span>
                                     </td>
 
                                     <td class="text-end fw-bold">
-                                        {{ number_format($item->price, 2, ',', '.') }} €
+                                        {{ number_format($item['price'], 2, ',', '.') }} €
                                     </td>
 
                                 </tr>
