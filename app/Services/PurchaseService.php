@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\OrderItem;
+use Illuminate\Support\Collection;
 
 class PurchaseService
 {
@@ -15,16 +16,17 @@ class PurchaseService
             ->exists();
     }
 
+    public static function purchasedProductIds(int $studentId, int $productType): Collection
+    {
+        return OrderItem::query()
+            ->where('product_type', $productType)
+            ->whereHas('order', fn ($query) => $query->where('student_id', $studentId))
+            ->pluck('product_id');
+    }
+
     public static function orderTotal($orderId): int
     {
-        $total = 0;
-
-        $orderItems = OrderItem::where('order_id', '=', $orderId)->get();
-        foreach ($orderItems as $item) {
-            $total += $item->price;
-        }
-
-        return $total;
+        return OrderItem::where('order_id', $orderId)->sum('price');
     }
 
     public static function monthName($month)

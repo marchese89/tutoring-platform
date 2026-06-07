@@ -8,8 +8,6 @@ use App\Models\Course;
 use App\Models\Subject;
 use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Models\Order;
-use App\Models\OrderItem;
 use App\Services\PurchaseService;
 
 class CourseController extends Controller
@@ -39,29 +37,20 @@ class CourseController extends Controller
     {
         $studentId = $request->user()->student->id;
 
-        $orderIds = Order::where('student_id', $studentId)->pluck('id');
+        $lessonCourseIds = Lesson::whereIn(
+            'id',
+            PurchaseService::purchasedProductIds($studentId, 0)
+        )->pluck('course_id');
 
-        $productRows = OrderItem::whereIn('order_id', $orderIds)->get();
+        $exerciseCourseIds = Exercise::whereIn(
+            'id',
+            PurchaseService::purchasedProductIds($studentId, 2)
+        )->pluck('course_id');
 
-        $courseIds = [];
-
-        foreach ($productRows as $row) {
-            if ($row->product_type == 0) {
-                $lesson = Lesson::find($row->product_id);
-                if ($lesson) {
-                    $courseIds[] = $lesson->course_id;
-                }
-            }
-
-            if ($row->product_type == 2) {
-                $exercise = Exercise::find($row->product_id);
-                if ($exercise) {
-                    $courseIds[] = $exercise->course_id;
-                }
-            }
-        }
-
-        $courseIds = array_unique($courseIds);
+        $courseIds = $lessonCourseIds
+            ->merge($exerciseCourseIds)
+            ->unique()
+            ->values();
 
         $courses = Course::with('subject.themeArea')
             ->whereIn('id', $courseIds)
@@ -124,42 +113,26 @@ class CourseController extends Controller
 
         $studentId = $user?->student?->id;
         $isAdmin = $user?->role === 'admin';
+        $purchasedLessonIds = $studentId
+            ? PurchaseService::purchasedProductIds($studentId, 0)
+            : collect();
+        $purchasedExerciseIds = $studentId
+            ? PurchaseService::purchasedProductIds($studentId, 2)
+            : collect();
 
-        $lessons = $course->lessons->map(function ($lesson) use ($studentId, $isAdmin) {
-
-            $purchased = false;
-
-            if ($studentId) {
-                $purchased = PurchaseService::isProductPurchased(
-                    $studentId,
-                    $lesson->id,
-                    0
-                );
-            }
-
+        $lessons = $course->lessons->map(function ($lesson) use ($purchasedLessonIds, $isAdmin) {
             $lesson->can_show =
                 $lesson->price == 0 ||
-                $purchased ||
+                $purchasedLessonIds->contains($lesson->id) ||
                 $isAdmin;
 
             return $lesson;
         });
 
-        $exercises = $course->exercises->map(function ($exercise) use ($studentId, $isAdmin) {
-
-            $purchased = false;
-
-            if ($studentId) {
-                $purchased = PurchaseService::isProductPurchased(
-                    $studentId,
-                    $exercise->id,
-                    2
-                );
-            }
-
+        $exercises = $course->exercises->map(function ($exercise) use ($purchasedExerciseIds, $isAdmin) {
             $exercise->can_show =
                 $exercise->price == 0 ||
-                $purchased ||
+                $purchasedExerciseIds->contains($exercise->id) ||
                 $isAdmin;
 
             return $exercise;

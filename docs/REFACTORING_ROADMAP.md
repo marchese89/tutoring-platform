@@ -128,7 +128,10 @@ Planned branch: `maintenance/dependency-upgrade`
   - prepared admin order detail data in `BillingController` instead of using
     duplicate queries and `request('id')` in Blade
   - added feature coverage for the admin order detail page
-- Verification: the full suite passes with 57 tests and 173 assertions.
+  - replaced per-item purchase checks in course listings with batched purchased
+    product ID lookups
+  - added feature coverage for purchased student course listings
+- Verification: the full suite passes with 59 tests and 181 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

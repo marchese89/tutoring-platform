@@ -17,24 +17,20 @@ class RouteController extends Controller
         $course = Course::query()->findOrFail($id);
 
         $student = $request->user()->student;
+        $purchasedLessonIds = PurchaseService::purchasedProductIds($student->id, 0);
+        $purchasedExerciseIds = PurchaseService::purchasedProductIds($student->id, 2);
 
         $lessons = Lesson::query()
             ->where('course_id', $course->id)
+            ->whereIn('id', $purchasedLessonIds)
             ->orderBy('number')
-            ->get()
-            ->filter(function ($lesson) use ($student) {
-                return PurchaseService::isProductPurchased($student->id, $lesson->id, 0);
-            })
-            ->values();
+            ->get();
 
         $exercises = Exercise::query()
             ->where('course_id', $course->id)
+            ->whereIn('id', $purchasedExerciseIds)
             ->orderBy('id')
-            ->get()
-            ->filter(function ($exercise) use ($student) {
-                return PurchaseService::isProductPurchased($student->id, $exercise->id, 2);
-            })
-            ->values();
+            ->get();
 
         return view('student.course', compact(
             'course',
