@@ -125,7 +125,9 @@ Planned branch: `maintenance/dependency-upgrade`
   - added `StudentFactory` and `AdminFactory` with role-correct user records
   - added the missing `Admin::user()` relationship
   - added feature coverage for both account factories
-- Verification: the full suite passes with 78 tests and 241 assertions.
+  - added smoke coverage for public, student, and admin top-level pages
+  - made the home page render safely before an admin account is seeded
+- Verification: the full suite passes with 81 tests and 289 assertions.
 - Previous query/controller branch is published through
   `ea350b0 Prepare login return intent`.
 - Completed query/controller work:
@@ -205,4 +207,5 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: add route smoke coverage and continue core model factories.
+- Next action: continue core model factories and use them to simplify feature
+  test setup.

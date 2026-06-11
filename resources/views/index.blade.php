@@ -32,11 +32,13 @@
 
         {{-- Profile --}}
         <div class="row align-items-center mb-5">
-            <div class="col-md-5">
-                <img src="{{ $admin->photo_path }}" class="img-fluid rounded-3 shadow-sm">
-            </div>
+            @if ($admin?->photo_path)
+                <div class="col-md-5">
+                    <img src="{{ $admin->photo_path }}" class="img-fluid rounded-3 shadow-sm">
+                </div>
+            @endif
 
-            <div class="col-md-7">
+            <div class="{{ $admin?->photo_path ? 'col-md-7' : 'col-12' }}">
                 <x-section-title>Chi sono</x-section-title>
 
                 <p>
