@@ -119,8 +119,15 @@ Planned branch: `maintenance/dependency-upgrade`
 
 ## Current progress
 
-- Current branch: `refactor/query-controller-cleanup`
-- Base commit: `e787967 Cover upload success flows`
+- Current branch: `test/application-coverage`
+- Base commit: `ea350b0 Prepare login return intent`
+- Completed automated-test work:
+  - added `StudentFactory` and `AdminFactory` with role-correct user records
+  - added the missing `Admin::user()` relationship
+  - added feature coverage for both account factories
+- Verification: the full suite passes with 78 tests and 241 assertions.
+- Previous query/controller branch is published through
+  `ea350b0 Prepare login return intent`.
 - Completed query/controller work:
   - moved certificate loading for the public about page from Blade to
     `HomeController`
@@ -161,7 +168,8 @@ Planned branch: `maintenance/dependency-upgrade`
   - replaced the login `Route::view` with a controller action and removed
     request access from the login Blade
   - added coverage for student login redirects with and without return intent
-- Verification: the full suite passes with 76 tests and 237 assertions.
+- Query/controller verification: the full suite passes with 76 tests and 237
+  assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:
@@ -197,5 +205,4 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: verify the remaining Blade PHP is limited to reusable component
-  class assembly, then close this work package and start application coverage.
+- Next action: add route smoke coverage and continue core model factories.
