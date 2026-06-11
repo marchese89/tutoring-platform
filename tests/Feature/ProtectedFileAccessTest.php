@@ -9,9 +9,6 @@ use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Student;
-use App\Models\Subject;
-use App\Models\ThemeArea;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
@@ -23,7 +20,9 @@ class ProtectedFileAccessTest extends TestCase
     public function test_guest_can_read_public_lesson_presentation_from_private_disk(): void
     {
         Storage::fake('private');
-        $course = $this->createCourse();
+        $course = Course::factory()->create([
+            'name' => 'Purchased course',
+        ]);
         $path = 'lessons/presentations/public.pdf';
         Storage::disk('private')->put($path, 'presentation');
         Lesson::create([
@@ -42,7 +41,9 @@ class ProtectedFileAccessTest extends TestCase
     public function test_guest_cannot_read_paid_lesson_content(): void
     {
         Storage::fake('private');
-        $course = $this->createCourse();
+        $course = Course::factory()->create([
+            'name' => 'Purchased course',
+        ]);
         $path = 'lessons/files/paid.pdf';
         Storage::disk('private')->put($path, 'paid content');
         Lesson::create([
@@ -60,9 +61,11 @@ class ProtectedFileAccessTest extends TestCase
     public function test_only_purchasing_student_can_read_paid_lesson_content(): void
     {
         Storage::fake('private');
-        $owner = $this->createStudent();
-        $otherStudent = $this->createStudent();
-        $course = $this->createCourse();
+        $owner = Student::factory()->create();
+        $otherStudent = Student::factory()->create();
+        $course = Course::factory()->create([
+            'name' => 'Purchased course',
+        ]);
         $path = 'lessons/files/purchased.pdf';
         Storage::disk('private')->put($path, 'purchased content');
         $lesson = Lesson::create([
@@ -87,8 +90,8 @@ class ProtectedFileAccessTest extends TestCase
     public function test_only_owner_can_read_direct_student_invoice(): void
     {
         Storage::fake('private');
-        $owner = $this->createStudent();
-        $otherStudent = $this->createStudent();
+        $owner = Student::factory()->create();
+        $otherStudent = Student::factory()->create();
         $path = 'extra-invoices/2026/invoice_303.pdf';
         Storage::disk('private')->put($path, 'extra invoice');
 
@@ -112,7 +115,7 @@ class ProtectedFileAccessTest extends TestCase
     public function test_student_can_preview_lesson_request_file_stored_in_session(): void
     {
         Storage::fake('private');
-        $student = $this->createStudent();
+        $student = Student::factory()->create();
         $path = 'lesson_requests/request_files/draft.pdf';
         Storage::disk('private')->put($path, 'draft request');
 
@@ -123,48 +126,19 @@ class ProtectedFileAccessTest extends TestCase
             ->assertStreamedContent('draft request');
     }
 
-    private function createStudent(): Student
-    {
-        $user = User::factory()->create(['role' => 'student']);
-
-        return Student::create([
-            'user_id' => $user->id,
-            'street' => 'Test street',
-            'house_number' => '1',
-            'city' => 'Rome',
-            'province' => 'RM',
-            'postal_code' => '00100',
-            'tax_code' => strtoupper(fake()->unique()->bothify('????????????????')),
-        ]);
-    }
-
-    private function createCourse(): Course
-    {
-        $themeArea = ThemeArea::create(['name' => fake()->unique()->word()]);
-        $subject = Subject::create([
-            'theme_area_id' => $themeArea->id,
-            'name' => fake()->unique()->word(),
-        ]);
-
-        return Course::create([
-            'subject_id' => $subject->id,
-            'name' => fake()->unique()->words(2, true),
-        ]);
-    }
-
     private function purchase(Student $student, Lesson $lesson): void
     {
-        $order = Order::create([
-            'student_id' => $student->id,
-            'ordered_at' => now(),
-        ]);
+        $order = Order::factory()
+            ->for($student)
+            ->create();
 
-        OrderItem::create([
-            'order_id' => $order->id,
-            'product_id' => $lesson->id,
-            'product_type' => CartItem::LESSON,
-            'price' => $lesson->price,
-            'description' => 'Lesson purchase',
-        ]);
+        OrderItem::factory()
+            ->for($order)
+            ->create([
+                'product_id' => $lesson->id,
+                'product_type' => CartItem::LESSON,
+                'price' => $lesson->price,
+                'description' => 'Lesson purchase',
+            ]);
     }
 }
