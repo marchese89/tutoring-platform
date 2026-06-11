@@ -71,7 +71,10 @@ Branch: `refactor/query-controller-cleanup`
 
 ### 6. Automated tests
 
-Planned branch: `test/application-coverage`
+Branches: `test/application-coverage`, `test/core-model-factories`,
+`test/factory-based-test-cleanup`
+
+Status: completed for the current application surface.
 
 - Configure an isolated testing database.
 - Cover authentication, roles, purchases, files, chat, invoices, and routes.
@@ -117,7 +120,61 @@ Planned branch: `maintenance/dependency-upgrade`
 - Perform a seeded installation and end-to-end browser verification.
 - Update setup and testing documentation.
 
-## Current progress
+## Current status
+
+Last verified: 2026-06-11.
+
+- Current branch: `test/factory-based-test-cleanup`.
+- Verified application baseline:
+  `6bc2e2e Use factories in purchase and billing tests`.
+- The verified baseline is published to
+  `origin/test/factory-based-test-cleanup`.
+- Automated verification: 93 tests and 332 assertions pass.
+- Core model factories: 18 factories available.
+- Blade query audit: no remaining direct model queries found.
+- Payment completion verifies the stored Stripe PaymentIntent, amount,
+  currency, ownership, and idempotency before fulfillment.
+- Chat writes and private broadcast subscriptions are authorized through the
+  chat policy.
+- Lesson-request writes and uploads require an authenticated student.
+- Protected uploads use centralized MIME and size rules and private storage
+  where appropriate.
+- Invoice workflows use the unified `invoices` table and concurrent invoice
+  numbering is protected by `invoice_sequences` and row locking.
+- Seeder credentials are documented in `.env.example`.
+
+### Remaining work
+
+1. Upgrade vulnerable Composer dependencies. `composer audit --locked` reports
+   11 advisories affecting Laravel and Symfony packages. Laravel must reach
+   12.60.0 or later because Laravel 10 and 11 no longer receive security fixes.
+2. Run Pint across the repository. The global check currently reports 35
+   files requiring formatting.
+3. Replace remaining numeric product and chat types (`0`, `2`, and `5`) with
+   a shared enum or equivalent typed constants.
+4. Finish factory-based cleanup in feature tests that still construct core
+   models manually.
+5. Split the monolithic `DatabaseSeeder` and verify a fresh seeded install in
+   a disposable database. The current PHP CLI does not have PDO SQLite, so the
+   in-memory installation check cannot run locally yet.
+6. Remove `public/custom_javascript/utility.js` after replacing or confirming
+   its remaining layout dependency.
+7. Complete internal code-quality cleanup, localization, and the global UI
+   audit described in work packages 7-9.
+8. Decide whether to squash transitional billing migrations before the first
+   stable release. Preserve them while upgrades from existing databases still
+   need support.
+
+### Next action
+
+Create `maintenance/dependency-upgrade` from
+`test/factory-based-test-cleanup`. Upgrade Laravel in two verified stages,
+first from 10 to 11 and then from 11 to Laravel 12.60.0 or later. Update the
+related first-party packages and Symfony dependencies at each stage, then run
+Composer audit, the full test suite, and Pint on files changed by the upgrade.
+Do not combine this work with localization or UI changes.
+
+## Historical progress
 
 - Current branch: `test/application-coverage`
 - Base commit: `ea350b0 Prepare login return intent`
