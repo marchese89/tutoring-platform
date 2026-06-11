@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\PaymentPurpose;
 use App\Http\Utility\CartItem;
 use App\Models\Admin;
 use App\Models\Certificate;
@@ -12,6 +13,7 @@ use App\Models\Lesson;
 use App\Models\LessonRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\PaymentTransaction;
 use App\Models\Review;
 use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -114,5 +116,17 @@ class ModelFactoryTest extends TestCase
         $this->assertSame('student', $review->student->user->role);
         $this->assertGreaterThanOrEqual(1, $review->rating);
         $this->assertLessThanOrEqual(5, $review->rating);
+    }
+
+    public function test_payment_transaction_factory_creates_transaction_for_user(): void
+    {
+        $transaction = PaymentTransaction::factory()->create();
+
+        $this->assertNotNull($transaction->user);
+        $this->assertSame('student', $transaction->user->role);
+        $this->assertSame(PaymentPurpose::CHECKOUT, $transaction->purpose);
+        $this->assertSame('eur', $transaction->currency);
+        $this->assertNull($transaction->order);
+        $this->assertFalse($transaction->isCompleted());
     }
 }
