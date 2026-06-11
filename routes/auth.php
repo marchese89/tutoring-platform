@@ -1,12 +1,12 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\RegistrationController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Auth\PasswordResetController;
+use App\Http\Controllers\Auth\RegistrationController;
+use Illuminate\Support\Facades\Route;
 
-Route::view('login', 'auth.login')->name('login');
+Route::get('login', [LoginController::class, 'show'])->name('login');
 
 Route::post('login', [LoginController::class, 'login']);
 Route::post('logout', [LogoutController::class, 'logout'])->name('logout');

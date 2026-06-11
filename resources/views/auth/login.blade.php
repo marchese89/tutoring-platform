@@ -35,7 +35,7 @@
 
                             @csrf
 
-                            <input type="hidden" name="return" value="{{ request('back') ? '1' : '0' }}">
+                            <input type="hidden" name="return" value="{{ $returnToLessonRequest ? '1' : '0' }}">
 
                             {{-- EMAIL --}}
                             <div class="mb-3">

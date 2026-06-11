@@ -158,7 +158,10 @@ Planned branch: `maintenance/dependency-upgrade`
   - moved extra-payment total and Stripe-key preparation into a dedicated
     student payment controller
   - prevented rejected extra-payment details from remaining in session
-- Verification: the full suite passes with 73 tests and 231 assertions.
+  - replaced the login `Route::view` with a controller action and removed
+    request access from the login Blade
+  - added coverage for student login redirects with and without return intent
+- Verification: the full suite passes with 76 tests and 237 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:
@@ -194,5 +197,5 @@ Planned branch: `maintenance/dependency-upgrade`
 - Existing demo-data issue: invoice number `2` is duplicated three times in
   2026. Existing invoices were intentionally not renumbered.
 - Known baseline issue: Pint fails across about 50 untouched files.
-- Next action: continue moving display preparation out of Blade files and
-  reduce duplicated query code in controllers.
+- Next action: verify the remaining Blade PHP is limited to reusable component
+  class assembly, then close this work package and start application coverage.

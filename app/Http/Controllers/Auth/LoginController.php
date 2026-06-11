@@ -3,15 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utility\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Utility\Cart;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Password;
-
 
 class LoginController extends Controller
 {
+    public function show(Request $request)
+    {
+        return view('auth.login', [
+            'returnToLessonRequest' => $request->boolean('back'),
+        ]);
+    }
+
     /**
      * Handle the incoming request.
      */
@@ -23,8 +28,6 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-
-
         if (Auth::guard('web')->attempt($credentials)) {
 
             $request->session()->regenerate();
@@ -32,8 +35,8 @@ class LoginController extends Controller
             if ($request->user()->role === 'admin') {
                 return redirect()->route('admin.dashboard');
             } elseif ($request->user()->role === 'student') {
-                Session::put('cart', new Cart());
-                if (request('return') === '1') {
+                $request->session()->put('cart', new Cart);
+                if ($request->boolean('return')) {
                     return redirect()->route('lesson-requests.create');
                 } else {
                     return redirect()->route('student.dashboard');
@@ -61,7 +64,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Email non valida o non presente'
+            'email' => 'Email non valida o non presente',
         ]);
     }
 }
