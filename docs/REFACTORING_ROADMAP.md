@@ -150,7 +150,10 @@ Planned branch: `maintenance/dependency-upgrade`
   - added end-to-end rendering coverage for the admin chat page
   - replaced the lesson-request `Route::view` with a controller action that
     prepares temporary upload state and its protected preview URL
-- Verification: the full suite passes with 68 tests and 209 assertions.
+  - moved temporary lesson and exercise upload state and preview URL
+    preparation into their controllers
+  - added rendering coverage for both admin teaching create pages
+- Verification: the full suite passes with 70 tests and 217 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

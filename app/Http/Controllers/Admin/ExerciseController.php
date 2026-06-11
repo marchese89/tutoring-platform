@@ -11,12 +11,25 @@ use Illuminate\Http\Request;
 
 class ExerciseController extends Controller
 {
-    public function create(int $course)
+    public function create(Request $request, int $course)
     {
         $course = Course::findOrFail($course);
         $id = $course->id;
+        $promptPath = $request->session()->get('uploaded_exercise_prompt');
+        $solutionPath = $request->session()->get('uploaded_exercise_solution');
 
-        return view('admin.teaching.create-exercise', compact('id', 'course'));
+        return view('admin.teaching.create-exercise', [
+            'id' => $id,
+            'course' => $course,
+            'promptUploaded' => (bool) $promptPath,
+            'promptUrl' => $promptPath
+                ? route('protected-files.show', ['path' => $promptPath])
+                : null,
+            'solutionUploaded' => (bool) $solutionPath,
+            'solutionUrl' => $solutionPath
+                ? route('protected-files.show', ['path' => $solutionPath])
+                : null,
+        ]);
     }
 
     public function edit(int $courseId, int $exerciseId)

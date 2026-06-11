@@ -13,11 +13,7 @@
         <br>
         <h4>Traccia</h4>
 
-        <iframe width="90%"
-            @if (Session::exists('uploaded_exercise_prompt')) src="/protected-files/{{ session()->get('uploaded_exercise_prompt') }}#view=FitH"
-                @else
-                    src="" @endif
-            height="400px">
+        <iframe width="90%" src="{{ $promptUrl ? $promptUrl . '#view=FitH' : '' }}" height="400px">
         </iframe>
 
         <form method="POST" action="{{ route('admin.exercises.trace.upload.store') }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
@@ -38,7 +34,7 @@
             <br>
             <br>
         </form>
-        @if (Session::exists('uploaded_exercise_prompt'))
+        @if ($promptUploaded)
             <div class="col-12">
                 <form action="{{ route('admin.exercises.trace.session.destroy') }}" method="POST">
                     @csrf
@@ -50,14 +46,10 @@
         <br>
 
         <br>
-        @if (Session::exists('uploaded_exercise_prompt'))
+        @if ($promptUploaded)
             <h4>Svolgimento</h4>
 
-            <iframe width="90%"
-                @if (Session::exists('uploaded_exercise_solution')) src="/protected-files/{{ session()->get('uploaded_exercise_solution') }}#view=FitH"
-                    @else
-                        src="" @endif
-                height="400px">
+            <iframe width="90%" src="{{ $solutionUrl ? $solutionUrl . '#view=FitH' : '' }}" height="400px">
             </iframe>
 
             <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
@@ -77,7 +69,7 @@
                 <br>
                 <br>
             </form>
-            @if (Session::exists('uploaded_exercise_solution'))
+            @if ($solutionUploaded)
                 <div class="col-12">
                     <form action="{{ route('admin.exercises.execution.session.destroy') }}" method="POST">
                         @csrf
@@ -88,7 +80,7 @@
             @endif
         @endif
 
-        @if (Session::exists('uploaded_exercise_prompt') && Session::exists('uploaded_exercise_solution'))
+        @if ($promptUploaded && $solutionUploaded)
             <form method="POST" action="{{ route('admin.exercises.store') }}">
                 @csrf
                 @method('POST')

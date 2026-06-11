@@ -10,8 +10,7 @@
         {{-- Presentation --}}
         <h5 class="mt-4">Presentazione</h5>
 
-        <iframe width="90%" height="400"
-            src="{{ session()->has('uploaded_lesson_presentation') ? route('protected-files.show', ['path' => session('uploaded_lesson_presentation')]) . '#view=FitH' : '' }}">
+        <iframe width="90%" height="400" src="{{ $presentationUrl ? $presentationUrl . '#view=FitH' : '' }}">
         </iframe>
 
         <form method="POST" action="{{ route('admin.lessons.upload-presentation.store') }}" enctype="multipart/form-data" id="upload-pres" data-upload-progress-form>
@@ -34,11 +33,10 @@
         </form>
 
         {{-- Content --}}
-        @if (session()->has('uploaded_lesson_presentation'))
+        @if ($presentationUploaded)
             <h5 class="mt-5">Svolgimento</h5>
 
-            <iframe width="90%" height="400"
-                src="{{ session()->has('uploaded_lesson_content') ? route('protected-files.show', ['path' => session('uploaded_lesson_content')]) . '#view=FitH' : '' }}">
+            <iframe width="90%" height="400" src="{{ $contentUrl ? $contentUrl . '#view=FitH' : '' }}">
             </iframe>
 
             <form method="POST" action="{{ route('admin.lessons.upload-file.store') }}" enctype="multipart/form-data" id="upload-lesson" data-upload-progress-form>
@@ -63,7 +61,7 @@
 
 
         {{-- Lesson form --}}
-        @if (session()->has('uploaded_lesson_presentation') && session()->has('uploaded_lesson_content'))
+        @if ($presentationUploaded && $contentUploaded)
             <form method="POST" action="{{ route('admin.lessons.store') }}" class="mt-4">
                 @csrf
                 <input type="hidden" name="course_id" value="{{ $id }}">

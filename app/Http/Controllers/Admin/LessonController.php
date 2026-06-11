@@ -27,11 +27,24 @@ class LessonController extends Controller
         return view('public.lesson-content', compact('course', 'lesson'));
     }
 
-    public function create(int $id)
+    public function create(Request $request, int $id)
     {
-        $course = Course::find($id);
+        $course = Course::findOrFail($id);
+        $presentationPath = $request->session()->get('uploaded_lesson_presentation');
+        $contentPath = $request->session()->get('uploaded_lesson_content');
 
-        return view('admin.teaching.create-lesson', compact('id', 'course'));
+        return view('admin.teaching.create-lesson', [
+            'id' => $id,
+            'course' => $course,
+            'presentationUploaded' => (bool) $presentationPath,
+            'presentationUrl' => $presentationPath
+                ? route('protected-files.show', ['path' => $presentationPath])
+                : null,
+            'contentUploaded' => (bool) $contentPath,
+            'contentUrl' => $contentPath
+                ? route('protected-files.show', ['path' => $contentPath])
+                : null,
+        ]);
     }
 
     public function edit(int $courseId, int $lessonId)
