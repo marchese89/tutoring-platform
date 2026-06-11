@@ -214,13 +214,15 @@ class PurchaseController extends Controller
             ]
         );
 
-        session()->put('extra_payment_description', $validated['description']);
-        session()->put('extra_payment_price', $validated['price']);
-        session()->put('extra_payment_quantity', $validated['quantity']);
-
         if (($validated['price'] * $validated['quantity']) > 77.47) {
             return back()->withError('Importo superiore a 77.47 € (max consentito)');
         }
+
+        $request->session()->put([
+            'extra_payment_description' => $validated['description'],
+            'extra_payment_price' => $validated['price'],
+            'extra_payment_quantity' => $validated['quantity'],
+        ]);
 
         return redirect()->route('payment.pay');
     }

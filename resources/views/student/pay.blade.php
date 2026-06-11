@@ -19,7 +19,7 @@
                         <p class="text-muted mb-0">
                             Paga
                             <span class="fw-bold text-success">
-                                {{ number_format(session()->get('extra_payment_price') * session()->get('extra_payment_quantity'), 2, ',', '.') }}&euro;
+                                {{ $formattedTotal }}&euro;
                             </span>
                             tramite Stripe.
                         </p>
@@ -58,7 +58,7 @@
         // This is your test publishable API key.
 
         const stripe = Stripe(
-            "{{ env('STRIPE_KEY') }}"
+            "{{ $stripeKey }}"
         );
 
         let elements;

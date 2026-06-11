@@ -155,7 +155,10 @@ Planned branch: `maintenance/dependency-upgrade`
   - added rendering coverage for both admin teaching create pages
   - replaced the certificate create `Route::view` with a controller action and
     removed direct upload-session access from its Blade
-- Verification: the full suite passes with 70 tests and 220 assertions.
+  - moved extra-payment total and Stripe-key preparation into a dedicated
+    student payment controller
+  - prevented rejected extra-payment details from remaining in session
+- Verification: the full suite passes with 73 tests and 231 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

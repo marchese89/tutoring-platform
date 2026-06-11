@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Public\CartController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Student\DirectRequestController;
 use App\Http\Controllers\Student\InvoiceController;
 use App\Http\Controllers\Student\OrderController;
-use App\Http\Controllers\Student\RouteController;
+use App\Http\Controllers\Student\PaymentController;
 use App\Http\Controllers\Student\ReviewController;
+use App\Http\Controllers\Student\RouteController;
 use App\Http\Controllers\Student\StudentController;
 use Illuminate\Support\Facades\Route;
 
@@ -48,7 +49,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('payment/success', [PurchaseController::class, 'completePurchase'])
         ->name('payment.success');
     Route::view('payment/complete', 'public.purchase-complete')->name('payment.complete');
-    Route::view('payment/pay', 'student.pay')->name('payment.pay');
+    Route::get('payment/pay', [PaymentController::class, 'pay'])->name('payment.pay');
     Route::view('payment/ok', 'student.payment-success')->name('payment.ok');
     Route::view('payment/extra', 'student.extra-payment')->name('payment.extra');
 
