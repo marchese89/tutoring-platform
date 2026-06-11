@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Http\Utility\CartItem;
 use App\Models\Admin;
+use App\Models\Certificate;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\Exercise;
@@ -11,6 +12,7 @@ use App\Models\Lesson;
 use App\Models\LessonRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Review;
 use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -94,5 +96,23 @@ class ModelFactoryTest extends TestCase
 
         $this->assertNotNull($message->chat);
         $this->assertNotNull($message->chat->student);
+    }
+
+    public function test_certificate_factory_creates_certificate(): void
+    {
+        $certificate = Certificate::factory()->create();
+
+        $this->assertNotNull($certificate->name);
+        $this->assertStringEndsWith('.pdf', $certificate->file_path);
+    }
+
+    public function test_review_factory_creates_review_for_student(): void
+    {
+        $review = Review::factory()->create();
+
+        $this->assertNotNull($review->student);
+        $this->assertSame('student', $review->student->user->role);
+        $this->assertGreaterThanOrEqual(1, $review->rating);
+        $this->assertLessThanOrEqual(5, $review->rating);
     }
 }
