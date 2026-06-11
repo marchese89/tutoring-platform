@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Admin;
 use App\Models\Exercise;
 use App\Models\Lesson;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -47,5 +49,21 @@ class AccountFactoryTest extends TestCase
         $this->assertNotNull($exercise->course);
         $this->assertNotNull($exercise->course->subject);
         $this->assertNotNull($exercise->course->subject->themeArea);
+    }
+
+    public function test_order_factory_creates_order_for_student(): void
+    {
+        $order = Order::factory()->create();
+
+        $this->assertNotNull($order->student);
+        $this->assertSame('student', $order->student->user->role);
+    }
+
+    public function test_order_item_factory_creates_item_for_order(): void
+    {
+        $orderItem = OrderItem::factory()->create();
+
+        $this->assertNotNull($orderItem->order);
+        $this->assertNotNull($orderItem->order->student);
     }
 }
