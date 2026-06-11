@@ -14,10 +14,10 @@
                     icon="bi-file-earmark-arrow-up">
                     <div class="mb-4">
                         <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                            @if (session()->has('uploaded_certificate_file'))
+                            @if ($uploadedCertificateFile)
                                 <iframe
                                     title="Anteprima certificato"
-                                    src="{{ session('uploaded_certificate_file') }}#view=FitH">
+                                    src="{{ $uploadedCertificateFile }}#view=FitH">
                                 </iframe>
                             @else
                                 <div class="d-flex align-items-center justify-content-center text-muted">
@@ -60,7 +60,7 @@
                         </x-ui.primary-button>
                     </form>
 
-                    @if (session()->has('uploaded_certificate_file'))
+                    @if ($uploadedCertificateFile)
                         <form method="POST" action="{{ route('admin.account.certificates.uploads.destroy') }}">
                             @csrf
                             @method('DELETE')
@@ -72,7 +72,7 @@
                     @endif
                 </x-ui.form-card>
 
-                @if (session()->has('uploaded_certificate_file'))
+                @if ($uploadedCertificateFile)
                     <x-ui.form-card
                         class="mt-4"
                         title="Dettagli certificato"

@@ -153,7 +153,9 @@ Planned branch: `maintenance/dependency-upgrade`
   - moved temporary lesson and exercise upload state and preview URL
     preparation into their controllers
   - added rendering coverage for both admin teaching create pages
-- Verification: the full suite passes with 70 tests and 217 assertions.
+  - replaced the certificate create `Route::view` with a controller action and
+    removed direct upload-session access from its Blade
+- Verification: the full suite passes with 70 tests and 220 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

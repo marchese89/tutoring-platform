@@ -56,6 +56,13 @@ class PublicUploadStorageTest extends TestCase
         $this->assertStringNotContainsString('certificate.pdf', $certificatePath);
         $this->assertStringEndsWith('.pdf', $certificatePath);
         Storage::disk('public')->assertExists(substr($certificatePath, 9));
+
+        $this->actingAs($adminUser)
+            ->withSession(['uploaded_certificate_file' => $certificatePath])
+            ->get(route('admin.account.certificates.create'))
+            ->assertOk()
+            ->assertSee($certificatePath)
+            ->assertSee(route('admin.account.certificates.store'));
     }
 
     public function test_replacing_certificate_deletes_previous_public_file(): void

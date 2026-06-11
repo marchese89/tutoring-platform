@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\SubjectController;
-use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\ThemeAreaController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\Public\LessonRequestController;
+use App\Http\Controllers\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')
@@ -26,7 +26,8 @@ Route::prefix('admin')
         Route::view('account/address', 'admin.settings.address')->name('account.address');
         Route::get('account/certificates', [AccountController::class, 'certificatesIndex'])
             ->name('account.certificates.index');
-        Route::view('account/certificates/create', 'admin.settings.create-certificate')->name('account.certificates.create');
+        Route::get('account/certificates/create', [AccountController::class, 'createCertificate'])
+            ->name('account.certificates.create');
         Route::view('account/vat-number', 'admin.settings.vat-number')->name('account.vat-number');
 
         Route::post('account/address', [AccountController::class, 'updateAddress'])

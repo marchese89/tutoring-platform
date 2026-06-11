@@ -3,17 +3,24 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
-use App\Models\User;
-use App\Models\Admin;
 use App\Models\Certificate;
 use App\Support\PublicUploadStorage;
 use App\Support\UploadRules;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 
 class AccountController extends Controller
 {
+    public function createCertificate(Request $request)
+    {
+        $uploadedCertificateFile = $request->session()->get('uploaded_certificate_file');
+
+        return view('admin.settings.create-certificate', [
+            'uploadedCertificateFile' => $uploadedCertificateFile,
+        ]);
+    }
+
     public function certificatesIndex()
     {
         $certificates = Certificate::orderBy('id')->get();
@@ -85,7 +92,7 @@ class AccountController extends Controller
     {
         $request->validate([
             'id' => 'required|exists:certificates,id',
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
         ]);
 
         $certificate = Certificate::findOrFail($request->id);
@@ -98,7 +105,7 @@ class AccountController extends Controller
     public function updateVatNumber(Request $request)
     {
         $request->validate([
-            'vat_number' => 'required|string|max:20'
+            'vat_number' => 'required|string|max:20',
         ]);
 
         $admin = auth()->user()->admin;
@@ -138,7 +145,7 @@ class AccountController extends Controller
     public function destroyCertificate(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:certificates,id'
+            'id' => 'required|exists:certificates,id',
         ]);
 
         $certificate = Certificate::findOrFail($request->id);
@@ -164,17 +171,17 @@ class AccountController extends Controller
 
     public function storeCertificate(Request $request)
     {
-        if (!$request->session()->has('uploaded_certificate_file')) {
+        if (! $request->session()->has('uploaded_certificate_file')) {
             return redirect()
                 ->route('admin.account.certificates.create')
                 ->withErrors(['file' => 'Carica un file prima di salvare il certificato.']);
         }
 
         $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => 'required|string|max:255',
         ]);
 
-        $certificate = new Certificate();
+        $certificate = new Certificate;
         $certificate->name = $request->name;
         $certificate->file_path = $request->session()->get('uploaded_certificate_file');
 
@@ -219,7 +226,7 @@ class AccountController extends Controller
 
         $user = $request->user();
 
-        if (!Hash::check($validated['current_password'], $user->password)) {
+        if (! Hash::check($validated['current_password'], $user->password)) {
             return back()->withErrors([
                 'current_password' => 'Password attuale errata',
             ]);
