@@ -2,16 +2,20 @@
 
 namespace Tests\Feature;
 
+use App\Http\Utility\CartItem;
 use App\Models\Admin;
+use App\Models\Chat;
+use App\Models\ChatMessage;
 use App\Models\Exercise;
 use App\Models\Lesson;
+use App\Models\LessonRequest;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AccountFactoryTest extends TestCase
+class ModelFactoryTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -65,5 +69,30 @@ class AccountFactoryTest extends TestCase
 
         $this->assertNotNull($orderItem->order);
         $this->assertNotNull($orderItem->order->student);
+    }
+
+    public function test_lesson_request_factory_creates_request_for_student(): void
+    {
+        $request = LessonRequest::factory()->create();
+
+        $this->assertNotNull($request->student);
+        $this->assertSame('student', $request->student->user->role);
+    }
+
+    public function test_chat_factory_creates_chat_for_lesson_and_student(): void
+    {
+        $chat = Chat::factory()->create();
+
+        $this->assertNotNull($chat->student);
+        $this->assertDatabaseHas('lessons', ['id' => $chat->product_id]);
+        $this->assertSame(CartItem::LESSON, $chat->product_type);
+    }
+
+    public function test_chat_message_factory_creates_message_for_chat(): void
+    {
+        $message = ChatMessage::factory()->create();
+
+        $this->assertNotNull($message->chat);
+        $this->assertNotNull($message->chat->student);
     }
 }
