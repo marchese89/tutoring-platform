@@ -9,6 +9,8 @@ use App\Models\Certificate;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\Exercise;
+use App\Models\Invoice;
+use App\Models\InvoiceSequence;
 use App\Models\Lesson;
 use App\Models\LessonRequest;
 use App\Models\Order;
@@ -128,5 +130,29 @@ class ModelFactoryTest extends TestCase
         $this->assertSame('eur', $transaction->currency);
         $this->assertNull($transaction->order);
         $this->assertFalse($transaction->isCompleted());
+    }
+
+    public function test_invoice_factory_creates_direct_invoice_for_student(): void
+    {
+        $invoice = Invoice::factory()->create();
+
+        $this->assertNotNull($invoice->student);
+        $this->assertSame('student', $invoice->student->user->role);
+        $this->assertSame('extra', $invoice->source);
+        $this->assertSame('eur', $invoice->currency);
+        $this->assertIsArray($invoice->customer_snapshot);
+        $this->assertIsArray($invoice->line_items);
+    }
+
+    public function test_invoice_sequence_factory_creates_yearly_sequence(): void
+    {
+        $sequence = InvoiceSequence::factory()->create();
+
+        $this->assertNotNull($sequence->year);
+        $this->assertGreaterThanOrEqual(0, $sequence->last_number);
+        $this->assertDatabaseHas('invoice_sequences', [
+            'year' => $sequence->year,
+            'last_number' => $sequence->last_number,
+        ]);
     }
 }
