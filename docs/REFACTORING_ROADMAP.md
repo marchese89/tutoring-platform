@@ -142,7 +142,9 @@ Planned branch: `maintenance/dependency-upgrade`
   - converted the shared support chat to a class component that normalizes
     messages for both student and admin contexts
   - removed duplicate chat message display mapping from `StudentController`
-- Verification: the full suite passes with 64 tests and 194 assertions.
+  - removed request access from the admin invoice Blade and made missing order
+    invoices return 404 from `BillingController`
+- Verification: the full suite passes with 66 tests and 198 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

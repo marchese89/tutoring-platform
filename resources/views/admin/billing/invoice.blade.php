@@ -16,7 +16,7 @@
 
                         <div class="text-start">
                             <h4 class="fw-bold mb-1">
-                                Fattura Ordine #{{ request('id') }}
+                                Fattura Ordine #{{ $orderId }}
                             </h4>
 
                             <p class="text-muted mb-0">

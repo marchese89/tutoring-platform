@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Order;
-use App\Models\Invoice;
 use App\Helpers\DateHelper;
-
+use App\Http\Controllers\Controller;
+use App\Models\Invoice;
+use App\Models\Order;
+use Illuminate\Http\Request;
 
 class BillingController extends Controller
 {
@@ -31,17 +30,21 @@ class BillingController extends Controller
 
     public function showInvoice(int $id)
     {
-        $invoice = Invoice::where('order_id', '=', $id)->first();
-        return view('admin.billing.invoice', compact('invoice'));
+        $invoice = Invoice::where('order_id', $id)->firstOrFail();
+
+        return view('admin.billing.invoice', [
+            'invoice' => $invoice,
+            'orderId' => $invoice->order_id,
+        ]);
     }
 
     public function sales()
     {
         $firstOrder = Order::orderByDesc('ordered_at')->first();
 
-        if (!$firstOrder) {
+        if (! $firstOrder) {
             return view('admin.billing.sales', [
-                'hasOrders' => false
+                'hasOrders' => false,
             ]);
         }
 
@@ -66,7 +69,7 @@ class BillingController extends Controller
             'firstOrderDate' => $firstOrderDate,
             'firstOrderMonthLabel' => DateHelper::monthName((int) $firstOrderDate['month']),
             'years' => $years,
-            'months' => $months
+            'months' => $months,
         ]);
     }
 
@@ -90,15 +93,15 @@ class BillingController extends Controller
 
             return [
                 'id' => $order->id,
-                'student' => $order->student->user->name . ' ' . $order->student->user->surname,
+                'student' => $order->student->user->name.' '.$order->student->user->surname,
                 'date' => DateHelper::format($order->ordered_at),
-                'total' => $orderTotal
+                'total' => $orderTotal,
             ];
         });
 
         return response()->json([
             'orders' => $mappedOrders,
-            'total' => $total
+            'total' => $total,
         ]);
     }
 
