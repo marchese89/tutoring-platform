@@ -136,6 +136,8 @@ class LessonRequestController extends Controller
 
         $student = Student::find($chat->student_id);
         $user = $student?->user;
+        $studentName = trim(($user?->name ?? '').' '.($user?->surname ?? '')) ?: 'Studente';
+        $enableEcho = true;
 
         return view('admin.students.chat', compact(
             'chat',
@@ -143,7 +145,8 @@ class LessonRequestController extends Controller
             'contentFile',
             'title',
             'messages',
-            'user'
+            'studentName',
+            'enableEcho'
         ));
     }
 

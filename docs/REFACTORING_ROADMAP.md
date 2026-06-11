@@ -146,7 +146,9 @@ Planned branch: `maintenance/dependency-upgrade`
     invoices return 404 from `BillingController`
   - prepared lesson-request dates, statuses, and detail URLs in the controller
     instead of the admin list Blade
-- Verification: the full suite passes with 67 tests and 202 assertions.
+  - moved admin chat student-name and Echo preparation out of Blade
+  - added end-to-end rendering coverage for the admin chat page
+- Verification: the full suite passes with 68 tests and 207 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

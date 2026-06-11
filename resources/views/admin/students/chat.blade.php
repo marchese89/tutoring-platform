@@ -5,11 +5,6 @@
 @endsection
 
 @section('inner')
-    @php
-        $enableEcho = true;
-        $studentName = trim(($user?->name ?? '') . ' ' . ($user?->surname ?? '')) ?: 'Studente';
-    @endphp
-
     <div class="container">
         <x-ui.card class="mb-4">
             <div class="text-center">
