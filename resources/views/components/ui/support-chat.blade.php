@@ -1,20 +1,3 @@
-@props([
-    'chat',
-    'messages',
-    'title' => 'Chat di supporto',
-    'description' => 'Scrivi qui per ricevere supporto.',
-    'postRoute' => null,
-    'ownAuthor' => 0,
-    'ownSender' => 'Tu',
-    'otherSender' => 'Insegnante',
-])
-
-@php
-    $chatDomId = 'support-chat-' . $chat->id;
-    $messageCount = count($messages);
-    $postUrl = $postRoute ?? route('student.chat.messages.store');
-@endphp
-
 @once
     <style>
         .support-chat-log {
@@ -146,33 +129,19 @@
     </div>
 
     <div id="{{ $chatDomId }}-messages" class="support-chat-log d-flex flex-column gap-2 mb-4">
-        @forelse ($messages as $item)
-            @php
-                $isArrayMessage = is_array($item);
-                $isOwnMessage = $isArrayMessage
-                    ? !($item['is_teacher'] ?? false)
-                    : (int) $item->sender_role === (int) $ownAuthor;
-                $sender = $isArrayMessage
-                    ? $item['sender']
-                    : ($isOwnMessage ? $ownSender : $otherSender);
-                $date = $isArrayMessage
-                    ? $item['date']
-                    : \App\Helpers\DateHelper::format($item->sent_at);
-                $message = $isArrayMessage ? $item['message'] : $item->message;
-            @endphp
-
-            <div class="d-flex {{ $isOwnMessage ? 'justify-content-end' : 'justify-content-start' }}">
-                <div class="support-chat-bubble {{ $isOwnMessage ? 'support-chat-bubble-own' : 'support-chat-bubble-other' }}">
+        @forelse ($preparedMessages as $item)
+            <div class="d-flex {{ $item['is_own'] ? 'justify-content-end' : 'justify-content-start' }}">
+                <div class="support-chat-bubble {{ $item['is_own'] ? 'support-chat-bubble-own' : 'support-chat-bubble-other' }}">
                     <div class="support-chat-sender">
-                        {{ $sender }}
+                        {{ $item['sender'] }}
                     </div>
 
                     <p class="support-chat-message">
-                        {!! nl2br(e($message)) !!}
+                        {!! nl2br(e($item['message'])) !!}
                     </p>
 
                     <span class="support-chat-date">
-                        {{ $date }}
+                        {{ $item['date'] }}
                     </span>
                 </div>
             </div>

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Student;
 
-use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -185,13 +184,6 @@ class StudentController extends Controller
     {
         return ChatMessage::where('chat_id', $chatId)
             ->orderBy('sent_at', 'asc')
-            ->get()
-            ->map(fn (ChatMessage $message) => [
-                'message' => $message->message,
-                'sender_role' => $message->sender_role,
-                'is_teacher' => (int) $message->sender_role === 1,
-                'sender' => (int) $message->sender_role === 1 ? 'Insegnante' : 'Tu',
-                'date' => DateHelper::format($message->sent_at),
-            ]);
+            ->get();
     }
 }

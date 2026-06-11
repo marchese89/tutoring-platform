@@ -139,7 +139,10 @@ Planned branch: `maintenance/dependency-upgrade`
   - added feature coverage for cart and checkout page preparation
   - converted the navbar to a class component so cart session inspection no
     longer occurs in Blade
-- Verification: the full suite passes with 63 tests and 190 assertions.
+  - converted the shared support chat to a class component that normalizes
+    messages for both student and admin contexts
+  - removed duplicate chat message display mapping from `StudentController`
+- Verification: the full suite passes with 64 tests and 194 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

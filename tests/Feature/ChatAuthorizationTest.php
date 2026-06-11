@@ -9,6 +9,7 @@ use App\Models\Student;
 use App\Models\User;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
@@ -113,6 +114,40 @@ class ChatAuthorizationTest extends TestCase
 
         $this->assertNotNull($route);
         $this->assertContains('POST', $route->methods());
+    }
+
+    public function test_support_chat_component_prepares_messages_for_each_role(): void
+    {
+        $student = $this->createStudent();
+        $chat = $this->createChat($student);
+        $messages = collect([
+            ChatMessage::create([
+                'chat_id' => $chat->id,
+                'message' => 'Student message',
+                'sender_role' => 0,
+                'sent_at' => now(),
+            ]),
+            ChatMessage::create([
+                'chat_id' => $chat->id,
+                'message' => 'Admin message',
+                'sender_role' => 1,
+                'sent_at' => now(),
+            ]),
+        ]);
+
+        $studentHtml = Blade::render(
+            '<x-ui.support-chat :chat="$chat" :messages="$messages" />',
+            compact('chat', 'messages')
+        );
+        $adminHtml = Blade::render(
+            '<x-ui.support-chat :chat="$chat" :messages="$messages" :own-author="1" own-sender="Tu" other-sender="Studente" />',
+            compact('chat', 'messages')
+        );
+
+        $this->assertStringContainsString('Student message', $studentHtml);
+        $this->assertStringContainsString('Insegnante', $studentHtml);
+        $this->assertStringContainsString('Admin message', $adminHtml);
+        $this->assertStringContainsString('Studente', $adminHtml);
     }
 
     private function createStudent(): Student
