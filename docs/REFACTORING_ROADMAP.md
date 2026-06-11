@@ -148,7 +148,9 @@ Planned branch: `maintenance/dependency-upgrade`
     instead of the admin list Blade
   - moved admin chat student-name and Echo preparation out of Blade
   - added end-to-end rendering coverage for the admin chat page
-- Verification: the full suite passes with 68 tests and 207 assertions.
+  - replaced the lesson-request `Route::view` with a controller action that
+    prepares temporary upload state and its protected preview URL
+- Verification: the full suite passes with 68 tests and 209 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

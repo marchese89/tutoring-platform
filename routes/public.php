@@ -30,7 +30,7 @@ Route::get('courses/{course}/lessons/{lesson}', [LessonController::class, 'view'
 Route::get('courses/{course}/exercises/{exercise}/trace', [ExerciseController::class, 'viewTrace'])
     ->name('exercises.trace');
 
-Route::view('lesson-requests/create', 'public.lesson-request')->name('lesson-requests.create');
+Route::get('lesson-requests/create', [LessonRequestController::class, 'create'])->name('lesson-requests.create');
 
 Route::middleware(['auth', 'role:student'])->group(function () {
     Route::post('lesson-requests/files', [LessonRequestController::class, 'storeRequestFile'])

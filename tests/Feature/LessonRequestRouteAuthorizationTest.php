@@ -54,6 +54,12 @@ class LessonRequestRouteAuthorizationTest extends TestCase
 
         $this->assertNotNull($path);
         Storage::disk('private')->assertExists($path);
+
+        $this->actingAs($student->user)
+            ->withSession(['uploaded_lesson_request_file' => $path])
+            ->get(route('lesson-requests.create'))
+            ->assertOk()
+            ->assertSee(route('protected-files.show', ['path' => $path]));
     }
 
     private function createStudent(): Student

@@ -20,6 +20,18 @@ use Illuminate\Support\Facades\Mail;
 
 class LessonRequestController extends Controller
 {
+    public function create(Request $request)
+    {
+        $uploadedRequestFile = $request->session()->get('uploaded_lesson_request_file');
+
+        return view('public.lesson-request', [
+            'uploadedRequestFile' => $uploadedRequestFile,
+            'uploadedRequestFileUrl' => $uploadedRequestFile
+                ? route('protected-files.show', ['path' => $uploadedRequestFile])
+                : null,
+        ]);
+    }
+
     public function index()
     {
         $lessonRequests = LessonRequest::all()->map(fn (LessonRequest $lessonRequest) => [
