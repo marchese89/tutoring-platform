@@ -5,10 +5,6 @@
 @endsection
 
 @section('inner')
-    @php
-        use App\Helpers\DateHelper;
-    @endphp
-
     <style>
         .status-dot {
             width: 14px;
@@ -47,27 +43,23 @@
                                 <tr>
 
                                     <td>
-                                        {{ $item->id }}
+                                        {{ $item['id'] }}
                                     </td>
 
                                     <td>
-                                        {{ $item->title }}
+                                        {{ $item['title'] }}
                                     </td>
 
                                     <td>
-                                        {{ DateHelper::format($item->requested_at) }}
+                                        {{ $item['requested_at'] }}
                                     </td>
 
                                     <td>
-                                        @if ($item->is_fulfilled == 0)
-                                            <span class="status-dot bg-danger"></span>
-                                        @else
-                                            <span class="status-dot bg-success"></span>
-                                        @endif
+                                        <span class="status-dot {{ $item['status_class'] }}"></span>
                                     </td>
 
                                     <td>
-                                        <a href="{{ route('admin.lesson-requests.show', ['id' => $item->id]) }}"
+                                        <a href="{{ $item['show_url'] }}"
                                             class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>

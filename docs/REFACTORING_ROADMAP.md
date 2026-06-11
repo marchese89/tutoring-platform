@@ -144,7 +144,9 @@ Planned branch: `maintenance/dependency-upgrade`
   - removed duplicate chat message display mapping from `StudentController`
   - removed request access from the admin invoice Blade and made missing order
     invoices return 404 from `BillingController`
-- Verification: the full suite passes with 66 tests and 198 assertions.
+  - prepared lesson-request dates, statuses, and detail URLs in the controller
+    instead of the admin list Blade
+- Verification: the full suite passes with 67 tests and 202 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

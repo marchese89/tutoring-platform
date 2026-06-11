@@ -2,26 +2,33 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Mail;
-use App\Models\LessonRequest;
-use App\Models\User;
-use App\Mail\NewStudentRequestMail;
 use App\Mail\LessonRequestFulfilledMail;
+use App\Mail\NewStudentRequestMail;
 use App\Models\Chat;
 use App\Models\ChatMessage;
-use App\Models\Student;
-use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
+use App\Models\Student;
+use App\Models\User;
 use App\Support\PrivateUploadStorage;
 use App\Support\UploadRules;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class LessonRequestController extends Controller
 {
     public function index()
     {
-        $lessonRequests = LessonRequest::with('student.user')->get();
+        $lessonRequests = LessonRequest::all()->map(fn (LessonRequest $lessonRequest) => [
+            'id' => $lessonRequest->id,
+            'title' => $lessonRequest->title,
+            'requested_at' => DateHelper::format($lessonRequest->requested_at),
+            'status_class' => $lessonRequest->is_fulfilled ? 'bg-success' : 'bg-danger',
+            'show_url' => route('admin.lesson-requests.show', $lessonRequest->id),
+        ]);
 
         return view('admin.students.lesson-requests', compact('lessonRequests'));
     }
@@ -70,7 +77,7 @@ class LessonRequestController extends Controller
             };
 
             $chat->student_name = $chat->student?->user
-                ? trim($chat->student->user->name . ' ' . $chat->student->user->surname)
+                ? trim($chat->student->user->name.' '.$chat->student->user->surname)
                 : '-';
 
             $chat->has_unread_admin_message =
@@ -94,9 +101,9 @@ class LessonRequestController extends Controller
                 $presentationFile = $lesson?->presentation_file;
                 $contentFile = $lesson?->content_file;
                 $title =
-                    'Lezione n. ' .
-                    $lesson?->id .
-                    ', ' .
+                    'Lezione n. '.
+                    $lesson?->id.
+                    ', '.
                     $lesson?->title;
                 break;
 
@@ -105,9 +112,9 @@ class LessonRequestController extends Controller
                 $presentationFile = $exercise?->prompt_file;
                 $contentFile = $exercise?->solution_file;
                 $title =
-                    'Esercizio n. ' .
-                    $exercise?->id .
-                    ', ' .
+                    'Esercizio n. '.
+                    $exercise?->id.
+                    ', '.
                     $exercise?->title;
                 break;
 
@@ -116,9 +123,9 @@ class LessonRequestController extends Controller
                 $presentationFile = $lessonRequest?->request_file;
                 $contentFile = $lessonRequest?->solution_file;
                 $title =
-                    'Lezione su richiesta n. ' .
-                    $lessonRequest?->id .
-                    ', ' .
+                    'Lezione su richiesta n. '.
+                    $lessonRequest?->id.
+                    ', '.
                     $lessonRequest?->title;
                 break;
         }
@@ -170,7 +177,7 @@ class LessonRequestController extends Controller
 
     public function store(Request $request)
     {
-        if (!$request->session()->has('uploaded_lesson_request_file')) {
+        if (! $request->session()->has('uploaded_lesson_request_file')) {
             return redirect()
                 ->route('lesson-requests.create')
                 ->withErrors(['file' => 'Carica un file prima di inviare la richiesta.']);
@@ -193,7 +200,7 @@ class LessonRequestController extends Controller
         $admin = User::where('role', 'admin')->first();
 
         Mail::to($admin->email)
-            ->send(new NewStudentRequestMail());
+            ->send(new NewStudentRequestMail);
 
         return redirect()->route('lesson-requests.success');
     }
@@ -213,7 +220,7 @@ class LessonRequestController extends Controller
         );
 
         $lessonRequest->update([
-            'solution_file' => $path
+            'solution_file' => $path,
         ]);
 
         PrivateUploadStorage::delete($oldPath);
@@ -228,7 +235,7 @@ class LessonRequestController extends Controller
         PrivateUploadStorage::delete($lessonRequest->solution_file);
 
         $lessonRequest->update([
-            'solution_file' => null
+            'solution_file' => null,
         ]);
 
         return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
@@ -246,13 +253,13 @@ class LessonRequestController extends Controller
 
         $lessonRequest->update([
             'price' => $request->price,
-            'is_fulfilled' => 1
+            'is_fulfilled' => 1,
         ]);
 
         $user = $lessonRequest->student->user;
 
         Mail::to($user->email)
-            ->send(new LessonRequestFulfilledMail());
+            ->send(new LessonRequestFulfilledMail);
 
         return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
