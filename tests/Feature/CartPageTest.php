@@ -46,6 +46,20 @@ class CartPageTest extends TestCase
             ->assertSee('45&euro;', false);
     }
 
+    public function test_navbar_uses_prepared_cart_item_count(): void
+    {
+        $student = $this->createStudent();
+        $cart = new Cart();
+        $cart->add(new CartItem($this->createLesson('First lesson', 10)->id, CartItem::LESSON));
+        $cart->add(new CartItem($this->createLesson('Second lesson', 20)->id, CartItem::LESSON));
+
+        $this->actingAs($student->user)
+            ->withSession(['cart' => $cart])
+            ->get(route('cart.show'))
+            ->assertOk()
+            ->assertSee('Carrello: 2 articoli');
+    }
+
     private function createStudent(): Student
     {
         $user = User::factory()->create(['role' => 'student']);

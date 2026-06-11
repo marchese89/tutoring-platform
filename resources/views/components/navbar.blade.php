@@ -46,17 +46,13 @@
 
                     @if (auth()->user()->role === 'student')
                         <li class="nav-item">
-                            <a class="nav-link position-relative" href="{{ route('cart.show') }}">
+                            <a class="nav-link position-relative" href="{{ route('cart.show') }}"
+                                aria-label="Carrello: {{ $cartCount }} articoli">
                                 <i class="bi bi-cart3 fs-5"></i>
 
-                                @php
-                                    $cart = session()->get('cart');
-                                    $count = $cart instanceof \App\Http\Utility\Cart ? $cart->count() : 0;
-                                @endphp
-
-                                @if ($count > 0)
+                                @if ($cartCount > 0)
                                     <span class="badge bg-primary rounded-pill">
-                                        {{ $count }}
+                                        {{ $cartCount }}
                                     </span>
                                 @endif
                             </a>

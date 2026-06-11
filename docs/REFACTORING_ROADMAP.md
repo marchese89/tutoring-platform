@@ -137,7 +137,9 @@ Planned branch: `maintenance/dependency-upgrade`
     duplicate `PurchaseService::monthName`
   - moved cart and checkout session summary preparation into `CartController`
   - added feature coverage for cart and checkout page preparation
-- Verification: the full suite passes with 62 tests and 188 assertions.
+  - converted the navbar to a class component so cart session inspection no
+    longer occurs in Blade
+- Verification: the full suite passes with 63 tests and 190 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:
