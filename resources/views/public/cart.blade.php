@@ -7,10 +7,6 @@
     <br>
     <div class="container" style="text-align: center;width:80%; height:800px">
 
-        @php
-            $cart = session()->get('cart');
-            $items = $cart instanceof \App\Http\Utility\Cart ? $cart->items() : [];
-        @endphp
         @if (count($items) == 0)
             <br>
             <h3>Cart empty!</h3>
@@ -30,17 +26,17 @@
                     @foreach ($items as $item)
                         <tr>
 
-                            <th scope="row">{{ $item->id() }}</th>
+                            <th scope="row">{{ $item['id'] }}</th>
                             <td>
-                                {{ $item->name() }}
+                                {{ $item['name'] }}
                             </td>
                             <td>
-                                {{ $item->price() }} &nbsp;<strong>&euro;</strong>
+                                {{ $item['price'] }} &nbsp;<strong>&euro;</strong>
                             </td>
                             <td>
-                                <form id="form-remove-{{ $item->id() }}-{{ $item->type() }}" method="POST"
+                                <form id="form-remove-{{ $item['id'] }}-{{ $item['type'] }}" method="POST"
                                     style="display: inline"
-                                    action="{{ route('cart.items.destroy', ['id' => $item->id(), 'type' => $item->type()]) }}"
+                                    action="{{ $item['remove_url'] }}"
                                     style="display: none;">
                                     @csrf
                                     @method('DELETE')
@@ -54,7 +50,7 @@
             </table>
             <div class="container">
                 <h3>Total:
-                    {{ $cart->total() }}
+                    {{ $total }}
                     &nbsp;&euro;
                 </h3>
             </div>

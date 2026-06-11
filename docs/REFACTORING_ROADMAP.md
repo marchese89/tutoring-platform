@@ -135,7 +135,9 @@ Planned branch: `maintenance/dependency-upgrade`
     into `InvoiceService`
   - consolidated month label formatting through `DateHelper` and removed the
     duplicate `PurchaseService::monthName`
-- Verification: the full suite passes with 60 tests and 183 assertions.
+  - moved cart and checkout session summary preparation into `CartController`
+  - added feature coverage for cart and checkout page preparation
+- Verification: the full suite passes with 62 tests and 188 assertions.
 - Previous billing-schema branch is published through
   `e787967 Cover upload success flows`.
 - Completed billing-schema work:

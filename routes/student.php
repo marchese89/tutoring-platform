@@ -3,6 +3,7 @@
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Public\CartController;
 use App\Http\Controllers\Student\DirectRequestController;
 use App\Http\Controllers\Student\InvoiceController;
 use App\Http\Controllers\Student\OrderController;
@@ -31,13 +32,13 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('student/courses/{course}/exercises/{exercise}', [StudentController::class, 'showExercise'])
         ->name('student.exercises.show');
 
-    Route::view('cart', 'public.cart')->name('cart.show');
+    Route::get('cart', [CartController::class, 'show'])->name('cart.show');
     Route::post('cart/items/{id}/{type}', [PurchaseController::class, 'addToCart'])
         ->name('cart.items.store');
     Route::delete('cart/items/{id}/{type}', [PurchaseController::class, 'removeFromCart'])
         ->name('cart.items.destroy');
 
-    Route::view('checkout', 'public.checkout')->name('checkout.show');
+    Route::get('checkout', [CartController::class, 'checkout'])->name('checkout.show');
     Route::post('checkout/payment', [PurchaseController::class, 'preparePayment'])
         ->name('checkout.payment.prepare');
     Route::post('payment/process', [PurchaseController::class, 'processPayment'])

@@ -10,10 +10,6 @@
     <br>
     <div class="container" style="text-align: center;width:80%; height:550px">
 
-        @php
-            $cart = session()->get('cart');
-            $total = $cart instanceof \App\Http\Utility\Cart ? $cart->total() : 0;
-        @endphp
         <h3>Pay <strong>{{ $total }}&euro;</strong> securely with Stripe</h3>
         <br>
         @if (session('success'))
