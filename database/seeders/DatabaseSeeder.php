@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ChatSenderRole;
 use App\Http\Utility\CartItem;
 use App\Models\Admin;
 use App\Models\Chat;
@@ -321,14 +322,14 @@ class DatabaseSeeder extends Seeder
         ChatMessage::create([
             'chat_id' => $chat->id,
             'message' => 'Ho una domanda sulla lezione.',
-            'sender_role' => 0,
+            'sender_role' => ChatSenderRole::STUDENT->value,
             'sent_at' => now()->subHours(2),
         ]);
 
         ChatMessage::create([
             'chat_id' => $chat->id,
             'message' => 'Certo, dimmi pure.',
-            'sender_role' => 1,
+            'sender_role' => ChatSenderRole::ADMIN->value,
             'sent_at' => now()->subHour(),
         ]);
     }

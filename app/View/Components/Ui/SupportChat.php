@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Ui;
 
+use App\Enums\ChatSenderRole;
 use App\Helpers\DateHelper;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -24,7 +25,7 @@ class SupportChat extends Component
         public readonly string $title = 'Chat di supporto',
         public readonly string $description = 'Scrivi qui per ricevere supporto.',
         ?string $postRoute = null,
-        public readonly int $ownAuthor = 0,
+        public readonly int $ownAuthor = ChatSenderRole::STUDENT->value,
         public readonly string $ownSender = 'Tu',
         public readonly string $otherSender = 'Insegnante',
     ) {

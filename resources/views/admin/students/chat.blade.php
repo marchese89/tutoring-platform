@@ -17,7 +17,8 @@
                         Presentazione
                     </h5>
 
-                    <iframe class="w-100 rounded-4 border-0" height="700" src="/protected-files/{{ $presentationFile }}#view=FitH">
+                    <iframe class="w-100 rounded-4 border-0" height="700"
+                        src="/protected-files/{{ $presentationFile }}#view=FitH">
                     </iframe>
                 </div>
 
@@ -26,21 +27,14 @@
                         Svolgimento
                     </h5>
 
-                    <iframe class="w-100 rounded-4 border-0" height="700" src="/protected-files/{{ $contentFile }}#view=FitH">
+                    <iframe class="w-100 rounded-4 border-0" height="700"
+                        src="/protected-files/{{ $contentFile }}#view=FitH">
                     </iframe>
                 </div>
             </div>
         </x-ui.card>
 
-        <x-ui.support-chat
-            :chat="$chat"
-            :messages="$messages"
-            :post-route="route('admin.chat.messages.store')"
-            :own-author="1"
-            own-sender="Tu"
-            :other-sender="$studentName"
-            title="Conversazione"
-            description="Gestisci qui i messaggi con lo studente."
-        />
+        <x-ui.support-chat :chat="$chat" :messages="$messages" :post-route="route('admin.chat.messages.store')" :own-author="\App\Enums\ChatSenderRole::ADMIN->value" own-sender="Tu"
+            :other-sender="$studentName" title="Conversazione" description="Gestisci qui i messaggi con lo studente." />
     </div>
 @endsection

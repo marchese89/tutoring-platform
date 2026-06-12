@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\ChatSenderRole;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -18,7 +19,10 @@ class ChatMessageFactory extends Factory
         return [
             'chat_id' => Chat::factory(),
             'message' => fake()->paragraph(),
-            'sender_role' => fake()->numberBetween(0, 1),
+            'sender_role' => fake()->randomElement([
+                ChatSenderRole::STUDENT->value,
+                ChatSenderRole::ADMIN->value,
+            ]),
             'sent_at' => fake()->dateTimeBetween('-1 month'),
         ];
     }

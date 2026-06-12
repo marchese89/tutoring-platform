@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Enums\ChatSenderRole;
 use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
@@ -52,7 +53,7 @@ class DirectRequestController extends Controller
                 'id' => $lesson->id,
                 'title' => $lesson->title,
                 'date' => DateHelper::format($lesson->requested_at),
-                'has_unread_message' => $latestMessage?->sender_role === 1,
+                'has_unread_message' => (int) $latestMessage?->sender_role === ChatSenderRole::ADMIN->value,
             ];
         });
 

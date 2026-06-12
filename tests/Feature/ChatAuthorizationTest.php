@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ChatSenderRole;
 use App\Enums\ProductType;
 use App\Events\MessageSent;
 use App\Models\Chat;
@@ -43,7 +44,7 @@ class ChatAuthorizationTest extends TestCase
         $this->assertDatabaseHas('chat_messages', [
             'chat_id' => $chat->id,
             'message' => 'Owned chat message',
-            'sender_role' => 0,
+            'sender_role' => ChatSenderRole::STUDENT->value,
         ]);
     }
 
@@ -87,7 +88,7 @@ class ChatAuthorizationTest extends TestCase
         $this->assertDatabaseHas('chat_messages', [
             'chat_id' => $chat->id,
             'message' => 'Admin message',
-            'sender_role' => 1,
+            'sender_role' => ChatSenderRole::ADMIN->value,
         ]);
     }
 
@@ -98,7 +99,7 @@ class ChatAuthorizationTest extends TestCase
         $message = ChatMessage::create([
             'chat_id' => $chat->id,
             'message' => 'Private message',
-            'sender_role' => 0,
+            'sender_role' => ChatSenderRole::STUDENT->value,
             'sent_at' => now(),
         ]);
 
@@ -126,13 +127,13 @@ class ChatAuthorizationTest extends TestCase
             ChatMessage::create([
                 'chat_id' => $chat->id,
                 'message' => 'Student message',
-                'sender_role' => 0,
+                'sender_role' => ChatSenderRole::STUDENT->value,
                 'sent_at' => now(),
             ]),
             ChatMessage::create([
                 'chat_id' => $chat->id,
                 'message' => 'Admin message',
-                'sender_role' => 1,
+                'sender_role' => ChatSenderRole::ADMIN->value,
                 'sent_at' => now(),
             ]),
         ]);
@@ -142,7 +143,7 @@ class ChatAuthorizationTest extends TestCase
             compact('chat', 'messages')
         );
         $adminHtml = Blade::render(
-            '<x-ui.support-chat :chat="$chat" :messages="$messages" :own-author="1" own-sender="Tu" other-sender="Studente" />',
+            '<x-ui.support-chat :chat="$chat" :messages="$messages" :own-author="\App\Enums\ChatSenderRole::ADMIN->value" own-sender="Tu" other-sender="Studente" />',
             compact('chat', 'messages')
         );
 

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ChatSenderRole;
 use App\Events\MessageSent;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\Order;
 use App\Models\Review;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -31,8 +33,11 @@ class AjaxController extends Controller
             ->whereYear('orders.ordered_at', $year)
             ->groupBy('orders.id', 'orders.ordered_at', 'orders.student_id');
 
-        if (auth()->user()->student !== null) {
-            $query->where('orders.student_id', auth()->user()->student->id);
+        /** @var User $user */
+        $user = $request->user();
+
+        if ($user->student !== null) {
+            $query->where('orders.student_id', $user->student->id);
         }
 
         $orders = $query
@@ -69,7 +74,7 @@ class AjaxController extends Controller
 
         $message = $chat->messages()->create([
             'message' => $validated['message'],
-            'sender_role' => $request->user()->role === 'admin' ? 1 : 0,
+            'sender_role' => $request->user()->role === 'admin' ? ChatSenderRole::ADMIN->value : ChatSenderRole::STUDENT->value,
             'sent_at' => now(),
         ]);
 

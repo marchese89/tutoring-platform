@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Enums\ChatSenderRole;
 use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
@@ -94,7 +95,7 @@ class LessonRequestController extends Controller
                 : '-';
 
             $chat->has_unread_admin_message =
-                $chat->latestMessage && (int) $chat->latestMessage->sender_role === 0;
+                $chat->latestMessage && (int) $chat->latestMessage->sender_role === ChatSenderRole::STUDENT->value;
         });
 
         return view('admin.students.chats', compact('chats'));

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ChatSenderRole;
 use App\Enums\ProductType;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -37,7 +38,7 @@ class AdminChatPageTest extends TestCase
         ChatMessage::create([
             'chat_id' => $chat->id,
             'message' => 'Prepared chat message',
-            'sender_role' => 0,
+            'sender_role' => ChatSenderRole::STUDENT->value,
             'sent_at' => now(),
         ]);
 
