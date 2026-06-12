@@ -9,22 +9,20 @@
     </div>
 
     <div class="progress" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
-        <div
-            class="progress-bar progress-bar-striped progress-bar-animated"
-            data-upload-progress-bar
-            style="width: 0%;">
+        <div class="progress-bar progress-bar-striped progress-bar-animated" data-upload-progress-bar style="width: 0%;">
             0%
         </div>
     </div>
 </div>
 
 @once
-    <style>
-        .upload-progress .progress {
-            height: 1.25rem;
-        }
-    </style>
-
+    @push('styles')
+        <style>
+            .upload-progress .progress {
+                height: 1.25rem;
+            }
+        </style>
+    @endpush
     <script>
         document.addEventListener("DOMContentLoaded", function() {
             document.querySelectorAll("form[data-upload-progress-form]").forEach(function(form) {
@@ -73,7 +71,8 @@
                             return;
                         }
 
-                        const percent = Math.round((uploadEvent.loaded / uploadEvent.total) * 100);
+                        const percent = Math.round((uploadEvent.loaded / uploadEvent
+                            .total) * 100);
 
                         progressBar.style.width = percent + "%";
                         progressBar.textContent = percent + "%";

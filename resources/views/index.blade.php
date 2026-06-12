@@ -1,7 +1,6 @@
 @extends('layouts.layout-bootstrap')
 
-@section('content')
-
+@push('styles')
     <style>
         .hero {
             padding: 80px 20px;
@@ -24,6 +23,9 @@
             cursor: pointer;
         }
     </style>
+@endpush
+
+@section('content')
 
     <div class="container py-5">
 

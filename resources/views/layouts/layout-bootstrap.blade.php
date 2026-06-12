@@ -80,6 +80,7 @@
             --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
         }
     </style>
+    @stack('styles')
 
 </head>
 

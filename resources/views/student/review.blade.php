@@ -1,10 +1,6 @@
 @extends('layouts.student-dashboard')
 
-@section('page-title')
-    <x-ui.section-header :title="'Recensione'" />
-@endsection
-
-@section('inner')
+@push('styles')
     <style>
         .review-stars {
             display: inline-flex;
@@ -28,7 +24,13 @@
             transform: translateY(-1px);
         }
     </style>
+@endpush
 
+@section('page-title')
+    <x-ui.section-header :title="'Recensione'" />
+@endsection
+
+@section('inner')
     <script>
         let currentRating = @json($rating);
 
@@ -93,13 +95,8 @@
 
                         <div class="review-stars" id="stars" aria-label="Valutazione">
                             @for ($value = 1; $value <= 5; $value++)
-                                <button
-                                    type="button"
-                                    class="review-star"
-                                    data-review-star="{{ $value }}"
-                                    onclick="saveRating({{ $value }})"
-                                    aria-label="{{ $value }} stelle"
-                                >
+                                <button type="button" class="review-star" data-review-star="{{ $value }}"
+                                    onclick="saveRating({{ $value }})" aria-label="{{ $value }} stelle">
                                     <i class="bi bi-star-fill"></i>
                                 </button>
                             @endfor
@@ -111,14 +108,8 @@
                             Recensione
                         </label>
 
-                        <textarea
-                            id="review"
-                            name="review"
-                            rows="6"
-                            maxlength="500"
-                            class="form-control rounded-4"
-                            onkeyup="countChar(this)"
-                        >{{ $review }}</textarea>
+                        <textarea id="review" name="review" rows="6" maxlength="500" class="form-control rounded-4"
+                            onkeyup="countChar(this)">{{ $review }}</textarea>
                     </div>
 
                     <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
@@ -131,7 +122,8 @@
                                 Recensione salvata.
                             </span>
 
-                            <x-ui.primary-button id="storeReview" onclick="storeReview(document.getElementById('review').value)">
+                            <x-ui.primary-button id="storeReview"
+                                onclick="storeReview(document.getElementById('review').value)">
                                 Invia
                             </x-ui.primary-button>
                         </div>

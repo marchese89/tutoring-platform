@@ -1,17 +1,17 @@
 @extends('layouts.layout-bootstrap')
 
+@push('styles')
+    <style>
+        ol {
+            padding-left: 20px;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div>
-        <style>
-            ol {
-                padding-left: 20px;
-            }
 
-            p {
-                white-space: wrap;
-            }
-        </style>
-        <table style="width: 70%;margin-left:auto;margin-right:auto" id="pannello_controllo" >
+        <table style="width: 70%;margin-left:auto;margin-right:auto" id="pannello_controllo">
             <tr colspan="3">
                 <td align="center">
                     <br />
@@ -44,7 +44,7 @@
                     funzioni principali.<br />
                     <br />Sul sito sono attualmente utilizzati i seguenti cookie tecnici:<br />
                     <br />
-                    <table  class="table" style="white-space: wrap;width:65%" border="1" rules="all">
+                    <table class="table" style="width:65%" border="1" rules="all">
                         <tr>
                             <td><strong>XSRF-TOKEN:</strong></td>
                             <td> Questo cookie viene utilizzato per proteggere le applicazioni Laravel da

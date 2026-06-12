@@ -1,10 +1,6 @@
 @extends('layouts.admin-dashboard')
 
-@section('page-title')
-    <x-ui.section-header :title="'Richieste Studenti'" />
-@endsection
-
-@section('inner')
+@push('styles')
     <style>
         .status-dot {
             width: 14px;
@@ -13,7 +9,13 @@
             display: inline-block;
         }
     </style>
+@endpush
 
+@section('page-title')
+    <x-ui.section-header :title="'Richieste Studenti'" />
+@endsection
+
+@section('inner')
     <div class="container">
 
         <div class="card border-0 shadow-sm rounded-4">
@@ -59,8 +61,7 @@
                                     </td>
 
                                     <td>
-                                        <a href="{{ $item['show_url'] }}"
-                                            class="btn btn-primary btn-sm rounded-pill px-3">
+                                        <a href="{{ $item['show_url'] }}" class="btn btn-primary btn-sm rounded-pill px-3">
                                             Visualizza
                                         </a>
                                     </td>

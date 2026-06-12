@@ -1,10 +1,4 @@
-@props([
-    'title',
-    'description' => null,
-    'icon' => null,
-    'class' => '',
-    'bodyClass' => 'p-4',
-])
+@props(['title', 'description' => null, 'icon' => null, 'class' => '', 'bodyClass' => 'p-4'])
 
 <x-ui.card :class="$class" :body-class="$bodyClass">
     <div class="d-flex gap-3 align-items-start mb-4">
@@ -31,12 +25,14 @@
 </x-ui.card>
 
 @once
-    <style>
-        .form-card-icon {
-            background: #eef2ff;
-            color: #4f46e5;
-            height: 3rem;
-            width: 3rem;
-        }
-    </style>
+    @push('styles')
+        <style>
+            .form-card-icon {
+                background: #eef2ff;
+                color: #4f46e5;
+                height: 3rem;
+                width: 3rem;
+            }
+        </style>
+    @endpush
 @endonce
