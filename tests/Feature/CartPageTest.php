@@ -34,6 +34,7 @@ class CartPageTest extends TestCase
 
     public function test_checkout_page_uses_prepared_cart_total(): void
     {
+        config(['services.stripe.key' => 'pk_test_cart']);
         $student = $this->createStudent();
         $lesson = $this->createLesson('Checkout lesson', 45);
         $cart = new Cart;
@@ -43,7 +44,11 @@ class CartPageTest extends TestCase
             ->withSession(['cart' => $cart])
             ->get(route('checkout.show'))
             ->assertOk()
-            ->assertSee('45&euro;', false);
+            ->assertSee('45,00&euro;', false)
+            ->assertSee('pk_test_cart')
+            ->assertSee('data-intent-url="' . route('payment.process') . '"', false)
+            ->assertSee('data-return-url="' . route('payment.success') . '"', false)
+            ->assertSee('https://js.stripe.com/v3/');
     }
 
     public function test_navbar_uses_prepared_cart_item_count(): void

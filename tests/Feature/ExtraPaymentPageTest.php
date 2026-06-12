@@ -24,7 +24,10 @@ class ExtraPaymentPageTest extends TestCase
             ->get(route('payment.pay'))
             ->assertOk()
             ->assertSee('25,00&euro;', false)
-            ->assertSee('pk_test_example');
+            ->assertSee('pk_test_example')
+            ->assertSee('data-intent-url="'.route('payment.extra.intent').'"', false)
+            ->assertSee('data-return-url="'.route('payment.success').'"', false)
+            ->assertSee('https://js.stripe.com/v3/');
     }
 
     public function test_payment_page_redirects_when_details_are_missing(): void

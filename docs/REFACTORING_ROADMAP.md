@@ -83,13 +83,20 @@ Status: completed for the current application surface.
 
 ### 7. Internal code quality
 
-Planned branch: `refactor/internal-code-quality`
+Status: in progress across focused branches.
 
 - Complete English naming for internal identifiers and comments.
 - Remove legacy routes and `public/custom_javascript/utility.js`.
 - Run Pint over the application and keep it enforced.
 - Remove unused imports, dead code, magic values, and duplicated helpers.
 - Introduce a maintained frontend dependency workflow.
+
+Completed:
+
+- Repository-wide Pint formatting is clean.
+- Product types and chat sender roles use enums instead of numeric magic values.
+- Password visibility controls use one shared Blade component.
+- `public/custom_javascript/utility.js` and unused public stylesheets were removed.
 
 ### 8. Localization
 
@@ -102,7 +109,7 @@ Planned branch: `feature/localization-foundation`
 
 ### 9. Visual consistency
 
-Planned branch: `ui/global-consistency`
+Status: in progress across focused UI branches.
 
 - Audit all public, student, admin, authentication, email, and invoice views.
 - Complete adoption of shared page, table, form, feedback, and upload components.
@@ -111,9 +118,19 @@ Planned branch: `ui/global-consistency`
 - Verify responsive behavior and primary workflows in the browser.
 - Audit PDF, image, and iframe viewers and consolidate repeated markup into shared media-viewer components.
 
+Completed so far:
+
+- Bootstrap primary colors now use a coherent, accessible palette.
+- Page and component styles are emitted through the layout style stack.
+- Lesson and exercise document previews use a shared component.
+- Cart and checkout use shared Bootstrap components, and cart and extra
+  payments use one shared Stripe payment form and script.
+- Public, authentication, student, and admin pages already use several shared
+  card, form, table, upload, chat, and page-header components.
+
 ### 10. Dependencies and release verification
 
-Planned branch: `maintenance/dependency-upgrade`
+Status: dependency upgrade completed; release verification remains open.
 
 - Upgrade Laravel and Symfony packages to supported, non-vulnerable versions.
 - Run Composer audit with no known advisories.
@@ -123,14 +140,17 @@ Planned branch: `maintenance/dependency-upgrade`
 
 ## Current status
 
-Last verified: 2026-06-11.
+Last verified: 2026-06-12.
 
-- Current branch: `test/factory-based-test-cleanup`.
+- Current branch: `refactor/static-inline-styles`.
 - Verified application baseline:
-  `6bc2e2e Use factories in purchase and billing tests`.
+  `04a3f9d Consolidate public document preview styles`.
 - The verified baseline is published to
-  `origin/test/factory-based-test-cleanup`.
-- Automated verification: 93 tests and 332 assertions pass.
+  `origin/refactor/static-inline-styles`.
+- Automated verification: 93 tests and 339 assertions pass.
+- Laravel version: 12.62.0.
+- `composer audit --locked`: no known security advisories.
+- Repository-wide Pint verification passes.
 - Core model factories: 18 factories available.
 - Blade query audit: no remaining direct model queries found.
 - Payment completion verifies the stored Stripe PaymentIntent, amount,
@@ -143,37 +163,38 @@ Last verified: 2026-06-11.
 - Invoice workflows use the unified `invoices` table and concurrent invoice
   numbering is protected by `invoice_sequences` and row locking.
 - Seeder credentials are documented in `.env.example`.
+- Product and chat sender types use enums.
+- The legacy password utility JavaScript and unused public CSS were removed.
+- Blade styles use the layout stack, and repeated lesson/exercise document
+  preview markup uses a shared component.
 
 ### Remaining work
 
-1. Upgrade vulnerable Composer dependencies. `composer audit --locked` reports
-   11 advisories affecting Laravel and Symfony packages. Laravel must reach
-   12.60.0 or later because Laravel 10 and 11 no longer receive security fixes.
-2. Run Pint across the repository. The global check currently reports 35
-   files requiring formatting.
-3. Replace remaining numeric product and chat types (`0`, `2`, and `5`) with
-   a shared enum or equivalent typed constants.
-4. Finish factory-based cleanup in feature tests that still construct core
-   models manually.
+1. Continue removing static inline styles from normal web views while keeping
+   dynamic styles and email/PDF-specific inline formatting where required.
+2. Continue consolidating repeated public, student, and admin view patterns
+   into focused Blade components without changing application behavior.
+3. Audit PDF, image, and iframe viewers before designing shared media-viewer
+   components for the remaining contexts.
+4. Complete English naming for internal code and start localization in its own
+   branch; user-facing Italian text remains until translation keys exist.
 5. Split the monolithic `DatabaseSeeder` and verify a fresh seeded install in
    a disposable database. The current PHP CLI does not have PDO SQLite, so the
    in-memory installation check cannot run locally yet.
-6. Remove `public/custom_javascript/utility.js` after replacing or confirming
-   its remaining layout dependency.
-7. Complete internal code-quality cleanup, localization, and the global UI
-   audit described in work packages 7-9.
+6. Introduce a maintained frontend dependency workflow and consolidate global
+   CSS and reusable JavaScript once the view audit is stable.
+7. Perform a seeded end-to-end browser verification and update setup/testing
+   documentation before release.
 8. Decide whether to squash transitional billing migrations before the first
    stable release. Preserve them while upgrades from existing databases still
    need support.
 
 ### Next action
 
-Create `maintenance/dependency-upgrade` from
-`test/factory-based-test-cleanup`. Upgrade Laravel in two verified stages,
-first from 10 to 11 and then from 11 to Laravel 12.60.0 or later. Update the
-related first-party packages and Symfony dependencies at each stage, then run
-Composer audit, the full test suite, and Pint on files changed by the upgrade.
-Do not combine this work with localization or UI changes.
+Commit and publish the verified cart, checkout, and shared Stripe payment-form
+refactoring. Then continue the static inline-style audit with the remaining
+ordinary public views, while leaving email, invoice PDF, and genuinely dynamic
+inline styles unchanged.
 
 ## Historical progress
 

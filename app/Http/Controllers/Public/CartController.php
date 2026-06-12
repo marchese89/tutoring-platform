@@ -20,7 +20,10 @@ class CartController extends Controller
     {
         ['total' => $total] = $this->summary($request);
 
-        return view('public.checkout', compact('total'));
+        return view('public.checkout', [
+            'formattedTotal' => number_format((float) $total, 2, ',', '.'),
+            'stripeKey' => config('services.stripe.key'),
+        ]);
     }
 
     private function summary(Request $request): array
