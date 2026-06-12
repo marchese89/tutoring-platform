@@ -56,30 +56,8 @@
                             </div>
 
                             {{-- PASSWORD --}}
-                            <div class="mb-3">
-
-                                <label class="form-label">
-                                    Password
-                                </label>
-
-                                <div class="input-group">
-
-                                    <input type="password" name="password" id="password"
-                                        class="form-control @error('password') is-invalid @enderror">
-
-                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
-                                        Mostra
-                                    </button>
-
-                                </div>
-
-                                @error('password')
-                                    <div class="invalid-feedback d-block">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-
-                            </div>
+                            <x-ui.password-field name="password" label="Password" wrapper-class="mb-3"
+                                autocomplete="current-password" required />
 
                             {{-- Password recovery --}}
                             <div class="text-end mb-4">
@@ -106,20 +84,4 @@
         </div>
 
     </div>
-
-    <script>
-        document.getElementById('togglePassword')
-            .addEventListener('click', function() {
-
-                const password = document.getElementById('password');
-
-                if (password.type === 'password') {
-                    password.type = 'text';
-                    this.innerText = 'Nascondi';
-                } else {
-                    password.type = 'password';
-                    this.innerText = 'Mostra';
-                }
-            });
-    </script>
 @endsection

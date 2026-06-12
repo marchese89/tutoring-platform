@@ -8,19 +8,12 @@
     <x-ui.page-section>
         <div class="row g-4">
             <div class="col-lg-6">
-                <x-ui.form-card
-                    class="h-100"
-                    title="Modifica Email"
-                    description="Aggiorna l'indirizzo email usato per accedere."
-                    icon="bi-envelope">
+                <x-ui.form-card class="h-100" title="Modifica Email"
+                    description="Aggiorna l'indirizzo email usato per accedere." icon="bi-envelope">
                     <form method="POST" action="{{ route('student.account.email.update') }}">
                         @csrf
 
-                        <x-ui.form-field
-                            type="email"
-                            name="email"
-                            label="Nuova Email"
-                            maxlength="255"
+                        <x-ui.form-field type="email" name="email" label="Nuova Email" maxlength="255"
                             :value="old('email', auth()->user()->email)" />
 
                         <x-ui.primary-button type="submit">
@@ -31,11 +24,8 @@
             </div>
 
             <div class="col-lg-6">
-                <x-ui.form-card
-                    class="h-100"
-                    title="Modifica Password"
-                    description="Scegli una password robusta per proteggere l'account."
-                    icon="bi-lock">
+                <x-ui.form-card class="h-100" title="Modifica Password"
+                    description="Scegli una password robusta per proteggere l'account." icon="bi-lock">
                     @if (session()->has('success'))
                         <div class="alert alert-success rounded-3">
                             {{ session()->get('success') }}
@@ -45,47 +35,15 @@
                     <form method="POST" action="{{ route('student.account.password.update') }}">
                         @csrf
 
-                        <x-ui.form-field
-                            wrapper-class="mb-2"
-                            type="password"
-                            name="current_password"
-                            label="Vecchia Password"
+                        <x-ui.password-field name="current_password" label="Vecchia Password"
+                            autocomplete="current-password" maxlength="255" />
+
+                        <x-ui.password-field name="password" label="Nuova Password" autocomplete="new-password"
                             maxlength="255" />
 
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" onclick="toggleCurrentPassword()" id="showOld">
-                            <label class="form-check-label" for="showOld">
-                                Mostra Password
-                            </label>
-                        </div>
 
-                        <x-ui.form-field
-                            wrapper-class="mb-2"
-                            type="password"
-                            name="password"
-                            label="Nuova Password"
-                            maxlength="255" />
-
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" onclick="toggleNewPassword()" id="showNew">
-                            <label class="form-check-label" for="showNew">
-                                Mostra Password
-                            </label>
-                        </div>
-
-                        <x-ui.form-field
-                            wrapper-class="mb-2"
-                            type="password"
-                            name="password_confirmation"
-                            label="Conferma Password"
-                            maxlength="255" />
-
-                        <div class="form-check mb-4">
-                            <input class="form-check-input" type="checkbox" onclick="togglePasswordConfirmation()" id="showConfirm">
-                            <label class="form-check-label" for="showConfirm">
-                                Mostra Password
-                            </label>
-                        </div>
+                        <x-ui.password-field name="password_confirmation" label="Conferma Password"
+                            autocomplete="new-password" maxlength="255" />
 
                         <div class="alert alert-light border rounded-4 small mb-4">
                             <div class="fw-semibold mb-2">

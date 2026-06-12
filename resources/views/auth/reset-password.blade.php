@@ -35,15 +35,14 @@
 
                     {{-- PASSWORD --}}
                     <div class="col-12">
-                        <label class="form-label">Nuova password</label>
-                        <input class="form-control" type="password" name="password" placeholder="Nuova password">
+                        <x-ui.password-field name="password" label="Nuova password" wrapper-class="mb-0"
+                            placeholder="Nuova password" autocomplete="new-password" required />
                     </div>
 
                     {{-- CONFIRM --}}
                     <div class="col-12">
-                        <label class="form-label">Conferma password</label>
-                        <input class="form-control" type="password" name="password_confirmation"
-                            placeholder="Conferma password">
+                        <x-ui.password-field name="password_confirmation" label="Conferma password" wrapper-class="mb-0"
+                            placeholder="Conferma password" autocomplete="new-password" required />
                     </div>
 
                     <div class="col-12">

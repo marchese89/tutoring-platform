@@ -114,21 +114,13 @@
 
                                 {{-- PASSWORD BLOCK --}}
                                 <div class="col-md-6">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" name="password"
-                                        class="form-control @error('password') is-invalid @enderror">
-                                    @error('password')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <x-ui.password-field name="password" label="Password" wrapper-class="mb-0"
+                                        autocomplete="new-password" required />
                                 </div>
 
                                 <div class="col-md-6">
-                                    <label class="form-label">Conferma password</label>
-                                    <input type="password" name="password_confirmation"
-                                        class="form-control @error('password_confirmation') is-invalid @enderror">
-                                    @error('password_confirmation')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                    <x-ui.password-field name="password_confirmation" label="Conferma password"
+                                        wrapper-class="mb-0" autocomplete="new-password" required />
                                 </div>
 
                                 <div class="col-12 text-center mt-4">
