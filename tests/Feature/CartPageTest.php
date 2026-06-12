@@ -21,7 +21,7 @@ class CartPageTest extends TestCase
     {
         $student = $this->createStudent();
         $lesson = $this->createLesson('Cart lesson', 30);
-        $cart = new Cart();
+        $cart = new Cart;
         $cart->add(new CartItem($lesson->id, CartItem::LESSON));
 
         $this->actingAs($student->user)
@@ -36,7 +36,7 @@ class CartPageTest extends TestCase
     {
         $student = $this->createStudent();
         $lesson = $this->createLesson('Checkout lesson', 45);
-        $cart = new Cart();
+        $cart = new Cart;
         $cart->add(new CartItem($lesson->id, CartItem::LESSON));
 
         $this->actingAs($student->user)
@@ -49,7 +49,7 @@ class CartPageTest extends TestCase
     public function test_navbar_uses_prepared_cart_item_count(): void
     {
         $student = $this->createStudent();
-        $cart = new Cart();
+        $cart = new Cart;
         $cart->add(new CartItem($this->createLesson('First lesson', 10)->id, CartItem::LESSON));
         $cart->add(new CartItem($this->createLesson('Second lesson', 20)->id, CartItem::LESSON));
 

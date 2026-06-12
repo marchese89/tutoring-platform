@@ -235,37 +235,37 @@ class DatabaseSeeder extends Seeder
                 'id' => $paidLesson->id,
                 'type' => CartItem::LESSON,
                 'price' => $paidLesson->price,
-                'description' => 'Lesson: ' . $paidLesson->title,
+                'description' => 'Lesson: '.$paidLesson->title,
             ],
             [
                 'id' => $advancedLesson->id,
                 'type' => CartItem::LESSON,
                 'price' => $advancedLesson->price,
-                'description' => 'Lesson: ' . $advancedLesson->title,
+                'description' => 'Lesson: '.$advancedLesson->title,
             ],
             [
                 'id' => $exercise->id,
                 'type' => CartItem::EXERCISE,
                 'price' => $exercise->price,
-                'description' => 'Exercise: ' . $exercise->title,
+                'description' => 'Exercise: '.$exercise->title,
             ],
             [
                 'id' => $advancedExercise->id,
                 'type' => CartItem::EXERCISE,
                 'price' => $advancedExercise->price,
-                'description' => 'Exercise: ' . $advancedExercise->title,
+                'description' => 'Exercise: '.$advancedExercise->title,
             ],
             [
                 'id' => $lessonRequest->id,
                 'type' => CartItem::REQUESTED_LESSON,
                 'price' => $lessonRequest->price,
-                'description' => 'Request: ' . $lessonRequest->title,
+                'description' => 'Request: '.$lessonRequest->title,
             ],
             [
                 'id' => $secondLessonRequest->id,
                 'type' => CartItem::REQUESTED_LESSON,
                 'price' => $secondLessonRequest->price,
-                'description' => 'Request: ' . $secondLessonRequest->title,
+                'description' => 'Request: '.$secondLessonRequest->title,
             ],
         ];
 
@@ -335,11 +335,11 @@ class DatabaseSeeder extends Seeder
 
     private function storeDemoPdf(string $path, string $title, array $lines): string
     {
-        $dompdf = new Dompdf();
+        $dompdf = new Dompdf;
         $escapedTitle = e($title);
         $generatedAt = now()->format('d/m/Y H:i');
         $items = collect($lines)
-            ->map(fn (string $line) => '<li>' . e($line) . '</li>')
+            ->map(fn (string $line) => '<li>'.e($line).'</li>')
             ->implode('');
 
         $dompdf->loadHtml(<<<HTML
