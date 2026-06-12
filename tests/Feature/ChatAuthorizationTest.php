@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ProductType;
 use App\Events\MessageSent;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -71,7 +72,8 @@ class ChatAuthorizationTest extends TestCase
     {
         $student = $this->createStudent();
         $chat = $this->createChat($student);
-        $admin = User::factory()->create(['role' => 'admin']);
+        /** @var User $admin */
+        $admin = User::factory()->createOne(['role' => 'admin']);
 
         $response = $this->actingAs($admin)->postJson(
             route('admin.chat.messages.store'),
@@ -169,7 +171,7 @@ class ChatAuthorizationTest extends TestCase
     {
         return Chat::create([
             'product_id' => fake()->unique()->numberBetween(1, 100000),
-            'product_type' => 5,
+            'product_type' => ProductType::REQUESTED_LESSON->value,
             'student_id' => $student->id,
         ]);
     }

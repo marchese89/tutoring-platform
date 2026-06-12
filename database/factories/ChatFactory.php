@@ -2,7 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Http\Utility\CartItem;
+use App\Enums\ProductType;
 use App\Models\Chat;
 use App\Models\Lesson;
 use App\Models\Student;
@@ -19,7 +19,7 @@ class ChatFactory extends Factory
     {
         return [
             'product_id' => Lesson::factory(),
-            'product_type' => CartItem::LESSON,
+            'product_type' => ProductType::LESSON->value,
             'student_id' => Student::factory(),
         ];
     }

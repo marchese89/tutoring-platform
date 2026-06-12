@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
@@ -31,7 +32,7 @@ class DirectRequestController extends Controller
             ->orderByDesc('requested_at')
             ->get();
 
-        $chats = Chat::where('product_type', 5)
+        $chats = Chat::where('product_type', ProductType::REQUESTED_LESSON->value)
             ->where('student_id', $studentId)
             ->whereIn('product_id', $lessons->pluck('id'))
             ->get()

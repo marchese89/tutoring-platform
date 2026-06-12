@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
@@ -102,9 +103,9 @@ class OrderController extends Controller
     private function productTypeLabel(int $type): string
     {
         return match ($type) {
-            0 => 'lezione',
-            2 => 'esercizio',
-            5 => 'lezione su richiesta',
+            ProductType::LESSON->value => 'lezione',
+            ProductType::EXERCISE->value => 'esercizio',
+            ProductType::REQUESTED_LESSON->value => 'lezione su richiesta',
             default => 'prodotto',
         };
     }

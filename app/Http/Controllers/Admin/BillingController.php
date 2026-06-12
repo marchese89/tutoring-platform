@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Invoice;
@@ -108,9 +109,9 @@ class BillingController extends Controller
     private function productTypeLabel(int $type): string
     {
         return match ($type) {
-            0 => 'Lezione',
-            2 => 'Esercizio',
-            5 => 'Lezione su richiesta',
+            ProductType::LESSON->value => 'Lezione',
+            ProductType::EXERCISE->value => 'Esercizio',
+            ProductType::REQUESTED_LESSON->value => 'Lezione su richiesta',
             default => 'Prodotto',
         };
     }
@@ -118,9 +119,9 @@ class BillingController extends Controller
     private function productTypeBadgeClass(int $type): string
     {
         return match ($type) {
-            0 => 'bg-primary-subtle text-primary',
-            2 => 'bg-success-subtle text-success',
-            5 => 'bg-warning-subtle text-dark',
+            ProductType::LESSON->value => 'bg-primary-subtle text-primary',
+            ProductType::EXERCISE->value => 'bg-success-subtle text-success',
+            ProductType::REQUESTED_LESSON->value => 'bg-warning-subtle text-dark',
             default => 'bg-secondary-subtle text-secondary',
         };
     }

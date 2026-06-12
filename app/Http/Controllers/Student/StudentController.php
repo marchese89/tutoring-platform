@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Enums\ProductType;
 use App\Http\Controllers\Controller;
 use App\Models\Chat;
 use App\Models\ChatMessage;
@@ -108,7 +109,7 @@ class StudentController extends Controller
         $student = $request->user()->student;
 
         $chat = Chat::where('product_id', $lessonId)
-            ->where('product_type', 0)
+            ->where('product_type', ProductType::LESSON->value)
             ->where('student_id', $student->id)
             ->first();
 
@@ -117,7 +118,7 @@ class StudentController extends Controller
 
             $chat = Chat::create([
                 'product_id' => $lessonId,
-                'product_type' => 0,
+                'product_type' => ProductType::LESSON->value,
                 'student_id' => $student->id,
             ]);
         }
@@ -145,7 +146,7 @@ class StudentController extends Controller
 
         $chat = Chat::firstOrCreate([
             'product_id' => $exerciseId,
-            'product_type' => 2,
+            'product_type' => ProductType::EXERCISE->value,
             'student_id' => $request->user()->student->id,
         ]);
 
@@ -162,14 +163,14 @@ class StudentController extends Controller
         $this->authorize('view', $lessonRequest);
 
         $chat = Chat::where('product_id', $id)
-            ->where('product_type', 5)
+            ->where('product_type', ProductType::REQUESTED_LESSON->value)
             ->where('student_id', $request->user()->student->id)
             ->first();
 
         if (! $chat && (int) $lessonRequest->is_paid === 1) {
             $chat = Chat::create([
                 'product_id' => $id,
-                'product_type' => 5,
+                'product_type' => ProductType::REQUESTED_LESSON->value,
                 'student_id' => $request->user()->student->id,
             ]);
         }

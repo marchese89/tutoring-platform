@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\ProductType;
 use App\Models\Chat;
 use App\Models\ChatMessage;
 use App\Models\LessonRequest;
@@ -16,7 +17,8 @@ class AdminChatPageTest extends TestCase
 
     public function test_admin_chat_page_uses_prepared_student_and_message_data(): void
     {
-        $admin = User::factory()->create(['role' => 'admin']);
+        /** @var User $admin */
+        $admin = User::factory()->createOne(['role' => 'admin']);
         $student = $this->createStudent();
         $lessonRequest = LessonRequest::create([
             'title' => 'Requested lesson',
@@ -28,7 +30,7 @@ class AdminChatPageTest extends TestCase
         ]);
         $chat = Chat::create([
             'product_id' => $lessonRequest->id,
-            'product_type' => 5,
+            'product_type' => ProductType::REQUESTED_LESSON->value,
             'student_id' => $student->id,
         ]);
 

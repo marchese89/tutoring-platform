@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Enums\ProductType;
 use App\Http\Utility\Cart;
 use App\Http\Utility\CartItem;
 use App\Models\Chat;
@@ -95,14 +96,14 @@ class OrderService
     {
         Lesson::findOrFail($id);
         $this->createOrderItem($orderId, $id, CartItem::LESSON, $price);
-        $this->createChat($id, 0, $studentId);
+        $this->createChat($id, ProductType::LESSON->value, $studentId);
     }
 
     private function handleExercise(int $id, int $price, int $orderId, int $studentId)
     {
         Exercise::findOrFail($id);
         $this->createOrderItem($orderId, $id, CartItem::EXERCISE, $price);
-        $this->createChat($id, 2, $studentId);
+        $this->createChat($id, ProductType::EXERCISE->value, $studentId);
     }
 
     private function handleRequest(int $id, int $price, int $orderId, int $studentId)
@@ -110,7 +111,7 @@ class OrderService
         $req = LessonRequest::where('student_id', $studentId)->findOrFail($id);
         $req->update(['is_paid' => 1]);
         $this->createOrderItem($orderId, $id, CartItem::REQUESTED_LESSON, $price);
-        $this->createChat($id, 5, $studentId);
+        $this->createChat($id, ProductType::REQUESTED_LESSON->value, $studentId);
     }
 
     private function createOrderItem(int $orderId, int $productId, int $type, int $price)

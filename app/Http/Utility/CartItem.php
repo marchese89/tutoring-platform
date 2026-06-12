@@ -2,6 +2,7 @@
 
 namespace App\Http\Utility;
 
+use App\Enums\ProductType;
 use App\Models\Course;
 use App\Models\Exercise;
 use App\Models\Lesson;
@@ -9,17 +10,17 @@ use App\Models\LessonRequest;
 
 class CartItem
 {
-    public const LESSON = 0;
+    public const LESSON = ProductType::LESSON->value;
 
-    public const COURSE_LESSONS = 1;
+    public const COURSE_LESSONS = ProductType::COURSE_LESSONS->value;
 
-    public const EXERCISE = 2;
+    public const EXERCISE = ProductType::EXERCISE->value;
 
-    public const COURSE_EXERCISES = 3;
+    public const COURSE_EXERCISES = ProductType::COURSE_EXERCISES->value;
 
-    public const FULL_COURSE = 4;
+    public const FULL_COURSE = ProductType::FULL_COURSE->value;
 
-    public const REQUESTED_LESSON = 5;
+    public const REQUESTED_LESSON = ProductType::REQUESTED_LESSON->value;
 
     private int $id;
 

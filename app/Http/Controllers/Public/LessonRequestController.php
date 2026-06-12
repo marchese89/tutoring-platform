@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Mail\LessonRequestFulfilledMail;
@@ -60,31 +61,31 @@ class LessonRequestController extends Controller
 
         $lessonTitles = Lesson::whereIn(
             'id',
-            $chats->where('product_type', 0)->pluck('product_id')
+            $chats->where('product_type', ProductType::LESSON->value)->pluck('product_id')
         )->pluck('title', 'id');
 
         $exerciseTitles = Exercise::whereIn(
             'id',
-            $chats->where('product_type', 2)->pluck('product_id')
+            $chats->where('product_type', ProductType::EXERCISE->value)->pluck('product_id')
         )->pluck('title', 'id');
 
         $lessonRequestTitles = LessonRequest::whereIn(
             'id',
-            $chats->where('product_type', 5)->pluck('product_id')
+            $chats->where('product_type', ProductType::REQUESTED_LESSON->value)->pluck('product_id')
         )->pluck('title', 'id');
 
         $chats->each(function (Chat $chat) use ($lessonTitles, $exerciseTitles, $lessonRequestTitles) {
             $chat->product_type_label = match ((int) $chat->product_type) {
-                0 => 'Lezione',
-                2 => 'Esercizio',
-                5 => 'Lezione su Richiesta',
+                ProductType::LESSON->value => 'Lezione',
+                ProductType::EXERCISE->value => 'Esercizio',
+                ProductType::REQUESTED_LESSON->value => 'Lezione su Richiesta',
                 default => '-',
             };
 
             $chat->product_name = match ((int) $chat->product_type) {
-                0 => $lessonTitles->get($chat->product_id, '-'),
-                2 => $exerciseTitles->get($chat->product_id, '-'),
-                5 => $lessonRequestTitles->get($chat->product_id, '-'),
+                ProductType::LESSON->value => $lessonTitles->get($chat->product_id, '-'),
+                ProductType::EXERCISE->value => $exerciseTitles->get($chat->product_id, '-'),
+                ProductType::REQUESTED_LESSON->value => $lessonRequestTitles->get($chat->product_id, '-'),
                 default => '-',
             };
 
@@ -99,7 +100,7 @@ class LessonRequestController extends Controller
         return view('admin.students.chats', compact('chats'));
     }
 
-    public function showChat($id)
+    public function showChat(int $id)
     {
         $chat = Chat::findOrFail($id);
 
@@ -108,7 +109,7 @@ class LessonRequestController extends Controller
         $title = '';
 
         switch ($chat->product_type) {
-            case 0:
+            case ProductType::LESSON->value:
                 $lesson = Lesson::find($chat->product_id);
                 $presentationFile = $lesson?->presentation_file;
                 $contentFile = $lesson?->content_file;
@@ -119,7 +120,7 @@ class LessonRequestController extends Controller
                     $lesson?->title;
                 break;
 
-            case 2:
+            case ProductType::EXERCISE->value:
                 $exercise = Exercise::find($chat->product_id);
                 $presentationFile = $exercise?->prompt_file;
                 $contentFile = $exercise?->solution_file;
@@ -130,7 +131,7 @@ class LessonRequestController extends Controller
                     $exercise?->title;
                 break;
 
-            case 5:
+            case ProductType::REQUESTED_LESSON->value:
                 $lessonRequest = LessonRequest::find($chat->product_id);
                 $presentationFile = $lessonRequest?->request_file;
                 $contentFile = $lessonRequest?->solution_file;
