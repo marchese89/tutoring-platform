@@ -41,43 +41,43 @@
         }
 
         :root {
-            /* 1. Define the custom palette once. */
-            --my-primary: #22c4ff;
-            --my-primary-rgb: 255, 87, 34;
-            --my-primary-hover: #19e3e6;
-            /* Darker hover tone. */
-            --my-primary-active: #15d8c8;
-            /* Darker active tone. */
+            --app-primary: #077a9f;
+            --app-primary-rgb: 7, 122, 159;
+            --app-primary-hover: #076b8c;
+            --app-primary-active: #05556f;
 
-            /* 2. Map the global Bootstrap variables. */
-            --bs-primary: var(--my-primary);
-            --bs-primary-rgb: var(--my-primary-rgb);
-            --bs-link-color: var(--my-primary);
-            --bs-link-hover-color: var(--my-primary-hover);
+            --bs-primary: var(--app-primary);
+            --bs-primary-rgb: var(--app-primary-rgb);
+            --bs-link-color: var(--app-primary);
+            --bs-link-hover-color: var(--app-primary-hover);
         }
 
-        /* 3. Customize the solid primary button. */
         .btn-primary {
-            --bs-btn-bg: var(--my-primary);
-            --bs-btn-border-color: var(--my-primary);
-            --bs-btn-hover-bg: var(--my-primary-hover);
-            --bs-btn-hover-border-color: var(--my-primary-hover);
-            --bs-btn-active-bg: var(--my-primary-active);
-            --bs-btn-active-border-color: var(--my-primary-active);
-            --bs-btn-focus-shadow-rgb: var(--my-primary-rgb);
-            --bs-btn-disabled-bg: var(--my-primary);
-            --bs-btn-disabled-border-color: var(--my-primary);
+            --bs-btn-color: #fff;
+            --bs-btn-bg: var(--app-primary);
+            --bs-btn-border-color: var(--app-primary);
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: var(--app-primary-hover);
+            --bs-btn-hover-border-color: var(--app-primary-hover);
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: var(--app-primary-active);
+            --bs-btn-active-border-color: var(--app-primary-active);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: var(--app-primary);
+            --bs-btn-disabled-border-color: var(--app-primary);
+            --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
         }
 
-        /* 4. Customize the outlined primary button. */
         .btn-outline-primary {
-            --bs-btn-color: var(--my-primary);
-            --bs-btn-border-color: var(--my-primary);
-            --bs-btn-hover-bg: var(--my-primary);
-            --bs-btn-hover-border-color: var(--my-primary);
-            --bs-btn-active-bg: var(--my-primary);
-            --bs-btn-active-border-color: var(--my-primary);
-            --bs-btn-focus-shadow-rgb: var(--my-primary-rgb);
+            --bs-btn-color: var(--app-primary);
+            --bs-btn-border-color: var(--app-primary);
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: var(--app-primary);
+            --bs-btn-hover-border-color: var(--app-primary);
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: var(--app-primary-active);
+            --bs-btn-active-border-color: var(--app-primary-active);
+            --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
         }
     </style>
 
