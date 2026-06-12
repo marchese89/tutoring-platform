@@ -1,5 +1,21 @@
 @extends('layouts.layout-bootstrap')
 
+@push('styles')
+    <style>
+        .lesson-request-upload {
+            max-width: 37.5rem;
+        }
+
+        .lesson-request-form {
+            max-width: 43.75rem;
+        }
+
+        .lesson-request-preview {
+            height: 37.5rem;
+        }
+    </style>
+@endpush
+
 @section('content')
     <div class="container py-5">
 
@@ -50,8 +66,8 @@
 
                             </div>
                         @else
-                            @if (! $uploadedRequestFile)
-                                <div class="mx-auto" style="max-width: 600px;">
+                            @if (!$uploadedRequestFile)
+                                <div class="lesson-request-upload mx-auto">
 
                                     <div class="card bg-light border-0 rounded-4">
                                         <div class="card-body p-4">
@@ -101,7 +117,7 @@
 
                                         <div class="card-body p-3">
 
-                                            <iframe class="w-100 rounded-3 border" style="height: 600px;"
+                                            <iframe class="lesson-request-preview w-100 rounded-3 border"
                                                 src="{{ $uploadedRequestFileUrl }}#view=FitH">
                                             </iframe>
 
@@ -119,7 +135,7 @@
                                         </form>
                                     </div>
 
-                                    <div class="mx-auto" style="max-width: 700px;">
+                                    <div class="lesson-request-form mx-auto">
 
                                         <div class="card bg-light border-0 rounded-4">
                                             <div class="card-body p-4 p-lg-5">

@@ -109,6 +109,7 @@ Planned branch: `ui/global-consistency`
 - Remove page-specific inline styling where a shared pattern applies.
 - Consolidate duplicated checkout and payment JavaScript.
 - Verify responsive behavior and primary workflows in the browser.
+- Audit PDF, image, and iframe viewers and consolidate repeated markup into shared media-viewer components.
 
 ### 10. Dependencies and release verification
 
