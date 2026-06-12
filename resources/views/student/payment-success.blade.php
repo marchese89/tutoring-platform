@@ -8,25 +8,8 @@
     <x-ui.page-section>
         <div class="row justify-content-center">
             <div class="col-lg-7">
-                <x-ui.card>
-                    <div class="text-center py-4">
-                        <div class="mb-3">
-                            <i class="fa-solid fa-circle-check fa-3x text-success"></i>
-                        </div>
-
-                        <h4 class="fw-bold mb-2">
-                            Fattura creata
-                        </h4>
-
-                        <p class="text-muted mb-4">
-                            Il pagamento è stato completato correttamente.
-                        </p>
-
-                        <x-ui.primary-button href="{{ route('student.dashboard') }}">
-                            Torna alla dashboard
-                        </x-ui.primary-button>
-                    </div>
-                </x-ui.card>
+                <x-ui.feedback-card title="Fattura creata" text="Il pagamento è stato completato correttamente."
+                    :action-url="route('student.dashboard')" action-label="Torna alla dashboard" />
             </div>
         </div>
     </x-ui.page-section>
