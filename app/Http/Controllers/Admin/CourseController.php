@@ -3,12 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Course;
-use App\Models\Subject;
-use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Models\Lesson;
+use App\Models\Subject;
 use App\Services\PurchaseService;
+use Illuminate\Http\Request;
 
 class CourseController extends Controller
 {
@@ -16,6 +16,7 @@ class CourseController extends Controller
     {
         $subjects = Subject::with('themeArea')->get();
         $courses = Course::with('subject.themeArea')->get();
+
         return view('admin.teaching.create-course', compact('subjects', 'courses'));
     }
 

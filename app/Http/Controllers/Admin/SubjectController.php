@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\Subject;
 use App\Models\ThemeArea;
+use Illuminate\Http\Request;
 
 class SubjectController extends Controller
 {
@@ -13,12 +13,14 @@ class SubjectController extends Controller
     {
         $subjects = Subject::with('theme_area')->get();
         $themeAreas = ThemeArea::all();
+
         return view('admin.teaching.subjects', compact('subjects', 'themeAreas'));
     }
 
     public function publicIndex(int $themeArea)
     {
         $subjects = Subject::where('theme_area_id', $themeArea)->get();
+
         return view('public.subjects', compact('subjects'));
     }
 

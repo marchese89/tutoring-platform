@@ -28,5 +28,4 @@ class PurchaseService
     {
         return OrderItem::where('order_id', $orderId)->sum('price');
     }
-
 }

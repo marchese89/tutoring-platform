@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
 use App\Models\Course;
-use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Models\Lesson;
 use App\Services\PurchaseService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;

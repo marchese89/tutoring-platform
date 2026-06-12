@@ -18,7 +18,7 @@ class OrderController extends Controller
             ->orderByDesc('ordered_at')
             ->first();
 
-        if (!$firstOrder) {
+        if (! $firstOrder) {
             return view('student.orders', [
                 'hasOrders' => false,
             ]);
@@ -37,7 +37,7 @@ class OrderController extends Controller
             ->groupBy('month')
             ->orderBy('month')
             ->pluck('month')
-            ->map(fn($month) => [
+            ->map(fn ($month) => [
                 'value' => $month,
                 'label' => DateHelper::monthName((int) $month),
             ]);
@@ -85,7 +85,7 @@ class OrderController extends Controller
         $order = Order::with(['invoice', 'orderItems'])
             ->where('student_id', $request->user()->student->id)
             ->findOrFail($id);
-        $products = $order->orderItems->map(fn($product) => [
+        $products = $order->orderItems->map(fn ($product) => [
             'id' => $product->product_id,
             'type' => $this->productTypeLabel((int) $product->product_type),
             'price' => $product->price,

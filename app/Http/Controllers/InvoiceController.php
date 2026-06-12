@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Helpers\DateHelper;
 use App\Models\Invoice;
 
-
 class InvoiceController extends Controller
 {
     public function showAll()

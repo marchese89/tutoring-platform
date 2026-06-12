@@ -2,8 +2,8 @@
 
 namespace App\Http\Utility;
 
-use App\Models\Lesson;
 use App\Models\Exercise;
+use App\Models\Lesson;
 
 class Cart
 {
@@ -34,6 +34,7 @@ class Cart
                 return true;
             }
         }
+
         return false;
     }
 
@@ -83,7 +84,7 @@ class Cart
 
     private function has(?int $id, int $type): bool
     {
-        if (!$id) {
+        if (! $id) {
             return false;
         }
 
@@ -92,6 +93,7 @@ class Cart
                 return true;
             }
         }
+
         return false;
     }
 
@@ -101,9 +103,11 @@ class Cart
             if ($item->id() === $id && $item->type() === $type) {
                 unset($this->items[$index]);
                 $this->items = array_values($this->items);
+
                 return true;
             }
         }
+
         return false;
     }
 
@@ -122,7 +126,7 @@ class Cart
 
     public function total(): int
     {
-        return array_sum(array_map(fn(CartItem $item) => $item->price(), $this->items));
+        return array_sum(array_map(fn (CartItem $item) => $item->price(), $this->items));
     }
 
     public function clear(): void

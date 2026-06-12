@@ -2,23 +2,31 @@
 
 namespace App\Http\Utility;
 
-use App\Models\Lesson;
-use App\Models\Exercise;
-use App\Models\LessonRequest;
 use App\Models\Course;
+use App\Models\Exercise;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
 
 class CartItem
 {
     public const LESSON = 0;
+
     public const COURSE_LESSONS = 1;
+
     public const EXERCISE = 2;
+
     public const COURSE_EXERCISES = 3;
+
     public const FULL_COURSE = 4;
+
     public const REQUESTED_LESSON = 5;
 
     private int $id;
+
     private int $type;
+
     private int $price = 0;
+
     private string $name;
 
     public function __construct(int $id, int $type)
@@ -47,23 +55,23 @@ class CartItem
 
             case self::REQUESTED_LESSON:
                 $request = LessonRequest::findOrFail($this->id);
-                $this->name = 'Requested lesson: ' . $request->title;
+                $this->name = 'Requested lesson: '.$request->title;
                 $this->price = $request->price;
                 break;
 
             case self::COURSE_LESSONS:
                 $course = Course::findOrFail($this->id);
-                $this->name = 'All lessons: ' . $course->name;
+                $this->name = 'All lessons: '.$course->name;
                 break;
 
             case self::COURSE_EXERCISES:
                 $course = Course::findOrFail($this->id);
-                $this->name = 'All exercises: ' . $course->name;
+                $this->name = 'All exercises: '.$course->name;
                 break;
 
             case self::FULL_COURSE:
                 $course = Course::findOrFail($this->id);
-                $this->name = 'Full course: ' . $course->name;
+                $this->name = 'Full course: '.$course->name;
                 break;
 
             default:

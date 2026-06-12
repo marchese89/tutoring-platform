@@ -3,24 +3,25 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use Laravel\Cashier\Billable;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Billable;
+    use Billable, HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';
 
-
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new class($token) extends \Illuminate\Auth\Notifications\ResetPassword {
-
+        $this->notify(new class($token) extends ResetPassword
+        {
             public function __construct($token)
             {
                 parent::__construct($token);
@@ -28,16 +29,15 @@ class User extends Authenticatable
 
             public function toMail($notifiable)
             {
-                return (new \Illuminate\Notifications\Messages\MailMessage)
+                return (new MailMessage)
                     ->subject('Reimpostazione Password')
                     ->view('emails.reset-password', [
                         'url' => $this->resetUrl($notifiable),
-                        'user' => $notifiable
+                        'user' => $notifiable,
                     ]);
             }
         });
     }
-
 
     /**
      * The attributes that are mass assignable.
