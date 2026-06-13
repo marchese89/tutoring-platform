@@ -1,10 +1,12 @@
 @extends('layouts.layout-bootstrap')
 
 @section('content')
-<div style="width: 70%;margin-left: auto;margin-right: auto;">
-    <br>
-    <br>
-  <h2>Privacy Policy</h2>
+    <x-ui.page-section class="py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <x-ui.card body-class="p-4 p-lg-5">
+                    <article>
+  <h1 class="h2 fw-bold">Privacy Policy</h1>
 
   <p>Ultimo aggiornamento: 31-05-2023</p>
 
@@ -123,5 +125,9 @@
     all'indirizzo [inserisci l'indirizzo email o i dati di contatto
     appropriati].
   </p>
-</div>
+                    </article>
+                </x-ui.card>
+            </div>
+        </div>
+    </x-ui.page-section>
 @endsection

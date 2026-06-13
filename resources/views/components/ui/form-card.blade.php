@@ -1,6 +1,6 @@
 @props(['title', 'description' => null, 'icon' => null, 'class' => '', 'bodyClass' => 'p-4'])
 
-<x-ui.card :class="$class" :body-class="$bodyClass">
+<x-ui.card :class="trim('h-auto ' . $class)" :body-class="$bodyClass">
     <div class="d-flex gap-3 align-items-start mb-4">
         @if ($icon)
             <div class="form-card-icon rounded-circle d-flex align-items-center justify-content-center flex-shrink-0">

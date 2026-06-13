@@ -1,22 +1,12 @@
 @extends('layouts.layout-bootstrap')
 
-@push('styles')
-    <style>
-        ol {
-            padding-left: 20px;
-        }
-    </style>
-@endpush
-
 @section('content')
-    <div>
-
-        <table style="width: 70%;margin-left:auto;margin-right:auto" id="pannello_controllo">
-            <tr colspan="3">
-                <td align="center">
-                    <br />
-                    <br />
-                    <h2 align="center">Utilizzo dei Cookie</h2>
+    <x-ui.page-section class="py-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 col-xl-8">
+                <x-ui.card body-class="p-4 p-lg-5">
+                    <article>
+                    <h1 class="h2 fw-bold text-center">Utilizzo dei Cookie</h1>
                     <p>
                         Questo sito utilizza i cookie al fine di garantire agli utenti i
                         propri servizi
@@ -44,7 +34,8 @@
                     funzioni principali.<br />
                     <br />Sul sito sono attualmente utilizzati i seguenti cookie tecnici:<br />
                     <br />
-                    <table class="table" style="width:65%" border="1" rules="all">
+                    <div class="table-responsive">
+                    <table class="table table-bordered align-middle">
                         <tr>
                             <td><strong>XSRF-TOKEN:</strong></td>
                             <td> Questo cookie viene utilizzato per proteggere le applicazioni Laravel da
@@ -66,6 +57,7 @@
                             </td>
                         </tr>
                     </table>
+                    </div>
 
 
 
@@ -187,8 +179,9 @@
                         obblighi legali o per scopi legittimi, come la difesa in caso di
                         controversie.
                     </p>
-                </td>
-            </tr>
-        </table>
-    </div>
+                    </article>
+                </x-ui.card>
+            </div>
+        </div>
+    </x-ui.page-section>
 @endsection

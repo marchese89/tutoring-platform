@@ -140,11 +140,11 @@ Status: dependency upgrade completed; release verification remains open.
 
 ## Current status
 
-Last verified: 2026-06-12.
+Last verified: 2026-06-13.
 
 - Current branch: `refactor/static-inline-styles`.
 - Verified application baseline:
-  `04a3f9d Consolidate public document preview styles`.
+  `bab660e Unify feedback result pages`.
 - The verified baseline is published to
   `origin/refactor/static-inline-styles`.
 - Automated verification: 93 tests and 339 assertions pass.
@@ -167,11 +167,14 @@ Last verified: 2026-06-12.
 - The legacy password utility JavaScript and unused public CSS were removed.
 - Blade styles use the layout stack, and repeated lesson/exercise document
   preview markup uses a shared component.
+- Cart and extra-payment pages share the same Stripe form and script.
+- Result pages share a reusable feedback-card component.
 
 ### Remaining work
 
-1. Continue removing static inline styles from normal web views while keeping
-   dynamic styles and email/PDF-specific inline formatting where required.
+1. Continue removing static inline styles from admin teaching and billing
+   views while keeping dynamic styles and email/PDF-specific inline formatting
+   where required.
 2. Continue consolidating repeated public, student, and admin view patterns
    into focused Blade components without changing application behavior.
 3. Audit PDF, image, and iframe viewers before designing shared media-viewer
@@ -191,10 +194,9 @@ Last verified: 2026-06-12.
 
 ### Next action
 
-Commit and publish the verified cart, checkout, and shared Stripe payment-form
-refactoring. Then continue the static inline-style audit with the remaining
-ordinary public views, while leaving email, invoice PDF, and genuinely dynamic
-inline styles unchanged.
+Commit and publish the public content-page cleanup. Then continue the static
+inline-style audit with the admin teaching views, while leaving email, invoice
+PDF, and genuinely dynamic inline styles unchanged.
 
 ## Historical progress
 
