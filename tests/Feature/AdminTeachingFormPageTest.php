@@ -3,13 +3,15 @@
 namespace Tests\Feature;
 
 use App\Models\Course;
+use App\Models\Exercise;
+use App\Models\Lesson;
 use App\Models\Subject;
 use App\Models\ThemeArea;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AdminTeachingCreatePageTest extends TestCase
+class AdminTeachingFormPageTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -49,6 +51,52 @@ class AdminTeachingCreatePageTest extends TestCase
             ->assertSee(route('protected-files.show', ['path' => $promptPath]))
             ->assertSee(route('protected-files.show', ['path' => $solutionPath]))
             ->assertSee(route('admin.exercises.store'));
+    }
+
+    public function test_lesson_edit_page_uses_shared_document_upload_forms(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $course = $this->createCourse();
+        $lesson = Lesson::factory()->for($course)->create([
+            'presentation_file' => 'lessons/presentations/lesson.pdf',
+            'content_file' => 'lessons/files/lesson.pdf',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.lessons.edit', [$course->id, $lesson->id]))
+            ->assertOk()
+            ->assertSee(route('protected-files.show', [
+                'path' => $lesson->presentation_file,
+            ]))
+            ->assertSee(route('protected-files.show', [
+                'path' => $lesson->content_file,
+            ]))
+            ->assertSee(route('admin.lessons.presentation.update', $lesson->id))
+            ->assertSee(route('admin.lessons.file.update', $lesson->id))
+            ->assertSee(route('admin.lessons.update', $lesson->id));
+    }
+
+    public function test_exercise_edit_page_uses_shared_document_upload_forms(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $course = $this->createCourse();
+        $exercise = Exercise::factory()->for($course)->create([
+            'prompt_file' => 'exercises/trace/exercise.pdf',
+            'solution_file' => 'exercises/execution/exercise.pdf',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.exercises.edit', [$course->id, $exercise->id]))
+            ->assertOk()
+            ->assertSee(route('protected-files.show', [
+                'path' => $exercise->prompt_file,
+            ]))
+            ->assertSee(route('protected-files.show', [
+                'path' => $exercise->solution_file,
+            ]))
+            ->assertSee(route('admin.exercises.trace.update', $exercise->id))
+            ->assertSee(route('admin.exercises.execution.update', $exercise->id))
+            ->assertSee(route('admin.exercises.update', $exercise->id));
     }
 
     private function createCourse(): Course

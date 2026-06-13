@@ -46,8 +46,8 @@ class CartPageTest extends TestCase
             ->assertOk()
             ->assertSee('45,00&euro;', false)
             ->assertSee('pk_test_cart')
-            ->assertSee('data-intent-url="' . route('payment.process') . '"', false)
-            ->assertSee('data-return-url="' . route('payment.success') . '"', false)
+            ->assertSee('data-intent-url="'.route('payment.process').'"', false)
+            ->assertSee('data-return-url="'.route('payment.success').'"', false)
             ->assertSee('https://js.stripe.com/v3/');
     }
 

@@ -5,74 +5,50 @@
 @endsection
 
 @section('inner')
-    <div class="container text-center" style="width: 40%">
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8">
+                <h2 class="h4 fw-bold text-center mb-4">
+                    Corso: {{ $course->name }}
+                </h2>
 
-        {{-- Presentation --}}
-        <h5 class="mt-4">Presentazione</h5>
+                <div class="mb-4">
+                    <x-ui.document-upload-card title="Presentazione" :preview-url="$presentationUrl" :upload-url="route('admin.lessons.upload-presentation.store')"
+                        input-name="presentation_file" progress-label="Caricamento presentazione" :delete-url="$presentationUploaded ? route('admin.lessons.upload-presentation.destroy') : null"
+                        :hidden-fields="['course_id' => $id]" />
+                </div>
 
-        <iframe width="90%" height="400" src="{{ $presentationUrl ? $presentationUrl . '#view=FitH' : '' }}">
-        </iframe>
+                @if ($presentationUploaded)
+                    <div class="mb-4">
+                        <x-ui.document-upload-card title="Svolgimento" :preview-url="$contentUrl" :upload-url="route('admin.lessons.upload-file.store')"
+                            input-name="content_file" progress-label="Caricamento svolgimento" :delete-url="$contentUploaded ? route('admin.lessons.upload-file.destroy') : null"
+                            :hidden-fields="['course_id' => $id]" />
+                    </div>
+                @endif
 
-        <form method="POST" action="{{ route('admin.lessons.upload-presentation.store') }}" enctype="multipart/form-data" id="upload-pres" data-upload-progress-form>
-            @csrf
-            <input type="hidden" name="course_id" value="{{ $id }}">
+                @if ($presentationUploaded && $contentUploaded)
+                    <x-ui.form-card title="Dettagli lezione"
+                        description="Completa i dati per aggiungere la lezione al corso." icon="bi-journal-plus">
+                        <form method="POST" action="{{ route('admin.lessons.store') }}">
+                            @csrf
 
-            <input type="file" class="form-control" name="presentation_file" accept="application/pdf" required>
+                            <input type="hidden" name="course_id" value="{{ $id }}">
 
-            <x-ui.upload-progress label="Caricamento presentazione" />
+                            <x-ui.form-field name="number" label="Numero" type="number" min="1"
+                                :value="old('number')" />
 
-            <button type="submit" class="btn btn-primary mt-2">
-                Upload
-            </button>
-        </form>
+                            <x-ui.form-field name="title" label="Titolo" maxlength="255" :value="old('title')" />
 
-        <form method="POST" action="{{ route('admin.lessons.upload-presentation.destroy') }}" class="mt-2">
-            @csrf
-            @method('DELETE')
-            <button class="btn btn-danger">Cancella file</button>
-        </form>
+                            <x-ui.form-field name="price" label="Prezzo (€)" type="number" min="0" step="0.01"
+                                :value="old('price')" />
 
-        {{-- Content --}}
-        @if ($presentationUploaded)
-            <h5 class="mt-5">Svolgimento</h5>
-
-            <iframe width="90%" height="400" src="{{ $contentUrl ? $contentUrl . '#view=FitH' : '' }}">
-            </iframe>
-
-            <form method="POST" action="{{ route('admin.lessons.upload-file.store') }}" enctype="multipart/form-data" id="upload-lesson" data-upload-progress-form>
-                @csrf
-                <input type="hidden" name="course_id" value="{{ $id }}">
-
-                <input type="file" class="form-control" name="content_file" accept="application/pdf" required>
-
-                <x-ui.upload-progress label="Caricamento svolgimento" />
-
-                <button type="submit" class="btn btn-primary mt-2">
-                    Upload
-                </button>
-            </form>
-
-            <form method="POST" action="{{ route('admin.lessons.upload-file.destroy') }}" class="mt-2">
-                @csrf
-                @method('DELETE')
-                <button class="btn btn-danger">Cancella file</button>
-            </form>
-        @endif
-
-
-        {{-- Lesson form --}}
-        @if ($presentationUploaded && $contentUploaded)
-            <form method="POST" action="{{ route('admin.lessons.store') }}" class="mt-4">
-                @csrf
-                <input type="hidden" name="course_id" value="{{ $id }}">
-
-                <input type="text" class="form-control mt-2" name="number" placeholder="Numero">
-                <input type="text" class="form-control mt-2" name="title" placeholder="Titolo">
-                <input type="text" class="form-control mt-2" name="price" placeholder="Prezzo &euro;">
-
-                <button class="btn btn-primary mt-3">Carica</button>
-            </form>
-        @endif
-
-    </div>
+                            <x-ui.primary-button type="submit">
+                                Aggiungi lezione
+                            </x-ui.primary-button>
+                        </form>
+                    </x-ui.form-card>
+                @endif
+            </div>
+        </div>
+    </x-ui.page-section>
 @endsection

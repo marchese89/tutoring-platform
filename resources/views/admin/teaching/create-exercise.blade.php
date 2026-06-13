@@ -5,109 +5,45 @@
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center;width:35%">
-        <h2>Nuovo Esercizio Corso di</h2>
-        <h2>"{{ $course->name }}"</h2>
-        <br>
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8">
+                <h2 class="h4 fw-bold text-center mb-4">
+                    Corso: {{ $course->name }}
+                </h2>
 
-        <br>
-        <h4>Traccia</h4>
+                <div class="mb-4">
+                    <x-ui.document-upload-card title="Traccia" :preview-url="$promptUrl" :upload-url="route('admin.exercises.trace.upload.store')" input-name="prompt_file"
+                        progress-label="Caricamento traccia" :delete-url="$promptUploaded ? route('admin.exercises.trace.session.destroy') : null" :hidden-fields="['course_id' => $id]" />
+                </div>
 
-        <iframe width="90%" src="{{ $promptUrl ? $promptUrl . '#view=FitH' : '' }}" height="400px">
-        </iframe>
+                @if ($promptUploaded)
+                    <div class="mb-4">
+                        <x-ui.document-upload-card title="Svolgimento" :preview-url="$solutionUrl" :upload-url="route('admin.exercises.execution.upload.store')"
+                            input-name="solution_file" progress-label="Caricamento svolgimento" :delete-url="$solutionUploaded ? route('admin.exercises.execution.session.destroy') : null" />
+                    </div>
+                @endif
 
-        <form method="POST" action="{{ route('admin.exercises.trace.upload.store') }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
-            @csrf
-            @method('POST')
-            <input type="hidden" name="course_id" value="{{ $id }}" />
-            <input type="file" class="form-control @error('prompt_file') is-invalid @enderror" id="prompt_file"
-                name="prompt_file" accept="application/pdf" required />
-            @error('prompt_file')
-                <div class="invalid-feedback">{{ $message }}</div>
-            @enderror
-            <x-ui.upload-progress label="Caricamento traccia" />
+                @if ($promptUploaded && $solutionUploaded)
+                    <x-ui.form-card title="Dettagli esercizio"
+                        description="Completa i dati per aggiungere l'esercizio al corso." icon="bi-journal-code">
+                        <form method="POST" action="{{ route('admin.exercises.store') }}">
+                            @csrf
 
-            <div class="col-12">
-                <button type="submit" class="btn btn-primary">Upload</button>
+                            <input type="hidden" name="course_id" value="{{ $id }}">
+
+                            <x-ui.form-field name="title" label="Titolo" maxlength="255" :value="old('title')" />
+
+                            <x-ui.form-field name="price" label="Prezzo (€)" type="number" min="0" step="0.01"
+                                :value="old('price')" />
+
+                            <x-ui.primary-button type="submit">
+                                Aggiungi esercizio
+                            </x-ui.primary-button>
+                        </form>
+                    </x-ui.form-card>
+                @endif
             </div>
-
-            <br>
-            <br>
-        </form>
-        @if ($promptUploaded)
-            <div class="col-12">
-                <form action="{{ route('admin.exercises.trace.session.destroy') }}" method="POST">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-primary">Cancella File</button>
-                </form>
-            </div>
-        @endif
-        <br>
-
-        <br>
-        @if ($promptUploaded)
-            <h4>Svolgimento</h4>
-
-            <iframe width="90%" src="{{ $solutionUrl ? $solutionUrl . '#view=FitH' : '' }}" height="400px">
-            </iframe>
-
-            <form method="POST" action="{{ route('admin.exercises.execution.upload.store') }}" enctype="multipart/form-data" id="upload2" data-upload-progress-form>
-                @csrf
-                @method('POST')
-                <input type="file" class="form-control @error('solution_file') is-invalid @enderror" id="solution_file"
-                    name="solution_file" accept="application/pdf" required />
-                @error('solution_file')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-                <x-ui.upload-progress label="Caricamento svolgimento" />
-
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                </div>
-
-                <br>
-                <br>
-            </form>
-            @if ($solutionUploaded)
-                <div class="col-12">
-                    <form action="{{ route('admin.exercises.execution.session.destroy') }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-primary">Cancella File</button>
-                    </form>
-                </div>
-            @endif
-        @endif
-
-        @if ($promptUploaded && $solutionUploaded)
-            <form method="POST" action="{{ route('admin.exercises.store') }}">
-                @csrf
-                @method('POST')
-                <input type="hidden" name="course_id" value="{{ $id }}" />
-                <div class="col-md-12">
-                    <h5>Titolo</h5>
-                    <input type="text" class="form-control @error('title') is-invalid @enderror" id="title"
-                        name="title" maxlength="255" value="{{ old('title') }}">
-                    @error('title')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <div class="col-md-12">
-                    <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control @error('price') is-invalid @enderror" id="price"
-                        name="price" maxlength="5" value="{{ old('price') }}" style="display: inline">
-                    @error('price')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <br>
-                <div class="col-12" style="text-align:center">
-                    <button type="submit" class="btn btn-primary">Carica</button>
-                </div>
-            </form>
-        @endif
-        <br>
-        <br>
-    </div>
+        </div>
+    </x-ui.page-section>
 @endsection

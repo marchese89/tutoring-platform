@@ -127,6 +127,8 @@ Completed so far:
   payments use one shared Stripe payment form and script.
 - Public, authentication, student, and admin pages already use several shared
   card, form, table, upload, chat, and page-header components.
+- Lesson and exercise create/edit pages share a reusable document upload
+  component and consistent form layouts.
 
 ### 10. Dependencies and release verification
 
@@ -147,7 +149,7 @@ Last verified: 2026-06-13.
   `bab660e Unify feedback result pages`.
 - The verified baseline is published to
   `origin/refactor/static-inline-styles`.
-- Automated verification: 93 tests and 339 assertions pass.
+- Automated verification: 95 tests and 351 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -194,9 +196,9 @@ Last verified: 2026-06-13.
 
 ### Next action
 
-Commit and publish the public content-page cleanup. Then continue the static
-inline-style audit with the admin teaching views, while leaving email, invoice
-PDF, and genuinely dynamic inline styles unchanged.
+Commit and publish the shared teaching document-upload forms. Then continue
+the static inline-style audit with course, subject, theme-area, and billing
+views.
 
 ## Historical progress
 
