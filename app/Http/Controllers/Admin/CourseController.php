@@ -14,8 +14,14 @@ class CourseController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::with('themeArea')->get();
-        $courses = Course::with('subject.themeArea')->get();
+        $subjects = Subject::with('themeArea')
+            ->orderBy('name')
+            ->get();
+
+        $courses = Course::with('subject.themeArea')
+            ->withCount(['lessons', 'exercises'])
+            ->orderBy('name')
+            ->get();
 
         return view('admin.teaching.create-course', compact('subjects', 'courses'));
     }
@@ -101,7 +107,15 @@ class CourseController extends Controller
 
     public function destroy(int $id)
     {
-        Course::findOrFail($id)->delete();
+        $course = Course::withCount(['lessons', 'exercises'])->findOrFail($id);
+
+        if ($course->lessons_count > 0 || $course->exercises_count > 0) {
+            return back()->withErrors([
+                'delete' => 'Non puoi eliminare un corso che contiene lezioni o esercizi.',
+            ]);
+        }
+
+        $course->delete();
 
         return back()->with('success', 'Corso eliminato');
     }

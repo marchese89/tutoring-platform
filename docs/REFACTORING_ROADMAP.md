@@ -129,6 +129,9 @@ Completed so far:
   card, form, table, upload, chat, and page-header components.
 - Lesson and exercise create/edit pages share a reusable document upload
   component and consistent form layouts.
+- Theme-area, subject, and course management pages share consistent form and
+  table components, use prepared relationship counts, and prevent deletion of
+  records that still contain child content.
 
 ### 10. Dependencies and release verification
 
@@ -146,10 +149,10 @@ Last verified: 2026-06-13.
 
 - Current branch: `refactor/static-inline-styles`.
 - Verified application baseline:
-  `bab660e Unify feedback result pages`.
-- The verified baseline is published to
-  `origin/refactor/static-inline-styles`.
-- Automated verification: 95 tests and 351 assertions pass.
+  `227765e Unify teaching document upload forms`.
+- The branch is published through
+  `3d7b165 Improve public content page layouts`.
+- Automated verification: 99 tests and 366 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -174,9 +177,9 @@ Last verified: 2026-06-13.
 
 ### Remaining work
 
-1. Continue removing static inline styles from admin teaching and billing
-   views while keeping dynamic styles and email/PDF-specific inline formatting
-   where required.
+1. Continue removing static inline styles from the remaining course-detail and
+   billing views while keeping dynamic styles and email/PDF-specific inline
+   formatting where required.
 2. Continue consolidating repeated public, student, and admin view patterns
    into focused Blade components without changing application behavior.
 3. Audit PDF, image, and iframe viewers before designing shared media-viewer
@@ -196,9 +199,8 @@ Last verified: 2026-06-13.
 
 ### Next action
 
-Commit and publish the shared teaching document-upload forms. Then continue
-the static inline-style audit with course, subject, theme-area, and billing
-views.
+Commit and publish the teaching-management cleanup. Then continue the static
+inline-style audit with the remaining course-detail and billing views.
 
 ## Historical progress
 

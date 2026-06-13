@@ -10,7 +10,9 @@ class ThemeAreaController extends Controller
 {
     public function index()
     {
-        $themeAreas = ThemeArea::all();
+        $themeAreas = ThemeArea::withCount('subjects')
+            ->orderBy('name')
+            ->get();
 
         return view('admin.teaching.theme-areas', compact('themeAreas'));
     }
@@ -54,7 +56,15 @@ class ThemeAreaController extends Controller
 
     public function destroy(int $id)
     {
-        ThemeArea::findOrFail($id)->delete();
+        $themeArea = ThemeArea::withCount('subjects')->findOrFail($id);
+
+        if ($themeArea->subjects_count > 0) {
+            return back()->withErrors([
+                'delete' => 'Non puoi eliminare un’area tematica che contiene materie.',
+            ]);
+        }
+
+        $themeArea->delete();
 
         return back()->with('success', 'Area tematica eliminata');
     }

@@ -11,8 +11,12 @@ class SubjectController extends Controller
 {
     public function index()
     {
-        $subjects = Subject::with('theme_area')->get();
-        $themeAreas = ThemeArea::all();
+        $subjects = Subject::with('themeArea')
+            ->withCount('courses')
+            ->orderBy('name')
+            ->get();
+
+        $themeAreas = ThemeArea::orderBy('name')->get();
 
         return view('admin.teaching.subjects', compact('subjects', 'themeAreas'));
     }
@@ -56,7 +60,14 @@ class SubjectController extends Controller
 
     public function destroy(int $id)
     {
-        $subject = Subject::findOrFail($id);
+        $subject = Subject::withCount('courses')->findOrFail($id);
+
+        if ($subject->courses_count > 0) {
+            return back()->withErrors([
+                'delete' => 'Non puoi eliminare una materia che contiene corsi.',
+            ]);
+        }
+
         $subject->delete();
 
         return redirect()->back()->with('success', 'Materia eliminata');

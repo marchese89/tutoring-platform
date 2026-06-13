@@ -1,6 +1,6 @@
 @props(['title' => null])
 
-<x-ui.card body-class="p-4">
+<x-ui.card class="h-auto" body-class="p-4">
     @if ($title)
         <h4 class="fw-bold mb-4">
             {{ $title }}
