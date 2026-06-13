@@ -35,7 +35,9 @@ class CourseController extends Controller
 
     public function list()
     {
-        $courses = Course::with('subject.themeArea')->get();
+        $courses = Course::with('subject.themeArea')
+            ->orderBy('name')
+            ->get();
 
         return view('admin.teaching.courses', compact('courses'));
     }

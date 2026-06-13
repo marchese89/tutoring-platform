@@ -15,6 +15,49 @@ class AdminTeachingManagementTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_course_list_displays_courses_in_name_order(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $subject = Subject::factory()->create();
+        $secondCourse = Course::factory()->for($subject)->create([
+            'name' => 'Second course',
+        ]);
+        $firstCourse = Course::factory()->for($subject)->create([
+            'name' => 'First course',
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.courses.index'))
+            ->assertOk()
+            ->assertSeeInOrder([$firstCourse->name, $secondCourse->name])
+            ->assertSee(route('admin.courses.edit', $firstCourse->id))
+            ->assertSee(route('admin.courses.edit', $secondCourse->id));
+    }
+
+    public function test_course_edit_page_displays_content_management_actions(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $course = Course::factory()->create();
+        $lesson = Lesson::factory()->for($course)->create();
+        $exercise = Exercise::factory()->for($course)->create();
+
+        $this->actingAs($admin)
+            ->get(route('admin.courses.edit', $course->id))
+            ->assertOk()
+            ->assertSee($lesson->title)
+            ->assertSee($exercise->title)
+            ->assertSee(route('admin.lessons.create', $course->id))
+            ->assertSee(route('admin.exercises.create', $course->id))
+            ->assertSee(route('admin.lessons.edit', [
+                'course' => $course->id,
+                'lesson' => $lesson->id,
+            ]))
+            ->assertSee(route('admin.exercises.edit', [
+                'course' => $course->id,
+                'exercise' => $exercise->id,
+            ]));
+    }
+
     public function test_theme_area_with_subjects_cannot_be_deleted(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);

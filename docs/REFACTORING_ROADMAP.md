@@ -132,6 +132,8 @@ Completed so far:
 - Theme-area, subject, and course management pages share consistent form and
   table components, use prepared relationship counts, and prevent deletion of
   records that still contain child content.
+- Course listing and detail pages use the shared table system, responsive
+  action layouts, explicit empty states, and focused rendering tests.
 
 ### 10. Dependencies and release verification
 
@@ -149,10 +151,10 @@ Last verified: 2026-06-13.
 
 - Current branch: `refactor/static-inline-styles`.
 - Verified application baseline:
-  `227765e Unify teaching document upload forms`.
-- The branch is published through
-  `3d7b165 Improve public content page layouts`.
-- Automated verification: 99 tests and 366 assertions pass.
+  `57d142b Unify teaching management pages`.
+- The verified baseline is published to
+  `origin/refactor/static-inline-styles`.
+- Automated verification: 101 tests and 377 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -177,9 +179,8 @@ Last verified: 2026-06-13.
 
 ### Remaining work
 
-1. Continue removing static inline styles from the remaining course-detail and
-   billing views while keeping dynamic styles and email/PDF-specific inline
-   formatting where required.
+1. Redesign the public home page as a focused portfolio-quality experience,
+   using the current visual system and responsive, accessible content.
 2. Continue consolidating repeated public, student, and admin view patterns
    into focused Blade components without changing application behavior.
 3. Audit PDF, image, and iframe viewers before designing shared media-viewer
@@ -199,8 +200,8 @@ Last verified: 2026-06-13.
 
 ### Next action
 
-Commit and publish the teaching-management cleanup. Then continue the static
-inline-style audit with the remaining course-detail and billing views.
+Commit and publish the course listing and detail cleanup. Then redesign the
+public home page in a dedicated work package before continuing with billing.
 
 ## Historical progress
 
