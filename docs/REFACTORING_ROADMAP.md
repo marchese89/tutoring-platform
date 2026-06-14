@@ -147,11 +147,11 @@ Status: dependency upgrade completed; release verification remains open.
 
 ## Current status
 
-Last verified: 2026-06-13.
+Last verified: 2026-06-14.
 
 - Current branch: `refactor/static-inline-styles`.
 - Verified application baseline:
-  `57d142b Unify teaching management pages`.
+  `8f5771b Unify course management views`.
 - The verified baseline is published to
   `origin/refactor/static-inline-styles`.
 - Automated verification: 101 tests and 377 assertions pass.
@@ -176,32 +176,41 @@ Last verified: 2026-06-13.
   preview markup uses a shared component.
 - Cart and extra-payment pages share the same Stripe form and script.
 - Result pages share a reusable feedback-card component.
+- Theme-area, subject, lesson, exercise, and course management pages use the
+  shared form and table system.
+- All four critical findings from the original security audit are resolved:
+  server-side payment verification, chat authorization, lesson-request
+  ownership protection, and vulnerable framework dependencies.
 
 ### Remaining work
 
 1. Redesign the public home page as a focused portfolio-quality experience,
    using the current visual system and responsive, accessible content.
-2. Continue consolidating repeated public, student, and admin view patterns
-   into focused Blade components without changing application behavior.
-3. Audit PDF, image, and iframe viewers before designing shared media-viewer
-   components for the remaining contexts.
-4. Complete English naming for internal code and start localization in its own
-   branch; user-facing Italian text remains until translation keys exist.
-5. Split the monolithic `DatabaseSeeder` and verify a fresh seeded install in
-   a disposable database. The current PHP CLI does not have PDO SQLite, so the
-   in-memory installation check cannot run locally yet.
-6. Introduce a maintained frontend dependency workflow and consolidate global
-   CSS and reusable JavaScript once the view audit is stable.
-7. Perform a seeded end-to-end browser verification and update setup/testing
-   documentation before release.
-8. Decide whether to squash transitional billing migrations before the first
-   stable release. Preserve them while upgrades from existing databases still
-   need support.
+2. Complete the remaining visual audit, especially billing, account settings,
+   lesson-request pages, and repeated PDF, image, and iframe viewers.
+3. Complete English naming for internal identifiers and comments. Keep
+   user-facing Italian text unchanged until localization keys are introduced.
+4. Add the localization foundation with Italian as the default locale and
+   English as the second supported language.
+5. Review monetary fields, model relationships, and database constraints, then
+   decide whether transitional billing migrations should be squashed before
+   the first stable release.
+6. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
+   fresh seeded installation in a disposable database. The current PHP CLI
+   does not have PDO SQLite, so the in-memory installation check cannot run
+   locally yet.
+7. Introduce a maintained frontend dependency workflow and consolidate global
+   CSS and reusable JavaScript after the view audit is stable.
+8. Add continuous integration for tests, Pint, and Composer security audits.
+9. Perform seeded end-to-end browser verification and update installation,
+   testing, and demo-account documentation before release.
 
 ### Next action
 
-Commit and publish the course listing and detail cleanup. Then redesign the
-public home page in a dedicated work package before continuing with billing.
+Create `refactor/public-home` from `refactor/static-inline-styles` and redesign
+the public home page in a focused work package. Preserve existing routes and
+user-facing Italian copy, add rendering coverage, and verify desktop and mobile
+layouts in the browser before publication.
 
 ## Historical progress
 
