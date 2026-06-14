@@ -48,6 +48,8 @@ class AdminChatPageTest extends TestCase
             ->assertSee('Mario Rossi')
             ->assertSee('Requested lesson')
             ->assertSee('Prepared chat message')
+            ->assertSee('src="/protected-files/lesson_requests/request.pdf#view=FitH"', false)
+            ->assertSee('src="/protected-files/lesson_requests/solution.pdf#view=FitH"', false)
             ->assertSee('window.Echo', false);
     }
 

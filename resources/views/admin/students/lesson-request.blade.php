@@ -1,78 +1,114 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Visualizza Richiesta Lezione'" />
+    <x-ui.section-header title="Visualizza richiesta lezione" />
 @endsection
 
 @section('inner')
-    <div class="container" style="text-align: center">
-        <h3>Richiesta Lezione: </h3>
-        <h3 style="color: blue">{{ $lessonRequest->title }}</h3>
-        <h4>Traccia</h4>
+    <x-ui.page-section>
+        <x-ui.card>
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
+                <div>
+                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
+                        Richiesta lezione
+                    </span>
 
-        <iframe width="90%" src="/protected-files/{{ $lessonRequest->request_file }}#view=FitH" height="800px">
-        </iframe>
-        <br>
-        <br>
-        @if ($lessonRequest->solution_file != null)
-            <h4>Soluzione</h4>
-            <iframe width="90%" src="/protected-files/{{ $lessonRequest->solution_file }}#view=FitH" height="800px">
-            </iframe>
-            <br>
-            <br>
-            @if ($lessonRequest->is_fulfilled == 0)
-                <div class="col-12">
-                    <form action="{{ route('admin.lesson-requests.solution.destroy', $lessonRequest->id) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-
-                        <button type="submit" class="btn btn-primary">
-                            Elimina
-                        </button>
-                    </form>
+                    <h3 class="fw-bold mb-0">
+                        {{ $lessonRequest->title }}
+                    </h3>
                 </div>
-                <br>
+
+                <div class="text-lg-end">
+                    <span
+                        class="badge {{ $lessonRequest->is_fulfilled ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }} rounded-pill px-3 py-2 mb-2">
+                        {{ $lessonRequest->is_fulfilled ? 'Completata' : 'Da completare' }}
+                    </span>
+
+                    @if ($lessonRequest->price !== null)
+                        <h5 class="fw-semibold mb-0">
+                            {{ number_format($lessonRequest->price, 2, ',', '.') }}&euro;
+                        </h5>
+                    @endif
+                </div>
+            </div>
+        </x-ui.card>
+
+        <div class="row g-4 mt-0">
+            <div class="col-12">
+                <x-ui.card>
+                    <h4 class="fw-bold mb-3">Traccia</h4>
+
+                    <x-ui.pdf-viewer :src="'/protected-files/' . $lessonRequest->request_file" title="Richiesta dello studente" />
+                </x-ui.card>
+            </div>
+
+            @if ($lessonRequest->solution_file)
+                <div class="col-12">
+                    <x-ui.card>
+                        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-3">
+                            <h4 class="fw-bold mb-0">Soluzione</h4>
+
+                            @if (! $lessonRequest->is_fulfilled)
+                                <form action="{{ route('admin.lesson-requests.solution.destroy', $lessonRequest->id) }}"
+                                    method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="submit" class="btn btn-outline-danger">
+                                        Elimina soluzione
+                                    </button>
+                                </form>
+                            @endif
+                        </div>
+
+                        <x-ui.pdf-viewer :src="'/protected-files/' . $lessonRequest->solution_file" title="Soluzione" />
+                    </x-ui.card>
+                </div>
             @endif
-        @endif
-        <div class="container" style="text-align: center;width:35%">
-            <form method="POST" action="{{ route('admin.lesson-requests.solution.store', $lessonRequest->id) }}" enctype="multipart/form-data" id="upload" data-upload-progress-form>
-                @csrf
-                @method('POST')
-                <input type="hidden" name="id" value="{{ $lessonRequest->id }}" />
-                <input type="file" class="form-control @error('file') is-invalid @enderror" id="file" name="file" accept="application/pdf" required />
-                @error('file')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-                <x-ui.upload-progress label="Caricamento soluzione" />
 
-                <div class="col-12">
-                    <button type="submit" class="btn btn-primary">Upload</button>
-                </div>
+            <div class="col-lg-7">
+                <x-ui.form-card title="Carica soluzione" description="Aggiungi o sostituisci il PDF con lo svolgimento della richiesta."
+                    icon="bi-file-earmark-arrow-up">
+                    <form method="POST"
+                        action="{{ route('admin.lesson-requests.solution.store', $lessonRequest->id) }}"
+                        enctype="multipart/form-data" data-upload-progress-form>
+                        @csrf
 
-                <br>
-                <br>
-            </form>
-            <br>
-            <br>
-            <form action="{{ route('admin.lesson-requests.price.store', $lessonRequest->id) }}" method="POST">
-                @csrf
-                @method('POST')
-                <input type="hidden" name="id" value="{{ $lessonRequest->id }}" />
-                <div class="col-md-12">
-                    <h5>Prezzo (&euro;)</h5>
-                    <input type="text" class="form-control @error('price') is-invalid @enderror" id="price"
-                        name="price" value="{{ old('price', $lessonRequest->price) }}" maxlength="5" style="display: inline">
-                    @error('price')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-                <br>
-                <div class="col-12" style="text-align:center">
-                    <button type="submit" class="btn btn-primary">Carica Prezzo</button>
-                </div>
-            </form>
-            <br>
-            <br>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold" for="solution-file">File PDF</label>
+                            <input id="solution-file" type="file"
+                                class="form-control rounded-3 @error('file') is-invalid @enderror" name="file"
+                                accept="application/pdf" required>
+
+                            @error('file')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <x-ui.upload-progress label="Caricamento soluzione" />
+
+                        <x-ui.primary-button type="submit">
+                            Carica soluzione
+                        </x-ui.primary-button>
+                    </form>
+                </x-ui.form-card>
+            </div>
+
+            <div class="col-lg-5">
+                <x-ui.form-card title="Imposta prezzo" description="Definisci il prezzo e rendi disponibile la richiesta allo studente."
+                    icon="bi-currency-euro">
+                    <form action="{{ route('admin.lesson-requests.price.store', $lessonRequest->id) }}" method="POST">
+                        @csrf
+
+                        <x-ui.form-field name="price" label="Prezzo (€)" type="number"
+                            :value="old('price', $lessonRequest->price)" min="0" step="0.01" required />
+
+                        <x-ui.primary-button type="submit">
+                            Salva prezzo
+                        </x-ui.primary-button>
+                    </form>
+                </x-ui.form-card>
+            </div>
         </div>
-    </div>
+    </x-ui.page-section>
 @endsection

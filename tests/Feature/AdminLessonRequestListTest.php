@@ -32,6 +32,30 @@ class AdminLessonRequestListTest extends TestCase
             ->assertSee(route('admin.lesson-requests.show', $lessonRequest->id));
     }
 
+    public function test_lesson_request_detail_uses_shared_document_and_form_components(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $student = $this->createStudent();
+        $lessonRequest = LessonRequest::create([
+            'title' => 'Request detail',
+            'student_id' => $student->id,
+            'request_file' => 'lesson_requests/request_files/request.pdf',
+            'solution_file' => 'lesson_requests/solution_files/solution.pdf',
+            'price' => 25,
+            'is_fulfilled' => false,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.lesson-requests.show', $lessonRequest->id))
+            ->assertOk()
+            ->assertSee('Request detail')
+            ->assertSee('src="/protected-files/lesson_requests/request_files/request.pdf#view=FitH"', false)
+            ->assertSee('src="/protected-files/lesson_requests/solution_files/solution.pdf#view=FitH"', false)
+            ->assertSee(route('admin.lesson-requests.solution.store', $lessonRequest->id), false)
+            ->assertSee(route('admin.lesson-requests.solution.destroy', $lessonRequest->id), false)
+            ->assertSee(route('admin.lesson-requests.price.store', $lessonRequest->id), false);
+    }
+
     private function createStudent(): Student
     {
         $user = User::factory()->create(['role' => 'student']);

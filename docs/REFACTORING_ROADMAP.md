@@ -136,6 +136,8 @@ Completed so far:
   action layouts, explicit empty states, and focused rendering tests.
 - The public home page uses a full-width, responsive presentation focused on
   the real course, lesson-request, tutoring, pricing, and review workflows.
+- Protected invoices, lessons, exercises, lesson requests, and admin chat
+  documents use one responsive PDF viewer component.
 
 ### 10. Dependencies and release verification
 
@@ -152,8 +154,8 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-14.
 
 - Current branch: `refactor/public-home`.
-- Branch base: `307ce68 Update refactoring roadmap`.
-- Automated verification: 102 tests and 383 assertions pass.
+- Latest published commit: `aaad729 Unify protected PDF viewers`.
+- Automated verification: 105 tests and 415 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -179,6 +181,8 @@ Last verified: 2026-06-14.
   shared form and table system.
 - The public home page was redesigned and visually verified at 1440 px desktop
   and 390 px mobile widths without horizontal overflow.
+- The admin lesson-request detail page uses the shared page, card, form,
+  upload-progress, and PDF-viewer components without inline layout styles.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
@@ -206,9 +210,9 @@ Last verified: 2026-06-14.
 
 ### Next action
 
-Publish `refactor/public-home` after review. Then create
-`refactor/remaining-view-patterns` and audit billing, account settings,
-lesson-request pages, and repeated media viewers before starting localization.
+Complete the remaining media-viewer audit for certificates and temporary upload
+previews, then finish account-setting and billing result-page cleanup before
+starting the internal English and localization work packages.
 
 ## Historical progress
 
