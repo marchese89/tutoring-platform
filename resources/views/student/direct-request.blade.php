@@ -39,9 +39,7 @@
                     Traccia
                 </h4>
 
-                <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lessonRequest->request_file }}#view=FitH"></iframe>
-                </div>
+                <x-ui.pdf-viewer :src="'/protected-files/' . $lessonRequest->request_file" title="Richiesta dello studente" />
             </x-ui.card>
         </div>
 
@@ -78,9 +76,7 @@
                         Soluzione
                     </h4>
 
-                    <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                        <iframe src="/protected-files/{{ $lessonRequest->solution_file }}#view=FitH"></iframe>
-                    </div>
+                    <x-ui.pdf-viewer :src="'/protected-files/' . $lessonRequest->solution_file" title="Soluzione" />
                 </x-ui.card>
             </div>
 

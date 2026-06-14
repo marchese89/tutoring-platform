@@ -52,12 +52,18 @@ class PurchasedContentAuthorizationTest extends TestCase
             'title' => 'Purchased lesson',
             'number' => 1,
             'price' => 20,
+            'presentation_file' => 'lessons/presentations/lesson.pdf',
+            'content_file' => 'lessons/files/lesson.pdf',
         ]);
         $this->purchase($student, $lesson->id, CartItem::LESSON);
 
         $this->actingAs($student->user)
             ->get(route('student.lessons.show', [$course, $lesson]))
-            ->assertOk();
+            ->assertOk()
+            ->assertSee('title="Presentazione"', false)
+            ->assertSee('title="Contenuto"', false)
+            ->assertSee('src="/protected-files/lessons/presentations/lesson.pdf#view=FitH"', false)
+            ->assertSee('src="/protected-files/lessons/files/lesson.pdf#view=FitH"', false);
     }
 
     public function test_student_cannot_open_an_unpurchased_exercise(): void
@@ -87,11 +93,17 @@ class PurchasedContentAuthorizationTest extends TestCase
             'course_id' => $course->id,
             'title' => 'Free exercise',
             'price' => 0,
+            'prompt_file' => 'exercises/trace/exercise.pdf',
+            'solution_file' => 'exercises/execution/exercise.pdf',
         ]);
 
         $this->actingAs($student->user)
             ->get(route('student.exercises.show', [$course, $exercise]))
-            ->assertOk();
+            ->assertOk()
+            ->assertSee('title="Traccia"', false)
+            ->assertSee('title="Esecuzione"', false)
+            ->assertSee('src="/protected-files/exercises/trace/exercise.pdf#view=FitH"', false)
+            ->assertSee('src="/protected-files/exercises/execution/exercise.pdf#view=FitH"', false);
     }
 
     public function test_student_cannot_purchase_another_students_direct_request(): void
@@ -125,6 +137,27 @@ class PurchasedContentAuthorizationTest extends TestCase
         $this->actingAs($otherStudent->user)
             ->get(route('student.direct-requests.show', $lessonRequest))
             ->assertForbidden();
+    }
+
+    public function test_student_can_view_owned_paid_direct_request_documents(): void
+    {
+        $student = Student::factory()->create();
+        $lessonRequest = LessonRequest::create([
+            'student_id' => $student->id,
+            'title' => 'Owned paid request',
+            'price' => 25,
+            'is_paid' => true,
+            'request_file' => 'lesson_requests/request_files/request.pdf',
+            'solution_file' => 'lesson_requests/solutions/solution.pdf',
+        ]);
+
+        $this->actingAs($student->user)
+            ->get(route('student.direct-requests.show', $lessonRequest))
+            ->assertOk()
+            ->assertSee('title="Richiesta dello studente"', false)
+            ->assertSee('title="Soluzione"', false)
+            ->assertSee('src="/protected-files/lesson_requests/request_files/request.pdf#view=FitH"', false)
+            ->assertSee('src="/protected-files/lesson_requests/solutions/solution.pdf#view=FitH"', false);
     }
 
     public function test_paid_direct_request_cannot_be_purchased_again(): void

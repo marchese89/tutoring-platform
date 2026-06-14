@@ -23,10 +23,7 @@
                 </x-ui.primary-button>
             </div>
 
-            <div class="border rounded-4 overflow-hidden bg-light">
-                <iframe class="w-100 border-0" height="800" src="/protected-files/{{ $invoice->file_path }}#view=FitH">
-                </iframe>
-            </div>
+            <x-ui.pdf-viewer :src="'/protected-files/' . $invoice->file_path" :title="$title" />
         </x-ui.card>
     </x-ui.page-section>
 @endsection

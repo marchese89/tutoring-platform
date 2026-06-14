@@ -1,37 +1,21 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div>
-                <h2>Visualizza Fattura</h2>
-            </div>
-        </div>
-    </div>
+    <x-ui.section-header title="Visualizza fattura" />
 @endsection
 
 @section('inner')
-    <div class="container">
+    <x-ui.page-section>
+        <x-ui.card>
+            <h4 class="fw-bold mb-1">
+                Documento fattura
+            </h4>
 
-        <div class="card border-0 shadow-sm rounded-4">
+            <p class="text-muted mb-4">
+                Visualizzazione documento PDF
+            </p>
 
-            <div class="card-body p-4">
-
-                <h4 class="fw-bold mb-4">
-                    Documento Fattura
-                </h4>
-
-                <div class="ratio" style="height: 800px;">
-
-                    <iframe src="/protected-files/{{ $invoice->file_path }}#view=FitH"
-                        style="width: 100%; height: 100%; border: 0; border-radius: 12px;">
-                    </iframe>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
+            <x-ui.pdf-viewer :src="'/protected-files/' . $invoice->file_path" title="Documento fattura" />
+        </x-ui.card>
+    </x-ui.page-section>
 @endsection

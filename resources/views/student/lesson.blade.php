@@ -36,9 +36,7 @@
                     Presentazione
                 </h4>
 
-                <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lesson->presentation_file }}#view=FitH"></iframe>
-                </div>
+                <x-ui.pdf-viewer :src="'/protected-files/' . $lesson->presentation_file" title="Presentazione" />
             </x-ui.card>
         </div>
 
@@ -48,9 +46,7 @@
                     Svolgimento
                 </h4>
 
-                <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                    <iframe src="/protected-files/{{ $lesson->content_file }}#view=FitH"></iframe>
-                </div>
+                <x-ui.pdf-viewer :src="'/protected-files/' . $lesson->content_file" title="Contenuto" />
             </x-ui.card>
         </div>
 

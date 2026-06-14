@@ -60,7 +60,8 @@ class AdminBillingOrderTest extends TestCase
             ->get(route('admin.orders.invoice', $order->id))
             ->assertOk()
             ->assertSee('Fattura Ordine #'.$order->id)
-            ->assertSee('invoices/order.pdf');
+            ->assertSee('src="/protected-files/invoices/order.pdf#view=FitH"', false)
+            ->assertSee('title="Fattura ordine #'.$order->id.'"', false);
     }
 
     public function test_admin_invoice_page_returns_not_found_without_invoice(): void

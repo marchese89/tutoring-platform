@@ -76,7 +76,9 @@ class StudentBillingAccessTest extends TestCase
         $this->actingAs($student->user)
             ->get(route('student.invoices.show', $invoice->id))
             ->assertOk()
-            ->assertSee('Fattura pagamento extra');
+            ->assertSee('Fattura pagamento extra')
+            ->assertSee('src="/protected-files/extra-invoices/2026/invoice_303.pdf#view=FitH"', false)
+            ->assertSee('class="pdf-viewer"', false);
     }
 
     public function test_student_cannot_open_another_students_direct_invoice(): void
