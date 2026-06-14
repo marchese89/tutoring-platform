@@ -1,6 +1,13 @@
 {{-- components/price-card.blade.php --}}
-<div class="card soft-card text-center p-4">
-    <h5>{{ $title }}</h5>
-    <h2 class="text-primary">{{ $price }}</h2>
-    <small class="text-muted">{{ $unit }}</small>
-</div>
+@props(['title', 'price', 'unit', 'description'])
+
+<article class="home-price h-100">
+    <div>
+        <p class="home-price__label">{{ $title }}</p>
+        <p class="home-price__description">{{ $description }}</p>
+    </div>
+    <div class="home-price__amount">
+        <strong>{{ $price }}</strong>
+        <span>{{ $unit }}</span>
+    </div>
+</article>

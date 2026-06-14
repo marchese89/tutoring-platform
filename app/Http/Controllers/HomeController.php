@@ -12,11 +12,18 @@ class HomeController extends Controller
     {
         $admin = User::with('admin')->where('role', 'admin')->first()?->admin;
 
-        $feedbacks = Review::with('student.user')->get();
+        $reviews = Review::query()
+            ->with('student.user')
+            ->whereNotNull('review')
+            ->where('review', '<>', '')
+            ->latest()
+            ->get();
 
-        $avg = $feedbacks->avg('rating');
+        $averageRating = Review::query()
+            ->whereNotNull('rating')
+            ->avg('rating');
 
-        return view('index', compact('admin', 'feedbacks', 'avg'));
+        return view('index', compact('admin', 'reviews', 'averageRating'));
     }
 
     public function about()

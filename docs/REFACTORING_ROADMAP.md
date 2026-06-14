@@ -134,6 +134,8 @@ Completed so far:
   records that still contain child content.
 - Course listing and detail pages use the shared table system, responsive
   action layouts, explicit empty states, and focused rendering tests.
+- The public home page uses a full-width, responsive presentation focused on
+  the real course, lesson-request, tutoring, pricing, and review workflows.
 
 ### 10. Dependencies and release verification
 
@@ -149,12 +151,9 @@ Status: dependency upgrade completed; release verification remains open.
 
 Last verified: 2026-06-14.
 
-- Current branch: `refactor/static-inline-styles`.
-- Verified application baseline:
-  `8f5771b Unify course management views`.
-- The verified baseline is published to
-  `origin/refactor/static-inline-styles`.
-- Automated verification: 101 tests and 377 assertions pass.
+- Current branch: `refactor/public-home`.
+- Branch base: `307ce68 Update refactoring roadmap`.
+- Automated verification: 102 tests and 383 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -178,39 +177,38 @@ Last verified: 2026-06-14.
 - Result pages share a reusable feedback-card component.
 - Theme-area, subject, lesson, exercise, and course management pages use the
   shared form and table system.
+- The public home page was redesigned and visually verified at 1440 px desktop
+  and 390 px mobile widths without horizontal overflow.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
 
 ### Remaining work
 
-1. Redesign the public home page as a focused portfolio-quality experience,
-   using the current visual system and responsive, accessible content.
-2. Complete the remaining visual audit, especially billing, account settings,
+1. Complete the remaining visual audit, especially billing, account settings,
    lesson-request pages, and repeated PDF, image, and iframe viewers.
-3. Complete English naming for internal identifiers and comments. Keep
+2. Complete English naming for internal identifiers and comments. Keep
    user-facing Italian text unchanged until localization keys are introduced.
-4. Add the localization foundation with Italian as the default locale and
+3. Add the localization foundation with Italian as the default locale and
    English as the second supported language.
-5. Review monetary fields, model relationships, and database constraints, then
+4. Review monetary fields, model relationships, and database constraints, then
    decide whether transitional billing migrations should be squashed before
    the first stable release.
-6. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
+5. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
    fresh seeded installation in a disposable database. The current PHP CLI
    does not have PDO SQLite, so the in-memory installation check cannot run
    locally yet.
-7. Introduce a maintained frontend dependency workflow and consolidate global
+6. Introduce a maintained frontend dependency workflow and consolidate global
    CSS and reusable JavaScript after the view audit is stable.
-8. Add continuous integration for tests, Pint, and Composer security audits.
-9. Perform seeded end-to-end browser verification and update installation,
+7. Add continuous integration for tests, Pint, and Composer security audits.
+8. Perform seeded end-to-end browser verification and update installation,
    testing, and demo-account documentation before release.
 
 ### Next action
 
-Create `refactor/public-home` from `refactor/static-inline-styles` and redesign
-the public home page in a focused work package. Preserve existing routes and
-user-facing Italian copy, add rendering coverage, and verify desktop and mobile
-layouts in the browser before publication.
+Publish `refactor/public-home` after review. Then create
+`refactor/remaining-view-patterns` and audit billing, account settings,
+lesson-request pages, and repeated media viewers before starting localization.
 
 ## Historical progress
 

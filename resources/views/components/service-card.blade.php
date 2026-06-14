@@ -1,5 +1,10 @@
 {{-- components/service-card.blade.php --}}
-<div class="card soft-card h-100 text-center p-3">
-    <h5>{{ $title }}</h5>
-    <p class="text-muted mb-0">{{ $description }}</p>
-</div>
+@props(['icon', 'title', 'description'])
+
+<article class="home-service h-100">
+    <span class="home-service__icon" aria-hidden="true">
+        <i class="bi {{ $icon }}"></i>
+    </span>
+    <h3>{{ $title }}</h3>
+    <p>{{ $description }}</p>
+</article>

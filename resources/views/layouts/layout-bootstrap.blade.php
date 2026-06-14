@@ -90,7 +90,7 @@
 
         <x-navbar />
 
-        <main class="container pb-4">
+        <main class="@yield('main-class', 'container pb-4')">
             @yield('content')
         </main>
 
