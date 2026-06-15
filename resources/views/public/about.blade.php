@@ -11,15 +11,15 @@
                         </h2>
 
                         @if ($certificate->file_path)
-                            <x-ui.pdf-viewer :src="$certificate->file_path" :title="'Certificato: ' . $certificate->name"
+                            <x-ui.pdf-viewer :src="$certificate->file_path"
+                                :title="__('public.about.certificate_preview', ['name' => $certificate->name])"
                                 size="compact" />
                         @endif
                     </x-ui.card>
                 </div>
             @empty
                 <div class="col-lg-8">
-                    <x-ui.empty-state title="Nessun certificato disponibile"
-                        text="I certificati saranno pubblicati in questa pagina." />
+                    <x-ui.empty-state :title="__('public.about.empty_title')" :text="__('public.about.empty_text')" />
                 </div>
             @endforelse
         </div>

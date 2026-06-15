@@ -3,15 +3,13 @@
 <x-ui.card>
     <div class="text-center mb-4">
         <h4 class="fw-bold mb-2">
-            Pagamento sicuro
+            {{ __('public.payment.title') }}
         </h4>
 
         <p class="text-muted mb-0">
-            Paga
-            <span class="fw-bold text-success">
-                {{ $formattedTotal }}&euro;
-            </span>
-            tramite Stripe.
+            {!! __('public.payment.summary', [
+                'total' => '<span class="fw-bold text-success">' . e($formattedTotal) . '&euro;</span>',
+            ]) !!}
         </p>
     </div>
 
@@ -28,7 +26,7 @@
 
         <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-4">
             <x-ui.primary-button href="{{ $backUrl }}" size="sm">
-                Indietro
+                {{ __('public.payment.back') }}
             </x-ui.primary-button>
 
             <x-ui.primary-button id="submit" type="submit" disabled>
@@ -36,7 +34,7 @@
                 </span>
 
                 <span id="button-text">
-                    Paga adesso
+                    {{ __('public.payment.pay_now') }}
                 </span>
             </x-ui.primary-button>
         </div>
@@ -93,7 +91,7 @@
                     const data = await response.json();
 
                     if (!response.ok || !data.clientSecret) {
-                        showMessage(data.message ?? 'Impossibile inizializzare il pagamento.');
+                        showMessage(data.message ?? @json(__('public.payment.initialization_error')));
                         return;
                     }
 
@@ -104,7 +102,7 @@
                     elements.create('payment').mount('#payment-element');
                     submitButton.disabled = false;
                 } catch (error) {
-                    showMessage('Impossibile inizializzare il pagamento.');
+                    showMessage(@json(__('public.payment.initialization_error')));
                     return;
                 }
 
@@ -121,7 +119,7 @@
 
                     if (result.error) {
                         showMessage(result.error.message ??
-                            'Si è verificato un errore durante il pagamento.');
+                            @json(__('public.payment.confirmation_error')));
                         setLoading(false);
                     }
                 });

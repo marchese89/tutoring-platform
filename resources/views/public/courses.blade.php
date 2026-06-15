@@ -2,7 +2,7 @@
 
 @section('page-title')
     <x-ui.page-header>
-        Corsi
+        {{ __('public.catalog.courses') }}
     </x-ui.page-header>
 @endsection
 
@@ -12,8 +12,8 @@
         <div class="row g-4">
 
             @foreach ($courses as $item)
-                <x-ui.card-item :title="$item->name" text="Percorso formativo disponibile nella materia selezionata"
-                    :url="route('courses.show', $item->id)" button="Vai" />
+                <x-ui.card-item :title="$item->name" :text="__('public.catalog.course_text')"
+                    :url="route('courses.show', $item->id)" :button="__('public.catalog.course_action')" />
             @endforeach
 
         </div>

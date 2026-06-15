@@ -30,6 +30,18 @@ class LocalizationTest extends TestCase
             ->assertSee('<html lang="en">', false)
             ->assertSee('Access your account')
             ->assertDontSee('Accedi al tuo account');
+
+        $this->get(route('theme-areas.index'))
+            ->assertOk()
+            ->assertSee('Topic areas')
+            ->assertSee('No topic areas available');
+
+        $student = Student::factory()->create();
+
+        $this->actingAs($student->user)
+            ->get(route('cart.show'))
+            ->assertOk()
+            ->assertSee('Your cart is empty');
     }
 
     public function test_unsupported_locale_is_rejected(): void
@@ -49,6 +61,7 @@ class LocalizationTest extends TestCase
             ->withSession(['locale' => 'en'])
             ->get(route('student.account.credentials'))
             ->assertOk()
+            ->assertSee('Account settings')
             ->assertSee('Update credentials')
             ->assertSee('Password requirements');
 

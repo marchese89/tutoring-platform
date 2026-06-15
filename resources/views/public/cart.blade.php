@@ -5,13 +5,12 @@
         <div class="row justify-content-center">
             <div class="col-12 col-xl-10">
                 <div class="text-center mb-4">
-                    <h2 class="fw-bold mb-2">Carrello</h2>
+                    <h2 class="fw-bold mb-2">{{ __('public.cart.title') }}</h2>
                 </div>
 
                 @if (count($items) === 0)
                     <x-ui.card class="h-auto">
-                        <x-ui.empty-state title="Il carrello è vuoto"
-                            text="Al momento non ci sono articoli nel carrello." />
+                        <x-ui.empty-state :title="__('public.cart.empty_title')" :text="__('public.cart.empty_text')" />
                     </x-ui.card>
                 @else
                     <x-ui.table-card>
@@ -19,9 +18,9 @@
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
-                                    <th scope="col">Titolo</th>
-                                    <th scope="col">Prezzo</th>
-                                    <th scope="col" class="text-end">Azioni</th>
+                                    <th scope="col">{{ __('public.cart.item_title') }}</th>
+                                    <th scope="col">{{ __('public.cart.price') }}</th>
+                                    <th scope="col" class="text-end">{{ __('public.cart.actions') }}</th>
                                 </tr>
                             </thead>
 
@@ -39,7 +38,7 @@
 
                                                 <button type="submit" class="btn btn-outline-danger btn-sm">
                                                     <i class="bi bi-trash me-1"></i>
-                                                    Rimuovi
+                                                    {{ __('public.cart.remove') }}
                                                 </button>
                                             </form>
                                         </td>
@@ -51,11 +50,11 @@
                         <div
                             class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-4 pt-4 border-top">
                             <h3 class="mb-0">
-                                Totale: {{ $total }} &euro;
+                                {{ __('public.cart.total', ['total' => $total]) }}
                             </h3>
 
                             <x-ui.primary-button href="{{ route('checkout.show') }}">
-                                Procedi al pagamento
+                                {{ __('public.cart.checkout') }}
                             </x-ui.primary-button>
                         </div>
                     </x-ui.table-card>
