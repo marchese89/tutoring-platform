@@ -9,10 +9,10 @@
         <thead class="table-light">
             <tr>
                 <th scope="col">#</th>
-                <th scope="col">Titolo</th>
-                <th scope="col">Data</th>
-                <th scope="col" class="text-center">Stato</th>
-                <th scope="col">Operazioni</th>
+                <th scope="col">{{ __('ui.table.title') }}</th>
+                <th scope="col">{{ __('ui.table.date') }}</th>
+                <th scope="col" class="text-center">{{ __('ui.table.status') }}</th>
+                <th scope="col">{{ __('ui.table.actions') }}</th>
             </tr>
         </thead>
 
@@ -27,7 +27,7 @@
                     </td>
                     <td>
                         <x-ui.primary-button href="{{ $item['show_url'] }}" size="sm">
-                            Visualizza
+                            {{ __('ui.table.view') }}
                         </x-ui.primary-button>
                     </td>
                 </tr>

@@ -25,7 +25,9 @@ class DirectRequestController extends Controller
                 'title' => $lessonRequest->title,
                 'date' => DateHelper::format($lessonRequest->requested_at),
                 'status_variant' => $lessonRequest->is_fulfilled ? 'success' : 'danger',
-                'status_label' => $lessonRequest->is_fulfilled ? 'Svolta' : 'Da svolgere',
+                'status_label' => $lessonRequest->is_fulfilled
+                    ? __('student.requests.fulfilled')
+                    : __('student.requests.pending'),
                 'show_url' => route('student.direct-requests.show', $lessonRequest->id),
             ]);
 
@@ -65,8 +67,8 @@ class DirectRequestController extends Controller
                     ? 'danger'
                     : 'success',
                 'status_label' => (int) $latestMessage?->sender_role === ChatSenderRole::ADMIN->value
-                    ? 'Da leggere'
-                    : 'Nessun nuovo messaggio',
+                    ? __('student.requests.unread')
+                    : __('student.requests.no_new_messages'),
                 'show_url' => route('student.direct-requests.show', $lesson->id),
             ];
         });

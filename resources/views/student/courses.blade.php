@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Corsi Acquistati'" />
+    <x-ui.section-header :title="__('student.courses.title')" />
 @endsection
 
 @section('inner')
@@ -11,10 +11,10 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Area Tematica</th>
-                        <th>Materia</th>
-                        <th>Corso</th>
-                        <th>Operazioni</th>
+                        <th>{{ __('student.courses.theme_area') }}</th>
+                        <th>{{ __('student.courses.subject') }}</th>
+                        <th>{{ __('student.courses.course') }}</th>
+                        <th>{{ __('ui.table.actions') }}</th>
                     </tr>
                 </thead>
 
@@ -31,7 +31,7 @@
 
                             <td>
                                 <x-ui.primary-button href="{{ route('student.courses.show', $course->id) }}">
-                                    Visualizza
+                                    {{ __('ui.table.view') }}
                                 </x-ui.primary-button>
                             </td>
                         </tr>

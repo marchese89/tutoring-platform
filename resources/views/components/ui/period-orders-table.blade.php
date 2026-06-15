@@ -7,12 +7,18 @@
     'selectedYear' => null,
     'selectedMonth' => null,
     'showStudent' => false,
-    'title' => 'Ordini',
-    'totalLabel' => 'Totale ordini',
-    'emptyTitle' => 'Non ci sono ordini',
+    'title' => null,
+    'totalLabel' => null,
+    'emptyTitle' => null,
     'emptyText' => null,
     'id' => 'period-orders',
 ])
+
+@php
+    $title ??= __('ui.orders.title');
+    $totalLabel ??= __('ui.orders.total_orders');
+    $emptyTitle ??= __('ui.orders.empty_title');
+@endphp
 
 @if ($hasOrders)
     <div id="{{ $id }}" data-period-orders-table data-endpoint="{{ $endpoint }}"
@@ -22,7 +28,7 @@
             <div class="row g-3 align-items-end">
                 <div class="col-md-3">
                     <label class="form-label fw-semibold" for="{{ $id }}-year">
-                        Anno
+                        {{ __('ui.orders.year') }}
                     </label>
 
                     <select class="form-select rounded-3" id="{{ $id }}-year" data-orders-year>
@@ -36,7 +42,7 @@
 
                 <div class="col-md-3">
                     <label class="form-label fw-semibold" for="{{ $id }}-month">
-                        Mese
+                        {{ __('ui.orders.month') }}
                     </label>
 
                     <select class="form-select rounded-3" id="{{ $id }}-month" data-orders-month>
@@ -57,19 +63,19 @@
                         <th scope="col">#</th>
 
                         @if ($showStudent)
-                            <th scope="col">Studente</th>
+                            <th scope="col">{{ __('ui.orders.student') }}</th>
                         @endif
 
-                        <th scope="col">Data</th>
-                        <th scope="col">Totale</th>
-                        <th scope="col">Operazioni</th>
+                        <th scope="col">{{ __('ui.table.date') }}</th>
+                        <th scope="col">{{ __('ui.orders.total') }}</th>
+                        <th scope="col">{{ __('ui.table.actions') }}</th>
                     </tr>
                 </thead>
 
                 <tbody data-orders-body>
                     <tr>
                         <td colspan="{{ $showStudent ? 5 : 4 }}" class="text-center text-muted py-4">
-                            Caricamento ordini...
+                            {{ __('ui.orders.loading') }}
                         </td>
                     </tr>
                 </tbody>
@@ -96,7 +102,7 @@
                 const tableBody = table.querySelector('[data-orders-body]');
                 const totalCell = table.querySelector('[data-orders-total]');
                 const columnCount = table.dataset.showStudent === 'true' ? 5 : 4;
-                const currencyFormatter = new Intl.NumberFormat('it-IT', {
+                const currencyFormatter = new Intl.NumberFormat(document.documentElement.lang, {
                     style: 'currency',
                     currency: 'EUR',
                 });
@@ -120,7 +126,7 @@
                 };
 
                 const loadOrders = async () => {
-                    showMessage('Caricamento ordini...');
+                    showMessage(@json(__('ui.orders.loading')));
 
                     try {
                         const url = new URL(table.dataset.endpoint, window.location.origin);
@@ -140,7 +146,7 @@
                         const data = await response.json();
 
                         if (!data.orders.length) {
-                            showMessage('Nessun ordine per il periodo selezionato.');
+                            showMessage(@json(__('ui.orders.period_empty')));
                             return;
                         }
 
@@ -160,7 +166,7 @@
                             const link = document.createElement('a');
                             link.href = table.dataset.orderUrlTemplate.replace('__ORDER_ID__', encodeURIComponent(order.id));
                             link.className = 'btn btn-primary btn-sm rounded-pill px-3 py-1';
-                            link.textContent = 'Visualizza';
+                            link.textContent = @json(__('ui.table.view'));
                             actionCell.appendChild(link);
                             row.appendChild(actionCell);
 
@@ -170,7 +176,7 @@
                         tableBody.replaceChildren(...rows);
                         totalCell.textContent = `${table.dataset.totalLabel}: ${currencyFormatter.format(Number(data.total))}`;
                     } catch (error) {
-                        showMessage('Non è stato possibile caricare gli ordini. Riprova.');
+                        showMessage(@json(__('ui.orders.load_error')));
                     }
                 };
 

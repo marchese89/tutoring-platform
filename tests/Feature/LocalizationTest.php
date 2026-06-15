@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Order;
 use App\Models\Student;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -43,6 +44,26 @@ class LocalizationTest extends TestCase
             ->assertSee('About me');
 
         $student = Student::factory()->create();
+
+        Order::factory()
+            ->for($student)
+            ->create(['ordered_at' => '2026-06-15 10:00:00']);
+
+        $this->actingAs($student->user)
+            ->withSession(['locale' => 'en'])
+            ->get(route('student.dashboard'))
+            ->assertOk()
+            ->assertSee('Student dashboard')
+            ->assertSee('Purchased courses')
+            ->assertSee('Extra payment');
+
+        $this->actingAs($student->user)
+            ->withSession(['locale' => 'en'])
+            ->get(route('student.orders.index'))
+            ->assertOk()
+            ->assertSee('Order history')
+            ->assertSee('June')
+            ->assertSee('Loading orders...');
 
         $this->actingAs($student->user)
             ->get(route('cart.show'))

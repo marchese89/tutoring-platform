@@ -123,7 +123,7 @@
 
         <span id="{{ $chatDomId }}-count" class="badge bg-light text-secondary border rounded-pill px-3 py-2"
             data-message-count="{{ $messageCount }}">
-            {{ $messageCount }} {{ $messageCount === 1 ? 'messaggio' : 'messaggi' }}
+            {{ trans_choice('ui.chat.message_count', $messageCount, ['count' => $messageCount]) }}
         </span>
     </div>
 
@@ -147,23 +147,23 @@
             </div>
         @empty
             <div id="{{ $chatDomId }}-empty" class="support-chat-empty text-center rounded-4 p-4">
-                Nessun messaggio presente.
+                {{ __('ui.chat.empty') }}
             </div>
         @endforelse
     </div>
 
     <div>
         <label class="form-label fw-semibold" for="{{ $chatDomId }}-input">
-            Messaggio
+            {{ __('ui.chat.message') }}
         </label>
 
         <textarea id="{{ $chatDomId }}-input" name="message" rows="4"
-            class="support-chat-input form-control rounded-4 mb-3" placeholder="Scrivi un messaggio..."></textarea>
+            class="support-chat-input form-control rounded-4 mb-3" placeholder="{{ __('ui.chat.placeholder') }}"></textarea>
 
         <div class="d-flex justify-content-end">
             <button id="{{ $chatDomId }}-send" type="button" class="support-chat-send">
                 <i class="bi bi-send"></i>
-                Invia
+                {{ __('ui.chat.send') }}
             </button>
         </div>
     </div>

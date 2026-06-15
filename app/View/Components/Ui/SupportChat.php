@@ -19,16 +19,28 @@ class SupportChat extends Component
 
     public readonly array $preparedMessages;
 
+    public readonly string $title;
+
+    public readonly string $description;
+
+    public readonly string $ownSender;
+
+    public readonly string $otherSender;
+
     public function __construct(
         public readonly Chat $chat,
         iterable $messages,
-        public readonly string $title = 'Chat di supporto',
-        public readonly string $description = 'Scrivi qui per ricevere supporto.',
+        ?string $title = null,
+        ?string $description = null,
         ?string $postRoute = null,
         public readonly int $ownAuthor = ChatSenderRole::STUDENT->value,
-        public readonly string $ownSender = 'Tu',
-        public readonly string $otherSender = 'Insegnante',
+        ?string $ownSender = null,
+        ?string $otherSender = null,
     ) {
+        $this->title = $title ?? __('ui.chat.title');
+        $this->description = $description ?? __('ui.chat.description');
+        $this->ownSender = $ownSender ?? __('ui.chat.you');
+        $this->otherSender = $otherSender ?? __('ui.chat.teacher');
         $this->chatDomId = 'support-chat-'.$chat->id;
         $this->postUrl = $postRoute ?? route('student.chat.messages.store');
         $this->preparedMessages = collect($messages)

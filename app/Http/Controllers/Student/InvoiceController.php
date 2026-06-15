@@ -47,7 +47,9 @@ class InvoiceController extends Controller
 
         return view('student.invoice', [
             'invoice' => $invoice,
-            'title' => $invoice->order_id ? "Fattura ordine #{$invoice->order_id}" : 'Fattura pagamento extra',
+            'title' => $invoice->order_id
+                ? __('student.invoices.order_title', ['number' => $invoice->order_id])
+                : __('student.invoices.extra_payment_title'),
             'backUrl' => $invoice->order_id
                 ? route('student.orders.show', $invoice->order_id)
                 : route('student.invoices.index'),

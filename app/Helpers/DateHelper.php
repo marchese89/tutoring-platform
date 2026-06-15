@@ -25,20 +25,12 @@ class DateHelper
 
     public static function monthName(int $month): string
     {
-        return match ($month) {
-            1 => 'Gennaio',
-            2 => 'Febbraio',
-            3 => 'Marzo',
-            4 => 'Aprile',
-            5 => 'Maggio',
-            6 => 'Giugno',
-            7 => 'Luglio',
-            8 => 'Agosto',
-            9 => 'Settembre',
-            10 => 'Ottobre',
-            11 => 'Novembre',
-            12 => 'Dicembre',
-            default => '',
-        };
+        if ($month < 1 || $month > 12) {
+            return '';
+        }
+
+        return ucfirst(Carbon::create(2000, $month, 1)
+            ->locale(app()->getLocale())
+            ->translatedFormat('F'));
     }
 }

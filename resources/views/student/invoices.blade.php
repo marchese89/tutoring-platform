@@ -1,20 +1,20 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Fatture'" />
+    <x-ui.section-header :title="__('student.invoices.title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
         @if ($invoices->isNotEmpty())
-            <x-ui.table-card title="Fatture disponibili">
+            <x-ui.table-card :title="__('student.invoices.available')">
                 <table class="table align-middle">
                     <thead class="table-light">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Ordine</th>
-                            <th scope="col">Data</th>
-                            <th scope="col">Operazioni</th>
+                            <th scope="col">{{ __('student.invoices.order') }}</th>
+                            <th scope="col">{{ __('ui.table.date') }}</th>
+                            <th scope="col">{{ __('ui.table.actions') }}</th>
                         </tr>
                     </thead>
 
@@ -23,7 +23,7 @@
                             <tr>
                                 <th scope="row">{{ $item['number'] ?? $item['id'] }}</th>
                                 <td>
-                                    {{ $item['order_id'] ? '#' . $item['order_id'] : 'Pagamento extra' }}
+                                    {{ $item['order_id'] ? '#' . $item['order_id'] : __('student.invoices.extra_payment') }}
                                 </td>
                                 <td>
                                     {{ $item['date'] }}
@@ -33,7 +33,7 @@
                                         href="{{ $item['show_url'] }}"
                                         size="sm"
                                     >
-                                        Visualizza
+                                        {{ __('ui.table.view') }}
                                     </x-ui.primary-button>
                                 </td>
                             </tr>
@@ -42,10 +42,7 @@
                 </table>
             </x-ui.table-card>
         @else
-            <x-ui.empty-state
-                title="Non ci sono fatture"
-                text="Quando una fattura sara disponibile, la troverai in questa sezione."
-            />
+            <x-ui.empty-state :title="__('student.invoices.empty_title')" :text="__('student.invoices.empty_text')" />
         @endif
     </x-ui.page-section>
 @endsection
