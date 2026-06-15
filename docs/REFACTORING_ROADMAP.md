@@ -154,6 +154,10 @@ Completed so far:
   password rule.
 - Admin and student address forms use one shared component, and account data
   is prepared by controllers instead of lazy-loading relationships in Blade.
+- Public, admin, and student lesson-request pages use shared request tables,
+  request summaries, file fields, PDF viewers, and upload-progress controls.
+- The public lesson-request form no longer uses nested cards, page-specific
+  styles, inline navigation handlers, or authentication checks inside Blade.
 
 ### 10. Dependencies and release verification
 
@@ -208,34 +212,34 @@ Last verified: 2026-06-15.
 - The account-settings audit is complete: credential and address forms are
   shared, account relations are resolved before rendering, and both roles use
   the same email and password validation workflow.
+- The structural visual audit is complete for billing, account settings, and
+  lesson requests. Seeded browser verification remains part of release work.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
 
 ### Remaining work
 
-1. Complete the remaining visual audit for lesson-request pages.
-2. Complete English naming for internal identifiers and comments. Keep
+1. Complete English naming for internal identifiers and comments. Keep
    user-facing Italian text unchanged until localization keys are introduced.
-3. Add the localization foundation with Italian as the default locale and
+2. Add the localization foundation with Italian as the default locale and
    English as the second supported language.
-4. Review monetary fields, model relationships, and database constraints, then
+3. Review monetary fields, model relationships, and database constraints, then
    decide whether transitional billing migrations should be squashed before
    the first stable release.
-5. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
+4. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
    fresh seeded installation in a disposable database. The current PHP CLI
    does not have PDO SQLite, so the in-memory installation check cannot run
    locally yet.
-6. Introduce a maintained frontend dependency workflow and consolidate global
+5. Introduce a maintained frontend dependency workflow and consolidate global
    CSS and reusable JavaScript after the view audit is stable.
-7. Add continuous integration for tests, Pint, and Composer security audits.
-8. Perform seeded end-to-end browser verification and update installation,
+6. Add continuous integration for tests, Pint, and Composer security audits.
+7. Perform seeded end-to-end browser verification and update installation,
    testing, and demo-account documentation before release.
 
 ### Next action
 
-Finish the remaining lesson-request cleanup, then start the internal English
-and localization work packages.
+Start the internal English cleanup, followed by the localization foundation.
 
 ## Historical progress
 

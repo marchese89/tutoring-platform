@@ -44,17 +44,7 @@
                         data-upload-progress-form>
                         @csrf
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold" for="file">
-                                Seleziona immagine
-                            </label>
-                            <input type="file" class="form-control rounded-3 @error('file') is-invalid @enderror"
-                                id="file" name="file" accept="image/jpeg,image/png,image/webp" required>
-
-                            @error('file')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <x-ui.form-file label="Seleziona immagine" accept="image/jpeg,image/png,image/webp" required />
 
                         <x-ui.upload-progress label="Caricamento foto" />
 

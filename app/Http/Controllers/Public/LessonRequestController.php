@@ -31,6 +31,8 @@ class LessonRequestController extends Controller
             'uploadedRequestFileUrl' => $uploadedRequestFile
                 ? route('protected-files.show', ['path' => $uploadedRequestFile])
                 : null,
+            'isAuthenticated' => $request->user() !== null,
+            'userCanSubmit' => $request->user()?->role === 'student',
         ]);
     }
 
@@ -39,8 +41,9 @@ class LessonRequestController extends Controller
         $lessonRequests = LessonRequest::all()->map(fn (LessonRequest $lessonRequest) => [
             'id' => $lessonRequest->id,
             'title' => $lessonRequest->title,
-            'requested_at' => DateHelper::format($lessonRequest->requested_at),
-            'status_class' => $lessonRequest->is_fulfilled ? 'bg-success' : 'bg-danger',
+            'date' => DateHelper::format($lessonRequest->requested_at),
+            'status_variant' => $lessonRequest->is_fulfilled ? 'success' : 'danger',
+            'status_label' => $lessonRequest->is_fulfilled ? 'Svolta' : 'Da svolgere',
             'show_url' => route('admin.lesson-requests.show', $lessonRequest->id),
         ]);
 

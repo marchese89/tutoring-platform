@@ -1,186 +1,95 @@
 @extends('layouts.layout-bootstrap')
 
-@push('styles')
-    <style>
-        .lesson-request-upload {
-            max-width: 37.5rem;
-        }
-
-        .lesson-request-form {
-            max-width: 43.75rem;
-        }
-
-    </style>
-@endpush
-
 @section('content')
-    <div class="container py-5">
-
+    <x-ui.page-section class="py-5">
         <div class="row justify-content-center">
             <div class="col-lg-9">
+                <x-ui.form-card title="Richiesta lezione su commissione"
+                    description="Invia il materiale e ricevi una soluzione personalizzata nel tuo profilo studente."
+                    icon="bi-file-earmark-text" body-class="p-4 p-lg-5">
+                    <div class="mb-5">
+                        <p class="text-muted mb-2">
+                            Carica una traccia, un esercizio o altro materiale didattico in formato PDF.
+                        </p>
+                        <p class="text-muted mb-2">
+                            Dopo la valutazione potrai consultare il prezzo e scegliere se acquistare la soluzione.
+                        </p>
+                        <p class="text-muted mb-0">
+                            Dopo l'acquisto avrai accesso anche alla chat di supporto dedicata.
+                        </p>
+                    </div>
 
-                <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+                    @if (! $userCanSubmit)
+                        <div class="alert alert-warning rounded-3 mb-0" role="alert">
+                            <h5 class="fw-semibold mb-2">
+                                Accesso studente richiesto
+                            </h5>
 
-                    <div class="card-body p-4 p-lg-5">
-
-                        <div class="text-center mb-5">
-                            <h1 class="fw-bold mb-3">
-                                Richiesta Lezione su Commissione
-                            </h1>
-
-                            <p class="text-muted fs-5 mb-2">
-                                Carica una traccia, un esercizio o del materiale didattico.
+                            <p class="mb-3">
+                                Questa funzionalità è disponibile esclusivamente agli account studente.
                             </p>
 
-                            <p class="text-muted fs-5 mb-2">
-                                Riceverai una risposta personalizzata direttamente nel tuo profilo studente.
-                            </p>
+                            @if (! $isAuthenticated)
+                                <x-ui.primary-button href="{{ route('login', ['back' => 1]) }}">
+                                    Accedi
+                                </x-ui.primary-button>
+                            @endif
+                        </div>
+                    @elseif (! $uploadedRequestFile)
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <form method="POST" action="{{ route('lesson-requests.files.store') }}"
+                                    enctype="multipart/form-data" data-upload-progress-form>
+                                    @csrf
 
-                            <p class="text-muted fs-5 mb-2">
-                                Dopo la valutazione potrai visualizzare il prezzo e decidere se acquistare.
-                            </p>
+                                    <x-ui.form-file label="Seleziona il file" accept="application/pdf"
+                                        class="form-control-lg" wrapper-class="mb-4" required />
 
-                            <p class="text-muted fs-5 mb-0">
-                                Eventuali chiarimenti via chat sono inclusi dopo l'acquisto.
-                            </p>
+                                    <x-ui.upload-progress label="Caricamento file" />
+
+                                    <x-ui.primary-button type="submit" class="w-100 justify-content-center">
+                                        Carica file
+                                    </x-ui.primary-button>
+                                </form>
+                            </div>
+                        </div>
+                    @else
+                        <div class="text-center mb-4">
+                            <span class="badge bg-success-subtle text-success rounded-pill px-3 py-2">
+                                File caricato correttamente
+                            </span>
                         </div>
 
-                        @if (!Auth::check())
-                            <div class="alert alert-warning text-center rounded-4 border-0 shadow-sm py-4">
+                        <div class="mb-4">
+                            <x-ui.pdf-viewer :src="$uploadedRequestFileUrl" title="Anteprima richiesta" size="compact" />
+                        </div>
 
-                                <h5 class="fw-semibold mb-3">
-                                    Accesso richiesto
-                                </h5>
+                        <div class="d-flex justify-content-end mb-4">
+                            <form method="POST" action="{{ route('lesson-requests.files.destroy') }}">
+                                @csrf
+                                @method('DELETE')
 
-                                <p class="mb-4">
-                                    Devi effettuare il login come studente per utilizzare questa funzionalità.
-                                </p>
-
-                                <button class="btn btn-primary px-4 rounded-3"
-                                    onclick="location.href='{{ route('login', ['back' => 1]) }}'">
-                                    Login
+                                <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
+                                    Elimina file
                                 </button>
+                            </form>
+                        </div>
 
-                            </div>
-                        @else
-                            @if (!$uploadedRequestFile)
-                                <div class="lesson-request-upload mx-auto">
+                        <hr class="my-4">
 
-                                    <div class="card bg-light border-0 rounded-4">
-                                        <div class="card-body p-4">
+                        <form method="POST" action="{{ route('lesson-requests.store') }}">
+                            @csrf
 
-                                            <form method="POST" action="{{ route('lesson-requests.files.store') }}"
-                                                enctype="multipart/form-data" id="upload" data-upload-progress-form>
+                            <x-ui.form-field name="title" label="Titolo / descrizione" maxlength="255"
+                                :value="old('title')" placeholder="Inserisci una breve descrizione della richiesta" required />
 
-                                                @csrf
-
-                                                <div class="mb-4">
-                                                    <label class="form-label fw-semibold">
-                                                        Seleziona il file
-                                                    </label>
-
-                                                    <input type="file"
-                                                        class="form-control form-control-lg @error('file') is-invalid @enderror"
-                                                        id="file" name="file" accept="application/pdf" required />
-                                                    @error('file')
-                                                        <div class="invalid-feedback">{{ $message }}</div>
-                                                    @enderror
-                                                </div>
-
-                                                <x-ui.upload-progress label="Caricamento file" />
-
-                                                <div class="d-grid">
-                                                    <button type="submit" class="btn btn-primary btn-lg rounded-3">
-                                                        Carica File
-                                                    </button>
-                                                </div>
-
-                                            </form>
-
-                                        </div>
-                                    </div>
-
-                                </div>
-                            @else
-                                <div class="text-center">
-
-                                    <div class="mb-4">
-                                        <span class="badge bg-success px-3 py-2 rounded-pill fs-6">
-                                            File caricato correttamente
-                                        </span>
-                                    </div>
-
-                                    <div class="mb-4">
-                                        <x-ui.pdf-viewer :src="$uploadedRequestFileUrl" title="Anteprima richiesta"
-                                            size="compact" />
-                                    </div>
-
-                                    <div class="mb-5">
-                                        <form method="POST" action="{{ route('lesson-requests.files.destroy') }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-outline-danger rounded-3 px-4">
-                                                Elimina File
-                                            </button>
-                                        </form>
-                                    </div>
-
-                                    <div class="lesson-request-form mx-auto">
-
-                                        <div class="card bg-light border-0 rounded-4">
-                                            <div class="card-body p-4 p-lg-5">
-
-                                                <h4 class="fw-semibold mb-4">
-                                                    Invia la richiesta
-                                                </h4>
-
-                                                <form method="POST" action="{{ route('lesson-requests.store') }}">
-
-                                                    @csrf
-
-                                                    <div class="mb-4 text-start">
-
-                                                        <label for="title" class="form-label fw-semibold">
-
-                                                            Titolo / Descrizione
-
-                                                        </label>
-
-                                                        <input type="text"
-                                                            class="form-control form-control-lg @error('title') is-invalid @enderror"
-                                                            id="title" name="title" maxlength="255"
-                                                            value="{{ old('title') }}"
-                                                            placeholder="Inserisci una breve descrizione della richiesta">
-                                                        @error('title')
-                                                            <div class="invalid-feedback">{{ $message }}</div>
-                                                        @enderror
-
-                                                    </div>
-
-                                                    <div class="d-grid">
-                                                        <button type="submit" class="btn btn-primary btn-lg rounded-3">
-
-                                                            Invia Richiesta
-
-                                                        </button>
-                                                    </div>
-
-                                                </form>
-
-                                            </div>
-                                        </div>
-
-                                    </div>
-
-                                </div>
-                            @endif
-                        @endif
-
-                    </div>
-                </div>
-
+                            <x-ui.primary-button type="submit" class="w-100 justify-content-center">
+                                Invia richiesta
+                            </x-ui.primary-button>
+                        </form>
+                    @endif
+                </x-ui.form-card>
             </div>
         </div>
-
-    </div>
+    </x-ui.page-section>
 @endsection

@@ -19,7 +19,15 @@ class DirectRequestController extends Controller
         $directRequests = LessonRequest::where('student_id', $request->user()->student->id)
             ->where('is_paid', 0)
             ->orderByDesc('requested_at')
-            ->get();
+            ->get()
+            ->map(fn (LessonRequest $lessonRequest) => [
+                'id' => $lessonRequest->id,
+                'title' => $lessonRequest->title,
+                'date' => DateHelper::format($lessonRequest->requested_at),
+                'status_variant' => $lessonRequest->is_fulfilled ? 'success' : 'danger',
+                'status_label' => $lessonRequest->is_fulfilled ? 'Svolta' : 'Da svolgere',
+                'show_url' => route('student.direct-requests.show', $lessonRequest->id),
+            ]);
 
         return view('student.direct-requests', compact('directRequests'));
     }
@@ -53,7 +61,13 @@ class DirectRequestController extends Controller
                 'id' => $lesson->id,
                 'title' => $lesson->title,
                 'date' => DateHelper::format($lesson->requested_at),
-                'has_unread_message' => (int) $latestMessage?->sender_role === ChatSenderRole::ADMIN->value,
+                'status_variant' => (int) $latestMessage?->sender_role === ChatSenderRole::ADMIN->value
+                    ? 'danger'
+                    : 'success',
+                'status_label' => (int) $latestMessage?->sender_role === ChatSenderRole::ADMIN->value
+                    ? 'Da leggere'
+                    : 'Nessun nuovo messaggio',
+                'show_url' => route('student.direct-requests.show', $lesson->id),
             ];
         });
 

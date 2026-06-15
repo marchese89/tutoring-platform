@@ -6,32 +6,9 @@
 
 @section('inner')
     <x-ui.page-section>
-        <x-ui.card>
-            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
-                <div>
-                    <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
-                        Richiesta lezione
-                    </span>
-
-                    <h3 class="fw-bold mb-0">
-                        {{ $lessonRequest->title }}
-                    </h3>
-                </div>
-
-                <div class="text-lg-end">
-                    <span
-                        class="badge {{ $lessonRequest->is_fulfilled ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning' }} rounded-pill px-3 py-2 mb-2">
-                        {{ $lessonRequest->is_fulfilled ? 'Completata' : 'Da completare' }}
-                    </span>
-
-                    @if ($lessonRequest->price !== null)
-                        <h5 class="fw-semibold mb-0">
-                            {{ number_format($lessonRequest->price, 2, ',', '.') }}&euro;
-                        </h5>
-                    @endif
-                </div>
-            </div>
-        </x-ui.card>
+        <x-ui.lesson-request-summary :title="$lessonRequest->title"
+            :status-label="$lessonRequest->is_fulfilled ? 'Completata' : 'Da completare'"
+            :status-variant="$lessonRequest->is_fulfilled ? 'success' : 'warning'" :price="$lessonRequest->price" />
 
         <div class="row g-4 mt-0">
             <div class="col-12">
@@ -74,16 +51,7 @@
                         enctype="multipart/form-data" data-upload-progress-form>
                         @csrf
 
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold" for="solution-file">File PDF</label>
-                            <input id="solution-file" type="file"
-                                class="form-control rounded-3 @error('file') is-invalid @enderror" name="file"
-                                accept="application/pdf" required>
-
-                            @error('file')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        <x-ui.form-file id="solution-file" label="File PDF" accept="application/pdf" required />
 
                         <x-ui.upload-progress label="Caricamento soluzione" />
 

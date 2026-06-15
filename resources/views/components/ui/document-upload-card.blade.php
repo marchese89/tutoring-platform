@@ -28,20 +28,8 @@
             <input type="hidden" name="{{ $name }}" value="{{ $value }}">
         @endforeach
 
-        <div class="mb-3">
-            <label class="form-label fw-semibold" for="{{ $inputId ?: $inputName }}">
-                Seleziona file
-            </label>
-
-            <input type="file" class="form-control rounded-3 @error($inputName) is-invalid @enderror"
-                id="{{ $inputId ?: $inputName }}" name="{{ $inputName }}" accept="application/pdf" required>
-
-            @error($inputName)
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-            @enderror
-        </div>
+        <x-ui.form-file :name="$inputName" :id="$inputId ?: $inputName" label="Seleziona file"
+            accept="application/pdf" required />
 
         <x-ui.upload-progress :label="$progressLabel" />
 

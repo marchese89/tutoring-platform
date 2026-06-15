@@ -70,23 +70,8 @@
 
                             <input type="hidden" name="id" value="{{ $certificate->id }}">
 
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold" for="file_{{ $certificate->id }}">
-                                    Sostituisci file
-                                </label>
-
-                                <input
-                                    type="file"
-                                    class="form-control rounded-3 @error('file') is-invalid @enderror"
-                                    id="file_{{ $certificate->id }}"
-                                    name="file"
-                                    accept="application/pdf" required>
-                                @error('file')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
+                            <x-ui.form-file label="Sostituisci file" id="file_{{ $certificate->id }}"
+                                accept="application/pdf" required />
 
                             <x-ui.upload-progress label="Caricamento certificato" />
 
