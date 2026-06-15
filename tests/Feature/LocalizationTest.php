@@ -36,6 +36,12 @@ class LocalizationTest extends TestCase
             ->assertSee('Topic areas')
             ->assertSee('No topic areas available');
 
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Private computer science lessons')
+            ->assertSee('How I can help')
+            ->assertSee('About me');
+
         $student = Student::factory()->create();
 
         $this->actingAs($student->user)

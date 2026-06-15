@@ -463,40 +463,39 @@
     <div class="home-page">
         <section class="home-hero">
             <img class="home-hero__image" src="{{ asset('images/computer-science-tutoring-hero.jpg') }}"
-                alt="Sessione individuale di studio e programmazione">
+                alt="{{ __('public.home.hero_alt') }}">
             <div class="home-hero__shade" aria-hidden="true"></div>
 
             <div class="container home-hero__content">
                 <p class="home-eyebrow">
                     <i class="bi bi-code-square" aria-hidden="true"></i>
-                    Lezioni individuali per superiori e università
+                    {{ __('public.home.hero_eyebrow') }}
                 </p>
-                <h1>Lezioni private di informatica</h1>
+                <h1>{{ __('public.home.hero_title') }}</h1>
                 <p class="home-hero__lead">
-                    Un percorso pratico per comprendere gli argomenti, affrontare gli esercizi con metodo e diventare
-                    autonomi nello studio.
+                    {{ __('public.home.hero_lead') }}
                 </p>
                 <div class="home-hero__actions">
                     <a class="btn btn-light" href="{{ route('theme-areas.index') }}">
-                        Esplora i corsi
+                        {{ __('public.home.explore_courses') }}
                         <i class="bi bi-arrow-right" aria-hidden="true"></i>
                     </a>
                     <a class="btn btn-outline-light" href="{{ route('lesson-requests.create') }}">
-                        Richiedi materiale
+                        {{ __('public.home.request_material') }}
                     </a>
                 </div>
             </div>
         </section>
 
-        <section class="home-proof" aria-label="Punti di forza">
+        <section class="home-proof" aria-label="{{ __('public.home.strengths_label') }}">
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
                         <div class="home-proof__item">
                             <i class="bi bi-mortarboard" aria-hidden="true"></i>
                             <div>
-                                <strong>Preparazione accademica</strong>
-                                <span>Laurea Magistrale in Ingegneria Informatica, 110/110</span>
+                                <strong>{{ __('public.home.strengths.academic_title') }}</strong>
+                                <span>{{ __('public.home.strengths.academic_text') }}</span>
                             </div>
                         </div>
                     </div>
@@ -504,8 +503,8 @@
                         <div class="home-proof__item">
                             <i class="bi bi-person-check" aria-hidden="true"></i>
                             <div>
-                                <strong>Percorso individuale</strong>
-                                <span>Lezioni costruite sul livello e sugli obiettivi dello studente</span>
+                                <strong>{{ __('public.home.strengths.individual_title') }}</strong>
+                                <span>{{ __('public.home.strengths.individual_text') }}</span>
                             </div>
                         </div>
                     </div>
@@ -513,8 +512,8 @@
                         <div class="home-proof__item">
                             <i class="bi bi-file-earmark-code" aria-hidden="true"></i>
                             <div>
-                                <strong>Materiale su richiesta</strong>
-                                <span>Spiegazioni ed esercizi preparati per esigenze specifiche</span>
+                                <strong>{{ __('public.home.strengths.material_title') }}</strong>
+                                <span>{{ __('public.home.strengths.material_text') }}</span>
                             </div>
                         </div>
                     </div>
@@ -524,25 +523,24 @@
 
         <section class="home-section">
             <div class="container">
-                <p class="home-section__eyebrow">Come posso aiutarti</p>
-                <h2>Dalla spiegazione alla soluzione, senza passaggi lasciati al caso.</h2>
+                <p class="home-section__eyebrow">{{ __('public.home.services.eyebrow') }}</p>
+                <h2>{{ __('public.home.services.title') }}</h2>
                 <p class="home-section__intro">
-                    Le attività sono organizzate per trasformare dubbi e lacune in un metodo di lavoro riutilizzabile,
-                    anche quando cambiano gli argomenti.
+                    {{ __('public.home.services.intro') }}
                 </p>
 
                 <div class="row g-4">
                     <div class="col-md-4">
-                        <x-service-card icon="bi-easel2" title="Lezioni online"
-                            description="Sessioni individuali dedicate agli argomenti che richiedono una spiegazione chiara e mirata." />
+                        <x-service-card icon="bi-easel2" :title="__('public.home.services.online_title')"
+                            :description="__('public.home.services.online_text')" />
                     </div>
                     <div class="col-md-4">
-                        <x-service-card icon="bi-terminal" title="Esercizi guidati"
-                            description="Analisi del problema, scelta della strategia e sviluppo della soluzione passo dopo passo." />
+                        <x-service-card icon="bi-terminal" :title="__('public.home.services.exercises_title')"
+                            :description="__('public.home.services.exercises_text')" />
                     </div>
                     <div class="col-md-4">
-                        <x-service-card icon="bi-compass" title="Metodo di studio"
-                            description="Strumenti per organizzare il ragionamento, verificare gli errori e proseguire in autonomia." />
+                        <x-service-card icon="bi-compass" :title="__('public.home.services.method_title')"
+                            :description="__('public.home.services.method_text')" />
                     </div>
                 </div>
             </div>
@@ -552,9 +550,9 @@
             <div class="container">
                 <div class="row g-5 align-items-start">
                     <div class="col-lg-7">
-                        <p class="home-section__eyebrow">Il metodo</p>
+                        <p class="home-section__eyebrow">{{ __('public.home.method.eyebrow') }}</p>
                         <p class="home-method__statement">
-                            L’obiettivo non è memorizzare una soluzione, ma capire perché funziona e saperla ricostruire.
+                            {{ __('public.home.method.statement') }}
                         </p>
                     </div>
                     <div class="col-lg-5">
@@ -562,22 +560,22 @@
                             <div class="home-method__step">
                                 <span>01</span>
                                 <div>
-                                    <h3>Individuare il punto critico</h3>
-                                    <p>Partiamo da ciò che blocca davvero la comprensione.</p>
+                                    <h3>{{ __('public.home.method.step_one_title') }}</h3>
+                                    <p>{{ __('public.home.method.step_one_text') }}</p>
                                 </div>
                             </div>
                             <div class="home-method__step">
                                 <span>02</span>
                                 <div>
-                                    <h3>Costruire il ragionamento</h3>
-                                    <p>Ogni passaggio viene motivato e collegato ai concetti fondamentali.</p>
+                                    <h3>{{ __('public.home.method.step_two_title') }}</h3>
+                                    <p>{{ __('public.home.method.step_two_text') }}</p>
                                 </div>
                             </div>
                             <div class="home-method__step">
                                 <span>03</span>
                                 <div>
-                                    <h3>Verificare l’autonomia</h3>
-                                    <p>Il metodo viene applicato a un nuovo problema, senza ripetere meccanicamente.</p>
+                                    <h3>{{ __('public.home.method.step_three_title') }}</h3>
+                                    <p>{{ __('public.home.method.step_three_text') }}</p>
                                 </div>
                             </div>
                         </div>
@@ -590,24 +588,24 @@
             <div class="container">
                 <div class="row g-5 align-items-end mb-5">
                     <div class="col-lg-8">
-                        <p class="home-section__eyebrow">Tariffe</p>
-                        <h2>Un riferimento semplice, prima di iniziare.</h2>
+                        <p class="home-section__eyebrow">{{ __('public.home.pricing.eyebrow') }}</p>
+                        <h2>{{ __('public.home.pricing.title') }}</h2>
                     </div>
                     <div class="col-lg-4">
                         <p class="home-section__intro mb-0">
-                            Il percorso viene concordato in base al livello, agli argomenti e al risultato da raggiungere.
+                            {{ __('public.home.pricing.intro') }}
                         </p>
                     </div>
                 </div>
 
                 <div class="row g-4">
                     <div class="col-lg-6">
-                        <x-price-card title="Scuole superiori" price="15 €" unit="all’ora"
-                            description="Recupero, preparazione alle verifiche ed esercitazioni guidate." />
+                        <x-price-card :title="__('public.home.pricing.high_school_title')" price="15 €"
+                            :unit="__('public.home.pricing.hour')" :description="__('public.home.pricing.high_school_text')" />
                     </div>
                     <div class="col-lg-6">
-                        <x-price-card title="Università" price="20 €" unit="all’ora"
-                            description="Preparazione agli esami, programmazione e materie informatiche." />
+                        <x-price-card :title="__('public.home.pricing.university_title')" price="20 €"
+                            :unit="__('public.home.pricing.hour')" :description="__('public.home.pricing.university_text')" />
                     </div>
                 </div>
             </div>
@@ -617,26 +615,25 @@
             <div class="container">
                 <div class="home-profile">
                     @if ($admin?->photo_path)
-                        <img class="home-profile__photo" src="{{ $admin->photo_path }}" alt="Tutor di informatica">
+                        <img class="home-profile__photo" src="{{ $admin->photo_path }}"
+                            alt="{{ __('public.home.profile.photo_alt') }}">
                     @endif
 
                     <div>
-                        <p class="home-section__eyebrow">Chi sono</p>
-                        <h2>Competenza tecnica e attenzione al modo in cui impari.</h2>
+                        <p class="home-section__eyebrow">{{ __('public.home.profile.eyebrow') }}</p>
+                        <h2>{{ __('public.home.profile.title') }}</h2>
                         <p class="home-section__intro mb-0">
-                            Sono laureato magistrale in Ingegneria Informatica e affianco studenti delle scuole superiori
-                            e universitari con un approccio orientato alla comprensione reale. Le lezioni partono dalle
-                            difficoltà concrete e costruiscono un metodo che resta utile anche dopo l’esame o la verifica.
+                            {{ __('public.home.profile.intro') }}
                         </p>
                         <div class="home-profile__credential">
                             <i class="bi bi-patch-check" aria-hidden="true"></i>
                             <div>
-                                <strong>Laurea Magistrale in Ingegneria Informatica</strong>
-                                <span>Conseguita con votazione 110/110</span>
+                                <strong>{{ __('public.home.profile.degree') }}</strong>
+                                <span>{{ __('public.home.profile.degree_result') }}</span>
                             </div>
                         </div>
                         <a class="btn btn-outline-primary mt-4" href="{{ route('about') }}">
-                            Scopri di più
+                            {{ __('public.home.profile.learn_more') }}
                         </a>
                     </div>
                 </div>
@@ -646,20 +643,21 @@
         @if ($reviews->isNotEmpty())
             <section class="home-section home-section--muted">
                 <div class="container">
-                    <p class="home-section__eyebrow">Recensioni</p>
-                    <h2>L’esperienza degli studenti.</h2>
+                    <p class="home-section__eyebrow">{{ __('public.home.reviews.eyebrow') }}</p>
+                    <h2>{{ __('public.home.reviews.title') }}</h2>
 
                     @if ($averageRating)
                         <div class="home-reviews__summary">
                             <span class="home-reviews__score">{{ number_format($averageRating, 1) }}</span>
                             <div>
-                                <div class="home-reviews__stars" aria-label="Valutazione media: {{ $averageRating }} su 5">
+                                <div class="home-reviews__stars"
+                                    aria-label="{{ __('public.home.reviews.average_aria', ['rating' => $averageRating]) }}">
                                     @for ($star = 1; $star <= 5; $star++)
                                         <i class="bi {{ $star <= round($averageRating) ? 'bi-star-fill' : 'bi-star' }}"
                                             aria-hidden="true"></i>
                                     @endfor
                                 </div>
-                                <small class="text-muted">Valutazione media</small>
+                                <small class="text-muted">{{ __('public.home.reviews.average_label') }}</small>
                             </div>
                         </div>
                     @endif
@@ -678,19 +676,18 @@
 
         <section class="home-contact">
             <div class="container">
-                <h2>Partiamo dal punto che oggi ti crea più difficoltà.</h2>
+                <h2>{{ __('public.home.contact.title') }}</h2>
                 <p>
-                    Puoi consultare il materiale disponibile, richiedere una lezione preparata su un argomento specifico
-                    oppure contattarmi direttamente per definire il percorso più adatto.
+                    {{ __('public.home.contact.text') }}
                 </p>
                 <div class="home-contact__actions">
                     <a class="btn btn-light" href="https://api.whatsapp.com/send?phone=3272991334">
                         <i class="bi bi-whatsapp" aria-hidden="true"></i>
-                        Scrivimi su WhatsApp
+                        {{ __('public.home.contact.whatsapp') }}
                     </a>
                     <a class="btn btn-outline-light" href="mailto:marchese89@hotmail.com">
                         <i class="bi bi-envelope" aria-hidden="true"></i>
-                        Invia un’email
+                        {{ __('public.home.contact.email') }}
                     </a>
                 </div>
             </div>

@@ -113,9 +113,11 @@ progress.
 - Authentication and shared account views use translation keys.
 - Breadcrumb labels and the operational public surface use translation keys,
   including the catalog, cart, checkout, lesson request, and result pages.
+- The public home page is fully available in Italian and English, including
+  accessible image and rating labels.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings in the home page, legal policies, student,
-  admin, mail, and invoice views still need to be moved into language files.
+- Remaining user-facing strings in legal policies, student, admin, mail, and
+  invoice views still need to be moved into language files.
 
 ### 9. Visual consistency
 
@@ -184,8 +186,8 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-15.
 
 - Current branch: `feature/localization-foundation`.
-- Latest localization foundation commit: `4356cef Add localization foundation`.
-- Automated verification: 118 tests and 505 assertions pass.
+- Latest public localization commit: `8816680 Localize public workflows and breadcrumbs`.
+- Automated verification: 118 tests and 509 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -234,8 +236,8 @@ Last verified: 2026-06-15.
 ### Remaining work
 
 1. Continue moving user-facing strings into Italian and English catalogs,
-   starting with the home page, then student, admin, mail, invoice, and legal
-   policy contexts.
+   starting with the student area, then admin, mail, invoice, and legal policy
+   contexts.
 2. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
@@ -253,8 +255,8 @@ Last verified: 2026-06-15.
 
 ### Next action
 
-Localize the home page, then continue through the student and admin areas in
-focused commits.
+Localize the student area, then continue through the admin area in focused
+commits.
 
 ## Historical progress
 
