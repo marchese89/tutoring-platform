@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\AccountCredentialsController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Public\CartController;
 use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\Student\AccountController;
 use App\Http\Controllers\Student\DirectRequestController;
 use App\Http\Controllers\Student\InvoiceController;
 use App\Http\Controllers\Student\OrderController;
@@ -17,13 +19,14 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::view('student/dashboard', 'layouts.student-dashboard')->name('student.dashboard');
 
     Route::view('student/account', 'student.account')->name('student.account');
-    Route::view('student/account/profile', 'student.profile')->name('student.account.profile');
-    Route::view('student/account/credentials', 'student.credentials')->name('student.account.credentials');
-    Route::post('student/account/address', [StudentController::class, 'updateAddress'])
+    Route::get('student/account/profile', [AccountController::class, 'profile'])->name('student.account.profile');
+    Route::get('student/account/credentials', [AccountCredentialsController::class, 'showStudent'])
+        ->name('student.account.credentials');
+    Route::post('student/account/address', [AccountController::class, 'updateAddress'])
         ->name('student.account.address.update');
-    Route::post('student/account/email', [StudentController::class, 'updateEmail'])
+    Route::post('student/account/email', [AccountCredentialsController::class, 'updateEmail'])
         ->name('student.account.email.update');
-    Route::post('student/account/password', [StudentController::class, 'updatePassword'])
+    Route::post('student/account/password', [AccountCredentialsController::class, 'updatePassword'])
         ->name('student.account.password.update');
 
     Route::get('student/courses', [CourseController::class, 'purchasedCourses'])->name('student.courses.index');

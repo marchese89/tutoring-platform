@@ -11,92 +11,9 @@ use App\Models\Exercise;
 use App\Models\Lesson;
 use App\Models\LessonRequest;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
 
 class StudentController extends Controller
 {
-    public function updateAddress(Request $request)
-    {
-        $validated = $request->validate(
-            [
-                'street' => ['required', 'string', 'max:255'],
-                'house_number' => ['required', 'string', 'max:6'],
-                'city' => ['required', 'string', 'max:255'],
-                'province' => ['required', 'string', 'max:2'],
-                'postal_code' => ['required', 'string', 'max:5'],
-            ],
-            [],
-            [
-                'street' => 'indirizzo',
-                'house_number' => 'numero civico',
-                'city' => 'città',
-                'province' => 'provincia',
-                'postal_code' => 'CAP',
-            ]
-        );
-
-        $student = $request->user()->student;
-
-        $student->update($validated);
-
-        return redirect()->route('student.account.profile');
-    }
-
-    public function updateEmail(Request $request)
-    {
-        $validated = $request->validate([
-            'email' => [
-                'required',
-                'email',
-                'max:255',
-                Rule::unique('users', 'email')->ignore($request->user()->id),
-            ],
-        ]);
-
-        $user = $request->user();
-        $user->email = $validated['email'];
-        $user->save();
-
-        return redirect()->route('student.account.credentials');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $validated = $request->validate(
-            [
-                'current_password' => ['required'],
-                'password' => [
-                    'required',
-                    'min:10',
-                    'regex:/[A-Z]/',
-                    'regex:/[a-z]/',
-                    'regex:/[0-9]/',
-                    'regex:/[@#!?.:,;]/',
-                ],
-                'password_confirmation' => ['required', 'same:password'],
-            ],
-            [],
-            [
-                'current_password' => 'password attuale',
-                'password' => 'nuova password',
-                'password_confirmation' => 'conferma password',
-            ]
-        );
-
-        if (! Hash::check($validated['current_password'], $request->user()->password)) {
-            return back()->withErrors([
-                'current_password' => 'La password non corrisponde a quella gia inserita',
-            ]);
-        }
-
-        $user = $request->user();
-        $user->password = Hash::make($validated['password']);
-        $user->save();
-
-        return redirect()->route('student.account.credentials')->withSuccess('Password Modificata con successo');
-    }
-
     public function showLesson(Request $request, int $courseId, int $lessonId)
     {
         $course = Course::findOrFail($courseId);

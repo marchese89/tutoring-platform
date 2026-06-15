@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Support\PasswordRequirements;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
@@ -29,11 +30,7 @@ class RegisterUserRequest extends FormRequest
             'email_confirmation' => ['required', 'email', 'same:email'],
             'password' => [
                 'required',
-                'min:10',
-                'regex:/[A-Z]/',
-                'regex:/[a-z]/',
-                'regex:/[0-9]/',
-                'regex:/[@#!?.:,;]/',
+                PasswordRequirements::rule(),
             ],
             'password_confirmation' => ['required', 'same:password'],
             'address' => ['required', 'string', 'max:255'],

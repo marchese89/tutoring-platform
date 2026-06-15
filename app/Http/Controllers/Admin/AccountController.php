@@ -7,11 +7,37 @@ use App\Models\Certificate;
 use App\Support\PublicUploadStorage;
 use App\Support\UploadRules;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rule;
+use Illuminate\View\View;
 
 class AccountController extends Controller
 {
+    public function address(Request $request): View
+    {
+        return view('admin.settings.address', [
+            'address' => $request->user()->admin->only([
+                'street',
+                'house_number',
+                'city',
+                'province',
+                'postal_code',
+            ]),
+        ]);
+    }
+
+    public function photo(Request $request): View
+    {
+        return view('admin.settings.photo', [
+            'photoPath' => $request->user()->admin->photo_path,
+        ]);
+    }
+
+    public function vatNumber(Request $request): View
+    {
+        return view('admin.settings.vat-number', [
+            'vatNumber' => $request->user()->admin->vat_number,
+        ]);
+    }
+
     public function createCertificate(Request $request)
     {
         $uploadedCertificateFile = $request->session()->get('uploaded_certificate_file');
@@ -34,7 +60,7 @@ class AccountController extends Controller
             'file' => UploadRules::image(),
         ]);
 
-        $admin = auth()->user()->admin;
+        $admin = $request->user()->admin;
 
         $oldPath = $admin->photo_path;
         $admin->photo_path = PublicUploadStorage::store(
@@ -108,7 +134,7 @@ class AccountController extends Controller
             'vat_number' => 'required|string|max:20',
         ]);
 
-        $admin = auth()->user()->admin;
+        $admin = $request->user()->admin;
         $admin->vat_number = $request->vat_number;
         $admin->save();
 
@@ -120,10 +146,10 @@ class AccountController extends Controller
         $validated = $request->validate(
             [
                 'street' => 'required|string|max:255',
-                'house_number' => 'required|string|max:10',
-                'city' => 'required|string|max:100',
-                'province' => 'required|string|max:100',
-                'postal_code' => 'required|string|max:10',
+                'house_number' => 'required|string|max:6',
+                'city' => 'required|string|max:255',
+                'province' => 'required|string|max:2',
+                'postal_code' => 'required|string|max:5',
             ],
             [],
             [
@@ -135,7 +161,7 @@ class AccountController extends Controller
             ]
         );
 
-        $admin = auth()->user()->admin;
+        $admin = $request->user()->admin;
 
         $admin->update($validated);
 
@@ -190,51 +216,5 @@ class AccountController extends Controller
         $certificate->save();
 
         return redirect()->route('admin.account.certificates.index');
-    }
-
-    public function updateEmail(Request $request)
-    {
-        $validated = $request->validate([
-            'email' => [
-                'required',
-                'email',
-                Rule::unique('users', 'email')->ignore($request->user()->id),
-            ],
-        ]);
-
-        $user = $request->user();
-        $user->email = $validated['email'];
-        $user->save();
-
-        return redirect()->route('admin.account.credentials');
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $validated = $request->validate(
-            [
-                'current_password' => 'required',
-                'password' => 'required|min:6|confirmed',
-            ],
-            [],
-            [
-                'current_password' => 'password attuale',
-                'password' => 'nuova password',
-                'password_confirmation' => 'conferma password',
-            ]
-        );
-
-        $user = $request->user();
-
-        if (! Hash::check($validated['current_password'], $user->password)) {
-            return back()->withErrors([
-                'current_password' => 'Password attuale errata',
-            ]);
-        }
-
-        $user->password = Hash::make($validated['password']);
-        $user->save();
-
-        return redirect()->route('admin.account.credentials')->withSuccess('Password modificata con successo');
     }
 }

@@ -149,6 +149,11 @@ Completed so far:
 - Admin and student order details and invoice PDF pages use shared billing
   components; the obsolete AJAX order method and server-rendered row partial
   were removed.
+- Admin and student credential pages use one shared component and controller;
+  password strength rules are shared with registration through the framework
+  password rule.
+- Admin and student address forms use one shared component, and account data
+  is prepared by controllers instead of lazy-loading relationships in Blade.
 
 ### 10. Dependencies and release verification
 
@@ -200,14 +205,16 @@ Last verified: 2026-06-15.
   feedback components without page-specific inline styling.
 - The billing view audit is complete: order histories, order details, invoice
   documents, and the manual invoice flow use shared responsive components.
+- The account-settings audit is complete: credential and address forms are
+  shared, account relations are resolved before rendering, and both roles use
+  the same email and password validation workflow.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
 
 ### Remaining work
 
-1. Complete the remaining visual audit, especially account settings and
-   lesson-request pages.
+1. Complete the remaining visual audit for lesson-request pages.
 2. Complete English naming for internal identifiers and comments. Keep
    user-facing Italian text unchanged until localization keys are introduced.
 3. Add the localization foundation with Italian as the default locale and
@@ -227,8 +234,8 @@ Last verified: 2026-06-15.
 
 ### Next action
 
-Finish the remaining account-setting and lesson-request cleanup, then start
-the internal English and localization work packages.
+Finish the remaining lesson-request cleanup, then start the internal English
+and localization work packages.
 
 ## Historical progress
 

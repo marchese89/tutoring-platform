@@ -20,7 +20,7 @@
                             label="Partita IVA"
                             minlength="11"
                             maxlength="11"
-                            :value="old('vat_number', auth()->user()->admin->vat_number)" />
+                            :value="old('vat_number', $vatNumber)" />
 
                         <x-ui.primary-button type="submit" class="w-100 justify-content-center">
                             Salva

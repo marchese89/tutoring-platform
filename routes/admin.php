@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccountCredentialsController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\BillingController;
@@ -21,14 +22,15 @@ Route::prefix('admin')
 
         Route::view('account', 'admin.settings.account')->name('account');
         Route::view('account/profile', 'admin.settings.profile')->name('account.profile');
-        Route::view('account/credentials', 'admin.settings.credentials')->name('account.credentials');
-        Route::view('account/photo', 'admin.settings.photo')->name('account.photo');
-        Route::view('account/address', 'admin.settings.address')->name('account.address');
+        Route::get('account/credentials', [AccountCredentialsController::class, 'showAdmin'])
+            ->name('account.credentials');
+        Route::get('account/photo', [AccountController::class, 'photo'])->name('account.photo');
+        Route::get('account/address', [AccountController::class, 'address'])->name('account.address');
         Route::get('account/certificates', [AccountController::class, 'certificatesIndex'])
             ->name('account.certificates.index');
         Route::get('account/certificates/create', [AccountController::class, 'createCertificate'])
             ->name('account.certificates.create');
-        Route::view('account/vat-number', 'admin.settings.vat-number')->name('account.vat-number');
+        Route::get('account/vat-number', [AccountController::class, 'vatNumber'])->name('account.vat-number');
 
         Route::post('account/address', [AccountController::class, 'updateAddress'])
             ->name('account.address.update');
@@ -46,9 +48,9 @@ Route::prefix('admin')
             ->name('account.certificates.destroy');
         Route::post('account/certificates', [AccountController::class, 'storeCertificate'])
             ->name('account.certificates.store');
-        Route::post('account/email', [AccountController::class, 'updateEmail'])
+        Route::post('account/email', [AccountCredentialsController::class, 'updateEmail'])
             ->name('account.email.update');
-        Route::post('account/password', [AccountController::class, 'updatePassword'])
+        Route::post('account/password', [AccountCredentialsController::class, 'updatePassword'])
             ->name('account.password.update');
         Route::post('account/vat-number', [AccountController::class, 'updateVatNumber'])
             ->name('account.vat-number.update');

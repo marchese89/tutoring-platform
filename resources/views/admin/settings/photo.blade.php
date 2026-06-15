@@ -24,9 +24,9 @@
                     title="Foto profilo amministratore"
                     description="Carica o sostituisci l'immagine mostrata nel sito."
                     icon="bi-person-circle">
-                    @if (auth()->user()->admin->photo_path)
+                    @if ($photoPath)
                         <div class="text-center mb-4">
-                            <img alt="Foto profilo amministratore" src="{{ auth()->user()->admin->photo_path }}"
+                            <img alt="Foto profilo amministratore" src="{{ $photoPath }}"
                                 class="admin-photo-preview shadow-sm border">
                         </div>
                     @else
