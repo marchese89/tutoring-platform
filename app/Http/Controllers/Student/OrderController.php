@@ -88,7 +88,8 @@ class OrderController extends Controller
             ->findOrFail($id);
         $products = $order->orderItems->map(fn ($product) => [
             'id' => $product->product_id,
-            'type' => $this->productTypeLabel((int) $product->product_type),
+            'type_label' => $this->productTypeLabel((int) $product->product_type),
+            'type_class' => $this->productTypeBadgeClass((int) $product->product_type),
             'price' => $product->price,
         ]);
 
@@ -103,10 +104,20 @@ class OrderController extends Controller
     private function productTypeLabel(int $type): string
     {
         return match ($type) {
-            ProductType::LESSON->value => 'lezione',
-            ProductType::EXERCISE->value => 'esercizio',
-            ProductType::REQUESTED_LESSON->value => 'lezione su richiesta',
-            default => 'prodotto',
+            ProductType::LESSON->value => 'Lezione',
+            ProductType::EXERCISE->value => 'Esercizio',
+            ProductType::REQUESTED_LESSON->value => 'Lezione su richiesta',
+            default => 'Prodotto',
+        };
+    }
+
+    private function productTypeBadgeClass(int $type): string
+    {
+        return match ($type) {
+            ProductType::LESSON->value => 'bg-primary-subtle text-primary',
+            ProductType::EXERCISE->value => 'bg-success-subtle text-success',
+            ProductType::REQUESTED_LESSON->value => 'bg-warning-subtle text-dark',
+            default => 'bg-secondary-subtle text-secondary',
         };
     }
 }

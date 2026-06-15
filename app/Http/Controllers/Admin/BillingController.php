@@ -15,9 +15,9 @@ class BillingController extends Controller
     {
         $order = Order::with('orderItems')->findOrFail($id);
         $products = $order->orderItems->map(fn ($item) => [
-            'product_id' => $item->product_id,
-            'product_type_label' => $this->productTypeLabel((int) $item->product_type),
-            'product_type_class' => $this->productTypeBadgeClass((int) $item->product_type),
+            'id' => $item->product_id,
+            'type_label' => $this->productTypeLabel((int) $item->product_type),
+            'type_class' => $this->productTypeBadgeClass((int) $item->product_type),
             'price' => $item->price,
         ]);
 
@@ -54,7 +54,7 @@ class BillingController extends Controller
         $years = Order::selectRaw('YEAR(ordered_at) as year')
             ->groupBy('year')
             ->orderBy('year')
-            ->get();
+            ->pluck('year');
 
         $months = Order::selectRaw('MONTH(ordered_at) as month')
             ->groupBy('month')
@@ -67,8 +67,8 @@ class BillingController extends Controller
 
         return view('admin.billing.sales', [
             'hasOrders' => true,
-            'firstOrderDate' => $firstOrderDate,
-            'firstOrderMonthLabel' => DateHelper::monthName((int) $firstOrderDate['month']),
+            'selectedYear' => $firstOrderDate['year'],
+            'selectedMonth' => $firstOrderDate['month'],
             'years' => $years,
             'months' => $months,
         ]);

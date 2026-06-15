@@ -143,6 +143,12 @@ Completed so far:
   image preview without inline sizing.
 - The admin extra-invoice form uses the shared form system, including a
   reusable textarea field, and its result page uses the shared feedback card.
+- Admin and student order histories use one shared period-filtered table with
+  safe DOM rendering, consistent loading and empty states, and no inline event
+  handlers.
+- Admin and student order details and invoice PDF pages use shared billing
+  components; the obsolete AJAX order method and server-rendered row partial
+  were removed.
 
 ### 10. Dependencies and release verification
 
@@ -192,14 +198,16 @@ Last verified: 2026-06-15.
   two intentional shared viewer components.
 - The admin extra-invoice form and confirmation page use the shared form and
   feedback components without page-specific inline styling.
+- The billing view audit is complete: order histories, order details, invoice
+  documents, and the manual invoice flow use shared responsive components.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
 
 ### Remaining work
 
-1. Complete the remaining visual audit, especially the other billing pages,
-   account settings, and lesson-request pages.
+1. Complete the remaining visual audit, especially account settings and
+   lesson-request pages.
 2. Complete English naming for internal identifiers and comments. Keep
    user-facing Italian text unchanged until localization keys are introduced.
 3. Add the localization foundation with Italian as the default locale and
@@ -219,8 +227,8 @@ Last verified: 2026-06-15.
 
 ### Next action
 
-Finish the remaining billing and account-setting cleanup, then start the
-internal English and localization work packages.
+Finish the remaining account-setting and lesson-request cleanup, then start
+the internal English and localization work packages.
 
 ## Historical progress
 
