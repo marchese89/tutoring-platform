@@ -1,12 +1,12 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Modifica indirizzo" />
+    <x-ui.section-header :title="__('account.address.page_title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
         <x-ui.address-form :action="route('admin.account.address.update')" :values="$address"
-            description="Aggiorna i dati di residenza associati al profilo amministratore." />
+            :description="__('account.address.admin_description')" />
     </x-ui.page-section>
 @endsection

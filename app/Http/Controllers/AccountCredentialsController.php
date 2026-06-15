@@ -31,7 +31,7 @@ class AccountCredentialsController extends Controller
 
         return redirect()
             ->route($this->credentialsRoute($request))
-            ->withSuccess('Email modificata con successo.');
+            ->withSuccess(__('account.credentials.email_updated'));
     }
 
     public function updatePassword(UpdateAccountPasswordRequest $request): RedirectResponse
@@ -42,7 +42,7 @@ class AccountCredentialsController extends Controller
 
         return redirect()
             ->route($this->credentialsRoute($request))
-            ->withSuccess('Password modificata con successo.');
+            ->withSuccess(__('account.credentials.password_updated'));
     }
 
     private function credentialsRoute(Request $request): string

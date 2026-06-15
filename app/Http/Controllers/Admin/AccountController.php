@@ -143,23 +143,13 @@ class AccountController extends Controller
 
     public function updateAddress(Request $request)
     {
-        $validated = $request->validate(
-            [
-                'street' => 'required|string|max:255',
-                'house_number' => 'required|string|max:6',
-                'city' => 'required|string|max:255',
-                'province' => 'required|string|max:2',
-                'postal_code' => 'required|string|max:5',
-            ],
-            [],
-            [
-                'street' => 'indirizzo',
-                'house_number' => 'numero civico',
-                'city' => 'città',
-                'province' => 'provincia',
-                'postal_code' => 'CAP',
-            ]
-        );
+        $validated = $request->validate([
+            'street' => 'required|string|max:255',
+            'house_number' => 'required|string|max:6',
+            'city' => 'required|string|max:255',
+            'province' => 'required|string|max:2',
+            'postal_code' => 'required|string|max:5',
+        ]);
 
         $admin = $request->user()->admin;
 
@@ -200,7 +190,7 @@ class AccountController extends Controller
         if (! $request->session()->has('uploaded_certificate_file')) {
             return redirect()
                 ->route('admin.account.certificates.create')
-                ->withErrors(['file' => 'Carica un file prima di salvare il certificato.']);
+                ->withErrors(['file' => __('account.certificates.file_required')]);
         }
 
         $request->validate([

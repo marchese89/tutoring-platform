@@ -23,16 +23,16 @@ class UpdateAccountPasswordRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'current_password' => 'password attuale',
-            'password' => 'nuova password',
-            'password_confirmation' => 'conferma password',
+            'current_password' => __('account.credentials.current_password'),
+            'password' => __('account.credentials.new_password'),
+            'password_confirmation' => __('account.credentials.password_confirmation'),
         ];
     }
 
     public function messages(): array
     {
         return [
-            'current_password.current_password' => 'La password attuale non è corretta.',
+            'current_password.current_password' => __('account.credentials.current_password_invalid'),
         ];
     }
 }

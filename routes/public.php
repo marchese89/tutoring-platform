@@ -6,10 +6,12 @@ use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\ThemeAreaController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LocaleController;
 use App\Http\Controllers\Public\LessonRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::post('locale', [LocaleController::class, 'update'])->name('locale.update');
 
 Route::view('registration/success', 'auth.registration-success')->name('registration.success');
 Route::view('registration/error', 'auth.registration-error')->name('registration.error');

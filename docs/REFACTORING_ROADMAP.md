@@ -100,12 +100,20 @@ Completed:
 
 ### 8. Localization
 
-Planned branch: `feature/localization-foundation`
+Branch: `feature/localization-foundation`
 
-- Add language files and locale configuration.
-- Move user-facing Italian text out of controllers, Blade files, mail, and breadcrumbs.
-- Keep Italian as the initial default locale.
-- Add English translations after all keys are centralized.
+Status: foundation implemented; application-wide string migration remains in
+progress.
+
+- Italian is the default locale and English is the supported fallback.
+- Users can change locale from the shared navbar; the choice persists in the
+  session and unsupported locales are rejected.
+- Organized Italian and English catalogs cover navigation, shared UI,
+  authentication, account settings, password reset, and validation messages.
+- Authentication and shared account views use translation keys.
+- Locale behavior and translated validation have focused feature coverage.
+- Remaining user-facing strings in public, student, admin, mail, invoice, and
+  breadcrumb views still need to be moved into language files.
 
 ### 9. Visual consistency
 
@@ -173,9 +181,9 @@ Status: dependency upgrade completed; release verification remains open.
 
 Last verified: 2026-06-15.
 
-- Current branch: `refactor/remaining-view-patterns`.
-- Latest published commit: `e08b834 Unify certificate and upload previews`.
-- Automated verification: 107 tests and 430 assertions pass.
+- Current branch: `feature/localization-foundation`.
+- Latest published commit: `19c634d Unify lesson request views and uploads`.
+- Automated verification: 118 tests and 499 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -217,13 +225,16 @@ Last verified: 2026-06-15.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
+- The localization foundation supports Italian and English through
+  configuration, middleware, a session-backed selector, translated validation,
+  and localized authentication and account-setting workflows.
 
 ### Remaining work
 
-1. Complete English naming for internal identifiers and comments. Keep
-   user-facing Italian text unchanged until localization keys are introduced.
-2. Add the localization foundation with Italian as the default locale and
-   English as the second supported language.
+1. Continue moving user-facing strings into Italian and English catalogs,
+   grouped by public, student, admin, mail, invoice, and breadcrumb contexts.
+2. Review remaining comments for internal Italian prose; the identifier audit
+   no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
    decide whether transitional billing migrations should be squashed before
    the first stable release.
@@ -239,7 +250,8 @@ Last verified: 2026-06-15.
 
 ### Next action
 
-Start the internal English cleanup, followed by the localization foundation.
+Localize the shared public surface and breadcrumbs, then continue through the
+student and admin areas in focused commits.
 
 ## Historical progress
 

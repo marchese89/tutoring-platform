@@ -12,9 +12,9 @@
                     <div class="card-body p-4">
 
                         <div class="text-center mb-4">
-                            <h2 class="fw-bold mb-1">Login</h2>
+                            <h2 class="fw-bold mb-1">{{ __('auth.login.title') }}</h2>
                             <p class="text-muted mb-0">
-                                Accedi al tuo account
+                                {{ __('auth.login.subtitle') }}
                             </p>
                         </div>
 
@@ -41,7 +41,7 @@
                             <div class="mb-3">
 
                                 <label class="form-label">
-                                    Email
+                                    {{ __('auth.fields.email') }}
                                 </label>
 
                                 <input type="email" name="email" value="{{ old('email') }}"
@@ -56,21 +56,21 @@
                             </div>
 
                             {{-- PASSWORD --}}
-                            <x-ui.password-field name="password" label="Password" wrapper-class="mb-3"
+                            <x-ui.password-field name="password" :label="__('auth.fields.password')" wrapper-class="mb-3"
                                 autocomplete="current-password" required />
 
                             {{-- Password recovery --}}
                             <div class="text-end mb-4">
 
                                 <a href="{{ route('password.request') }}" class="text-decoration-none small">
-                                    Recupera password
+                                    {{ __('auth.login.forgot_password') }}
                                 </a>
 
                             </div>
 
                             {{-- SUBMIT --}}
                             <button type="submit" class="btn btn-primary w-100">
-                                Accedi
+                                {{ __('auth.login.submit') }}
                             </button>
 
                         </form>

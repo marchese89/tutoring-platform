@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Modifica dati personali" />
+    <x-ui.section-header :title="__('account.profile.page_title')" />
 @endsection
 
 @section('inner')
@@ -10,7 +10,7 @@
             <div class="row g-4">
                 <div class="col-md-6">
                     <span class="text-muted small d-block mb-1">
-                        Nome
+                        {{ __('account.profile.first_name') }}
                     </span>
 
                     <div class="fw-semibold fs-5">
@@ -20,7 +20,7 @@
 
                 <div class="col-md-6">
                     <span class="text-muted small d-block mb-1">
-                        Cognome
+                        {{ __('account.profile.last_name') }}
                     </span>
 
                     <div class="fw-semibold fs-5">
@@ -31,6 +31,6 @@
         </x-ui.card>
 
         <x-ui.address-form :action="route('student.account.address.update')" :values="$address"
-            description="Aggiorna i dati di residenza associati al tuo account." />
+            :description="__('account.address.student_description')" />
     </x-ui.page-section>
 @endsection

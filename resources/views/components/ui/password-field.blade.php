@@ -15,7 +15,7 @@
             {{ $attributes->class(['form-control', 'is-invalid' => $errors->has($fieldError)]) }}>
 
         <button class="btn btn-outline-secondary" type="button" data-password-toggle="{{ $fieldId }}"
-            aria-controls="{{ $fieldId }}" aria-pressed="false" aria-label="Mostra password">
+            aria-controls="{{ $fieldId }}" aria-pressed="false" aria-label="{{ __('ui.password.show') }}">
             <i class="bi bi-eye"></i>
         </button>
 
@@ -30,6 +30,9 @@
 @once
     @push('scripts')
         <script>
+            const showPasswordLabel = @js(__('ui.password.show'));
+            const hidePasswordLabel = @js(__('ui.password.hide'));
+
             document.addEventListener('click', (event) => {
                 const button = event.target.closest('[data-password-toggle]');
 
@@ -51,7 +54,7 @@
                 button.setAttribute('aria-pressed', String(showPassword));
                 button.setAttribute(
                     'aria-label',
-                    showPassword ? 'Nascondi password' : 'Mostra password'
+                    showPassword ? hidePasswordLabel : showPasswordLabel
                 );
             });
         </script>
