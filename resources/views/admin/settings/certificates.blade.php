@@ -52,18 +52,13 @@
                                 File certificato
                             </label>
 
-                            <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                                @if ($certificate->file_path)
-                                    <iframe
-                                        title="Certificato {{ $certificate->id }}"
-                                        src="{{ $certificate->file_path }}#view=FitH">
-                                    </iframe>
-                                @else
-                                    <div class="d-flex align-items-center justify-content-center text-muted">
-                                        Nessun file caricato.
-                                    </div>
-                                @endif
-                            </div>
+                            @if ($certificate->file_path)
+                                <x-ui.pdf-viewer :src="$certificate->file_path" :title="'Certificato ' . $certificate->id"
+                                    size="compact" />
+                            @else
+                                <x-ui.empty-state title="Nessun file caricato"
+                                    text="Carica un PDF per visualizzare il certificato." />
+                            @endif
                         </div>
 
                         <form

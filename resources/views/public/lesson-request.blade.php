@@ -10,9 +10,6 @@
             max-width: 43.75rem;
         }
 
-        .lesson-request-preview {
-            height: 37.5rem;
-        }
     </style>
 @endpush
 
@@ -113,16 +110,9 @@
                                         </span>
                                     </div>
 
-                                    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-4">
-
-                                        <div class="card-body p-3">
-
-                                            <iframe class="lesson-request-preview w-100 rounded-3 border"
-                                                src="{{ $uploadedRequestFileUrl }}#view=FitH">
-                                            </iframe>
-
-                                        </div>
-
+                                    <div class="mb-4">
+                                        <x-ui.pdf-viewer :src="$uploadedRequestFileUrl" title="Anteprima richiesta"
+                                            size="compact" />
                                     </div>
 
                                     <div class="mb-5">

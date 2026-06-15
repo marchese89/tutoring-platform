@@ -19,6 +19,8 @@ class PublicAboutPageTest extends TestCase
 
         $this->get(route('about'))
             ->assertOk()
-            ->assertSee('PHP Certificate');
+            ->assertSee('PHP Certificate')
+            ->assertSee('src="/storage/certificates/php.pdf#view=FitH"', false)
+            ->assertSee('pdf-viewer--compact', false);
     }
 }

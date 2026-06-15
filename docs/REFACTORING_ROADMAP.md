@@ -138,6 +138,9 @@ Completed so far:
   the real course, lesson-request, tutoring, pricing, and review workflows.
 - Protected invoices, lessons, exercises, lesson requests, and admin chat
   documents use one responsive PDF viewer component.
+- Certificate pages and temporary upload previews use the compact variant of
+  the shared PDF viewer; the admin photo page has a responsive empty state and
+  image preview without inline sizing.
 
 ### 10. Dependencies and release verification
 
@@ -155,7 +158,7 @@ Last verified: 2026-06-14.
 
 - Current branch: `refactor/public-home`.
 - Latest published commit: `aaad729 Unify protected PDF viewers`.
-- Automated verification: 105 tests and 415 assertions pass.
+- Automated verification: 107 tests and 430 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -183,6 +186,8 @@ Last verified: 2026-06-14.
   and 390 px mobile widths without horizontal overflow.
 - The admin lesson-request detail page uses the shared page, card, form,
   upload-progress, and PDF-viewer components without inline layout styles.
+- The media-viewer audit is complete: raw PDF iframes remain only inside the
+  two intentional shared viewer components.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
@@ -210,9 +215,8 @@ Last verified: 2026-06-14.
 
 ### Next action
 
-Complete the remaining media-viewer audit for certificates and temporary upload
-previews, then finish account-setting and billing result-page cleanup before
-starting the internal English and localization work packages.
+Finish the remaining billing result-page and account-setting cleanup, then
+start the internal English and localization work packages.
 
 ## Historical progress
 

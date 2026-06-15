@@ -31,6 +31,7 @@ class AdminTeachingFormPageTest extends TestCase
             ->assertOk()
             ->assertSee(route('protected-files.show', ['path' => $presentationPath]))
             ->assertSee(route('protected-files.show', ['path' => $contentPath]))
+            ->assertSee('pdf-viewer--compact', false)
             ->assertSee(route('admin.lessons.store'));
     }
 
@@ -50,6 +51,7 @@ class AdminTeachingFormPageTest extends TestCase
             ->assertOk()
             ->assertSee(route('protected-files.show', ['path' => $promptPath]))
             ->assertSee(route('protected-files.show', ['path' => $solutionPath]))
+            ->assertSee('pdf-viewer--compact', false)
             ->assertSee(route('admin.exercises.store'));
     }
 

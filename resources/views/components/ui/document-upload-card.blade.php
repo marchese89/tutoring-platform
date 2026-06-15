@@ -11,13 +11,12 @@
 ])
 
 <x-ui.form-card :title="$title" icon="bi-file-earmark-pdf">
-    <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-body-tertiary mb-4">
+    <div class="mb-4">
         @if ($previewUrl)
-            <iframe src="{{ $previewUrl }}#view=FitH" title="{{ $title }}"></iframe>
+            <x-ui.pdf-viewer :src="$previewUrl" :title="$title" size="compact" />
         @else
-            <div class="d-flex align-items-center justify-content-center text-muted">
-                Nessun file caricato.
-            </div>
+            <x-ui.empty-state title="Nessun file caricato"
+                text="Seleziona un PDF per visualizzarne l'anteprima." />
         @endif
     </div>
 

@@ -13,18 +13,12 @@
                     description="Carica il file del certificato prima di completare il salvataggio."
                     icon="bi-file-earmark-arrow-up">
                     <div class="mb-4">
-                        <div class="ratio ratio-16x9 rounded-4 overflow-hidden border bg-light">
-                            @if ($uploadedCertificateFile)
-                                <iframe
-                                    title="Anteprima certificato"
-                                    src="{{ $uploadedCertificateFile }}#view=FitH">
-                                </iframe>
-                            @else
-                                <div class="d-flex align-items-center justify-content-center text-muted">
-                                    Nessun file caricato.
-                                </div>
-                            @endif
-                        </div>
+                        @if ($uploadedCertificateFile)
+                            <x-ui.pdf-viewer :src="$uploadedCertificateFile" title="Anteprima certificato" size="compact" />
+                        @else
+                            <x-ui.empty-state title="Nessun file caricato"
+                                text="Seleziona un PDF per visualizzarne l'anteprima." />
+                        @endif
                     </div>
 
                     <form

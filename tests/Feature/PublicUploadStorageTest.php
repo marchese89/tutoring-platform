@@ -61,8 +61,40 @@ class PublicUploadStorageTest extends TestCase
             ->withSession(['uploaded_certificate_file' => $certificatePath])
             ->get(route('admin.account.certificates.create'))
             ->assertOk()
-            ->assertSee($certificatePath)
+            ->assertSee('src="'.$certificatePath.'#view=FitH"', false)
+            ->assertSee('pdf-viewer--compact', false)
             ->assertSee(route('admin.account.certificates.store'));
+    }
+
+    public function test_certificate_list_uses_compact_pdf_viewer(): void
+    {
+        $adminUser = $this->createAdmin();
+        $certificate = Certificate::create([
+            'name' => 'Laravel certificate',
+            'file_path' => '/storage/certificates/laravel.pdf',
+        ]);
+
+        $this->actingAs($adminUser)
+            ->get(route('admin.account.certificates.index'))
+            ->assertOk()
+            ->assertSee('Laravel certificate')
+            ->assertSee('src="'.$certificate->file_path.'#view=FitH"', false)
+            ->assertSee('pdf-viewer--compact', false);
+    }
+
+    public function test_admin_photo_page_displays_the_current_photo(): void
+    {
+        $adminUser = $this->createAdmin();
+        $adminUser->admin->update([
+            'photo_path' => '/storage/admin/photos/profile.jpg',
+        ]);
+
+        $this->actingAs($adminUser)
+            ->get(route('admin.account.photo'))
+            ->assertOk()
+            ->assertSee('src="/storage/admin/photos/profile.jpg"', false)
+            ->assertSee('class="admin-photo-preview shadow-sm border"', false)
+            ->assertDontSee('style="max-width: 300px', false);
     }
 
     public function test_replacing_certificate_deletes_previous_public_file(): void

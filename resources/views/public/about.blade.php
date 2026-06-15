@@ -11,12 +11,8 @@
                         </h2>
 
                         @if ($certificate->file_path)
-                            <div class="overflow-hidden rounded-3 border bg-body-tertiary">
-                                <iframe class="w-100 border-0" height="900"
-                                    src="{{ $certificate->file_path }}#view=FitH"
-                                    title="Certificato: {{ $certificate->name }}">
-                                </iframe>
-                            </div>
+                            <x-ui.pdf-viewer :src="$certificate->file_path" :title="'Certificato: ' . $certificate->name"
+                                size="compact" />
                         @endif
                     </x-ui.card>
                 </div>

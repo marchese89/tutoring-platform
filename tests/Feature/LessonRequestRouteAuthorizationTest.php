@@ -59,7 +59,9 @@ class LessonRequestRouteAuthorizationTest extends TestCase
             ->withSession(['uploaded_lesson_request_file' => $path])
             ->get(route('lesson-requests.create'))
             ->assertOk()
-            ->assertSee(route('protected-files.show', ['path' => $path]));
+            ->assertSee(route('protected-files.show', ['path' => $path]))
+            ->assertSee('title="Anteprima richiesta"', false)
+            ->assertSee('pdf-viewer--compact', false);
     }
 
     private function createStudent(): Student
