@@ -141,6 +141,8 @@ Completed so far:
 - Certificate pages and temporary upload previews use the compact variant of
   the shared PDF viewer; the admin photo page has a responsive empty state and
   image preview without inline sizing.
+- The admin extra-invoice form uses the shared form system, including a
+  reusable textarea field, and its result page uses the shared feedback card.
 
 ### 10. Dependencies and release verification
 
@@ -154,10 +156,10 @@ Status: dependency upgrade completed; release verification remains open.
 
 ## Current status
 
-Last verified: 2026-06-14.
+Last verified: 2026-06-15.
 
-- Current branch: `refactor/public-home`.
-- Latest published commit: `aaad729 Unify protected PDF viewers`.
+- Current branch: `refactor/remaining-view-patterns`.
+- Latest published commit: `e08b834 Unify certificate and upload previews`.
 - Automated verification: 107 tests and 430 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
@@ -188,14 +190,16 @@ Last verified: 2026-06-14.
   upload-progress, and PDF-viewer components without inline layout styles.
 - The media-viewer audit is complete: raw PDF iframes remain only inside the
   two intentional shared viewer components.
+- The admin extra-invoice form and confirmation page use the shared form and
+  feedback components without page-specific inline styling.
 - All four critical findings from the original security audit are resolved:
   server-side payment verification, chat authorization, lesson-request
   ownership protection, and vulnerable framework dependencies.
 
 ### Remaining work
 
-1. Complete the remaining visual audit, especially billing, account settings,
-   lesson-request pages, and repeated PDF, image, and iframe viewers.
+1. Complete the remaining visual audit, especially the other billing pages,
+   account settings, and lesson-request pages.
 2. Complete English naming for internal identifiers and comments. Keep
    user-facing Italian text unchanged until localization keys are introduced.
 3. Add the localization foundation with Italian as the default locale and
@@ -215,8 +219,8 @@ Last verified: 2026-06-14.
 
 ### Next action
 
-Finish the remaining billing result-page and account-setting cleanup, then
-start the internal English and localization work packages.
+Finish the remaining billing and account-setting cleanup, then start the
+internal English and localization work packages.
 
 ## Historical progress
 
