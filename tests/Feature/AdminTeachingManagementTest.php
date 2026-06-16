@@ -15,6 +15,40 @@ class AdminTeachingManagementTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_teaching_management_pages_follow_the_session_locale(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.teaching.index'))
+            ->assertOk()
+            ->assertSee('Teaching')
+            ->assertSee('Topic areas')
+            ->assertSee('Course list');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.theme-areas.index'))
+            ->assertOk()
+            ->assertSee('New topic area')
+            ->assertSee('No topic areas found.');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.subjects.index'))
+            ->assertOk()
+            ->assertSee('New subject')
+            ->assertSee('No subjects found.');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.courses.create'))
+            ->assertOk()
+            ->assertSee('New course')
+            ->assertSee('No courses found.');
+    }
+
     public function test_course_list_displays_courses_in_name_order(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);

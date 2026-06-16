@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Nuovo Corso'" />
+    <x-ui.section-header :title="__('admin.teaching.new_course_title')" />
 @endsection
 
 @section('inner')
@@ -9,8 +9,8 @@
         <div class="row justify-content-center mb-4">
             <div class="col-lg-7">
                 <x-ui.form-card
-                    title="Nuovo corso"
-                    description="Associa il corso alla materia corrispondente."
+                    :title="__('admin.teaching.new_course')"
+                    :description="__('admin.teaching.new_course_description')"
                     icon="bi-mortarboard">
                     <form method="POST"
                         action="{{ route('admin.courses.store') }}">
@@ -18,7 +18,7 @@
 
                         <x-ui.form-select
                             name="subject_id"
-                            label="Materia"
+                            :label="__('admin.teaching.subject')"
                             required>
                             @foreach ($subjects as $subject)
                                 <option value="{{ $subject->id }}"
@@ -31,28 +31,28 @@
 
                         <x-ui.form-field
                             name="name"
-                            label="Nome corso"
+                            :label="__('admin.teaching.course_name')"
                             maxlength="255"
                             :value="old('name')" />
 
                         <x-ui.primary-button type="submit">
-                            Aggiungi corso
+                            {{ __('admin.teaching.add_course') }}
                         </x-ui.primary-button>
                     </form>
                 </x-ui.form-card>
             </div>
         </div>
 
-        <x-ui.table-card title="Corsi inseriti">
+        <x-ui.table-card :title="__('admin.teaching.inserted_courses')">
             <table class="table align-middle mb-0">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Area tematica</th>
-                        <th scope="col">Materia</th>
-                        <th scope="col">Nome</th>
-                        <th scope="col" class="w-50">Modifica</th>
-                        <th scope="col">Operazioni</th>
+                        <th scope="col">{{ __('admin.teaching.theme_area') }}</th>
+                        <th scope="col">{{ __('admin.teaching.subject') }}</th>
+                        <th scope="col">{{ __('admin.teaching.name') }}</th>
+                        <th scope="col" class="w-50">{{ __('admin.teaching.edit') }}</th>
+                        <th scope="col">{{ __('ui.table.actions') }}</th>
                     </tr>
                 </thead>
 
@@ -78,11 +78,11 @@
                                         name="name"
                                         value="{{ $course->name }}"
                                         maxlength="255"
-                                        aria-label="Modifica {{ $course->name }}">
+                                        aria-label="{{ __('admin.teaching.edit_named', ['name' => $course->name]) }}">
 
                                     <button type="submit"
                                         class="btn btn-primary btn-sm">
-                                        Salva
+                                        {{ __('admin.actions.save') }}
                                     </button>
                                 </form>
                             </td>
@@ -101,13 +101,13 @@
 
                                         <button type="submit"
                                             class="btn btn-outline-danger btn-sm">
-                                            Elimina
+                                            {{ __('admin.actions.delete') }}
                                         </button>
                                     </form>
                                 @else
                                     <span class="text-muted small">
-                                        {{ $course->lessons_count }} lezioni,
-                                        {{ $course->exercises_count }} esercizi
+                                        {{ trans_choice('admin.teaching.lesson_count', $course->lessons_count, ['count' => $course->lessons_count]) }},
+                                        {{ trans_choice('admin.teaching.exercise_count', $course->exercises_count, ['count' => $course->exercises_count]) }}
                                     </span>
                                 @endif
                             </td>
@@ -115,7 +115,7 @@
                     @empty
                         <tr>
                             <td colspan="6" class="text-center text-muted py-4">
-                                Nessun corso presente.
+                                {{ __('admin.teaching.course_empty') }}
                             </td>
                         </tr>
                     @endforelse

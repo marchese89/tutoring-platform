@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Modifica Corso'" />
+    <x-ui.section-header :title="__('admin.teaching.edit_course')" />
 @endsection
 
 @section('inner')
@@ -12,26 +12,26 @@
             </h2>
 
             <p class="text-muted mb-0">
-                Gestisci lezioni ed esercizi associati al corso.
+                {{ __('admin.teaching.edit_course_description') }}
             </p>
         </div>
 
         <div class="mb-4">
-            <x-ui.table-card title="Lezioni">
+            <x-ui.table-card :title="__('admin.teaching.lessons')">
                 <x-slot:actions>
                     <x-ui.primary-button size="sm"
                         href="{{ route('admin.lessons.create', $course->id) }}">
-                        Nuova lezione
+                        {{ __('admin.teaching.new_lesson') }}
                     </x-ui.primary-button>
                 </x-slot:actions>
 
                 <table class="table align-middle mb-0">
                     <thead>
                         <tr>
-                            <th scope="col">Numero</th>
-                            <th scope="col">Titolo</th>
-                            <th scope="col">Prezzo</th>
-                            <th scope="col">Operazioni</th>
+                            <th scope="col">{{ __('admin.teaching.number') }}</th>
+                            <th scope="col">{{ __('ui.table.title') }}</th>
+                            <th scope="col">{{ __('ui.table.price') }}</th>
+                            <th scope="col">{{ __('ui.table.actions') }}</th>
                         </tr>
                     </thead>
 
@@ -42,7 +42,7 @@
                                 <td class="fw-semibold">
                                     {{ $lesson->title }}
                                 </td>
-                                <td>{{ number_format($lesson->price, 2, ',', '.') }} €</td>
+                                <td>{{ \App\Helpers\NumberHelper::format($lesson->price) }} €</td>
                                 <td>
                                     <div class="d-flex flex-wrap gap-2">
                                         <x-ui.primary-button size="sm"
@@ -50,7 +50,7 @@
                                                 'course' => $course->id,
                                                 'lesson' => $lesson->id,
                                             ]) }}">
-                                            Modifica
+                                            {{ __('admin.actions.edit') }}
                                         </x-ui.primary-button>
 
                                         <form method="POST"
@@ -59,7 +59,7 @@
                                             @method('DELETE')
 
                                             <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                Elimina
+                                                {{ __('admin.actions.delete') }}
                                             </button>
                                         </form>
                                     </div>
@@ -68,7 +68,7 @@
                         @empty
                             <tr>
                                 <td colspan="4" class="text-center text-muted py-4">
-                                    Nessuna lezione presente.
+                                    {{ __('admin.teaching.lesson_empty') }}
                                 </td>
                             </tr>
                         @endforelse
@@ -77,11 +77,11 @@
             </x-ui.table-card>
         </div>
 
-        <x-ui.table-card title="Esercizi">
+        <x-ui.table-card :title="__('admin.teaching.exercises')">
             <x-slot:actions>
                 <x-ui.primary-button size="sm"
                     href="{{ route('admin.exercises.create', $course->id) }}">
-                    Nuovo esercizio
+                    {{ __('admin.teaching.new_exercise') }}
                 </x-ui.primary-button>
             </x-slot:actions>
 
@@ -89,9 +89,9 @@
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Titolo</th>
-                        <th scope="col">Prezzo</th>
-                        <th scope="col">Operazioni</th>
+                        <th scope="col">{{ __('ui.table.title') }}</th>
+                        <th scope="col">{{ __('ui.table.price') }}</th>
+                        <th scope="col">{{ __('ui.table.actions') }}</th>
                     </tr>
                 </thead>
 
@@ -102,7 +102,7 @@
                             <td class="fw-semibold">
                                 {{ $exercise->title }}
                             </td>
-                            <td>{{ number_format($exercise->price, 2, ',', '.') }} €</td>
+                            <td>{{ \App\Helpers\NumberHelper::format($exercise->price) }} €</td>
                             <td>
                                 <div class="d-flex flex-wrap gap-2">
                                     <x-ui.primary-button size="sm"
@@ -110,7 +110,7 @@
                                             'course' => $course->id,
                                             'exercise' => $exercise->id,
                                         ]) }}">
-                                        Modifica
+                                        {{ __('admin.actions.edit') }}
                                     </x-ui.primary-button>
 
                                     <form method="POST"
@@ -119,7 +119,7 @@
                                         @method('DELETE')
 
                                         <button type="submit" class="btn btn-outline-danger btn-sm">
-                                            Elimina
+                                            {{ __('admin.actions.delete') }}
                                         </button>
                                     </form>
                                 </div>
@@ -128,7 +128,7 @@
                     @empty
                         <tr>
                             <td colspan="4" class="text-center text-muted py-4">
-                                Nessun esercizio presente.
+                                {{ __('admin.teaching.exercise_empty') }}
                             </td>
                         </tr>
                     @endforelse

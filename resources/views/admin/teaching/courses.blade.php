@@ -1,20 +1,20 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Elenco Corsi'" />
+    <x-ui.section-header :title="__('admin.teaching.course_list_title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
-        <x-ui.table-card title="Corsi disponibili">
+        <x-ui.table-card :title="__('admin.teaching.available_courses')">
             <table class="table align-middle mb-0">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Area tematica</th>
-                        <th scope="col">Materia</th>
-                        <th scope="col">Corso</th>
-                        <th scope="col">Operazioni</th>
+                        <th scope="col">{{ __('admin.teaching.theme_area') }}</th>
+                        <th scope="col">{{ __('admin.teaching.subject') }}</th>
+                        <th scope="col">{{ __('admin.teaching.course') }}</th>
+                        <th scope="col">{{ __('ui.table.actions') }}</th>
                     </tr>
                 </thead>
 
@@ -30,14 +30,14 @@
                             <td>
                                 <x-ui.primary-button size="sm"
                                     href="{{ route('admin.courses.edit', $course->id) }}">
-                                    Gestisci
+                                    {{ __('admin.actions.manage') }}
                                 </x-ui.primary-button>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="5" class="text-center text-muted py-4">
-                                Nessun corso presente.
+                                {{ __('admin.teaching.course_empty') }}
                             </td>
                         </tr>
                     @endforelse

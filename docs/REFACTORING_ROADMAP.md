@@ -122,10 +122,13 @@ progress.
   formatting are covered.
 - Admin billing pages use localized text for sales, invoice lists, invoice
   documents, extra invoice creation, confirmation states, and validation labels.
+- Admin teaching management pages use localized text for the teaching
+  dashboard, theme areas, subjects, courses, lesson forms, exercise forms, and
+  empty states.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings in admin teaching/student/settings pages,
-  legal policies, mail, and invoice PDF views still need to be moved into
-  language files.
+- Remaining user-facing strings in admin student/settings pages, legal
+  policies, mail, and invoice PDF views still need to be moved into language
+  files.
 
 ### 9. Visual consistency
 
@@ -194,9 +197,9 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest student detail localization commit:
-  `7443e7e Localize student detail workflows`.
-- Automated verification: 120 tests and 538 assertions pass.
+- Latest localization milestone: admin teaching management and form pages use
+  Italian and English translation catalogs.
+- Automated verification: 121 tests and 571 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -243,11 +246,13 @@ Last verified: 2026-06-16.
   and localized authentication and account-setting workflows.
 - Public and student-facing operational pages are localized in Italian and
   English; the numeric formatter no longer requires the PHP `intl` extension.
+- Admin billing and teaching management workflows are localized in Italian and
+  English.
 
 ### Remaining work
 
-1. Continue moving user-facing strings through admin teaching, admin student,
-   admin settings, mail, invoice PDF, and legal policy contexts.
+1. Continue moving user-facing strings through admin student, admin settings,
+   mail, invoice PDF, and legal policy contexts.
 2. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
@@ -265,8 +270,8 @@ Last verified: 2026-06-16.
 
 ### Next action
 
-Localize admin teaching pages next, then admin student and settings pages in
-separate focused commits.
+Localize admin student and settings pages next, then mail, invoice PDF, and
+legal policy contexts in separate focused commits.
 
 ## Historical progress
 

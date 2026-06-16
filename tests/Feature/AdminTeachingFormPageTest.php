@@ -24,11 +24,17 @@ class AdminTeachingFormPageTest extends TestCase
 
         $this->actingAs($admin)
             ->withSession([
+                'locale' => 'en',
                 'uploaded_lesson_presentation' => $presentationPath,
                 'uploaded_lesson_content' => $contentPath,
             ])
             ->get(route('admin.lessons.create', $course->id))
             ->assertOk()
+            ->assertSee('New lesson')
+            ->assertSee('Presentation')
+            ->assertSee('Solution')
+            ->assertSee('Lesson details')
+            ->assertSee('Add lesson')
             ->assertSee(route('protected-files.show', ['path' => $presentationPath]))
             ->assertSee(route('protected-files.show', ['path' => $contentPath]))
             ->assertSee('pdf-viewer--compact', false)
@@ -44,11 +50,17 @@ class AdminTeachingFormPageTest extends TestCase
 
         $this->actingAs($admin)
             ->withSession([
+                'locale' => 'en',
                 'uploaded_exercise_prompt' => $promptPath,
                 'uploaded_exercise_solution' => $solutionPath,
             ])
             ->get(route('admin.exercises.create', $course->id))
             ->assertOk()
+            ->assertSee('New exercise')
+            ->assertSee('Prompt')
+            ->assertSee('Solution')
+            ->assertSee('Exercise details')
+            ->assertSee('Add exercise')
             ->assertSee(route('protected-files.show', ['path' => $promptPath]))
             ->assertSee(route('protected-files.show', ['path' => $solutionPath]))
             ->assertSee('pdf-viewer--compact', false)
@@ -65,8 +77,14 @@ class AdminTeachingFormPageTest extends TestCase
         ]);
 
         $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.lessons.edit', [$course->id, $lesson->id]))
             ->assertOk()
+            ->assertSee('Edit lesson')
+            ->assertSee('Presentation')
+            ->assertSee('Solution')
+            ->assertSee('Lesson details')
+            ->assertSee('Save changes')
             ->assertSee(route('protected-files.show', [
                 'path' => $lesson->presentation_file,
             ]))
@@ -88,8 +106,14 @@ class AdminTeachingFormPageTest extends TestCase
         ]);
 
         $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.exercises.edit', [$course->id, $exercise->id]))
             ->assertOk()
+            ->assertSee('Edit exercise')
+            ->assertSee('Prompt')
+            ->assertSee('Solution')
+            ->assertSee('Exercise details')
+            ->assertSee('Save changes')
             ->assertSee(route('protected-files.show', [
                 'path' => $exercise->prompt_file,
             ]))
