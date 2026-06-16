@@ -132,9 +132,13 @@ progress.
   fallback text use Italian and English catalogs.
 - Privacy and cookie policy pages render from Italian and English language
   catalogs.
+- The final focused residual audit removed hardcoded admin dashboard, auth,
+  password-reset, upload-progress, legal, mail, and PDF viewer strings from
+  views/controllers.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings should be checked with a final residual audit
-  for miscellaneous shared fallbacks and edge cases.
+- Remaining strings found by broad search are either translation catalog
+  entries, CSS/JavaScript implementation details, fixture data, or non-user
+  exception/debug messages.
 
 ### 9. Visual consistency
 
@@ -203,9 +207,9 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest localization milestone: legal policy pages use Italian and English
-  translation catalogs.
-- Automated verification: 126 tests and 630 assertions pass.
+- Latest localization milestone: focused residual string audit completed after
+  legal policy localization.
+- Automated verification: 126 tests and 634 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -257,30 +261,30 @@ Last verified: 2026-06-16.
 - Email notifications, reset-password email content, invoice PDF labels, and
   shared PDF viewer fallback text are localized in Italian and English.
 - Privacy and cookie policy pages are localized in Italian and English.
+- Admin dashboard cards, login/reset feedback, and shared upload progress
+  fallback text are localized in Italian and English.
 
 ### Remaining work
 
-1. Run a final residual string audit for miscellaneous shared fallbacks and
-   edge cases.
-2. Review remaining comments for internal Italian prose; the identifier audit
+1. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
-3. Review monetary fields, model relationships, and database constraints, then
+2. Review monetary fields, model relationships, and database constraints, then
    decide whether transitional billing migrations should be squashed before
    the first stable release.
-4. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
+3. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
    fresh seeded installation in a disposable database. The current PHP CLI
    does not have PDO SQLite, so the in-memory installation check cannot run
    locally yet.
-5. Introduce a maintained frontend dependency workflow and consolidate global
+4. Introduce a maintained frontend dependency workflow and consolidate global
    CSS and reusable JavaScript after the view audit is stable.
-6. Add continuous integration for tests, Pint, and Composer security audits.
-7. Perform seeded end-to-end browser verification and update installation,
+5. Add continuous integration for tests, Pint, and Composer security audits.
+6. Perform seeded end-to-end browser verification and update installation,
    testing, and demo-account documentation before release.
 
 ### Next action
 
-Run a final residual string audit and decide whether the remaining strings are
-user-facing content, fixture data, or internal implementation details.
+Move from localization to the next structural cleanup: internal comment audit,
+then database/model constraint review and seeder split.
 
 ## Historical progress
 

@@ -52,6 +52,10 @@ return [
         'maximum_exceeded' => 'Importo superiore a 77,47 euro (massimo consentito).',
     ],
 
+    'upload' => [
+        'progress' => 'Upload in corso',
+    ],
+
     'pdf' => [
         'document' => 'Documento PDF',
         'unsupported' => 'Il browser non supporta la visualizzazione PDF.',

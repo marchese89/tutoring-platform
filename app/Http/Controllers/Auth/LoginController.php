@@ -45,7 +45,7 @@ class LoginController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'Credenziali non corrette',
+            'email' => __('auth.failed'),
         ])->onlyInput('email');
     }
 
@@ -60,11 +60,11 @@ class LoginController extends Controller
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            return back()->withSuccess('Link di reset inviato via email');
+            return back()->withSuccess(__($status));
         }
 
         return back()->withErrors([
-            'email' => 'Email non valida o non presente',
+            'email' => __($status),
         ]);
     }
 }

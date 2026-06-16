@@ -1,6 +1,22 @@
 <?php
 
 return [
+    'dashboard' => [
+        'title' => 'Dashboard admin',
+        'account_title' => 'Impostazioni account',
+        'account_text' => "Modifica dati personali, email e password dell'account amministratore.",
+        'teaching_title' => 'Insegnamento',
+        'teaching_text' => 'Gestione aree tematiche, materie, corsi, lezioni ed esercizi.',
+        'students_title' => 'Studenti',
+        'students_text' => 'Richieste studenti, gestione chat e monitoraggio attivita.',
+        'sales_title' => 'Vendite',
+        'sales_text' => 'Controllo ordini, statistiche e guadagni mensili e totali.',
+        'extra_invoice_title' => 'Fattura extra',
+        'extra_invoice_text' => 'Creazione di fatture personalizzate per attivita esterne.',
+        'invoices_title' => 'Elenco fatture',
+        'invoices_text' => 'Archivio completo delle fatture emesse dalla piattaforma.',
+    ],
+
     'actions' => [
         'save' => 'Salva',
         'delete' => 'Elimina',

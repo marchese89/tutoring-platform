@@ -52,6 +52,10 @@ return [
         'maximum_exceeded' => 'The amount exceeds the maximum allowed value of EUR 77.47.',
     ],
 
+    'upload' => [
+        'progress' => 'Upload in progress',
+    ],
+
     'pdf' => [
         'document' => 'PDF document',
         'unsupported' => 'Your browser does not support PDF preview.',

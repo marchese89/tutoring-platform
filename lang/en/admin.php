@@ -1,6 +1,22 @@
 <?php
 
 return [
+    'dashboard' => [
+        'title' => 'Admin dashboard',
+        'account_title' => 'Account settings',
+        'account_text' => 'Update administrator personal details, email, and password.',
+        'teaching_title' => 'Teaching',
+        'teaching_text' => 'Manage topic areas, subjects, courses, lessons, and exercises.',
+        'students_title' => 'Students',
+        'students_text' => 'Student requests, chat management, and activity monitoring.',
+        'sales_title' => 'Sales',
+        'sales_text' => 'Review orders, statistics, and monthly and total earnings.',
+        'extra_invoice_title' => 'Extra invoice',
+        'extra_invoice_text' => 'Create custom invoices for external activities.',
+        'invoices_title' => 'Invoice list',
+        'invoices_text' => 'Complete archive of invoices issued by the platform.',
+    ],
+
     'actions' => [
         'save' => 'Save',
         'delete' => 'Delete',

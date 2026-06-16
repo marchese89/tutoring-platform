@@ -139,6 +139,14 @@ class LocalizationTest extends TestCase
 
         $this->actingAs($admin)
             ->withSession(['locale' => 'en'])
+            ->get(route('admin.dashboard'))
+            ->assertOk()
+            ->assertSee('Admin dashboard')
+            ->assertSee('Account settings')
+            ->assertSee('Extra invoice');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.sales.index'))
             ->assertOk()
             ->assertSee('Sales')

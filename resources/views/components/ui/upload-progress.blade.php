@@ -1,10 +1,10 @@
 @props([
-    'label' => 'Upload in corso',
+    'label' => null,
 ])
 
 <div class="upload-progress d-none mb-3" data-upload-progress>
     <div class="d-flex justify-content-between align-items-center small text-muted mb-1">
-        <span>{{ $label }}</span>
+        <span>{{ $label ?? __('ui.upload.progress') }}</span>
         <span data-upload-progress-percent>0%</span>
     </div>
 
