@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
 
@@ -18,13 +19,13 @@ return new class extends Migration
         DB::table('invoices')
             ->whereNotNull('issued_at')
             ->whereNotNull('number')
-            ->selectRaw('YEAR(issued_at) as invoice_year, MAX(number) as last_number')
-            ->groupByRaw('YEAR(issued_at)')
-            ->get()
-            ->each(function ($sequence) {
+            ->get(['issued_at', 'number'])
+            ->groupBy(fn ($invoice) => Carbon::parse($invoice->issued_at)->year)
+            ->map(fn ($invoices) => $invoices->max('number'))
+            ->each(function ($lastNumber, $year) {
                 DB::table('invoice_sequences')->insert([
-                    'year' => $sequence->invoice_year,
-                    'last_number' => $sequence->last_number,
+                    'year' => $year,
+                    'last_number' => $lastNumber,
                     'created_at' => now(),
                     'updated_at' => now(),
                 ]);

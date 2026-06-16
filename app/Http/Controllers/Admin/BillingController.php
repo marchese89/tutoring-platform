@@ -51,15 +51,21 @@ class BillingController extends Controller
 
         $firstOrderDate = DateHelper::parse($firstOrder->ordered_at);
 
-        $years = Order::selectRaw('YEAR(ordered_at) as year')
-            ->groupBy('year')
-            ->orderBy('year')
-            ->pluck('year');
+        $orderedDates = Order::query()
+            ->whereNotNull('ordered_at')
+            ->pluck('ordered_at');
 
-        $months = Order::selectRaw('MONTH(ordered_at) as month')
-            ->groupBy('month')
-            ->orderBy('month')
-            ->pluck('month')
+        $years = $orderedDates
+            ->map(fn ($date) => DateHelper::parse($date)['year'])
+            ->unique()
+            ->sort()
+            ->values();
+
+        $months = $orderedDates
+            ->map(fn ($date) => DateHelper::parse($date)['month'])
+            ->unique()
+            ->sort()
+            ->values()
             ->map(fn ($month) => [
                 'value' => $month,
                 'label' => DateHelper::monthName((int) $month),

@@ -212,10 +212,13 @@ Status: dependency upgrade completed; release verification remains open.
 
 Last verified: 2026-06-16.
 
-- Current branch: `refactor/internal-code-cleanup`.
-- Latest cleanup milestone: residual controller/seeder Italian literals were
-  moved into translation catalogs or neutral demo data.
+- Current branch: `refactor/schema-hardening`.
+- Latest schema-hardening milestone: automated tests now use SQLite in memory,
+  and MySQL-specific year/month extraction was removed from invoice sequence
+  migration and order filters.
 - Automated verification: 126 tests and 634 assertions pass.
+- Test database: SQLite `:memory:` through `phpunit.xml`; the previous MySQL
+  testing database is no longer required for automated tests.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -319,6 +322,19 @@ Definition of Done:
   before a stable public release.
 - Run migrations on a disposable database and run the full test suite.
 
+Completed so far:
+
+- `phpunit.xml` uses SQLite `:memory:` for isolated automated tests.
+- Invoice sequence migration groups legacy invoice years in PHP instead of
+  using MySQL `YEAR()`.
+- Admin and student order filters derive available years and months through
+  database-neutral date parsing instead of MySQL `YEAR()` and `MONTH()`.
+
+Verification so far:
+
+- `php artisan test` - 126 passed, 634 assertions.
+- `vendor\bin\pint --test`
+
 ### Package C. Seeder split and demo installation
 
 Branch: `refactor/demo-seeders`
@@ -384,8 +400,8 @@ Definition of Done:
 
 ### Next action
 
-Create `refactor/schema-hardening` from `refactor/internal-code-cleanup` and
-start Package B with a schema/model audit commit.
+Continue Package B by auditing table constraints, model casts, relationships,
+and enum usage.
 
 ## Historical progress
 
