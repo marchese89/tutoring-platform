@@ -83,7 +83,7 @@ Status: completed for the current application surface.
 
 ### 7. Internal code quality
 
-Status: in progress across focused branches.
+Status: one small cleanup pass remains, then this package is closed.
 
 - Complete English naming for internal identifiers and comments.
 - Remove legacy routes and `public/custom_javascript/utility.js`.
@@ -102,8 +102,7 @@ Completed:
 
 Branch: `feature/localization-foundation`
 
-Status: foundation implemented; application-wide string migration remains in
-progress.
+Status: complete for the current application surface.
 
 - Italian is the default locale and English is the supported fallback.
 - Users can change locale from the shared navbar; the choice persists in the
@@ -146,7 +145,8 @@ progress.
 
 ### 9. Visual consistency
 
-Status: in progress across focused UI branches.
+Status: complete for the audited application surface; final seeded browser
+verification remains part of release verification.
 
 - Audit all public, student, admin, authentication, email, and invoice views.
 - Complete adoption of shared page, table, form, feedback, and upload components.
@@ -210,7 +210,7 @@ Status: dependency upgrade completed; release verification remains open.
 
 Last verified: 2026-06-16.
 
-- Current branch: `feature/localization-foundation`.
+- Current branch: `refactor/internal-code-cleanup`.
 - Latest cleanup milestone: residual controller/seeder Italian literals were
   moved into translation catalogs or neutral demo data.
 - Automated verification: 126 tests and 634 assertions pass.
@@ -270,27 +270,86 @@ Last verified: 2026-06-16.
 - Teaching CRUD feedback, validation labels, order product-type labels, and
   password-reset feedback no longer contain hardcoded Italian in controllers.
 
-### Remaining work
+## Final completion plan
 
-1. Review remaining comments for internal prose and remove stale framework
-   comments where they add no value.
-2. Review monetary fields, model relationships, and database constraints, then
-   decide whether transitional billing migrations should be squashed before
-   the first stable release.
-3. Split the monolithic `DatabaseSeeder` into focused seeders and verify a
-   fresh seeded installation in a disposable database. The current PHP CLI
-   does not have PDO SQLite, so the in-memory installation check cannot run
-   locally yet.
-4. Introduce a maintained frontend dependency workflow and consolidate global
-   CSS and reusable JavaScript after the view audit is stable.
-5. Add continuous integration for tests, Pint, and Composer security audits.
-6. Perform seeded end-to-end browser verification and update installation,
-   testing, and demo-account documentation before release.
+The refactoring is no longer tracked as an open-ended audit. The remaining
+work is limited to four packages. When these are complete, the branch series is
+ready for merge/squash review.
+
+### Package A. Internal cleanup closure
+
+Branch: `refactor/internal-code-cleanup`
+
+Estimated commits: 1.
+
+Definition of Done:
+
+- Remove stale generated comments and docblocks that do not add project
+  knowledge.
+- Keep framework/vendor-style comments only where they clarify Laravel
+  extension points.
+- Run Pint and the full test suite.
+
+### Package B. Model and migration hardening
+
+Branch: `refactor/schema-hardening`
+
+Estimated commits: 2-3.
+
+Definition of Done:
+
+- Review every application table for missing foreign keys, indexes, nullability,
+  cascade behavior, and uniqueness constraints.
+- Review models for casts, relationships, fillable fields, and enum usage.
+- Decide explicitly whether billing transition migrations are kept or squashed
+  before a stable public release.
+- Run migrations on a disposable database and run the full test suite.
+
+### Package C. Seeder split and demo installation
+
+Branch: `refactor/demo-seeders`
+
+Estimated commits: 2.
+
+Definition of Done:
+
+- Split `DatabaseSeeder` into focused seeders for users, catalog content,
+  purchases, invoices, chats, reviews, and documents.
+- Ensure `.env.example` documents usable demo credentials.
+- Ensure a fresh install can seed enough realistic data to inspect dashboards,
+  orders, invoices, lessons, exercises, chats, and direct requests.
+- Run a fresh seeded database verification.
+
+### Package D. Release verification
+
+Branch: `release/final-verification`
+
+Estimated commits: 1-2.
+
+Definition of Done:
+
+- Add or document CI commands for tests, Pint, and Composer audit.
+- Run Composer audit, Pint, and the full suite.
+- Perform seeded browser verification of the main public, student, admin,
+  checkout, upload, chat, invoice, and localization flows.
+- Update README/setup documentation with installation, seeding, demo accounts,
+  and verification commands.
+
+### Closed packages
+
+- Payment and HTTP safety.
+- Authorization.
+- File handling.
+- Billing consolidation and invoice numbering.
+- Query/controller cleanup.
+- Automated tests and factories.
+- Visual consistency for audited pages.
+- Localization for public, student, admin, mail, PDF, and legal surfaces.
 
 ### Next action
 
-Continue the internal cleanup branch with comment/stale-docblock pruning, then
-move to database/model constraint review and seeder split.
+Complete Package A with one small commit on `refactor/internal-code-cleanup`,
+then create `refactor/schema-hardening` for Package B.
 
 ## Historical progress
 
