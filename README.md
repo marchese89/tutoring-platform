@@ -144,9 +144,3 @@ Completed refactoring areas include:
 * reusable Blade components for repeated UI patterns
 * Italian and English localization
 * automated tests and model factories
-
-## Author
-
-Giovanni Marchese
-
-[GitHub](https://github.com/marchese89)
