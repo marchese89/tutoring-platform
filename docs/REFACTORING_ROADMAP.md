@@ -120,9 +120,12 @@ progress.
 - Student detail pages for courses, lessons, exercises, direct requests,
   reviews, extra payments, payment confirmation, and localized number
   formatting are covered.
+- Admin billing pages use localized text for sales, invoice lists, invoice
+  documents, extra invoice creation, confirmation states, and validation labels.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings in legal policies, admin, mail, and invoice
-  views still need to be moved into language files.
+- Remaining user-facing strings in admin teaching/student/settings pages,
+  legal policies, mail, and invoice PDF views still need to be moved into
+  language files.
 
 ### 9. Visual consistency
 
@@ -191,9 +194,9 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest shared student localization commit:
-  `cd20460 Localize shared student workflows`.
-- Automated verification: 119 tests and 527 assertions pass.
+- Latest student detail localization commit:
+  `7443e7e Localize student detail workflows`.
+- Automated verification: 120 tests and 538 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -243,8 +246,8 @@ Last verified: 2026-06-16.
 
 ### Remaining work
 
-1. Continue moving user-facing strings through admin, mail, invoice, and legal
-   policy contexts.
+1. Continue moving user-facing strings through admin teaching, admin student,
+   admin settings, mail, invoice PDF, and legal policy contexts.
 2. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
@@ -262,8 +265,8 @@ Last verified: 2026-06-16.
 
 ### Next action
 
-Localize the admin operational area in focused commits, starting from billing
-and teaching pages because they reuse several shared components.
+Localize admin teaching pages next, then admin student and settings pages in
+separate focused commits.
 
 ## Historical progress
 

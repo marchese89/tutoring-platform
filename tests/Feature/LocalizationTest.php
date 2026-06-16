@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Order;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -120,5 +121,38 @@ class LocalizationTest extends TestCase
         $response->assertSessionHasErrors([
             'postal_code' => 'The postal code field is required.',
         ]);
+    }
+
+    public function test_admin_billing_content_and_validation_follow_the_session_locale(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.sales.index'))
+            ->assertOk()
+            ->assertSee('Sales')
+            ->assertSee('No orders found');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.invoices.index'))
+            ->assertOk()
+            ->assertSee('Invoice list')
+            ->assertSee('No invoices found');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.invoices.extra'))
+            ->assertOk()
+            ->assertSee('Create extra invoice')
+            ->assertSee('Tax code');
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->post(route('admin.invoices.extra.store'), [])
+            ->assertSessionHasErrors([
+                'first_name' => 'The first name field is required.',
+            ]);
     }
 }
