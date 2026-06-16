@@ -31,6 +31,11 @@ class Order extends Model
         return $this->hasOne(Invoice::class);
     }
 
+    public function paymentTransaction(): HasOne
+    {
+        return $this->hasOne(PaymentTransaction::class);
+    }
+
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class);

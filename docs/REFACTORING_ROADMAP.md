@@ -333,6 +333,13 @@ Completed so far:
   relationship with `users` through unique `user_id` constraints.
 - Frequently used numeric and date fields now have explicit Eloquent casts on
   the related models.
+- Purchase and chat lookup paths now have supporting indexes for product and
+  student/type filters.
+- User, student, order, payment transaction, and invoice-adjacent relationships
+  are represented explicitly in Eloquent models.
+- Student reviews now reflect the intended one-review-per-student domain rule
+  through a `hasOne` model relationship and a unique `reviews.student_id`
+  constraint.
 
 Verification so far:
 
