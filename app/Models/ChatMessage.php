@@ -20,6 +20,7 @@ class ChatMessage extends Model
     ];
 
     protected $casts = [
+        'sender_role' => 'integer',
         'sent_at' => 'datetime',
     ];
 

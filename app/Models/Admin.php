@@ -28,6 +28,10 @@ class Admin extends Authenticatable
         'stripe_secret_key',
     ];
 
+    protected $casts = [
+        'last_login_at' => 'datetime',
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

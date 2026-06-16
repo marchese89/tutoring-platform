@@ -26,6 +26,7 @@ class PaymentTransaction extends Model
 
     protected $casts = [
         'purpose' => PaymentPurpose::class,
+        'amount' => 'integer',
         'context' => 'array',
         'completed_at' => 'datetime',
         'receipt_sent_at' => 'datetime',

@@ -329,6 +329,10 @@ Completed so far:
   using MySQL `YEAR()`.
 - Admin and student order filters derive available years and months through
   database-neutral date parsing instead of MySQL `YEAR()` and `MONTH()`.
+- Admin and student profile tables now enforce the intended one-to-one
+  relationship with `users` through unique `user_id` constraints.
+- Frequently used numeric and date fields now have explicit Eloquent casts on
+  the related models.
 
 Verification so far:
 

@@ -19,6 +19,11 @@ class Lesson extends Model
         'price',
     ];
 
+    protected $casts = [
+        'number' => 'integer',
+        'price' => 'integer',
+    ];
+
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

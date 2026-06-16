@@ -22,6 +22,7 @@ class LessonRequest extends Model
     ];
 
     protected $casts = [
+        'price' => 'integer',
         'is_fulfilled' => 'boolean',
         'is_paid' => 'boolean',
         'requested_at' => 'datetime',

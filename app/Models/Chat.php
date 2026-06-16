@@ -20,6 +20,12 @@ class Chat extends Model
         'student_id',
     ];
 
+    protected $casts = [
+        'product_type' => 'integer',
+        'product_id' => 'integer',
+        'student_id' => 'integer',
+    ];
+
     public function messages(): HasMany
     {
         return $this->hasMany(ChatMessage::class);

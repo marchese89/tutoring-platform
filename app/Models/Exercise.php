@@ -18,6 +18,10 @@ class Exercise extends Model
         'price',
     ];
 
+    protected $casts = [
+        'price' => 'integer',
+    ];
+
     public function course(): BelongsTo
     {
         return $this->belongsTo(Course::class);

@@ -19,4 +19,9 @@ class InvoiceSequence extends Model
         'year',
         'last_number',
     ];
+
+    protected $casts = [
+        'year' => 'integer',
+        'last_number' => 'integer',
+    ];
 }
