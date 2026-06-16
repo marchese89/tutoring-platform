@@ -273,7 +273,7 @@ Last verified: 2026-06-16.
 ## Final completion plan
 
 The refactoring is no longer tracked as an open-ended audit. The remaining
-work is limited to four packages. When these are complete, the branch series is
+work is limited to five packages. When these are complete, the branch series is
 ready for merge/squash review.
 
 ### Package A. Internal cleanup closure
@@ -320,7 +320,27 @@ Definition of Done:
   orders, invoices, lessons, exercises, chats, and direct requests.
 - Run a fresh seeded database verification.
 
-### Package D. Release verification
+### Package D. Public UX and list pagination
+
+Branch: `feature/public-ux-pagination`
+
+Estimated commits: 2-3.
+
+Definition of Done:
+
+- Add restrained scroll-based animation to the homepage without harming
+  readability, accessibility, or mobile performance.
+- Improve the public about page so it presents profile/context content and uses
+  certificates as supporting proof instead of only listing documents.
+- Add pagination to long public, student, and admin lists where unbounded
+  tables/cards can grow: orders, invoices, chats, lesson requests, catalog or
+  teaching management lists where appropriate.
+- Preserve existing filters and AJAX behavior when adding pagination.
+- Add or update feature tests for paginated list rendering and ownership
+  constraints.
+- Verify the homepage and about page at desktop and mobile widths.
+
+### Package E. Release verification
 
 Branch: `release/final-verification`
 
@@ -331,7 +351,8 @@ Definition of Done:
 - Add or document CI commands for tests, Pint, and Composer audit.
 - Run Composer audit, Pint, and the full suite.
 - Perform seeded browser verification of the main public, student, admin,
-  checkout, upload, chat, invoice, and localization flows.
+  checkout, upload, chat, invoice, pagination, homepage, about, and
+  localization flows.
 - Update README/setup documentation with installation, seeding, demo accounts,
   and verification commands.
 
