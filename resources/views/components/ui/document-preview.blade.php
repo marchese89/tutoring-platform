@@ -2,6 +2,7 @@
     'badge',
     'badgeClass' => 'bg-primary',
     'courseName',
+    'courseLabel' => null,
     'description',
     'titleLabel',
     'title',
@@ -31,7 +32,7 @@
             </span>
 
             <h3 class="mb-2">
-                <strong>Corso:</strong> {{ $courseName }}
+                <strong>{{ $courseLabel ?? __('public.catalog.course_label') }}</strong> {{ $courseName }}
             </h3>
 
             <p class="text-muted mb-0">

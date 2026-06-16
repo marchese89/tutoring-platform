@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Ordine #' . $order->id" />
+    <x-ui.section-header :title="__('ui.orders.order_number', ['number' => $order->id])" />
 @endsection
 
 @section('inner')

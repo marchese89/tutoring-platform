@@ -3,7 +3,7 @@
 @section('page-title')
     <div class="container py-4">
         <h3 class="fw-bold">
-            Anteprima Lezione
+            {{ __('public.catalog.lesson_preview_title') }}
         </h3>
 
     </div>
@@ -12,8 +12,8 @@
 @section('inner')
     <div class="container py-4">
 
-        <x-ui.document-preview badge="Anteprima Lezione" :course-name="$course->name"
-            description="Visualizzazione introduttiva della lezione" title-label="Titolo Lezione" :title="$lesson->title"
-            section-title="Presentazione" :file-path="$lesson->presentation_file" />
+        <x-ui.document-preview :badge="__('public.catalog.lesson_preview_title')" :course-name="$course->name"
+            :description="__('public.catalog.lesson_preview_description')" :title-label="__('public.catalog.lesson_title_label')" :title="$lesson->title"
+            :section-title="__('public.catalog.lesson_presentation_section')" :file-path="$lesson->presentation_file" />
     </div>
 @endsection
