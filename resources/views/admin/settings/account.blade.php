@@ -1,22 +1,22 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Impostazioni Account'" />
+    <x-ui.section-header :title="__('admin.settings.account_title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
         <div class="row g-4">
             <x-ui.card-item
-                title="Modifica Dati Personali"
-                text="Aggiorna informazioni anagrafiche, indirizzo e dati del profilo."
+                :title="__('admin.settings.personal_data_title')"
+                :text="__('admin.settings.personal_data_text')"
                 :url="route('admin.account.profile')"
                 icon="fa-solid fa-user"
             />
 
             <x-ui.card-item
-                title="Modifica Credenziali"
-                text="Gestisci email, password e sicurezza dell'account amministratore."
+                :title="__('admin.settings.credentials_title')"
+                :text="__('admin.settings.credentials_text')"
                 :url="route('admin.account.credentials')"
                 icon="fa-solid fa-shield-halved"
             />

@@ -43,14 +43,57 @@ class AdminChatPageTest extends TestCase
         ]);
 
         $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.chats.show', $chat->id))
             ->assertOk()
+            ->assertSee('Chat with student')
+            ->assertSee('Requested lesson no.')
+            ->assertSee('Student request')
+            ->assertSee('Solution')
+            ->assertSee('Conversation')
             ->assertSee('Mario Rossi')
             ->assertSee('Requested lesson')
             ->assertSee('Prepared chat message')
             ->assertSee('src="/protected-files/lesson_requests/request.pdf#view=FitH"', false)
             ->assertSee('src="/protected-files/lesson_requests/solution.pdf#view=FitH"', false)
             ->assertSee('window.Echo', false);
+    }
+
+    public function test_admin_chat_list_follows_the_session_locale(): void
+    {
+        /** @var User $admin */
+        $admin = User::factory()->createOne(['role' => 'admin']);
+        $student = $this->createStudent();
+        $lessonRequest = LessonRequest::create([
+            'title' => 'Requested lesson list item',
+            'student_id' => $student->id,
+            'request_file' => 'lesson_requests/request.pdf',
+            'solution_file' => 'lesson_requests/solution.pdf',
+            'is_fulfilled' => true,
+            'is_paid' => true,
+        ]);
+        $chat = Chat::create([
+            'product_id' => $lessonRequest->id,
+            'product_type' => ProductType::REQUESTED_LESSON->value,
+            'student_id' => $student->id,
+        ]);
+
+        ChatMessage::create([
+            'chat_id' => $chat->id,
+            'message' => 'Unread message',
+            'sender_role' => ChatSenderRole::STUDENT->value,
+            'sent_at' => now(),
+        ]);
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.chats.index'))
+            ->assertOk()
+            ->assertSee('Student chats')
+            ->assertSee('Chat list')
+            ->assertSee('Requested lesson')
+            ->assertSee('Unread')
+            ->assertSee('View chat');
     }
 
     private function createStudent(): Student

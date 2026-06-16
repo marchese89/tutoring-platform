@@ -133,6 +133,7 @@ return [
         'uploaded' => 'File caricato correttamente',
         'preview' => 'Anteprima richiesta',
         'delete_file' => 'Elimina file',
+        'file_required_before_submit' => 'Carica un file prima di inviare la richiesta.',
         'request_title' => 'Titolo / descrizione',
         'request_placeholder' => 'Inserisci una breve descrizione della richiesta',
         'submit' => 'Invia richiesta',

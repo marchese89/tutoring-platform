@@ -9,7 +9,7 @@
     <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
         <div>
             <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
-                Richiesta lezione
+                {{ __('student.requests.detail_title') }}
             </span>
 
             <h3 class="fw-bold mb-0">

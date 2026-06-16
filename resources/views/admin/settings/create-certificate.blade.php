@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Aggiungi Certificato'" />
+    <x-ui.section-header :title="__('admin.settings.add_certificate_title')" />
 @endsection
 
 @section('inner')
@@ -9,15 +9,15 @@
         <div class="row justify-content-center">
             <div class="col-lg-8">
                 <x-ui.form-card
-                    title="File certificato"
-                    description="Carica il file del certificato prima di completare il salvataggio."
+                    :title="__('admin.settings.certificate_file_title')"
+                    :description="__('admin.settings.certificate_file_description')"
                     icon="bi-file-earmark-arrow-up">
                     <div class="mb-4">
                         @if ($uploadedCertificateFile)
-                            <x-ui.pdf-viewer :src="$uploadedCertificateFile" title="Anteprima certificato" size="compact" />
+                            <x-ui.pdf-viewer :src="$uploadedCertificateFile" :title="__('admin.settings.certificate_preview_title')" size="compact" />
                         @else
-                            <x-ui.empty-state title="Nessun file caricato"
-                                text="Seleziona un PDF per visualizzarne l'anteprima." />
+                            <x-ui.empty-state :title="__('admin.settings.certificate_file_empty_title')"
+                                :text="__('admin.settings.certificate_file_empty_text')" />
                         @endif
                     </div>
 
@@ -29,12 +29,12 @@
                         data-upload-progress-form>
                         @csrf
 
-                        <x-ui.form-file label="Seleziona file" accept="application/pdf" required />
+                        <x-ui.form-file :label="__('admin.settings.select_file')" accept="application/pdf" required />
 
-                        <x-ui.upload-progress label="Caricamento certificato" />
+                        <x-ui.upload-progress :label="__('admin.settings.certificate_upload_progress')" />
 
                         <x-ui.primary-button type="submit">
-                            Upload file
+                            {{ __('admin.settings.upload_file') }}
                         </x-ui.primary-button>
                     </form>
 
@@ -44,7 +44,7 @@
                             @method('DELETE')
 
                             <button type="submit" class="btn btn-outline-danger rounded-pill px-4">
-                                Elimina file
+                                {{ __('admin.settings.delete_file') }}
                             </button>
                         </form>
                     @endif
@@ -53,20 +53,20 @@
                 @if ($uploadedCertificateFile)
                     <x-ui.form-card
                         class="mt-4"
-                        title="Dettagli certificato"
-                        description="Assegna un nome al certificato prima di salvarlo."
+                        :title="__('admin.settings.certificate_details_title')"
+                        :description="__('admin.settings.certificate_details_text')"
                         icon="bi-award">
                         <form method="POST" action="{{ route('admin.account.certificates.store') }}">
                             @csrf
 
                             <x-ui.form-field
                                 name="name"
-                                label="Nome certificato"
+                                :label="__('admin.settings.certificate_name')"
                                 maxlength="255"
                                 :value="old('name')" />
 
                             <x-ui.primary-button type="submit">
-                                Aggiungi certificato
+                                {{ __('admin.settings.add_certificate') }}
                             </x-ui.primary-button>
                         </form>
                     </x-ui.form-card>

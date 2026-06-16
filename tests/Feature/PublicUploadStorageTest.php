@@ -58,9 +58,14 @@ class PublicUploadStorageTest extends TestCase
         Storage::disk('public')->assertExists(substr($certificatePath, 9));
 
         $this->actingAs($adminUser)
-            ->withSession(['uploaded_certificate_file' => $certificatePath])
+            ->withSession([
+                'locale' => 'en',
+                'uploaded_certificate_file' => $certificatePath,
+            ])
             ->get(route('admin.account.certificates.create'))
             ->assertOk()
+            ->assertSee('Certificate file')
+            ->assertSee('Certificate details')
             ->assertSee('src="'.$certificatePath.'#view=FitH"', false)
             ->assertSee('pdf-viewer--compact', false)
             ->assertSee(route('admin.account.certificates.store'));
@@ -75,8 +80,12 @@ class PublicUploadStorageTest extends TestCase
         ]);
 
         $this->actingAs($adminUser)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.account.certificates.index'))
             ->assertOk()
+            ->assertSee('Update certificates')
+            ->assertSee('Certificate #'.$certificate->id)
+            ->assertSee('Replace file')
             ->assertSee('Laravel certificate')
             ->assertSee('src="'.$certificate->file_path.'#view=FitH"', false)
             ->assertSee('pdf-viewer--compact', false);

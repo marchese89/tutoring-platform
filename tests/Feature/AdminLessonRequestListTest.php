@@ -12,6 +12,19 @@ class AdminLessonRequestListTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_student_request_dashboard_follows_the_session_locale(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.students.index'))
+            ->assertOk()
+            ->assertSee('Student requests')
+            ->assertSee('View and manage all requests submitted by students.')
+            ->assertSee('Student chats');
+    }
+
     public function test_lesson_request_list_uses_prepared_display_data(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
@@ -25,8 +38,11 @@ class AdminLessonRequestListTest extends TestCase
         ]);
 
         $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.lesson-requests.index'))
             ->assertOk()
+            ->assertSee('Student requests')
+            ->assertSee('Completed')
             ->assertSee('Prepared request')
             ->assertSee('10-06-2026 14:30')
             ->assertSee(route('admin.lesson-requests.show', $lessonRequest->id));
@@ -46,8 +62,14 @@ class AdminLessonRequestListTest extends TestCase
         ]);
 
         $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
             ->get(route('admin.lesson-requests.show', $lessonRequest->id))
             ->assertOk()
+            ->assertSee('View lesson request')
+            ->assertSee('Prompt')
+            ->assertSee('Solution')
+            ->assertSee('Upload solution')
+            ->assertSee('Set price')
             ->assertSee('Request detail')
             ->assertSee('src="/protected-files/lesson_requests/request_files/request.pdf#view=FitH"', false)
             ->assertSee('src="/protected-files/lesson_requests/solution_files/solution.pdf#view=FitH"', false)

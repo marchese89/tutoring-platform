@@ -43,7 +43,9 @@ class LessonRequestController extends Controller
             'title' => $lessonRequest->title,
             'date' => DateHelper::format($lessonRequest->requested_at),
             'status_variant' => $lessonRequest->is_fulfilled ? 'success' : 'danger',
-            'status_label' => $lessonRequest->is_fulfilled ? 'Svolta' : 'Da svolgere',
+            'status_label' => $lessonRequest->is_fulfilled
+                ? __('admin.students.request_fulfilled')
+                : __('admin.students.request_to_fulfill'),
             'show_url' => route('admin.lesson-requests.show', $lessonRequest->id),
         ]);
 
@@ -80,9 +82,9 @@ class LessonRequestController extends Controller
 
         $chats->each(function (Chat $chat) use ($lessonTitles, $exerciseTitles, $lessonRequestTitles) {
             $chat->product_type_label = match ((int) $chat->product_type) {
-                ProductType::LESSON->value => 'Lezione',
-                ProductType::EXERCISE->value => 'Esercizio',
-                ProductType::REQUESTED_LESSON->value => 'Lezione su Richiesta',
+                ProductType::LESSON->value => __('admin.students.lesson_type'),
+                ProductType::EXERCISE->value => __('admin.students.exercise_type'),
+                ProductType::REQUESTED_LESSON->value => __('admin.students.requested_lesson_type'),
                 default => '-',
             };
 
@@ -110,6 +112,8 @@ class LessonRequestController extends Controller
 
         $presentationFile = '';
         $contentFile = '';
+        $presentationLabel = __('admin.students.presentation');
+        $contentLabel = __('admin.students.content');
         $title = '';
 
         switch ($chat->product_type) {
@@ -117,33 +121,36 @@ class LessonRequestController extends Controller
                 $lesson = Lesson::find($chat->product_id);
                 $presentationFile = $lesson?->presentation_file;
                 $contentFile = $lesson?->content_file;
-                $title =
-                    'Lezione n. '.
-                    $lesson?->id.
-                    ', '.
-                    $lesson?->title;
+                $presentationLabel = __('admin.students.presentation');
+                $contentLabel = __('admin.students.content');
+                $title = __('admin.students.lesson_chat_title', [
+                    'number' => $lesson?->id,
+                    'title' => $lesson?->title,
+                ]);
                 break;
 
             case ProductType::EXERCISE->value:
                 $exercise = Exercise::find($chat->product_id);
                 $presentationFile = $exercise?->prompt_file;
                 $contentFile = $exercise?->solution_file;
-                $title =
-                    'Esercizio n. '.
-                    $exercise?->id.
-                    ', '.
-                    $exercise?->title;
+                $presentationLabel = __('admin.students.prompt');
+                $contentLabel = __('admin.students.solution');
+                $title = __('admin.students.exercise_chat_title', [
+                    'number' => $exercise?->id,
+                    'title' => $exercise?->title,
+                ]);
                 break;
 
             case ProductType::REQUESTED_LESSON->value:
                 $lessonRequest = LessonRequest::find($chat->product_id);
                 $presentationFile = $lessonRequest?->request_file;
                 $contentFile = $lessonRequest?->solution_file;
-                $title =
-                    'Lezione su richiesta n. '.
-                    $lessonRequest?->id.
-                    ', '.
-                    $lessonRequest?->title;
+                $presentationLabel = __('admin.students.student_request');
+                $contentLabel = __('admin.students.solution');
+                $title = __('admin.students.requested_lesson_chat_title', [
+                    'number' => $lessonRequest?->id,
+                    'title' => $lessonRequest?->title,
+                ]);
                 break;
         }
 
@@ -153,13 +160,15 @@ class LessonRequestController extends Controller
 
         $student = Student::find($chat->student_id);
         $user = $student?->user;
-        $studentName = trim(($user?->name ?? '').' '.($user?->surname ?? '')) ?: 'Studente';
+        $studentName = trim(($user?->name ?? '').' '.($user?->surname ?? '')) ?: __('admin.students.fallback_student');
         $enableEcho = true;
 
         return view('admin.students.chat', compact(
             'chat',
             'presentationFile',
             'contentFile',
+            'presentationLabel',
+            'contentLabel',
             'title',
             'messages',
             'studentName',
@@ -200,13 +209,13 @@ class LessonRequestController extends Controller
         if (! $request->session()->has('uploaded_lesson_request_file')) {
             return redirect()
                 ->route('lesson-requests.create')
-                ->withErrors(['file' => 'Carica un file prima di inviare la richiesta.']);
+                ->withErrors(['file' => __('public.lesson_request.file_required_before_submit')]);
         }
 
         $request->validate(
             ['title' => ['required', 'string', 'max:255']],
             [],
-            ['title' => 'titolo']
+            ['title' => __('public.lesson_request.request_title')]
         );
 
         LessonRequest::create([
@@ -266,7 +275,7 @@ class LessonRequestController extends Controller
         $request->validate(
             ['price' => ['required', 'numeric', 'min:0']],
             [],
-            ['price' => 'prezzo']
+            ['price' => __('admin.students.price')]
         );
 
         $lessonRequest = LessonRequest::findOrFail($id);

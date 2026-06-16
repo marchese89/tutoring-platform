@@ -1,14 +1,14 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Modifica Certificati'" />
+    <x-ui.section-header :title="__('admin.settings.certificates_title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
         <div class="d-flex justify-content-end mb-4">
             <x-ui.primary-button href="{{ route('admin.account.certificates.create') }}">
-                Aggiungi certificato
+                {{ __('admin.settings.add_certificate') }}
             </x-ui.primary-button>
         </div>
 
@@ -16,8 +16,8 @@
             @forelse ($certificates as $certificate)
                 <div class="col-12">
                     <x-ui.form-card
-                        :title="'Certificato #' . $certificate->id"
-                        description="Modifica nome e file associati al certificato."
+                        :title="__('admin.settings.certificate_title', ['id' => $certificate->id])"
+                        :description="__('admin.settings.certificate_description')"
                         icon="bi-award">
                         <div class="d-flex justify-content-end mb-4">
                             <form method="POST" action="{{ route('admin.account.certificates.destroy') }}">
@@ -26,7 +26,7 @@
                                 <input type="hidden" name="id" value="{{ $certificate->id }}">
 
                                 <button type="submit" class="btn btn-outline-danger rounded-pill px-3">
-                                    Elimina
+                                    {{ __('admin.settings.delete') }}
                                 </button>
                             </form>
                         </div>
@@ -38,26 +38,26 @@
                             <x-ui.form-field
                                 name="name"
                                 id="name_{{ $certificate->id }}"
-                                label="Nome certificato"
+                                :label="__('admin.settings.certificate_name')"
                                 maxlength="255"
                                 :value="old('name', $certificate->name)" />
 
                             <x-ui.primary-button type="submit" size="sm">
-                                Modifica nome
+                                {{ __('admin.settings.edit_certificate_name') }}
                             </x-ui.primary-button>
                         </form>
 
                         <div class="mb-4">
                             <label class="form-label fw-semibold">
-                                File certificato
+                                {{ __('admin.settings.certificate_file') }}
                             </label>
 
                             @if ($certificate->file_path)
-                                <x-ui.pdf-viewer :src="$certificate->file_path" :title="'Certificato ' . $certificate->id"
+                                <x-ui.pdf-viewer :src="$certificate->file_path" :title="__('admin.settings.certificate_preview', ['id' => $certificate->id])"
                                     size="compact" />
                             @else
-                                <x-ui.empty-state title="Nessun file caricato"
-                                    text="Carica un PDF per visualizzare il certificato." />
+                                <x-ui.empty-state :title="__('admin.settings.certificate_file_empty_title')"
+                                    :text="__('admin.settings.certificate_file_empty_text')" />
                             @endif
                         </div>
 
@@ -70,13 +70,13 @@
 
                             <input type="hidden" name="id" value="{{ $certificate->id }}">
 
-                            <x-ui.form-file label="Sostituisci file" id="file_{{ $certificate->id }}"
+                            <x-ui.form-file :label="__('admin.settings.replace_file')" id="file_{{ $certificate->id }}"
                                 accept="application/pdf" required />
 
-                            <x-ui.upload-progress label="Caricamento certificato" />
+                            <x-ui.upload-progress :label="__('admin.settings.certificate_upload_progress')" />
 
                             <x-ui.primary-button type="submit" size="sm">
-                                Upload file
+                                {{ __('admin.settings.upload_file') }}
                             </x-ui.primary-button>
                         </form>
                     </x-ui.form-card>
@@ -84,8 +84,8 @@
             @empty
                 <div class="col-12">
                     <x-ui.empty-state
-                        title="Nessun certificato presente"
-                        text="Aggiungi un certificato per mostrarlo nel profilo pubblico." />
+                        :title="__('admin.settings.certificate_empty_title')"
+                        :text="__('admin.settings.certificate_empty_text')" />
                 </div>
             @endforelse
         </div>

@@ -133,6 +133,7 @@ return [
         'uploaded' => 'File uploaded successfully',
         'preview' => 'Request preview',
         'delete_file' => 'Delete file',
+        'file_required_before_submit' => 'Upload a file before submitting the request.',
         'request_title' => 'Title / description',
         'request_placeholder' => 'Enter a short description of your request',
         'submit' => 'Send request',

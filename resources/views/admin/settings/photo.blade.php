@@ -13,7 +13,7 @@
 @endpush
 
 @section('page-title')
-    <x-ui.section-header title="Modifica foto" />
+    <x-ui.section-header :title="__('admin.settings.photo_title')" />
 @endsection
 
 @section('inner')
@@ -21,18 +21,18 @@
         <div class="row justify-content-center">
             <div class="col-lg-7">
                 <x-ui.form-card
-                    title="Foto profilo amministratore"
-                    description="Carica o sostituisci l'immagine mostrata nel sito."
+                    :title="__('admin.settings.admin_photo_title')"
+                    :description="__('admin.settings.admin_photo_text')"
                     icon="bi-person-circle">
                     @if ($photoPath)
                         <div class="text-center mb-4">
-                            <img alt="Foto profilo amministratore" src="{{ $photoPath }}"
+                            <img alt="{{ __('admin.settings.admin_photo_alt') }}" src="{{ $photoPath }}"
                                 class="admin-photo-preview shadow-sm border">
                         </div>
                     @else
                         <div class="mb-4">
-                            <x-ui.empty-state title="Nessuna foto caricata"
-                                text="Seleziona un'immagine per visualizzarla nel sito." />
+                            <x-ui.empty-state :title="__('admin.settings.photo_empty_title')"
+                                :text="__('admin.settings.photo_empty_text')" />
                         </div>
                     @endif
 
@@ -44,14 +44,14 @@
                         data-upload-progress-form>
                         @csrf
 
-                        <x-ui.form-file label="Seleziona immagine" accept="image/jpeg,image/png,image/webp" required />
+                        <x-ui.form-file :label="__('admin.settings.select_image')" accept="image/jpeg,image/png,image/webp" required />
 
-                        <x-ui.upload-progress label="Caricamento foto" />
+                        <x-ui.upload-progress :label="__('admin.settings.photo_upload_progress')" />
 
                         <x-ui.primary-button
                             type="submit"
                             class="w-100 justify-content-center">
-                            Carica foto
+                            {{ __('admin.settings.upload_photo') }}
                         </x-ui.primary-button>
                     </form>
                 </x-ui.form-card>

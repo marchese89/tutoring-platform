@@ -1,36 +1,36 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Modifica Dati Personali'" />
+    <x-ui.section-header :title="__('admin.settings.personal_data_title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
         <div class="row g-4">
             <x-ui.card-item
-                title="Modifica Foto"
-                text="Gestione e aggiornamento dell'immagine profilo o contenuti fotografici."
+                :title="__('admin.settings.photo_title')"
+                :text="__('admin.settings.photo_text')"
                 :url="route('admin.account.photo')"
                 icon="fa-solid fa-image"
             />
 
             <x-ui.card-item
-                title="Modifica Indirizzo"
-                text="Aggiornamento dati di residenza o contatti geografici."
+                :title="__('admin.settings.address_title')"
+                :text="__('admin.settings.address_text')"
                 :url="route('admin.account.address')"
                 icon="fa-solid fa-location-dot"
             />
 
             <x-ui.card-item
-                title="Modifica Certificati"
-                text="Gestione dei certificati e documenti allegati."
+                :title="__('admin.settings.certificates_title')"
+                :text="__('admin.settings.certificates_text')"
                 :url="route('admin.account.certificates.index')"
                 icon="fa-solid fa-certificate"
             />
 
             <x-ui.card-item
-                title="Modifica Partita IVA"
-                text="Aggiornamento dati fiscali e partita IVA."
+                :title="__('admin.settings.vat_title')"
+                :text="__('admin.settings.vat_text')"
                 :url="route('admin.account.vat-number')"
                 icon="fa-solid fa-file-invoice-dollar"
             />

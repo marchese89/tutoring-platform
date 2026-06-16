@@ -119,6 +119,8 @@ class AccountController extends Controller
         $request->validate([
             'id' => 'required|exists:certificates,id',
             'name' => 'required|string|max:255',
+        ], [], [
+            'name' => __('admin.settings.certificate_name'),
         ]);
 
         $certificate = Certificate::findOrFail($request->id);
@@ -132,6 +134,8 @@ class AccountController extends Controller
     {
         $request->validate([
             'vat_number' => 'required|string|max:20',
+        ], [], [
+            'vat_number' => __('admin.settings.vat_number'),
         ]);
 
         $admin = $request->user()->admin;
@@ -195,6 +199,8 @@ class AccountController extends Controller
 
         $request->validate([
             'name' => 'required|string|max:255',
+        ], [], [
+            'name' => __('admin.settings.certificate_name'),
         ]);
 
         $certificate = new Certificate;

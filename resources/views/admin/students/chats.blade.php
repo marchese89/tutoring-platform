@@ -1,21 +1,21 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Chat Studenti'" />
+    <x-ui.section-header :title="__('admin.students.chats_title')" />
 @endsection
 
 @section('inner')
     <x-ui.page-section>
-        <x-ui.table-card title="Elenco Chat">
+        <x-ui.table-card :title="__('admin.students.chat_list_title')">
             <table class="table align-middle">
                 <thead>
                     <tr>
                         <th>ID</th>
-                        <th>Tipo Prodotto</th>
-                        <th>Titolo</th>
-                        <th>Studente</th>
-                        <th class="text-center">Stato</th>
-                        <th>Operazioni</th>
+                        <th>{{ __('admin.students.product_type') }}</th>
+                        <th>{{ __('ui.table.title') }}</th>
+                        <th>{{ __('admin.students.student') }}</th>
+                        <th class="text-center">{{ __('ui.table.status') }}</th>
+                        <th>{{ __('ui.table.actions') }}</th>
                     </tr>
                 </thead>
 
@@ -29,7 +29,7 @@
                             <td class="text-center">
                                 <x-ui.status-dot
                                     :variant="$item->has_unread_admin_message ? 'danger' : 'success'"
-                                    :label="$item->has_unread_admin_message ? 'Da leggere' : 'Letta'"
+                                    :label="$item->has_unread_admin_message ? __('admin.students.unread') : __('admin.students.read')"
                                 />
                             </td>
                             <td>
@@ -37,14 +37,14 @@
                                     href="{{ route('admin.chats.show', $item->id) }}"
                                     size="sm"
                                 >
-                                    Visualizza Chat
+                                    {{ __('admin.students.view_chat') }}
                                 </x-ui.primary-button>
                             </td>
                         </tr>
                     @empty
                         <tr>
                             <td colspan="6" class="text-center text-muted py-4">
-                                Nessuna chat presente.
+                                {{ __('admin.students.chat_empty') }}
                             </td>
                         </tr>
                     @endforelse

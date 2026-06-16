@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Chat con studente" />
+    <x-ui.section-header :title="__('admin.students.chat_with_student')" />
 @endsection
 
 @section('inner')
@@ -14,25 +14,25 @@
             @if ($presentationFile)
                 <div class="mb-5">
                     <h5 class="fw-semibold mb-3">
-                        Presentazione
+                        {{ $presentationLabel }}
                     </h5>
 
-                    <x-ui.pdf-viewer :src="'/protected-files/' . $presentationFile" title="Presentazione" />
+                    <x-ui.pdf-viewer :src="'/protected-files/' . $presentationFile" :title="$presentationLabel" />
                 </div>
             @endif
 
             @if ($contentFile)
                 <div>
                     <h5 class="fw-semibold mb-3">
-                        Svolgimento
+                        {{ $contentLabel }}
                     </h5>
 
-                    <x-ui.pdf-viewer :src="'/protected-files/' . $contentFile" title="Svolgimento" />
+                    <x-ui.pdf-viewer :src="'/protected-files/' . $contentFile" :title="$contentLabel" />
                 </div>
             @endif
         </x-ui.card>
 
-        <x-ui.support-chat :chat="$chat" :messages="$messages" :post-route="route('admin.chat.messages.store')" :own-author="\App\Enums\ChatSenderRole::ADMIN->value" own-sender="Tu"
-            :other-sender="$studentName" title="Conversazione" description="Gestisci qui i messaggi con lo studente." />
+        <x-ui.support-chat :chat="$chat" :messages="$messages" :post-route="route('admin.chat.messages.store')" :own-author="\App\Enums\ChatSenderRole::ADMIN->value" :own-sender="__('admin.students.you')"
+            :other-sender="$studentName" :title="__('admin.students.conversation')" :description="__('admin.students.conversation_text')" />
     </x-ui.page-section>
 @endsection
