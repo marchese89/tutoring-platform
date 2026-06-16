@@ -130,9 +130,11 @@ progress.
   and certificate workflows.
 - Email templates, email subjects, PDF invoice labels, and shared PDF viewer
   fallback text use Italian and English catalogs.
+- Privacy and cookie policy pages render from Italian and English language
+  catalogs.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings in legal policies and miscellaneous shared
-  fallbacks still need to be moved into language files.
+- Remaining user-facing strings should be checked with a final residual audit
+  for miscellaneous shared fallbacks and edge cases.
 
 ### 9. Visual consistency
 
@@ -201,9 +203,9 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest localization milestone: email templates and PDF invoice workflows use
-  Italian and English translation catalogs.
-- Automated verification: 126 tests and 624 assertions pass.
+- Latest localization milestone: legal policy pages use Italian and English
+  translation catalogs.
+- Automated verification: 126 tests and 630 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -254,11 +256,12 @@ Last verified: 2026-06-16.
   workflows are localized in Italian and English.
 - Email notifications, reset-password email content, invoice PDF labels, and
   shared PDF viewer fallback text are localized in Italian and English.
+- Privacy and cookie policy pages are localized in Italian and English.
 
 ### Remaining work
 
-1. Continue moving user-facing strings through legal policy contexts and
-   miscellaneous shared fallbacks.
+1. Run a final residual string audit for miscellaneous shared fallbacks and
+   edge cases.
 2. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
@@ -276,7 +279,8 @@ Last verified: 2026-06-16.
 
 ### Next action
 
-Localize legal policy contexts next, then run a final residual string audit.
+Run a final residual string audit and decide whether the remaining strings are
+user-facing content, fixture data, or internal implementation details.
 
 ## Historical progress
 

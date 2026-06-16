@@ -44,6 +44,16 @@ class LocalizationTest extends TestCase
             ->assertSee('How I can help')
             ->assertSee('About me');
 
+        $this->get(route('privacy-policy'))
+            ->assertOk()
+            ->assertSee('Last updated')
+            ->assertSee('Information collected');
+
+        $this->get(route('cookie-policy'))
+            ->assertOk()
+            ->assertSee('Cookie usage')
+            ->assertSee('Technical cookies');
+
         $student = Student::factory()->create();
 
         Order::factory()
