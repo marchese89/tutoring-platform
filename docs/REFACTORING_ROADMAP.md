@@ -117,9 +117,12 @@ progress.
   accessible image and rating labels.
 - The shared student dashboard, account menu, course/request/order/invoice
   listings, order details, month labels, and support chat use localized text.
+- Student detail pages for courses, lessons, exercises, direct requests,
+  reviews, extra payments, payment confirmation, and localized number
+  formatting are covered.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings in detailed student pages, legal policies,
-  admin, mail, and invoice views still need to be moved into language files.
+- Remaining user-facing strings in legal policies, admin, mail, and invoice
+  views still need to be moved into language files.
 
 ### 9. Visual consistency
 
@@ -185,11 +188,12 @@ Status: dependency upgrade completed; release verification remains open.
 
 ## Current status
 
-Last verified: 2026-06-15.
+Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest home localization commit: `ac205d5 Localize the public home page`.
-- Automated verification: 118 tests and 517 assertions pass.
+- Latest shared student localization commit:
+  `cd20460 Localize shared student workflows`.
+- Automated verification: 119 tests and 527 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -234,11 +238,13 @@ Last verified: 2026-06-15.
 - The localization foundation supports Italian and English through
   configuration, middleware, a session-backed selector, translated validation,
   and localized authentication and account-setting workflows.
+- Public and student-facing operational pages are localized in Italian and
+  English; the numeric formatter no longer requires the PHP `intl` extension.
 
 ### Remaining work
 
-1. Complete the detailed student pages, then continue moving user-facing
-   strings through admin, mail, invoice, and legal policy contexts.
+1. Continue moving user-facing strings through admin, mail, invoice, and legal
+   policy contexts.
 2. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
@@ -256,8 +262,8 @@ Last verified: 2026-06-15.
 
 ### Next action
 
-Complete the student detail, review, and extra-payment pages, then continue
-through the admin area in focused commits.
+Localize the admin operational area in focused commits, starting from billing
+and teaching pages because they reuse several shared components.
 
 ## Historical progress
 

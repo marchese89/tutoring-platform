@@ -51,7 +51,7 @@
                         </td>
 
                         <td class="text-end fw-semibold">
-                            {{ number_format($item['price'], 2, ',', '.') }}&euro;
+                            {{ \App\Helpers\NumberHelper::format($item['price']) }}&euro;
                         </td>
                     </tr>
                 @endforeach
@@ -64,7 +64,7 @@
                     </th>
 
                     <th class="text-end border-0 pt-4">
-                        {{ number_format($total, 2, ',', '.') }}&euro;
+                        {{ \App\Helpers\NumberHelper::format($total) }}&euro;
                     </th>
                 </tr>
             </tfoot>

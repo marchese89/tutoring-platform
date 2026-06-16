@@ -40,9 +40,15 @@ return [
         'you' => 'Tu',
         'teacher' => 'Insegnante',
         'message_count' => '{1} :count messaggio|[2,*] :count messaggi',
+        'message_singular' => 'messaggio',
+        'message_plural' => 'messaggi',
         'empty' => 'Nessun messaggio presente.',
         'message' => 'Messaggio',
         'placeholder' => 'Scrivi un messaggio...',
         'send' => 'Invia',
+    ],
+
+    'payment' => [
+        'maximum_exceeded' => 'Importo superiore a 77,47 € (massimo consentito).',
     ],
 ];

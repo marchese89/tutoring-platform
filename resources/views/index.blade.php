@@ -648,7 +648,9 @@
 
                     @if ($averageRating)
                         <div class="home-reviews__summary">
-                            <span class="home-reviews__score">{{ number_format($averageRating, 1) }}</span>
+                            <span class="home-reviews__score">
+                                {{ \App\Helpers\NumberHelper::format($averageRating, 1) }}
+                            </span>
                             <div>
                                 <div class="home-reviews__stars"
                                     aria-label="{{ __('public.home.reviews.average_aria', ['rating' => $averageRating]) }}">

@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Acquista'" />
+    <x-ui.section-header :title="__('student.payment.purchase_title')" />
 @endsection
 
 @section('inner')

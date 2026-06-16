@@ -24,7 +24,7 @@
 
             @if ($price !== null)
                 <h5 class="fw-semibold mb-0">
-                    {{ number_format($price, 2, ',', '.') }}&euro;
+                    {{ \App\Helpers\NumberHelper::format($price) }}&euro;
                 </h5>
             @endif
         </div>

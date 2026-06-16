@@ -66,6 +66,27 @@ class LocalizationTest extends TestCase
             ->assertSee('Loading orders...');
 
         $this->actingAs($student->user)
+            ->withSession(['locale' => 'en'])
+            ->get(route('payment.extra'))
+            ->assertOk()
+            ->assertSee('Payment details')
+            ->assertSee('Example: private lesson');
+
+        $this->actingAs($student->user)
+            ->withSession(['locale' => 'en'])
+            ->get(route('student.review'))
+            ->assertOk()
+            ->assertSee('Rating')
+            ->assertSee('Review saved.');
+
+        $this->actingAs($student->user)
+            ->withSession(['locale' => 'en'])
+            ->post(route('checkout.payment.prepare'), [])
+            ->assertSessionHasErrors([
+                'description' => 'The description field is required.',
+            ]);
+
+        $this->actingAs($student->user)
             ->get(route('cart.show'))
             ->assertOk()
             ->assertSee('Your cart is empty');

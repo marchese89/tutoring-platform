@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Lezione" />
+    <x-ui.section-header :title="__('student.courses.lesson')" />
 @endsection
 
 @section('inner')
@@ -10,7 +10,7 @@
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
                 <div>
                     <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
-                        Corso
+                        {{ __('student.courses.course') }}
                     </span>
 
                     <h3 class="fw-bold mb-0">
@@ -20,7 +20,7 @@
 
                 <div class="text-lg-end">
                     <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2 mb-2">
-                        Lezione
+                        {{ __('student.courses.lesson') }}
                     </span>
 
                     <h5 class="fw-semibold mb-0">
@@ -33,20 +33,22 @@
         <div class="mt-4">
             <x-ui.card>
                 <h4 class="fw-bold mb-3">
-                    Presentazione
+                    {{ __('student.courses.presentation') }}
                 </h4>
 
-                <x-ui.pdf-viewer :src="'/protected-files/' . $lesson->presentation_file" title="Presentazione" />
+                <x-ui.pdf-viewer :src="'/protected-files/' . $lesson->presentation_file"
+                    :title="__('student.courses.presentation')" />
             </x-ui.card>
         </div>
 
         <div class="mt-4">
             <x-ui.card>
                 <h4 class="fw-bold mb-3">
-                    Svolgimento
+                    {{ __('student.courses.content') }}
                 </h4>
 
-                <x-ui.pdf-viewer :src="'/protected-files/' . $lesson->content_file" title="Contenuto" />
+                <x-ui.pdf-viewer :src="'/protected-files/' . $lesson->content_file"
+                    :title="__('student.courses.lesson_content')" />
             </x-ui.card>
         </div>
 
@@ -54,7 +56,7 @@
             <x-ui.support-chat
                 :chat="$chat"
                 :messages="$messages"
-                description="Scrivi qui per ricevere supporto sulla lezione."
+                :description="__('student.courses.lesson_chat')"
             />
         </div>
     </x-ui.page-section>

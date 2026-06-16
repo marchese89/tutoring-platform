@@ -29,7 +29,10 @@
                                     <tr>
                                         <th scope="row">{{ $item['id'] }}</th>
                                         <td>{{ $item['name'] }}</td>
-                                        <td>{{ $item['price'] }} &euro;</td>
+                                        <td>
+                                            {{ \App\Helpers\NumberHelper::format($item['price']) }}
+                                            &euro;
+                                        </td>
                                         <td class="text-end">
                                             <form id="form-remove-{{ $item['id'] }}-{{ $item['type'] }}" method="POST"
                                                 action="{{ $item['remove_url'] }}" class="d-inline">
@@ -50,7 +53,9 @@
                         <div
                             class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3 mt-4 pt-4 border-top">
                             <h3 class="mb-0">
-                                {{ __('public.cart.total', ['total' => $total]) }}
+                                {{ __('public.cart.total', [
+                                    'total' => \App\Helpers\NumberHelper::format($total),
+                                ]) }}
                             </h3>
 
                             <x-ui.primary-button href="{{ route('checkout.show') }}">

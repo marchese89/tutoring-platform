@@ -177,6 +177,8 @@
         const ownAuthor = @json((int) $ownAuthor);
         const ownSender = @json($ownSender);
         const otherSender = @json($otherSender);
+        const messageSingular = @json(__('ui.chat.message_singular'));
+        const messagePlural = @json(__('ui.chat.message_plural'));
 
         function escapeHtml(value) {
             const div = document.createElement("div");
@@ -200,7 +202,7 @@
             const currentCount = Number(badge.dataset.messageCount || 0) + 1;
 
             badge.dataset.messageCount = currentCount;
-            badge.textContent = `${currentCount} ${currentCount === 1 ? 'messaggio' : 'messaggi'}`;
+            badge.textContent = `${currentCount} ${currentCount === 1 ? messageSingular : messagePlural}`;
         }
 
         function appendMessage(msg) {
@@ -278,7 +280,7 @@
             button.addEventListener("click", sendMessage);
 
             if (!window.Echo) {
-                console.error("Echo non disponibile");
+                console.error("Echo is unavailable");
                 return;
             }
 

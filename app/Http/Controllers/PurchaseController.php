@@ -158,36 +158,20 @@ class PurchaseController extends Controller
 
     public function createExtraInvoice(Request $request, InvoiceService $invoiceService)
     {
-        $validated = $request->validate(
-            [
-                'first_name' => ['required', 'string', 'max:255'],
-                'last_name' => ['required', 'string', 'max:255'],
-                'street' => ['required', 'string', 'max:255'],
-                'house_number' => ['required', 'string', 'max:6'],
-                'city' => ['required', 'string', 'max:255'],
-                'province' => ['required', 'string', 'max:2'],
-                'postal_code' => ['required', 'string', 'max:5'],
-                'tax_code' => ['required', 'string', 'max:16'],
-                'description' => ['required', 'string', 'max:255'],
-                'price' => ['required', 'numeric', 'min:0'],
-                'quantity' => ['required', 'numeric', 'min:1'],
-                'note' => ['nullable', 'string', 'max:255'],
-            ],
-            [],
-            [
-                'first_name' => 'nome',
-                'last_name' => 'cognome',
-                'street' => 'indirizzo',
-                'house_number' => 'numero civico',
-                'city' => 'città',
-                'province' => 'provincia',
-                'postal_code' => 'CAP',
-                'tax_code' => 'codice fiscale',
-                'description' => 'descrizione',
-                'price' => 'prezzo',
-                'quantity' => 'quantità',
-            ]
-        );
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'street' => ['required', 'string', 'max:255'],
+            'house_number' => ['required', 'string', 'max:6'],
+            'city' => ['required', 'string', 'max:255'],
+            'province' => ['required', 'string', 'max:2'],
+            'postal_code' => ['required', 'string', 'max:5'],
+            'tax_code' => ['required', 'string', 'max:16'],
+            'description' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'quantity' => ['required', 'numeric', 'min:1'],
+            'note' => ['nullable', 'string', 'max:255'],
+        ]);
 
         $invoiceService->generateManualExtraPdf($validated);
 
@@ -200,22 +184,14 @@ class PurchaseController extends Controller
             'price' => str_replace(',', '.', (string) $request->input('price')),
         ]);
 
-        $validated = $request->validate(
-            [
-                'description' => ['required', 'string', 'max:255'],
-                'price' => ['required', 'numeric', 'min:0.01'],
-                'quantity' => ['required', 'integer', 'min:1'],
-            ],
-            [],
-            [
-                'description' => 'descrizione',
-                'price' => 'prezzo',
-                'quantity' => 'quantità',
-            ]
-        );
+        $validated = $request->validate([
+            'description' => ['required', 'string', 'max:255'],
+            'price' => ['required', 'numeric', 'min:0.01'],
+            'quantity' => ['required', 'integer', 'min:1'],
+        ]);
 
         if (($validated['price'] * $validated['quantity']) > 77.47) {
-            return back()->withError('Importo superiore a 77.47 € (max consentito)');
+            return back()->withError(__('ui.payment.maximum_exceeded'));
         }
 
         $request->session()->put([

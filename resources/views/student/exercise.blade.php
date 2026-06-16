@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Esercizio'" />
+    <x-ui.section-header :title="__('student.courses.exercise')" />
 @endsection
 
 @section('inner')
@@ -10,7 +10,7 @@
             <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3">
                 <div>
                     <span class="badge bg-primary-subtle text-primary rounded-pill px-3 py-2 mb-2">
-                        Corso
+                        {{ __('student.courses.course') }}
                     </span>
 
                     <h3 class="fw-bold mb-0">
@@ -20,7 +20,7 @@
 
                 <div class="text-lg-end">
                     <span class="badge bg-secondary-subtle text-secondary rounded-pill px-3 py-2 mb-2">
-                        Esercizio
+                        {{ __('student.courses.exercise') }}
                     </span>
 
                     <h5 class="fw-semibold mb-0">
@@ -33,20 +33,22 @@
         <div class="mt-4">
             <x-ui.card>
                 <h4 class="fw-bold mb-3">
-                    Traccia
+                    {{ __('student.courses.exercise_prompt') }}
                 </h4>
 
-                <x-ui.pdf-viewer :src="'/protected-files/' . $exercise->prompt_file" title="Traccia" />
+                <x-ui.pdf-viewer :src="'/protected-files/' . $exercise->prompt_file"
+                    :title="__('student.courses.exercise_prompt')" />
             </x-ui.card>
         </div>
 
         <div class="mt-4">
             <x-ui.card>
                 <h4 class="fw-bold mb-3">
-                    Svolgimento
+                    {{ __('student.courses.exercise_solution') }}
                 </h4>
 
-                <x-ui.pdf-viewer :src="'/protected-files/' . $exercise->solution_file" title="Esecuzione" />
+                <x-ui.pdf-viewer :src="'/protected-files/' . $exercise->solution_file"
+                    :title="__('student.courses.exercise_solution')" />
             </x-ui.card>
         </div>
 
@@ -54,7 +56,7 @@
             <x-ui.support-chat
                 :chat="$chat"
                 :messages="$messages"
-                description="Scrivi qui per ricevere supporto sull'esercizio."
+                :description="__('student.courses.exercise_chat')"
             />
         </div>
     </x-ui.page-section>

@@ -1,7 +1,7 @@
 @extends('layouts.student-dashboard')
 
 @section('page-title')
-    <x-ui.section-header :title="'Pagamento Extra'" />
+    <x-ui.section-header :title="__('student.payment.extra_title')" />
 @endsection
 
 @section('inner')
@@ -23,11 +23,11 @@
                 <x-ui.card>
                     <div class="mb-4">
                         <h4 class="fw-bold mb-2">
-                            Dettagli pagamento
+                            {{ __('student.payment.details_title') }}
                         </h4>
 
                         <p class="text-muted mb-0">
-                            Inserisci descrizione, prezzo unitario e quantita del servizio da pagare.
+                            {{ __('student.payment.details_text') }}
                         </p>
                     </div>
 
@@ -42,7 +42,7 @@
 
                         <div class="col-md-8">
                             <label class="form-label fw-semibold" for="description">
-                                Descrizione
+                                {{ __('student.payment.description') }}
                             </label>
                             <input
                                 type="text"
@@ -51,7 +51,7 @@
                                 name="description"
                                 value="{{ old('description') }}"
                                 maxlength="255"
-                                placeholder="Esempio: lezione privata"
+                                placeholder="{{ __('student.payment.description_placeholder') }}"
                             >
                             @error('description')
                                 <div class="invalid-feedback">{{ $message }}</div>
@@ -60,7 +60,7 @@
 
                         <div class="col-md-2">
                             <label class="form-label fw-semibold" for="price">
-                                Prezzo
+                                {{ __('student.payment.price') }}
                             </label>
                             <input
                                 type="text"
@@ -79,7 +79,7 @@
 
                         <div class="col-md-2">
                             <label class="form-label fw-semibold" for="quantity">
-                                Qta
+                                {{ __('student.payment.quantity') }}
                             </label>
                             <input
                                 type="text"
@@ -99,7 +99,7 @@
                         <div class="col-12">
                             <div class="border rounded-4 p-3 bg-light d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-2">
                                 <span class="text-muted">
-                                    Totale
+                                    {{ __('student.payment.total') }}
                                 </span>
 
                                 <span class="fs-4 fw-bold text-success" id="payment-total">
@@ -110,7 +110,7 @@
 
                         <div class="col-12 text-end">
                             <x-ui.primary-button type="submit">
-                                Paga
+                                {{ __('student.payment.pay') }}
                             </x-ui.primary-button>
                         </div>
                     </form>

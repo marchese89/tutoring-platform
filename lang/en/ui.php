@@ -40,9 +40,15 @@ return [
         'you' => 'You',
         'teacher' => 'Teacher',
         'message_count' => '{1} :count message|[2,*] :count messages',
+        'message_singular' => 'message',
+        'message_plural' => 'messages',
         'empty' => 'No messages yet.',
         'message' => 'Message',
         'placeholder' => 'Write a message...',
         'send' => 'Send',
+    ],
+
+    'payment' => [
+        'maximum_exceeded' => 'The amount exceeds the maximum allowed value of €77.47.',
     ],
 ];

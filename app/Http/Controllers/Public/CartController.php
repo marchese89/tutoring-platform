@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Public;
 
+use App\Helpers\NumberHelper;
 use App\Http\Controllers\Controller;
 use App\Http\Utility\Cart;
 use Illuminate\Http\Request;
@@ -21,7 +22,7 @@ class CartController extends Controller
         ['total' => $total] = $this->summary($request);
 
         return view('public.checkout', [
-            'formattedTotal' => number_format((float) $total, 2, ',', '.'),
+            'formattedTotal' => NumberHelper::format((float) $total),
             'stripeKey' => config('services.stripe.key'),
         ]);
     }

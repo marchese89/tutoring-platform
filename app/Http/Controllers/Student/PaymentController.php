@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Student;
 
+use App\Helpers\NumberHelper;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -17,11 +18,11 @@ class PaymentController extends Controller
         if (! is_numeric($price) || ! is_numeric($quantity)) {
             return redirect()
                 ->route('payment.extra')
-                ->withError('Inserisci i dettagli del pagamento prima di procedere.');
+                ->withError(__('student.payment.details_missing'));
         }
 
         return view('student.pay', [
-            'formattedTotal' => number_format((float) $price * (int) $quantity, 2, ',', '.'),
+            'formattedTotal' => NumberHelper::format((float) $price * (int) $quantity),
             'stripeKey' => config('services.stripe.key'),
         ]);
     }

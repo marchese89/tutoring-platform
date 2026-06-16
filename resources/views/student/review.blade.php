@@ -27,7 +27,7 @@
 @endpush
 
 @section('page-title')
-    <x-ui.section-header :title="'Recensione'" />
+    <x-ui.section-header :title="__('student.review.title')" />
 @endsection
 
 @section('inner')
@@ -90,13 +90,14 @@
                 <x-ui.card>
                     <div class="mb-4 text-center">
                         <h4 class="fw-bold mb-3">
-                            Valutazione
+                            {{ __('student.review.rating') }}
                         </h4>
 
-                        <div class="review-stars" id="stars" aria-label="Valutazione">
+                        <div class="review-stars" id="stars" aria-label="{{ __('student.review.rating') }}">
                             @for ($value = 1; $value <= 5; $value++)
                                 <button type="button" class="review-star" data-review-star="{{ $value }}"
-                                    onclick="saveRating({{ $value }})" aria-label="{{ $value }} stelle">
+                                    onclick="saveRating({{ $value }})"
+                                    aria-label="{{ trans_choice('student.review.stars', $value, ['count' => $value]) }}">
                                     <i class="bi bi-star-fill"></i>
                                 </button>
                             @endfor
@@ -105,7 +106,7 @@
 
                     <div class="mb-3">
                         <label class="form-label fw-semibold" for="review">
-                            Recensione
+                            {{ __('student.review.review') }}
                         </label>
 
                         <textarea id="review" name="review" rows="6" maxlength="500" class="form-control rounded-4"
@@ -119,12 +120,12 @@
 
                         <div class="d-flex align-items-center gap-3">
                             <span id="review-status" class="text-success small d-none">
-                                Recensione salvata.
+                                {{ __('student.review.saved') }}
                             </span>
 
                             <x-ui.primary-button id="storeReview"
                                 onclick="storeReview(document.getElementById('review').value)">
-                                Invia
+                                {{ __('student.review.submit') }}
                             </x-ui.primary-button>
                         </div>
                     </div>
