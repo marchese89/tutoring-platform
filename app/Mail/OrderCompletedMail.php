@@ -17,7 +17,7 @@ class OrderCompletedMail extends Mailable
 
     public function build()
     {
-        return $this->subject('Ordine Effettuato')
+        return $this->subject(__('mail.order_completed.subject'))
             ->view('emails.order-success')
             ->with([
                 'user' => $this->user,
@@ -27,7 +27,7 @@ class OrderCompletedMail extends Mailable
             ->attach(
                 Storage::disk('private')->path($this->pdf_path),
                 [
-                    'as' => 'fattura.pdf',
+                    'as' => __('mail.order_completed.attachment_name'),
                     'mime' => 'application/pdf',
                 ]
             );

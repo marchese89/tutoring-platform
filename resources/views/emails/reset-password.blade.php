@@ -1,49 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
-    <title>Reset Password</title>
+    <title>{{ __('mail.reset_password.subject') }}</title>
 </head>
 
 <body>
 
-    <h2>Reimpostazione Password</h2>
+    <h2>{{ __('mail.reset_password.title') }}</h2>
 
-    <p>Ciao!</p>
+    <p>{{ __('mail.reset_password.greeting') }}</p>
 
-    <p>Hai ricevuto questa email perché è stato richiesto un reset della password.</p>
+    <p>{{ __('mail.reset_password.body') }}</p>
 
     <p>
         <a href="{{ $url }}"
             style="padding:10px 20px;background:#0d6efd;color:#fff;text-decoration:none;border-radius:5px;hover:bg-blue-700;">
-            Reimposta Password
+            {{ __('mail.reset_password.action') }}
         </a>
     </p>
 
-    <p>Il link scadrà tra 60 minuti.</p>
+    <p>{{ __('mail.reset_password.expires') }}</p>
 
-    <p>Se non hai richiesto il reset, ignora questa email.</p>
-
-
-
+    <p>{{ __('mail.reset_password.ignore') }}</p>
 
     <br>
 
-    <p>Cordiali saluti,<br>Lezioni Informatica</p>
+    <p>{{ __('mail.reset_password.regards') }}<br>{{ __('mail.signature') }}</p>
 
     <hr>
 
     <p>
-        Se hai problemi a cliccare il pulsante <strong>"Reimposta Password"</strong>, copia e incolla il link qui sotto
-        nel tuo browser:
+        {{ __('mail.reset_password.fallback', ['action' => __('mail.reset_password.action')]) }}
     </p>
 
     <p>
         <a href="{{ $url }}">{{ $url }}</a>
     </p>
-
-
 
 </body>
 

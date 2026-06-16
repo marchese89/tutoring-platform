@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
 </head>
 
 <body>
-    <h2>Richiesta evasa</h2>
+    <h2>{{ __('mail.lesson_request_fulfilled.title') }}</h2>
 
-    <p>Gentile studente,</p>
+    <p>{{ __('mail.lesson_request_fulfilled.greeting') }}</p>
 
-    <p>la sua richiesta è stata evasa.</p>
+    <p>{{ __('mail.lesson_request_fulfilled.body') }}</p>
 
-    <p>Può ora visualizzare il preventivo nel sito.</p>
+    <p>{{ __('mail.lesson_request_fulfilled.cta') }}</p>
 
     <br>
-    <p>Lezioni Informatica</p>
+    <p>{{ __('mail.signature') }}</p>
 </body>
 
 </html>

@@ -1,21 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
 </head>
 
 <body>
-    <h2>Nuova richiesta di lezione</h2>
+    <h2>{{ __('mail.new_student_request.title') }}</h2>
 
-    <p>Salve,</p>
+    <p>{{ __('mail.new_student_request.greeting') }}</p>
 
-    <p>è stata inviata una nuova richiesta da uno studente.</p>
+    <p>{{ __('mail.new_student_request.body') }}</p>
 
-    <p><strong>Accedi al pannello admin per visualizzarla.</strong></p>
+    <p><strong>{{ __('mail.new_student_request.cta') }}</strong></p>
 
     <br>
-    <p>Lezioni Informatica</p>
+    <p>{{ __('mail.signature') }}</p>
 </body>
 
 </html>

@@ -8,7 +8,7 @@ class NewStudentRequestMail extends Mailable
 {
     public function build()
     {
-        return $this->subject('Nuova Richiesta Studente')
+        return $this->subject(__('mail.new_student_request.subject'))
             ->view('emails.new-student-request');
     }
 }

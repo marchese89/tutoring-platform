@@ -49,6 +49,12 @@ return [
     ],
 
     'payment' => [
-        'maximum_exceeded' => 'The amount exceeds the maximum allowed value of €77.47.',
+        'maximum_exceeded' => 'The amount exceeds the maximum allowed value of EUR 77.47.',
+    ],
+
+    'pdf' => [
+        'document' => 'PDF document',
+        'unsupported' => 'Your browser does not support PDF preview.',
+        'open_document' => 'Open the document',
     ],
 ];

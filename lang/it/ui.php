@@ -31,7 +31,7 @@ return [
         'student' => 'Studente',
         'loading' => 'Caricamento ordini...',
         'period_empty' => 'Nessun ordine per il periodo selezionato.',
-        'load_error' => 'Non è stato possibile caricare gli ordini. Riprova.',
+        'load_error' => 'Non e stato possibile caricare gli ordini. Riprova.',
     ],
 
     'chat' => [
@@ -49,6 +49,12 @@ return [
     ],
 
     'payment' => [
-        'maximum_exceeded' => 'Importo superiore a 77,47 € (massimo consentito).',
+        'maximum_exceeded' => 'Importo superiore a 77,47 euro (massimo consentito).',
+    ],
+
+    'pdf' => [
+        'document' => 'Documento PDF',
+        'unsupported' => 'Il browser non supporta la visualizzazione PDF.',
+        'open_document' => 'Apri il documento',
     ],
 ];

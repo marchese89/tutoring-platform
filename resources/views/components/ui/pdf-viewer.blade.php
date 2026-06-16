@@ -1,4 +1,4 @@
-@props(['src', 'title' => 'Documento PDF', 'size' => 'default'])
+@props(['src', 'title' => null, 'size' => 'default'])
 
 @php
     $sizeClass = $size === 'compact' ? 'pdf-viewer--compact' : '';
@@ -45,11 +45,11 @@
 @endonce
 
 <div {{ $attributes->class(['pdf-viewer', $sizeClass]) }}>
-    <iframe src="{{ $src }}#view=FitH" title="{{ $title }}">
+    <iframe src="{{ $src }}#view=FitH" title="{{ $title ?? __('ui.pdf.document') }}">
         <p>
-            Il browser non supporta la visualizzazione PDF.
+            {{ __('ui.pdf.unsupported') }}
             <a href="{{ $src }}" target="_blank" rel="noopener">
-                Apri il documento
+                {{ __('ui.pdf.open_document') }}
             </a>
         </p>
     </iframe>

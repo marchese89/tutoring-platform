@@ -128,9 +128,11 @@ progress.
 - Admin student and settings pages use localized text for student request
   management, admin chats, account/profile cards, photo uploads, VAT settings,
   and certificate workflows.
+- Email templates, email subjects, PDF invoice labels, and shared PDF viewer
+  fallback text use Italian and English catalogs.
 - Locale behavior and translated validation have focused feature coverage.
-- Remaining user-facing strings in legal policies, mail, invoice PDF views, and
-  miscellaneous shared fallbacks still need to be moved into language files.
+- Remaining user-facing strings in legal policies and miscellaneous shared
+  fallbacks still need to be moved into language files.
 
 ### 9. Visual consistency
 
@@ -199,9 +201,9 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest localization milestone: admin student and settings workflows use
+- Latest localization milestone: email templates and PDF invoice workflows use
   Italian and English translation catalogs.
-- Automated verification: 124 tests and 614 assertions pass.
+- Automated verification: 126 tests and 624 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
 - Repository-wide Pint verification passes.
@@ -250,11 +252,13 @@ Last verified: 2026-06-16.
   English; the numeric formatter no longer requires the PHP `intl` extension.
 - Admin billing, teaching management, student request/chat, and settings
   workflows are localized in Italian and English.
+- Email notifications, reset-password email content, invoice PDF labels, and
+  shared PDF viewer fallback text are localized in Italian and English.
 
 ### Remaining work
 
-1. Continue moving user-facing strings through mail, invoice PDF, legal policy
-   contexts, and miscellaneous shared fallbacks.
+1. Continue moving user-facing strings through legal policy contexts and
+   miscellaneous shared fallbacks.
 2. Review remaining comments for internal Italian prose; the identifier audit
    no longer finds Italian application identifiers.
 3. Review monetary fields, model relationships, and database constraints, then
@@ -272,8 +276,7 @@ Last verified: 2026-06-16.
 
 ### Next action
 
-Localize mail, invoice PDF, and legal policy contexts next in separate focused
-commits.
+Localize legal policy contexts next, then run a final residual string audit.
 
 ## Historical progress
 

@@ -30,7 +30,7 @@ class User extends Authenticatable
             public function toMail($notifiable)
             {
                 return (new MailMessage)
-                    ->subject('Reimpostazione Password')
+                    ->subject(__('mail.reset_password.subject'))
                     ->view('emails.reset-password', [
                         'url' => $this->resetUrl($notifiable),
                         'user' => $notifiable,

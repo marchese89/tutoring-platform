@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Fattura',
+    'vat_number' => 'PARTITA IVA',
+    'tax_code' => 'COD. FISC',
+    'customer' => 'Cliente',
+    'customer_tax_code' => 'CF',
+    'date' => 'DATA',
+    'invoice_number' => 'FATTURA',
+    'description' => 'DESCRIZIONE',
+    'price' => 'PREZZO',
+    'quantity' => 'QTA',
+    'amount' => 'IMPORTO',
+    'taxable_amount' => 'IMPONIBILE',
+    'inps' => 'Rivalsa Inps 4%',
+    'total' => 'TOTALE',
+    'stamp_duty' => 'Imposta di bollo euro 2,00 su originale',
+    'stamp_duty_threshold' => 'su importi superiori ad euro 77,47',
+    'notes' => 'NOTE',
+    'vat_exemption' => 'Operazione in franchigia da Iva art. 1 cc. 54-89 L. 190/2014',
+    'withholding_exemption' => "Non soggetta a ritenuta d'acconto ai sensi del c. 67 L. 190/2014",
+    'document_view' => 'Visualizzazione documento PDF',
+    'open_new_tab' => 'Apri in una nuova scheda',
+    'admin_order_title' => 'Fattura ordine #:number',
+    'admin_order_heading' => 'Fattura Ordine #:number',
+];

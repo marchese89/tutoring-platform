@@ -2,7 +2,7 @@
     'src',
     'title',
     'viewerTitle' => null,
-    'description' => 'Visualizzazione documento PDF',
+    'description' => null,
     'actionUrl' => null,
     'actionLabel' => null,
     'actionTarget' => null,
@@ -16,7 +16,7 @@
             </h4>
 
             <p class="text-muted mb-0">
-                {{ $description }}
+                {{ $description ?? __('invoice.document_view') }}
             </p>
         </div>
 

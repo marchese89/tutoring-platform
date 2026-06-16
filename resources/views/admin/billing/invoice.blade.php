@@ -1,7 +1,7 @@
 @extends('layouts.admin-dashboard')
 
 @section('page-title')
-    <x-ui.section-header title="Fattura" />
+    <x-ui.section-header :title="__('invoice.title')" />
 @endsection
 
 @section('inner')
@@ -10,8 +10,8 @@
             $documentUrl = route('protected-files.show', ['path' => $invoice->file_path], false);
         @endphp
 
-        <x-ui.pdf-document-card :src="$documentUrl" :title="'Fattura Ordine #' . $orderId"
-            :viewer-title="'Fattura ordine #' . $orderId" :action-url="$documentUrl" action-label="Apri in una nuova scheda"
+        <x-ui.pdf-document-card :src="$documentUrl" :title="__('invoice.admin_order_heading', ['number' => $orderId])"
+            :viewer-title="__('invoice.admin_order_title', ['number' => $orderId])" :action-url="$documentUrl" :action-label="__('invoice.open_new_tab')"
             action-target="_blank" />
     </x-ui.page-section>
 @endsection
