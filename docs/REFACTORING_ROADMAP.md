@@ -135,6 +135,10 @@ progress.
 - The final focused residual audit removed hardcoded admin dashboard, auth,
   password-reset, upload-progress, legal, mail, and PDF viewer strings from
   views/controllers.
+- The first internal cleanup pass moved remaining teaching CRUD flash messages,
+  validation attribute labels, order product-type labels, password-reset
+  feedback, and seeded demo chat text out of Italian literals in controllers
+  and seeders.
 - Locale behavior and translated validation have focused feature coverage.
 - Remaining strings found by broad search are either translation catalog
   entries, CSS/JavaScript implementation details, fixture data, or non-user
@@ -207,8 +211,8 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `feature/localization-foundation`.
-- Latest localization milestone: focused residual string audit completed after
-  legal policy localization.
+- Latest cleanup milestone: residual controller/seeder Italian literals were
+  moved into translation catalogs or neutral demo data.
 - Automated verification: 126 tests and 634 assertions pass.
 - Laravel version: 12.62.0.
 - `composer audit --locked`: no known security advisories.
@@ -263,11 +267,13 @@ Last verified: 2026-06-16.
 - Privacy and cookie policy pages are localized in Italian and English.
 - Admin dashboard cards, login/reset feedback, and shared upload progress
   fallback text are localized in Italian and English.
+- Teaching CRUD feedback, validation labels, order product-type labels, and
+  password-reset feedback no longer contain hardcoded Italian in controllers.
 
 ### Remaining work
 
-1. Review remaining comments for internal Italian prose; the identifier audit
-   no longer finds Italian application identifiers.
+1. Review remaining comments for internal prose and remove stale framework
+   comments where they add no value.
 2. Review monetary fields, model relationships, and database constraints, then
    decide whether transitional billing migrations should be squashed before
    the first stable release.
@@ -283,8 +289,8 @@ Last verified: 2026-06-16.
 
 ### Next action
 
-Move from localization to the next structural cleanup: internal comment audit,
-then database/model constraint review and seeder split.
+Continue the internal cleanup branch with comment/stale-docblock pruning, then
+move to database/model constraint review and seeder split.
 
 ## Historical progress
 

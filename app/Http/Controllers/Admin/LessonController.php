@@ -120,9 +120,9 @@ class LessonController extends Controller
             ],
             [],
             [
-                'number' => 'numero',
-                'title' => 'titolo',
-                'price' => 'prezzo',
+                'number' => __('admin.teaching.validation.number'),
+                'title' => __('admin.teaching.validation.title'),
+                'price' => __('admin.teaching.validation.price'),
             ]
         );
 
@@ -208,9 +208,9 @@ class LessonController extends Controller
             ],
             [],
             [
-                'number' => 'numero',
-                'title' => 'titolo',
-                'price' => 'prezzo',
+                'number' => __('admin.teaching.validation.number'),
+                'title' => __('admin.teaching.validation.title'),
+                'price' => __('admin.teaching.validation.price'),
             ]
         );
 

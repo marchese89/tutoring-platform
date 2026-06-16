@@ -34,6 +34,13 @@ return [
         'load_error' => 'Non e stato possibile caricare gli ordini. Riprova.',
     ],
 
+    'product_types' => [
+        'lesson' => 'Lezione',
+        'exercise' => 'Esercizio',
+        'requested_lesson' => 'Lezione su richiesta',
+        'product' => 'Prodotto',
+    ],
+
     'chat' => [
         'title' => 'Chat di supporto',
         'description' => 'Scrivi qui per ricevere supporto.',

@@ -112,8 +112,8 @@ class ExerciseController extends Controller
             ],
             [],
             [
-                'title' => 'titolo',
-                'price' => 'prezzo',
+                'title' => __('admin.teaching.validation.title'),
+                'price' => __('admin.teaching.validation.price'),
             ]
         );
 
@@ -198,8 +198,8 @@ class ExerciseController extends Controller
             ],
             [],
             [
-                'title' => 'titolo',
-                'price' => 'prezzo',
+                'title' => __('admin.teaching.validation.title'),
+                'price' => __('admin.teaching.validation.price'),
             ]
         );
 

@@ -40,7 +40,7 @@ class SubjectController extends Controller
             'theme_area_id' => $data['theme_area_id'],
         ]);
 
-        return redirect()->back()->with('success', 'Materia creata');
+        return redirect()->back()->with('success', __('admin.teaching.messages.subject_created'));
     }
 
     public function update(Request $request, int $id)
@@ -55,7 +55,7 @@ class SubjectController extends Controller
             'name' => $data['name'],
         ]);
 
-        return redirect()->back()->with('success', 'Materia aggiornata');
+        return redirect()->back()->with('success', __('admin.teaching.messages.subject_updated'));
     }
 
     public function destroy(int $id)
@@ -64,12 +64,12 @@ class SubjectController extends Controller
 
         if ($subject->courses_count > 0) {
             return back()->withErrors([
-                'delete' => 'Non puoi eliminare una materia che contiene corsi.',
+                'delete' => __('admin.teaching.messages.subject_has_courses'),
             ]);
         }
 
         $subject->delete();
 
-        return redirect()->back()->with('success', 'Materia eliminata');
+        return redirect()->back()->with('success', __('admin.teaching.messages.subject_deleted'));
     }
 }

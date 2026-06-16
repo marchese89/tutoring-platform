@@ -109,10 +109,10 @@ class BillingController extends Controller
     private function productTypeLabel(int $type): string
     {
         return match ($type) {
-            ProductType::LESSON->value => 'Lezione',
-            ProductType::EXERCISE->value => 'Esercizio',
-            ProductType::REQUESTED_LESSON->value => 'Lezione su richiesta',
-            default => 'Prodotto',
+            ProductType::LESSON->value => __('ui.product_types.lesson'),
+            ProductType::EXERCISE->value => __('ui.product_types.exercise'),
+            ProductType::REQUESTED_LESSON->value => __('ui.product_types.requested_lesson'),
+            default => __('ui.product_types.product'),
         };
     }
 

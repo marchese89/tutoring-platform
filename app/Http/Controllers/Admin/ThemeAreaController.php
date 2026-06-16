@@ -36,7 +36,7 @@ class ThemeAreaController extends Controller
             'name' => $data['name'],
         ]);
 
-        return back()->with('success', 'Area tematica creata');
+        return back()->with('success', __('admin.teaching.messages.theme_area_created'));
     }
 
     public function update(Request $request, int $id)
@@ -51,7 +51,7 @@ class ThemeAreaController extends Controller
             'name' => $data['name'],
         ]);
 
-        return back()->with('success', 'Area tematica aggiornata');
+        return back()->with('success', __('admin.teaching.messages.theme_area_updated'));
     }
 
     public function destroy(int $id)
@@ -60,12 +60,12 @@ class ThemeAreaController extends Controller
 
         if ($themeArea->subjects_count > 0) {
             return back()->withErrors([
-                'delete' => 'Non puoi eliminare un’area tematica che contiene materie.',
+                'delete' => __('admin.teaching.messages.theme_area_has_subjects'),
             ]);
         }
 
         $themeArea->delete();
 
-        return back()->with('success', 'Area tematica eliminata');
+        return back()->with('success', __('admin.teaching.messages.theme_area_deleted'));
     }
 }

@@ -89,7 +89,7 @@ class CourseController extends Controller
             'subject_id' => $data['subject_id'],
         ]);
 
-        return back()->with('success', 'Corso creato');
+        return back()->with('success', __('admin.teaching.messages.course_created'));
     }
 
     public function update(Request $request, int $id)
@@ -104,7 +104,7 @@ class CourseController extends Controller
             'name' => $data['name'],
         ]);
 
-        return back()->with('success', 'Corso aggiornato');
+        return back()->with('success', __('admin.teaching.messages.course_updated'));
     }
 
     public function destroy(int $id)
@@ -113,13 +113,13 @@ class CourseController extends Controller
 
         if ($course->lessons_count > 0 || $course->exercises_count > 0) {
             return back()->withErrors([
-                'delete' => 'Non puoi eliminare un corso che contiene lezioni o esercizi.',
+                'delete' => __('admin.teaching.messages.course_has_content'),
             ]);
         }
 
         $course->delete();
 
-        return back()->with('success', 'Corso eliminato');
+        return back()->with('success', __('admin.teaching.messages.course_deleted'));
     }
 
     public function show(int $id)

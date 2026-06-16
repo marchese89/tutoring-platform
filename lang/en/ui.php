@@ -34,6 +34,13 @@ return [
         'load_error' => 'Orders could not be loaded. Please try again.',
     ],
 
+    'product_types' => [
+        'lesson' => 'Lesson',
+        'exercise' => 'Exercise',
+        'requested_lesson' => 'Requested lesson',
+        'product' => 'Product',
+    ],
+
     'chat' => [
         'title' => 'Support chat',
         'description' => 'Write here to receive support.',

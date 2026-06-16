@@ -321,7 +321,7 @@ class DatabaseSeeder extends Seeder
 
         ChatMessage::create([
             'chat_id' => $chat->id,
-            'message' => 'Ho una domanda sulla lezione.',
+            'message' => 'I have a question about this lesson.',
             'sender_role' => ChatSenderRole::STUDENT->value,
             'sent_at' => now()->subHours(2),
         ]);
