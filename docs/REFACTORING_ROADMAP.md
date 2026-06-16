@@ -83,7 +83,7 @@ Status: completed for the current application surface.
 
 ### 7. Internal code quality
 
-Status: one small cleanup pass remains, then this package is closed.
+Status: completed for the current application surface.
 
 - Complete English naming for internal identifiers and comments.
 - Remove legacy routes and `public/custom_javascript/utility.js`.
@@ -97,6 +97,8 @@ Completed:
 - Product types and chat sender roles use enums instead of numeric magic values.
 - Password visibility controls use one shared Blade component.
 - `public/custom_javascript/utility.js` and unused public stylesheets were removed.
+- Remaining public lesson, exercise, order, and shared document-preview headings
+  use translation catalogs instead of hardcoded Blade strings.
 
 ### 8. Localization
 
@@ -269,18 +271,25 @@ Last verified: 2026-06-16.
   fallback text are localized in Italian and English.
 - Teaching CRUD feedback, validation labels, order product-type labels, and
   password-reset feedback no longer contain hardcoded Italian in controllers.
+- Remaining public lesson, exercise, order, and shared document-preview headings
+  were moved from Blade literals to Italian and English translation catalogs.
 
 ## Final completion plan
 
-The refactoring is no longer tracked as an open-ended audit. The remaining
-work is limited to five packages. When these are complete, the branch series is
-ready for merge/squash review.
+The refactoring is no longer tracked as an open-ended audit. The final work is
+tracked as five packages. Package A is complete, so four packages remain before
+the branch series is ready for merge/squash review.
 
 ### Package A. Internal cleanup closure
 
 Branch: `refactor/internal-code-cleanup`
 
-Estimated commits: 1.
+Status: completed.
+
+Completed commits:
+
+- `86899e1` Add UX and pagination package to roadmap.
+- `061b5e2` Localize remaining Blade headings.
 
 Definition of Done:
 
@@ -289,6 +298,11 @@ Definition of Done:
 - Keep framework/vendor-style comments only where they clarify Laravel
   extension points.
 - Run Pint and the full test suite.
+
+Verification:
+
+- `vendor\bin\pint --test`
+- `php artisan test` - 126 passed, 634 assertions.
 
 ### Package B. Model and migration hardening
 
@@ -366,11 +380,12 @@ Definition of Done:
 - Automated tests and factories.
 - Visual consistency for audited pages.
 - Localization for public, student, admin, mail, PDF, and legal surfaces.
+- Internal cleanup closure.
 
 ### Next action
 
-Complete Package A with one small commit on `refactor/internal-code-cleanup`,
-then create `refactor/schema-hardening` for Package B.
+Create `refactor/schema-hardening` from `refactor/internal-code-cleanup` and
+start Package B with a schema/model audit commit.
 
 ## Historical progress
 
