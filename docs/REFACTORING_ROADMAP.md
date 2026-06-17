@@ -391,6 +391,8 @@ Completed so far:
 - Demo PDF generation is shared through one seeder concern.
 - Fresh install verification passes with SQLite `:memory:` using
   `php artisan migrate:fresh --seed --force`.
+- Demo seeding has feature coverage for generated users, catalog content,
+  orders, invoices, chats, reviews, and private demo PDFs.
 
 ### Package D. Public UX and list pagination
 
