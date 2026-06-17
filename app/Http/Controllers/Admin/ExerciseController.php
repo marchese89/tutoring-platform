@@ -41,10 +41,10 @@ class ExerciseController extends Controller
         return view('admin.teaching.edit-exercise', compact('course', 'exercise'));
     }
 
-    public function viewTrace($courseId, $exerciseId)
+    public function viewTrace(int $courseId, int $exerciseId)
     {
-        $course = Course::find($courseId);
-        $exercise = Exercise::find($exerciseId);
+        $course = Course::findOrFail($courseId);
+        $exercise = Exercise::where('course_id', $courseId)->findOrFail($exerciseId);
 
         return view('public.exercise-trace', compact('exercise', 'course'));
     }
@@ -115,7 +115,7 @@ class ExerciseController extends Controller
                     Rule::unique('exercises', 'title')
                         ->where(fn ($query) => $query->where('course_id', $request->input('course_id'))),
                 ],
-                'price' => 'required|numeric',
+                'price' => 'required|numeric|min:0',
             ],
             [],
             [
@@ -140,7 +140,7 @@ class ExerciseController extends Controller
         return redirect()->route('admin.courses.edit', $validated['course_id']);
     }
 
-    public function destroy($id)
+    public function destroy(int $id)
     {
         $exercise = Exercise::findOrFail($id);
 
@@ -154,7 +154,7 @@ class ExerciseController extends Controller
         return back();
     }
 
-    public function updateTrace(Request $request, $id)
+    public function updateTrace(Request $request, int $id)
     {
         $request->validate([
             'prompt_file' => UploadRules::pdf(),
@@ -175,7 +175,7 @@ class ExerciseController extends Controller
         return back();
     }
 
-    public function updateExecution(Request $request, $id)
+    public function updateExecution(Request $request, int $id)
     {
         $request->validate([
             'solution_file' => UploadRules::pdf(),
@@ -196,7 +196,7 @@ class ExerciseController extends Controller
         return back();
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $exercise = Exercise::findOrFail($id);
 
@@ -210,7 +210,7 @@ class ExerciseController extends Controller
                         ->where(fn ($query) => $query->where('course_id', $exercise->course_id))
                         ->ignore($exercise->id),
                 ],
-                'price' => 'required|numeric',
+                'price' => 'required|numeric|min:0',
             ],
             [],
             [

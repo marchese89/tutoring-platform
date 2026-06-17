@@ -14,16 +14,16 @@ class LessonController extends Controller
 {
     public function viewPresentation(int $courseId, int $lessonId)
     {
-        $course = Course::find($courseId);
-        $lesson = Lesson::find($lessonId);
+        $course = Course::findOrFail($courseId);
+        $lesson = Lesson::where('course_id', $courseId)->findOrFail($lessonId);
 
         return view('public.lesson-presentation', compact('course', 'lesson'));
     }
 
     public function view(int $courseId, int $lessonId)
     {
-        $course = Course::find($courseId);
-        $lesson = Lesson::find($lessonId);
+        $course = Course::findOrFail($courseId);
+        $lesson = Lesson::where('course_id', $courseId)->findOrFail($lessonId);
 
         return view('public.lesson-content', compact('course', 'lesson'));
     }
@@ -122,7 +122,7 @@ class LessonController extends Controller
                         ->where(fn ($query) => $query->where('course_id', $request->input('course_id'))),
                 ],
                 'title' => 'required|string',
-                'price' => 'required|numeric',
+                'price' => 'required|numeric|min:0',
             ],
             [],
             [
@@ -218,7 +218,7 @@ class LessonController extends Controller
                         ->ignore($lesson->id),
                 ],
                 'title' => 'required|string',
-                'price' => 'required|numeric',
+                'price' => 'required|numeric|min:0',
             ],
             [],
             [

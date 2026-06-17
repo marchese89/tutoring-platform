@@ -178,6 +178,25 @@ class PurchasedContentAuthorizationTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_student_cannot_add_missing_catalog_content_to_cart(): void
+    {
+        $student = Student::factory()->create();
+
+        $this->actingAs($student->user)
+            ->post(route('cart.items.store', [
+                'id' => 999999,
+                'type' => CartItem::LESSON,
+            ]))
+            ->assertNotFound();
+
+        $this->actingAs($student->user)
+            ->post(route('cart.items.store', [
+                'id' => 999999,
+                'type' => CartItem::EXERCISE,
+            ]))
+            ->assertNotFound();
+    }
+
     private function purchase(Student $student, int $productId, int $productType): void
     {
         $order = Order::factory()

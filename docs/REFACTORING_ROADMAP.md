@@ -210,13 +210,13 @@ Status: dependency upgrade completed; release verification remains open.
 
 ## Current status
 
-Last verified: 2026-06-16.
+Last verified: 2026-06-17.
 
-- Current branch: `refactor/schema-hardening`.
+- Current branch: `refactor/final-safety-pass`.
 - Latest schema-hardening milestone: transition migrations were folded into the
   base schema, unused legacy billing/subscription schema was removed, and
   required domain fields are no longer nullable in fresh installs.
-- Automated verification: 133 tests and 654 assertions pass.
+- Automated verification: 143 tests and 715 assertions pass.
 - Test database: SQLite `:memory:` through `phpunit.xml`; the previous MySQL
   testing database is no longer required for automated tests.
 - Laravel version: 12.62.0.
@@ -464,6 +464,17 @@ Definition of Done:
 - Review static services such as purchase helpers and decide whether to keep
   them as lightweight support classes or convert them to injectable services.
 - Add focused tests for each behavior-preserving split or safety fix.
+
+Completed so far:
+
+- Catalog add-to-cart redirects and order-item description creation use
+  failing lookups instead of nullable model access for missing lessons,
+  exercises, and direct lesson requests.
+- Public lesson, lesson-presentation, and exercise-trace routes now verify
+  that the requested content belongs to the requested course before rendering.
+- Admin lesson and exercise prices reject negative values on create and update.
+- Focused tests cover missing cart content, course/content mismatches, and
+  negative teaching-content prices.
 
 ### Package F. Release verification
 

@@ -34,8 +34,8 @@ class PurchaseController extends Controller
         $request->session()->put('cart', $cart);
 
         return match ($type) {
-            CartItem::LESSON => redirect()->route('courses.show', Lesson::find($id)->course_id),
-            CartItem::EXERCISE => redirect()->route('courses.show', Exercise::find($id)->course_id),
+            CartItem::LESSON => redirect()->route('courses.show', Lesson::findOrFail($id)->course_id),
+            CartItem::EXERCISE => redirect()->route('courses.show', Exercise::findOrFail($id)->course_id),
             CartItem::COURSE_LESSONS,
             CartItem::FULL_COURSE => redirect()->route('courses.show', $id),
             CartItem::REQUESTED_LESSON => redirect()->route('student.direct-requests.show', $id),

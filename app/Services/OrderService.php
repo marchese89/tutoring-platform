@@ -122,9 +122,9 @@ class OrderService
             'product_type' => $type,
             'price' => $price,
             'description' => match ($type) {
-                CartItem::LESSON => 'Lesson: '.Lesson::find($productId)->title,
-                CartItem::EXERCISE => 'Exercise: '.Exercise::find($productId)->title,
-                CartItem::REQUESTED_LESSON => 'Request: '.LessonRequest::find($productId)->title,
+                CartItem::LESSON => 'Lesson: '.Lesson::findOrFail($productId)->title,
+                CartItem::EXERCISE => 'Exercise: '.Exercise::findOrFail($productId)->title,
+                CartItem::REQUESTED_LESSON => 'Request: '.LessonRequest::findOrFail($productId)->title,
                 default => 'Unknown product',
             },
         ]);

@@ -201,6 +201,51 @@ class AdminTeachingManagementTest extends TestCase
             ->assertSessionHasErrors('title');
     }
 
+    public function test_lessons_and_exercises_reject_negative_prices(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $course = Course::factory()->create();
+        $lesson = Lesson::factory()->for($course)->create([
+            'number' => 1,
+            'price' => 15,
+        ]);
+        $exercise = Exercise::factory()->for($course)->create([
+            'price' => 10,
+        ]);
+
+        $this->actingAs($admin)
+            ->post(route('admin.lessons.store'), [
+                'course_id' => $course->id,
+                'number' => 2,
+                'title' => 'Negative lesson',
+                'price' => -1,
+            ])
+            ->assertSessionHasErrors('price');
+
+        $this->actingAs($admin)
+            ->put(route('admin.lessons.update', $lesson), [
+                'number' => $lesson->number,
+                'title' => $lesson->title,
+                'price' => -1,
+            ])
+            ->assertSessionHasErrors('price');
+
+        $this->actingAs($admin)
+            ->post(route('admin.exercises.store'), [
+                'course_id' => $course->id,
+                'title' => 'Negative exercise',
+                'price' => -1,
+            ])
+            ->assertSessionHasErrors('price');
+
+        $this->actingAs($admin)
+            ->put(route('admin.exercises.update', $exercise), [
+                'title' => $exercise->title,
+                'price' => -1,
+            ])
+            ->assertSessionHasErrors('price');
+    }
+
     public function test_teaching_catalog_records_can_keep_their_current_unique_value_when_updated(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);
