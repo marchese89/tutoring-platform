@@ -24,6 +24,10 @@ return new class extends Migration
             $table->string('password');
             $table->enum('role', ['admin', 'student'])->default('student');
             $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->string('stripe_id')->nullable()->index();
+            $table->string('pm_type')->nullable();
+            $table->string('pm_last_four', 4)->nullable();
+            $table->timestamp('trial_ends_at')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

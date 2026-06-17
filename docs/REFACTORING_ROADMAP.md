@@ -353,6 +353,9 @@ Completed so far:
 - Final invoice columns, invoice indexes, and payment transaction linkage were
   folded into the base invoices migration; legacy invoice-sheet backfill
   migrations were removed from the fresh schema path.
+- Cashier customer columns were folded into the base users migration, and
+  unused subscription tables were removed because the application only handles
+  one-off payments.
 
 Verification so far:
 
