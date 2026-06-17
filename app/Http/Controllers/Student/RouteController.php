@@ -12,10 +12,8 @@ use Illuminate\View\View;
 
 class RouteController extends Controller
 {
-    public function show(Request $request, int $id): View
+    public function show(Request $request, Course $course): View
     {
-        $course = Course::query()->findOrFail($id);
-
         $student = $request->user()->student;
         $purchasedLessonIds = PurchaseService::purchasedProductIds($student->id, 0);
         $purchasedExerciseIds = PurchaseService::purchasedProductIds($student->id, 2);

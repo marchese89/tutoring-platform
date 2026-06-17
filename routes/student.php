@@ -30,7 +30,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
         ->name('student.account.password.update');
 
     Route::get('student/courses', [CourseController::class, 'purchasedCourses'])->name('student.courses.index');
-    Route::get('student/courses/{id}', [RouteController::class, 'show'])->name('student.courses.show');
+    Route::get('student/courses/{course}', [RouteController::class, 'show'])->name('student.courses.show');
     Route::get('student/courses/{course}/lessons/{lesson}', [StudentController::class, 'showLesson'])
         ->name('student.lessons.show');
     Route::get('student/courses/{course}/exercises/{exercise}', [StudentController::class, 'showExercise'])
@@ -64,7 +64,7 @@ Route::middleware(['auth', 'role:student'])->group(function () {
     Route::get('student/direct-requests', [DirectRequestController::class, 'index'])->name('student.direct-requests.index');
     Route::get('student/direct-requests/purchased', [DirectRequestController::class, 'purchased'])
         ->name('student.direct-requests.purchased');
-    Route::get('student/direct-requests/{id}', [StudentController::class, 'showDirectRequest'])
+    Route::get('student/direct-requests/{lessonRequest}', [StudentController::class, 'showDirectRequest'])
         ->name('student.direct-requests.show');
 
     Route::post('student/chat/messages', [AjaxController::class, 'sendMessage'])

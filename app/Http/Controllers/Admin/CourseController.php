@@ -27,9 +27,9 @@ class CourseController extends Controller
         return view('admin.teaching.create-course', compact('subjects', 'courses'));
     }
 
-    public function publicIndex(int $subject)
+    public function publicIndex(Subject $subject)
     {
-        $courses = Course::where('subject_id', $subject)->get();
+        $courses = Course::where('subject_id', $subject->id)->get();
 
         return view('public.courses', compact('courses'));
     }
@@ -136,9 +136,9 @@ class CourseController extends Controller
         return back()->with('success', __('admin.teaching.messages.course_deleted'));
     }
 
-    public function show(int $id)
+    public function show(Course $course)
     {
-        $course = Course::with(['lessons', 'exercises'])->findOrFail($id);
+        $course->load(['lessons', 'exercises']);
 
         $user = auth()->user();
 

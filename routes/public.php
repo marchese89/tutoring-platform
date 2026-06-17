@@ -23,7 +23,7 @@ Route::get('about', [HomeController::class, 'about'])->name('about');
 Route::get('theme-areas', [ThemeAreaController::class, 'publicIndex'])->name('theme-areas.index');
 Route::get('theme-areas/{themeArea}/subjects', [SubjectController::class, 'publicIndex'])->name('subjects.index');
 Route::get('subjects/{subject}/courses', [CourseController::class, 'publicIndex'])->name('courses.index');
-Route::get('courses/{id}', [CourseController::class, 'show'])->name('courses.show');
+Route::get('courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
 Route::get('courses/{course}/lessons/{lesson}/presentation', [LessonController::class, 'viewPresentation'])
     ->name('lessons.presentation');

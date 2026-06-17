@@ -21,8 +21,8 @@ Breadcrumbs::for('subjects.index', function (BreadcrumbTrail $trail, $themeArea)
     $trail->push(__('breadcrumbs.subjects'), route('subjects.index', $themeArea));
 });
 
-Breadcrumbs::for('courses.index', function (BreadcrumbTrail $trail, $subjectId) {
-    $subject = Subject::find($subjectId);
+Breadcrumbs::for('courses.index', function (BreadcrumbTrail $trail, $subject) {
+    $subject = $subject instanceof Subject ? $subject : Subject::find($subject);
 
     if ($subject) {
         $trail->parent('subjects.index', $subject->theme_area_id);
@@ -30,11 +30,11 @@ Breadcrumbs::for('courses.index', function (BreadcrumbTrail $trail, $subjectId) 
         $trail->parent('theme-areas.index');
     }
 
-    $trail->push(__('breadcrumbs.courses'), route('courses.index', $subjectId));
+    $trail->push(__('breadcrumbs.courses'), route('courses.index', $subject));
 });
 
-Breadcrumbs::for('courses.show', function (BreadcrumbTrail $trail, $id) {
-    $course = Course::find($id);
+Breadcrumbs::for('courses.show', function (BreadcrumbTrail $trail, $course) {
+    $course = $course instanceof Course ? $course : Course::find($course);
 
     if ($course) {
         $trail->parent('courses.index', $course->subject_id);
@@ -42,7 +42,7 @@ Breadcrumbs::for('courses.show', function (BreadcrumbTrail $trail, $id) {
         $trail->parent('theme-areas.index');
     }
 
-    $trail->push(__('breadcrumbs.course'), route('courses.show', $id));
+    $trail->push(__('breadcrumbs.course'), route('courses.show', $course));
 });
 
 Breadcrumbs::for('lessons.presentation', function (BreadcrumbTrail $trail, $course, $lesson) {
@@ -269,9 +269,9 @@ Breadcrumbs::for('student.courses.index', function (BreadcrumbTrail $trail) {
     $trail->push(__('breadcrumbs.courses'), route('student.courses.index'));
 });
 
-Breadcrumbs::for('student.courses.show', function (BreadcrumbTrail $trail, $id) {
+Breadcrumbs::for('student.courses.show', function (BreadcrumbTrail $trail, $course) {
     $trail->parent('student.courses.index');
-    $trail->push(__('breadcrumbs.course'), route('student.courses.show', $id));
+    $trail->push(__('breadcrumbs.course'), route('student.courses.show', $course));
 });
 
 Breadcrumbs::for('student.lessons.show', function (BreadcrumbTrail $trail, $course, $lesson) {
@@ -339,8 +339,8 @@ Breadcrumbs::for('student.direct-requests.purchased', function (BreadcrumbTrail 
     $trail->push(__('breadcrumbs.requested_lessons'), route('student.direct-requests.purchased'));
 });
 
-Breadcrumbs::for('student.direct-requests.show', function (BreadcrumbTrail $trail, $id) {
-    $request = LessonRequest::find($id);
+Breadcrumbs::for('student.direct-requests.show', function (BreadcrumbTrail $trail, $lessonRequest) {
+    $request = $lessonRequest instanceof LessonRequest ? $lessonRequest : LessonRequest::find($lessonRequest);
 
     if ($request?->is_paid) {
         $trail->parent('student.direct-requests.purchased');
@@ -348,7 +348,7 @@ Breadcrumbs::for('student.direct-requests.show', function (BreadcrumbTrail $trai
         $trail->parent('student.direct-requests.index');
     }
 
-    $trail->push(__('breadcrumbs.view_request'), route('student.direct-requests.show', $id));
+    $trail->push(__('breadcrumbs.view_request'), route('student.direct-requests.show', $request ?? $lessonRequest));
 });
 
 Breadcrumbs::for('student.review', function (BreadcrumbTrail $trail) {

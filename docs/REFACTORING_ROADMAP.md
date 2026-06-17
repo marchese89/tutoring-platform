@@ -478,6 +478,9 @@ Completed so far:
 - The former mixed public lesson-request controller was split so public
   request creation/uploads, admin request fulfillment, and admin chat browsing
   live in separate controllers while preserving existing routes and views.
+- Public course routes and student course/detail routes now use route model
+  binding for courses, lessons, exercises, subjects, and direct lesson
+  requests where those parameters represent real domain models.
 
 ### Package F. Release verification
 
