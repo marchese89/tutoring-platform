@@ -3,6 +3,8 @@
 namespace Database\Seeders;
 
 use App\Enums\ChatSenderRole;
+use App\Enums\UserRole;
+use App\Enums\UserStatus;
 use App\Http\Utility\CartItem;
 use App\Models\Admin;
 use App\Models\Chat;
@@ -43,8 +45,8 @@ class DatabaseSeeder extends Seeder
             'email' => env('SEED_ADMIN_EMAIL', 'admin@example.com'),
             'email_verified_at' => now(),
             'password' => Hash::make($adminPassword),
-            'role' => 'admin',
-            'status' => 'active',
+            'role' => UserRole::ADMIN->value,
+            'status' => UserStatus::ACTIVE->value,
         ]);
 
         Admin::create([
@@ -80,8 +82,8 @@ class DatabaseSeeder extends Seeder
                 'email' => $data['email'],
                 'email_verified_at' => now(),
                 'password' => Hash::make($data['password']),
-                'role' => 'student',
-                'status' => 'active',
+                'role' => UserRole::STUDENT->value,
+                'status' => UserStatus::ACTIVE->value,
             ]);
 
             return Student::create([

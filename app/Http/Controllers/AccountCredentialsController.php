@@ -47,7 +47,7 @@ class AccountCredentialsController extends Controller
 
     private function credentialsRoute(Request $request): string
     {
-        return $request->user()->role === 'admin'
+        return $request->user()->isAdmin()
             ? 'admin.account.credentials'
             : 'student.account.credentials';
     }

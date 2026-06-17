@@ -32,9 +32,9 @@ class LoginController extends Controller
 
             $request->session()->regenerate();
 
-            if ($request->user()->role === 'admin') {
+            if ($request->user()->isAdmin()) {
                 return redirect()->route('admin.dashboard');
-            } elseif ($request->user()->role === 'student') {
+            } elseif ($request->user()->isStudent()) {
                 $request->session()->put('cart', new Cart);
                 if ($request->boolean('return')) {
                     return redirect()->route('lesson-requests.create');

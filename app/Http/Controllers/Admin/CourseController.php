@@ -129,7 +129,7 @@ class CourseController extends Controller
         $user = auth()->user();
 
         $studentId = $user?->student?->id;
-        $isAdmin = $user?->role === 'admin';
+        $isAdmin = $user?->isAdmin() ?? false;
         $purchasedLessonIds = $studentId
             ? PurchaseService::purchasedProductIds($studentId, 0)
             : collect();

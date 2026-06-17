@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\InvoiceSource;
+use App\Enums\UserRole;
 use App\Models\Admin;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -28,7 +30,7 @@ class InvoiceService
         }
 
         $order = Order::findOrFail($orderId);
-        $admin = User::where('role', 'admin')->first();
+        $admin = User::where('role', UserRole::ADMIN->value)->first();
         $adminData = Admin::where('user_id', $admin->id)->first();
         $student = $order->student;
         $user = $student->user;
@@ -71,7 +73,7 @@ class InvoiceService
             'order_id' => $order->id,
             'student_id' => $student->id,
             'payment_transaction_id' => $paymentTransactionId,
-            'source' => 'order',
+            'source' => InvoiceSource::ORDER->value,
             'total_amount' => (int) round($total * 100),
             'currency' => 'eur',
             'customer_snapshot' => $this->customerSnapshot($user, $student),
@@ -108,7 +110,7 @@ class InvoiceService
             throw new RuntimeException('Extra payment invoice context is incomplete.');
         }
 
-        $admin = User::where('role', 'admin')->firstOrFail();
+        $admin = User::where('role', UserRole::ADMIN->value)->firstOrFail();
         $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
         $issuedAt = $transaction->completed_at ?? now();
         $number = $this->numbers->next($issuedAt->year);
@@ -145,7 +147,7 @@ class InvoiceService
             'issued_at' => $issuedAt,
             'student_id' => $student->id,
             'payment_transaction_id' => $transaction->id,
-            'source' => 'extra',
+            'source' => InvoiceSource::EXTRA->value,
             'total_amount' => $transaction->amount,
             'currency' => $transaction->currency,
             'customer_snapshot' => $this->customerSnapshot($user, $student),
@@ -162,7 +164,7 @@ class InvoiceService
 
     public function generateManualExtraPdf(array $data): Invoice
     {
-        $admin = User::where('role', 'admin')->firstOrFail();
+        $admin = User::where('role', UserRole::ADMIN->value)->firstOrFail();
         $adminData = Admin::where('user_id', $admin->id)->firstOrFail();
         $issuedAt = now();
         $number = $this->numbers->next($issuedAt->year);
@@ -210,7 +212,7 @@ class InvoiceService
             'number' => $number,
             'issued_at' => $issuedAt,
             'order_id' => null,
-            'source' => 'extra',
+            'source' => InvoiceSource::EXTRA->value,
             'total_amount' => (int) round($total * 100),
             'currency' => 'eur',
             'customer_snapshot' => [

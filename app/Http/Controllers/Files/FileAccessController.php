@@ -45,12 +45,12 @@ class FileAccessController extends Controller
 
         $user = $request->user();
 
-        if ($user->role === 'admin') {
+        if ($user->isAdmin()) {
             return $this->serve($path);
         }
 
         if (
-            $user->role === 'student'
+            $user->isStudent()
             && $this->canAccessStudent(
                 $request,
                 $user->student,

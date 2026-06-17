@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,7 +17,7 @@ class StudentFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->state(['role' => 'student']),
+            'user_id' => User::factory()->state(['role' => UserRole::STUDENT->value]),
             'street' => fake()->streetName(),
             'house_number' => (string) fake()->buildingNumber(),
             'city' => fake()->city(),

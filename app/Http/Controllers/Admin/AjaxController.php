@@ -24,7 +24,7 @@ class AjaxController extends Controller
 
         $message = $chat->messages()->create([
             'message' => $validated['message'],
-            'sender_role' => $request->user()->role === 'admin' ? ChatSenderRole::ADMIN->value : ChatSenderRole::STUDENT->value,
+            'sender_role' => $request->user()->isAdmin() ? ChatSenderRole::ADMIN->value : ChatSenderRole::STUDENT->value,
             'sent_at' => now(),
         ]);
 

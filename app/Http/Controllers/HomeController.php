@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\UserRole;
 use App\Models\Certificate;
 use App\Models\Review;
 use App\Models\User;
@@ -10,7 +11,7 @@ class HomeController extends Controller
 {
     public function index()
     {
-        $admin = User::with('admin')->where('role', 'admin')->first()?->admin;
+        $admin = User::with('admin')->where('role', UserRole::ADMIN->value)->first()?->admin;
 
         $reviews = Review::query()
             ->with('student.user')

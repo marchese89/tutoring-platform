@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Enums\PaymentPurpose;
+use App\Enums\PaymentStatus;
 use App\Exceptions\PaymentVerificationException;
 use App\Models\PaymentTransaction;
 use App\Models\User;
@@ -33,7 +34,7 @@ class PaymentService
             'purpose' => $purpose,
             'amount' => $amount,
             'currency' => 'eur',
-            'status' => 'creating',
+            'status' => PaymentStatus::CREATING->value,
             'context' => $context,
         ]);
 
@@ -43,7 +44,7 @@ class PaymentService
                 'purpose' => $purpose->value,
             ]);
         } catch (Throwable $exception) {
-            $transaction->update(['status' => 'failed']);
+            $transaction->update(['status' => PaymentStatus::FAILED->value]);
 
             throw $exception;
         }

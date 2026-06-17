@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\InvoiceSource;
 use App\Models\Invoice;
 use App\Models\Student;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -23,7 +24,7 @@ class InvoiceFactory extends Factory
             'order_id' => null,
             'student_id' => Student::factory(),
             'payment_transaction_id' => null,
-            'source' => 'extra',
+            'source' => InvoiceSource::EXTRA->value,
             'total_amount' => $amount,
             'currency' => 'eur',
             'customer_snapshot' => [

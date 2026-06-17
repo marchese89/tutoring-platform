@@ -2,6 +2,8 @@
 
 namespace App\Payments;
 
+use App\Enums\PaymentStatus;
+
 class PaymentIntentData
 {
     public function __construct(
@@ -14,6 +16,6 @@ class PaymentIntentData
 
     public function succeeded(): bool
     {
-        return $this->status === 'succeeded';
+        return $this->status === PaymentStatus::SUCCEEDED->value;
     }
 }

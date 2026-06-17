@@ -340,6 +340,8 @@ Completed so far:
 - Student reviews now reflect the intended one-review-per-student domain rule
   through a `hasOne` model relationship and a unique `reviews.student_id`
   constraint.
+- User roles/statuses, invoice sources, and payment statuses now use
+  application enums at write/check sites while preserving string storage.
 
 Verification so far:
 

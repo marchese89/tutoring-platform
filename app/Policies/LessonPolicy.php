@@ -11,14 +11,14 @@ class LessonPolicy
 {
     public function before(User $user): ?bool
     {
-        return $user->role === 'admin' ? true : null;
+        return $user->isAdmin() ? true : null;
     }
 
     public function view(User $user, Lesson $lesson): bool
     {
         $studentId = $user->student?->getKey();
 
-        return $user->role === 'student'
+        return $user->isStudent()
             && ((int) $lesson->price === 0
                 || ($studentId
                     && PurchaseService::isProductPurchased(

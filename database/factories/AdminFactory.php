@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -16,7 +17,7 @@ class AdminFactory extends Factory
     public function definition(): array
     {
         return [
-            'user_id' => User::factory()->state(['role' => 'admin']),
+            'user_id' => User::factory()->state(['role' => UserRole::ADMIN->value]),
             'tax_code' => strtoupper(fake()->unique()->bothify('????????????????')),
             'street' => fake()->streetName(),
             'house_number' => (string) fake()->buildingNumber(),

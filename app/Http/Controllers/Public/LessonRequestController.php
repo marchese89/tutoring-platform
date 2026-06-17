@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Public;
 
 use App\Enums\ChatSenderRole;
 use App\Enums\ProductType;
+use App\Enums\UserRole;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Mail\LessonRequestFulfilledMail;
@@ -32,7 +33,7 @@ class LessonRequestController extends Controller
                 ? route('protected-files.show', ['path' => $uploadedRequestFile])
                 : null,
             'isAuthenticated' => $request->user() !== null,
-            'userCanSubmit' => $request->user()?->role === 'student',
+            'userCanSubmit' => $request->user()?->isStudent() ?? false,
         ]);
     }
 
@@ -226,7 +227,7 @@ class LessonRequestController extends Controller
 
         $request->session()->forget('uploaded_lesson_request_file');
 
-        $admin = User::where('role', 'admin')->first();
+        $admin = User::where('role', UserRole::ADMIN->value)->first();
 
         Mail::to($admin->email)
             ->send(new NewStudentRequestMail);
