@@ -280,7 +280,7 @@ Last verified: 2026-06-16.
 ## Final completion plan
 
 The refactoring is no longer tracked as an open-ended audit. The final work is
-tracked as five packages. Package A is complete, so four packages remain before
+tracked as six packages. Package A is complete, so five packages remain before
 the branch series is ready for merge/squash review.
 
 ### Package A. Internal cleanup closure
@@ -399,7 +399,9 @@ Completed so far:
 
 Branch: `feature/public-ux-pagination`
 
-Estimated commits: 2-3.
+Status: in progress.
+
+Estimated commits: 4-5.
 
 Definition of Done:
 
@@ -435,7 +437,28 @@ Completed so far:
   documents.
 - Newly added Italian public-page strings were checked for mojibake sequences.
 
-### Package E. Release verification
+### Package E. Final safety pass
+
+Branch: `refactor/final-safety-pass`
+
+Estimated commits: 2-4.
+
+Definition of Done:
+
+- Split oversized controllers where they still mix public, admin, chat, upload,
+  pricing, and email responsibilities. Start with the lesson-request and admin
+  chat flow.
+- Normalize route parameter naming and route model binding where the same
+  domain entity is currently addressed with mixed `{id}` and model parameters.
+- Replace risky nullable `find()` paths with `findOrFail()` or explicit
+  validation/404 handling.
+- Tighten remaining numeric price validation with minimum values and consistent
+  attribute labels.
+- Review static services such as purchase helpers and decide whether to keep
+  them as lightweight support classes or convert them to injectable services.
+- Add focused tests for each behavior-preserving split or safety fix.
+
+### Package F. Release verification
 
 Branch: `release/final-verification`
 
@@ -465,8 +488,8 @@ Definition of Done:
 
 ### Next action
 
-Start Package D by adding public UX polish and pagination on a dedicated
-`feature/public-ux-pagination` branch.
+Finish Package D with targeted browser verification for homepage, about page,
+and paginated lists. Then start Package E on `refactor/final-safety-pass`.
 
 ## Historical progress
 
