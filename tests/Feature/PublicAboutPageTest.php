@@ -27,7 +27,7 @@ class PublicAboutPageTest extends TestCase
             ->assertOk()
             ->assertSee('A technical learning path built for real understanding.')
             ->assertSee('Computer science background with attention to student reasoning.')
-            ->assertSee('/files/tutor.jpg', false)
+            ->assertSee(asset('files/tutor.jpg'), false)
             ->assertSee('1 certificate published')
             ->assertSee('PHP Certificate')
             ->assertSee('src="/storage/certificates/php.pdf#view=FitH"', false)

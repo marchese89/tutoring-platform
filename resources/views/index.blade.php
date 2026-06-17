@@ -64,6 +64,7 @@
             line-height: 1.02;
             font-weight: 700;
             letter-spacing: 0;
+            overflow-wrap: anywhere;
         }
 
         .home-hero__lead {
@@ -169,6 +170,7 @@
             line-height: 1.12;
             font-weight: 700;
             letter-spacing: 0;
+            overflow-wrap: anywhere;
         }
 
         .home-section__intro {
@@ -447,7 +449,12 @@
             }
 
             .home-hero h1 {
-                font-size: 2.65rem;
+                font-size: 2.35rem;
+            }
+
+            .home-hero__lead {
+                max-width: 350px;
+                font-size: .98rem;
             }
 
             .home-hero__actions .btn {
@@ -461,6 +468,15 @@
 
             .home-section {
                 padding-block: 64px;
+            }
+
+            .home-section h2 {
+                max-width: 350px;
+                font-size: 1.35rem;
+            }
+
+            .home-section__intro {
+                max-width: 350px;
             }
 
             .home-profile {
@@ -638,8 +654,8 @@
         <section class="home-section home-reveal" data-home-reveal>
             <div class="container">
                 <div class="home-profile">
-                    @if ($admin?->photo_path)
-                        <img class="home-profile__photo" src="{{ $admin->photo_path }}"
+                    @if ($adminPhotoUrl)
+                        <img class="home-profile__photo" src="{{ $adminPhotoUrl }}"
                             alt="{{ __('public.home.profile.photo_alt') }}">
                     @endif
 
@@ -732,6 +748,12 @@
                 return;
             }
 
+            revealItems.forEach((item) => {
+                if (item.getBoundingClientRect().top < window.innerHeight) {
+                    item.classList.add('is-visible');
+                }
+            });
+
             document.documentElement.classList.add('home-animations-ready');
 
             const observer = new IntersectionObserver((entries) => {
@@ -747,7 +769,11 @@
                 threshold: 0.18,
             });
 
-            revealItems.forEach((item) => observer.observe(item));
+            revealItems.forEach((item) => {
+                if (!item.classList.contains('is-visible')) {
+                    observer.observe(item);
+                }
+            });
         })();
     </script>
 @endpush

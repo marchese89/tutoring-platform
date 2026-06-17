@@ -399,7 +399,7 @@ Completed so far:
 
 Branch: `feature/public-ux-pagination`
 
-Status: in progress.
+Status: completed.
 
 Estimated commits: 4-5.
 
@@ -436,6 +436,13 @@ Completed so far:
   certificate previews as a structured public page instead of only listing
   documents.
 - Newly added Italian public-page strings were checked for mojibake sequences.
+- Public profile images are rendered through generated asset URLs so they work
+  when the application is served from an Apache subdirectory.
+- Homepage and about page responsive typography were tightened after Chrome
+  headless desktop/mobile verification.
+- Package verification passed with Chrome headless screenshots at 1440 px and
+  390 px widths, `vendor\bin\pint --test`, and `php artisan test` with 139
+  tests and 702 assertions.
 
 ### Package E. Final safety pass
 
@@ -488,8 +495,7 @@ Definition of Done:
 
 ### Next action
 
-Finish Package D with targeted browser verification for homepage, about page,
-and paginated lists. Then start Package E on `refactor/final-safety-pass`.
+Start Package E on `refactor/final-safety-pass`.
 
 ## Historical progress
 

@@ -36,6 +36,6 @@ class HomePageTest extends TestCase
             ->assertSee('images/computer-science-tutoring-hero.jpg', false)
             ->assertSee('data-home-reveal', false)
             ->assertDontSee('Sono un ingegnere informatico')
-            ->assertSee('/files/tutor.jpg', false);
+            ->assertSee(asset('files/tutor.jpg'), false);
     }
 }

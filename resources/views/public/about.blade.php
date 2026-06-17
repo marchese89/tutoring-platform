@@ -7,6 +7,7 @@
         .about-page {
             color: #182a31;
             background: #fff;
+            overflow-x: clip;
         }
 
         .about-hero {
@@ -37,6 +38,7 @@
             line-height: 1.05;
             font-weight: 700;
             letter-spacing: 0;
+            overflow-wrap: anywhere;
         }
 
         .about-hero p {
@@ -85,6 +87,7 @@
             line-height: 1.12;
             font-weight: 700;
             letter-spacing: 0;
+            overflow-wrap: anywhere;
         }
 
         .about-section__text {
@@ -92,6 +95,7 @@
             color: #5f7077;
             font-size: 1.02rem;
             line-height: 1.8;
+            overflow-wrap: anywhere;
         }
 
         .about-fact-grid {
@@ -180,6 +184,24 @@
             .about-fact-grid {
                 grid-template-columns: 1fr;
             }
+
+            .about-hero h1 {
+                font-size: 2.3rem;
+            }
+
+            .about-hero p {
+                max-width: 350px;
+                font-size: .98rem;
+            }
+
+            .about-section h2 {
+                max-width: 350px;
+                font-size: 1.35rem;
+            }
+
+            .about-section__text {
+                max-width: 350px;
+            }
         }
     </style>
 @endpush
@@ -202,8 +224,8 @@
         <section class="about-section">
             <div class="container">
                 <div class="about-profile">
-                    @if ($admin?->photo_path)
-                        <img class="about-profile__photo" src="{{ $admin->photo_path }}"
+                    @if ($adminPhotoUrl)
+                        <img class="about-profile__photo" src="{{ $adminPhotoUrl }}"
                             alt="{{ __('public.about.photo_alt') }}">
                     @endif
 
