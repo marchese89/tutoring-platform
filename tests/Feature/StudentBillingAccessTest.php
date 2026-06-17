@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\InvoiceSource;
 use App\Models\Invoice;
 use App\Models\Order;
 use App\Models\Student;
@@ -20,17 +21,21 @@ class StudentBillingAccessTest extends TestCase
         $ownOrder = Order::factory()->for($student)->create();
         $otherOrder = Order::factory()->for($otherStudent)->create();
 
-        $ownInvoice = Invoice::create([
+        $ownInvoice = Invoice::factory()->create([
             'number' => 101,
             'issued_at' => now(),
             'order_id' => $ownOrder->id,
+            'student_id' => $student->id,
+            'source' => InvoiceSource::ORDER->value,
             'file_path' => 'invoices/2026/invoice_101.pdf',
         ]);
 
-        $otherInvoice = Invoice::create([
+        $otherInvoice = Invoice::factory()->create([
             'number' => 999,
             'issued_at' => now(),
             'order_id' => $otherOrder->id,
+            'student_id' => $otherStudent->id,
+            'source' => InvoiceSource::ORDER->value,
             'file_path' => 'invoices/2026/invoice_999.pdf',
         ]);
 
@@ -50,10 +55,12 @@ class StudentBillingAccessTest extends TestCase
         $otherStudent = Student::factory()->create();
         $otherOrder = Order::factory()->for($otherStudent)->create();
 
-        $invoice = Invoice::create([
+        $invoice = Invoice::factory()->create([
             'number' => 999,
             'issued_at' => now(),
             'order_id' => $otherOrder->id,
+            'student_id' => $otherStudent->id,
+            'source' => InvoiceSource::ORDER->value,
             'file_path' => 'invoices/2026/invoice_999.pdf',
         ]);
 
@@ -66,7 +73,7 @@ class StudentBillingAccessTest extends TestCase
     {
         $student = Student::factory()->create();
 
-        $invoice = Invoice::create([
+        $invoice = Invoice::factory()->create([
             'number' => 303,
             'issued_at' => now(),
             'student_id' => $student->id,
@@ -86,7 +93,7 @@ class StudentBillingAccessTest extends TestCase
         $student = Student::factory()->create();
         $otherStudent = Student::factory()->create();
 
-        $invoice = Invoice::create([
+        $invoice = Invoice::factory()->create([
             'number' => 404,
             'issued_at' => now(),
             'student_id' => $otherStudent->id,

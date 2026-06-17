@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
-            $table->integer('number')->nullable();
+            $table->string('title');
+            $table->integer('number');
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
             $table->string('presentation_file')->nullable();
             $table->string('content_file')->nullable();
-            $table->integer('price')->nullable();
+            $table->integer('price');
             $table->timestamps();
 
             $table->unique(['course_id', 'number']);

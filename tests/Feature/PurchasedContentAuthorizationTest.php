@@ -110,7 +110,7 @@ class PurchasedContentAuthorizationTest extends TestCase
     {
         $owner = Student::factory()->create();
         $otherStudent = Student::factory()->create();
-        $lessonRequest = LessonRequest::create([
+        $lessonRequest = LessonRequest::factory()->create([
             'student_id' => $owner->id,
             'title' => 'Private request',
             'price' => 25,
@@ -128,7 +128,7 @@ class PurchasedContentAuthorizationTest extends TestCase
     {
         $owner = Student::factory()->create();
         $otherStudent = Student::factory()->create();
-        $lessonRequest = LessonRequest::create([
+        $lessonRequest = LessonRequest::factory()->create([
             'student_id' => $owner->id,
             'title' => 'Private request',
             'price' => 25,
@@ -142,7 +142,7 @@ class PurchasedContentAuthorizationTest extends TestCase
     public function test_student_can_view_owned_paid_direct_request_documents(): void
     {
         $student = Student::factory()->create();
-        $lessonRequest = LessonRequest::create([
+        $lessonRequest = LessonRequest::factory()->create([
             'student_id' => $student->id,
             'title' => 'Owned paid request',
             'price' => 25,
@@ -163,7 +163,7 @@ class PurchasedContentAuthorizationTest extends TestCase
     public function test_paid_direct_request_cannot_be_purchased_again(): void
     {
         $student = Student::factory()->create();
-        $lessonRequest = LessonRequest::create([
+        $lessonRequest = LessonRequest::factory()->create([
             'student_id' => $student->id,
             'title' => 'Paid request',
             'price' => 25,

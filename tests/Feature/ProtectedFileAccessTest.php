@@ -95,7 +95,7 @@ class ProtectedFileAccessTest extends TestCase
         $path = 'extra-invoices/2026/invoice_303.pdf';
         Storage::disk('private')->put($path, 'extra invoice');
 
-        Invoice::create([
+        Invoice::factory()->create([
             'number' => 303,
             'issued_at' => now(),
             'student_id' => $owner->id,

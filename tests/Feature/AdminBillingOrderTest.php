@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Enums\InvoiceSource;
 use App\Http\Utility\CartItem;
 use App\Models\Invoice;
 use App\Models\Order;
@@ -49,10 +50,12 @@ class AdminBillingOrderTest extends TestCase
             'ordered_at' => now(),
         ]);
 
-        Invoice::create([
+        Invoice::factory()->create([
             'number' => 1,
             'issued_at' => now(),
             'order_id' => $order->id,
+            'student_id' => $student->id,
+            'source' => InvoiceSource::ORDER->value,
             'file_path' => 'invoices/order.pdf',
         ]);
 

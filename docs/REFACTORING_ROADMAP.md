@@ -358,6 +358,10 @@ Completed so far:
   one-off payments.
 - The invoice sequence table now has a clean creation migration next to the
   invoice schema, without legacy backfill logic.
+- Required catalog, lesson-request, and certificate fields are no longer
+  nullable in the base schema.
+- Required invoice fields are no longer nullable in the base schema while
+  preserving nullable ownership links for direct/manual invoice variants.
 
 Verification so far:
 

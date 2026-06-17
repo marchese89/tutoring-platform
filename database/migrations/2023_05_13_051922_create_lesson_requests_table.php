@@ -11,9 +11,9 @@ return new class extends Migration
     {
         Schema::create('lesson_requests', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
+            $table->string('title');
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
-            $table->string('request_file')->nullable();
+            $table->string('request_file');
             $table->string('solution_file')->nullable();
             $table->integer('price')->nullable();
             $table->boolean('is_fulfilled')->default(false);
