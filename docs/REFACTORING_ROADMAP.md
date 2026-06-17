@@ -356,6 +356,8 @@ Completed so far:
 - Cashier customer columns were folded into the base users migration, and
   unused subscription tables were removed because the application only handles
   one-off payments.
+- The invoice sequence table now has a clean creation migration next to the
+  invoice schema, without legacy backfill logic.
 
 Verification so far:
 
