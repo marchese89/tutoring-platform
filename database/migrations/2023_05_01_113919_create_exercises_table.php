@@ -19,6 +19,8 @@ return new class extends Migration
             $table->string('solution_file')->nullable();
             $table->integer('price')->nullable();
             $table->timestamps();
+
+            $table->unique(['course_id', 'title']);
         });
     }
 

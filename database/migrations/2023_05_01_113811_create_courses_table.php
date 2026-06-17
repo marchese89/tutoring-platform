@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->foreignId('subject_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
+
+            $table->unique(['subject_id', 'name']);
         });
     }
 
