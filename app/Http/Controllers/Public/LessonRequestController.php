@@ -68,24 +68,26 @@ class LessonRequestController extends Controller
     {
         $chats = Chat::with(['student.user', 'latestMessage'])
             ->orderByDesc('created_at')
-            ->get();
+            ->paginate(10);
+
+        $chatItems = $chats->getCollection();
 
         $lessonTitles = Lesson::whereIn(
             'id',
-            $chats->where('product_type', ProductType::LESSON->value)->pluck('product_id')
+            $chatItems->where('product_type', ProductType::LESSON->value)->pluck('product_id')
         )->pluck('title', 'id');
 
         $exerciseTitles = Exercise::whereIn(
             'id',
-            $chats->where('product_type', ProductType::EXERCISE->value)->pluck('product_id')
+            $chatItems->where('product_type', ProductType::EXERCISE->value)->pluck('product_id')
         )->pluck('title', 'id');
 
         $lessonRequestTitles = LessonRequest::whereIn(
             'id',
-            $chats->where('product_type', ProductType::REQUESTED_LESSON->value)->pluck('product_id')
+            $chatItems->where('product_type', ProductType::REQUESTED_LESSON->value)->pluck('product_id')
         )->pluck('title', 'id');
 
-        $chats->each(function (Chat $chat) use ($lessonTitles, $exerciseTitles, $lessonRequestTitles) {
+        $chatItems->each(function (Chat $chat) use ($lessonTitles, $exerciseTitles, $lessonRequestTitles) {
             $chat->product_type_label = match ((int) $chat->product_type) {
                 ProductType::LESSON->value => __('admin.students.lesson_type'),
                 ProductType::EXERCISE->value => __('admin.students.exercise_type'),

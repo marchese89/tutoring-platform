@@ -96,6 +96,40 @@ class AdminChatPageTest extends TestCase
             ->assertSee('View chat');
     }
 
+    public function test_admin_chat_list_is_paginated(): void
+    {
+        /** @var User $admin */
+        $admin = User::factory()->createOne(['role' => 'admin']);
+        $student = $this->createStudent();
+
+        for ($index = 0; $index < 11; $index++) {
+            $lessonRequest = LessonRequest::create([
+                'title' => $index === 0 ? 'Newest paginated chat' : 'Paginated chat '.$index,
+                'student_id' => $student->id,
+                'request_file' => 'lesson_requests/request-'.$index.'.pdf',
+                'solution_file' => 'lesson_requests/solution-'.$index.'.pdf',
+                'is_fulfilled' => true,
+                'is_paid' => true,
+                'requested_at' => now()->subMinutes($index),
+            ]);
+
+            Chat::create([
+                'product_id' => $lessonRequest->id,
+                'product_type' => ProductType::REQUESTED_LESSON->value,
+                'student_id' => $student->id,
+                'created_at' => now()->subMinutes($index),
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->withSession(['locale' => 'en'])
+            ->get(route('admin.chats.index'))
+            ->assertOk()
+            ->assertSee('Newest paginated chat')
+            ->assertDontSee('Paginated chat 10')
+            ->assertSee('page=2', false);
+    }
+
     private function createStudent(): Student
     {
         $user = User::factory()->create([

@@ -76,6 +76,26 @@ class AdminBillingOrderTest extends TestCase
             ->assertNotFound();
     }
 
+    public function test_admin_invoice_list_is_paginated(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        for ($index = 0; $index < 11; $index++) {
+            Invoice::factory()->create([
+                'number' => 900 + $index,
+                'issued_at' => now()->subMinutes($index),
+                'source' => InvoiceSource::EXTRA->value,
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->get(route('admin.invoices.index'))
+            ->assertOk()
+            ->assertSee('900')
+            ->assertDontSee('910')
+            ->assertSee('page=2', false);
+    }
+
     private function createStudent(): Student
     {
         $user = User::factory()->create(['role' => 'student']);

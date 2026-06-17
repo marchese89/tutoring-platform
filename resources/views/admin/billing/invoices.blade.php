@@ -48,6 +48,12 @@
                     </tbody>
 
                 </table>
+
+                @if ($invoices->hasPages())
+                    <div class="mt-4">
+                        {{ $invoices->links() }}
+                    </div>
+                @endif
             </x-ui.table-card>
         @else
             <x-ui.empty-state :title="__('admin.billing.no_invoices')" />

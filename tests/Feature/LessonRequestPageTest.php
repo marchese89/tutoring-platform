@@ -86,6 +86,7 @@ class LessonRequestPageTest extends TestCase
             ->assertOk()
             ->assertSee('Richiesta più recente')
             ->assertDontSee('Richiesta 10')
+            ->assertSee('class="pagination"', false)
             ->assertSee('page=2', false);
 
         $this->actingAs($student->user)

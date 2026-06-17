@@ -420,10 +420,14 @@ Completed so far:
 - Admin lesson-request lists, student direct-request lists, purchased
   direct-request lists, and student invoice lists use paginated queries instead
   of unbounded collections.
+- Admin invoice and chat lists use paginated queries instead of unbounded
+  collections.
 - Shared lesson-request tables render paginator links when the data source is
   paginated.
+- Pagination links use the Bootstrap 5 renderer globally, matching the
+  frontend stack used by the project.
 - Feature tests cover first-page rendering, hidden overflow rows, and paginator
-  links for lesson-request and invoice lists.
+  links for lesson-request, invoice, and chat lists.
 - The public home page has progressive scroll reveal animations that keep
   content visible without JavaScript and respect reduced-motion preferences.
 - The public about page now presents profile, method, certificate counts, and

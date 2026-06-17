@@ -50,6 +50,12 @@
                     @endforelse
                 </tbody>
             </table>
+
+            @if ($chats->hasPages())
+                <div class="mt-4">
+                    {{ $chats->links() }}
+                </div>
+            @endif
         </x-ui.table-card>
     </x-ui.page-section>
 @endsection

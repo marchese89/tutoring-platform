@@ -12,8 +12,8 @@ class InvoiceController extends Controller
         $invoices = Invoice::query()
             ->orderByDesc('issued_at')
             ->orderByDesc('id')
-            ->get()
-            ->map(fn (Invoice $invoice) => (object) [
+            ->paginate(10)
+            ->through(fn (Invoice $invoice) => (object) [
                 'number' => $invoice->number ?? '-',
                 'date' => $invoice->issued_at ? DateHelper::format($invoice->issued_at) : '-',
                 'showUrl' => $invoice->number ? route('admin.invoices.show', $invoice->number) : null,

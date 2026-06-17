@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Payments\CashierPaymentGateway;
 use App\Payments\PaymentGateway;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -19,5 +20,8 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void {}
+    public function boot(): void
+    {
+        Paginator::useBootstrapFive();
+    }
 }
