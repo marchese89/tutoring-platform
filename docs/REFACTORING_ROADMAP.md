@@ -342,6 +342,9 @@ Completed so far:
   constraint.
 - User roles/statuses, invoice sources, and payment statuses now use
   application enums at write/check sites while preserving string storage.
+- Teaching catalog records now enforce uniqueness for theme-area names,
+  subject names inside a theme area, course names inside a subject, lesson
+  numbers inside a course, and exercise titles inside a course.
 
 Verification so far:
 
