@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('number')->nullable();
             $table->timestamp('issued_at')->nullable();
-            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('order_id')->nullable()->unique()->constrained()->nullOnDelete();
             $table->string('file_path')->nullable();
             $table->timestamps();
         });

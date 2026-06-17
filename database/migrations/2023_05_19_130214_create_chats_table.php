@@ -18,6 +18,7 @@ return new class extends Migration
             $table->unsignedTinyInteger('product_type');
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->unique(['product_id', 'product_type', 'student_id']);
+            $table->index(['student_id', 'product_type']);
             $table->timestamps();
         });
     }

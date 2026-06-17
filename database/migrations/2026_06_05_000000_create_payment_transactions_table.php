@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('payment_transactions', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('order_id')->nullable()->unique()->constrained()->nullOnDelete();
             $table->string('stripe_payment_intent_id')->nullable()->unique();
             $table->string('purpose', 20);
             $table->unsignedInteger('amount');
@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('status', 40)->default('creating');
             $table->json('context');
             $table->timestamp('completed_at')->nullable();
+            $table->timestamp('receipt_sent_at')->nullable();
             $table->timestamps();
 
             $table->index(['user_id', 'purpose', 'status']);

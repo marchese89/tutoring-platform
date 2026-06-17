@@ -347,6 +347,9 @@ Completed so far:
   numbers inside a course, and exercise titles inside a course.
 - Admin teaching forms now validate those uniqueness rules before database
   writes, including safe update rules that ignore the current record.
+- Profile, review, payment-completion, invoice, purchase lookup, and chat
+  lookup constraints were folded into the base migrations instead of being kept
+  as transition-only additive migrations.
 
 Verification so far:
 
