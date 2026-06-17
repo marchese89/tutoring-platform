@@ -213,10 +213,10 @@ Status: dependency upgrade completed; release verification remains open.
 Last verified: 2026-06-16.
 
 - Current branch: `refactor/schema-hardening`.
-- Latest schema-hardening milestone: automated tests now use SQLite in memory,
-  and MySQL-specific year/month extraction was removed from invoice sequence
-  migration and order filters.
-- Automated verification: 126 tests and 634 assertions pass.
+- Latest schema-hardening milestone: transition migrations were folded into the
+  base schema, unused legacy billing/subscription schema was removed, and
+  required domain fields are no longer nullable in fresh installs.
+- Automated verification: 133 tests and 654 assertions pass.
 - Test database: SQLite `:memory:` through `phpunit.xml`; the previous MySQL
   testing database is no longer required for automated tests.
 - Laravel version: 12.62.0.
@@ -311,7 +311,7 @@ Verification:
 
 Branch: `refactor/schema-hardening`
 
-Estimated commits: 2-3.
+Status: completed.
 
 Definition of Done:
 
@@ -365,7 +365,7 @@ Completed so far:
 
 Verification so far:
 
-- `php artisan test` - 126 passed, 634 assertions.
+- `php artisan test` - 133 passed, 654 assertions.
 - `vendor\bin\pint --test`
 
 ### Package C. Seeder split and demo installation
@@ -433,8 +433,8 @@ Definition of Done:
 
 ### Next action
 
-Continue Package B by auditing table constraints, model casts, relationships,
-and enum usage.
+Start Package C by splitting the monolithic `DatabaseSeeder` into focused demo
+seeders and verifying a fresh seeded installation.
 
 ## Historical progress
 
