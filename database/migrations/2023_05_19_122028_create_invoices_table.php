@@ -16,8 +16,19 @@ return new class extends Migration
             $table->integer('number')->nullable();
             $table->timestamp('issued_at')->nullable();
             $table->foreignId('order_id')->nullable()->unique()->constrained()->nullOnDelete();
+            $table->foreignId('student_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('payment_transaction_id')->nullable()->unique()->constrained()->nullOnDelete();
+            $table->string('source', 20)->default('order');
+            $table->unsignedInteger('total_amount')->nullable();
+            $table->char('currency', 3)->default('eur');
+            $table->json('customer_snapshot')->nullable();
+            $table->json('line_items')->nullable();
+            $table->string('note')->nullable();
             $table->string('file_path')->nullable();
             $table->timestamps();
+
+            $table->index(['student_id', 'issued_at']);
+            $table->index(['source', 'issued_at']);
         });
     }
 

@@ -350,6 +350,9 @@ Completed so far:
 - Profile, review, payment-completion, invoice, purchase lookup, and chat
   lookup constraints were folded into the base migrations instead of being kept
   as transition-only additive migrations.
+- Final invoice columns, invoice indexes, and payment transaction linkage were
+  folded into the base invoices migration; legacy invoice-sheet backfill
+  migrations were removed from the fresh schema path.
 
 Verification so far:
 
