@@ -475,6 +475,9 @@ Completed so far:
 - Admin lesson and exercise prices reject negative values on create and update.
 - Focused tests cover missing cart content, course/content mismatches, and
   negative teaching-content prices.
+- The former mixed public lesson-request controller was split so public
+  request creation/uploads, admin request fulfillment, and admin chat browsing
+  live in separate controllers while preserving existing routes and views.
 
 ### Package F. Release verification
 

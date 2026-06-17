@@ -4,13 +4,14 @@ use App\Http\Controllers\AccountCredentialsController;
 use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AjaxController;
 use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\CourseController;
 use App\Http\Controllers\Admin\ExerciseController;
 use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\LessonRequestController;
 use App\Http\Controllers\Admin\SubjectController;
 use App\Http\Controllers\Admin\ThemeAreaController;
 use App\Http\Controllers\InvoiceController;
-use App\Http\Controllers\Public\LessonRequestController;
 use App\Http\Controllers\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
@@ -133,7 +134,7 @@ Route::prefix('admin')
         Route::view('invoices/created', 'admin.billing.invoice-created')->name('invoices.created');
         Route::get('invoices/{id}', [InvoiceController::class, 'show'])->whereNumber('id')->name('invoices.show');
 
-        Route::get('chats', [LessonRequestController::class, 'studentChats'])->name('chats.index');
-        Route::get('chats/{id}', [LessonRequestController::class, 'showChat'])->whereNumber('id')->name('chats.show');
+        Route::get('chats', [ChatController::class, 'index'])->name('chats.index');
+        Route::get('chats/{id}', [ChatController::class, 'show'])->whereNumber('id')->name('chats.show');
         Route::post('chat/messages', [AjaxController::class, 'sendMessage'])->name('chat.messages.store');
     });
