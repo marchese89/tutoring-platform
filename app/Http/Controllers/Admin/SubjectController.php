@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Subject;
 use App\Models\ThemeArea;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SubjectController extends Controller
 {
@@ -32,7 +33,13 @@ class SubjectController extends Controller
     {
         $data = $request->validate([
             'theme_area_id' => 'required|exists:theme_areas,id',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('subjects', 'name')
+                    ->where(fn ($query) => $query->where('theme_area_id', $request->input('theme_area_id'))),
+            ],
         ]);
 
         Subject::create([
@@ -45,11 +52,18 @@ class SubjectController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
         $subject = Subject::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('subjects', 'name')
+                    ->where(fn ($query) => $query->where('theme_area_id', $subject->theme_area_id))
+                    ->ignore($subject->id),
+            ],
+        ]);
 
         $subject->update([
             'name' => $data['name'],

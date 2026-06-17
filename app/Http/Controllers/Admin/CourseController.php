@@ -9,6 +9,7 @@ use App\Models\Lesson;
 use App\Models\Subject;
 use App\Services\PurchaseService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
 {
@@ -82,7 +83,13 @@ class CourseController extends Controller
     {
         $data = $request->validate([
             'subject_id' => 'required|exists:subjects,id',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('courses', 'name')
+                    ->where(fn ($query) => $query->where('subject_id', $request->input('subject_id'))),
+            ],
         ]);
         Course::create([
             'name' => $data['name'],
@@ -94,11 +101,18 @@ class CourseController extends Controller
 
     public function update(Request $request, int $id)
     {
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
         $course = Course::findOrFail($id);
+
+        $data = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('courses', 'name')
+                    ->where(fn ($query) => $query->where('subject_id', $course->subject_id))
+                    ->ignore($course->id),
+            ],
+        ]);
 
         $course->update([
             'name' => $data['name'],

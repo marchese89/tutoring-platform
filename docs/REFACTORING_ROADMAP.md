@@ -345,6 +345,8 @@ Completed so far:
 - Teaching catalog records now enforce uniqueness for theme-area names,
   subject names inside a theme area, course names inside a subject, lesson
   numbers inside a course, and exercise titles inside a course.
+- Admin teaching forms now validate those uniqueness rules before database
+  writes, including safe update rules that ignore the current record.
 
 Verification so far:
 

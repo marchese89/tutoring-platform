@@ -155,4 +155,93 @@ class AdminTeachingManagementTest extends TestCase
         $this->assertDatabaseMissing('subjects', ['id' => $subject->id]);
         $this->assertDatabaseMissing('theme_areas', ['id' => $themeArea->id]);
     }
+
+    public function test_duplicate_teaching_catalog_values_return_validation_errors(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $themeArea = ThemeArea::factory()->create(['name' => 'Programming']);
+        $subject = Subject::factory()->for($themeArea)->create(['name' => 'PHP']);
+        $course = Course::factory()->for($subject)->create(['name' => 'Laravel basics']);
+        Lesson::factory()->for($course)->create(['number' => 1]);
+        Exercise::factory()->for($course)->create(['title' => 'Select queries']);
+
+        $this->actingAs($admin)
+            ->post(route('admin.theme-areas.store'), ['name' => 'Programming'])
+            ->assertSessionHasErrors('name');
+
+        $this->actingAs($admin)
+            ->post(route('admin.subjects.store'), [
+                'theme_area_id' => $themeArea->id,
+                'name' => 'PHP',
+            ])
+            ->assertSessionHasErrors('name');
+
+        $this->actingAs($admin)
+            ->post(route('admin.courses.store'), [
+                'subject_id' => $subject->id,
+                'name' => 'Laravel basics',
+            ])
+            ->assertSessionHasErrors('name');
+
+        $this->actingAs($admin)
+            ->post(route('admin.lessons.store'), [
+                'course_id' => $course->id,
+                'number' => 1,
+                'title' => 'Duplicate lesson',
+                'price' => 15,
+            ])
+            ->assertSessionHasErrors('number');
+
+        $this->actingAs($admin)
+            ->post(route('admin.exercises.store'), [
+                'course_id' => $course->id,
+                'title' => 'Select queries',
+                'price' => 10,
+            ])
+            ->assertSessionHasErrors('title');
+    }
+
+    public function test_teaching_catalog_records_can_keep_their_current_unique_value_when_updated(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $themeArea = ThemeArea::factory()->create(['name' => 'Programming']);
+        $subject = Subject::factory()->for($themeArea)->create(['name' => 'PHP']);
+        $course = Course::factory()->for($subject)->create(['name' => 'Laravel basics']);
+        $lesson = Lesson::factory()->for($course)->create([
+            'number' => 1,
+            'title' => 'Routes',
+            'price' => 15,
+        ]);
+        $exercise = Exercise::factory()->for($course)->create([
+            'title' => 'Select queries',
+            'price' => 10,
+        ]);
+
+        $this->actingAs($admin)
+            ->put(route('admin.theme-areas.update', $themeArea), ['name' => 'Programming'])
+            ->assertSessionHasNoErrors();
+
+        $this->actingAs($admin)
+            ->put(route('admin.subjects.update', $subject), ['name' => 'PHP'])
+            ->assertSessionHasNoErrors();
+
+        $this->actingAs($admin)
+            ->put(route('admin.courses.update', $course), ['name' => 'Laravel basics'])
+            ->assertSessionHasNoErrors();
+
+        $this->actingAs($admin)
+            ->put(route('admin.lessons.update', $lesson), [
+                'number' => 1,
+                'title' => 'Routes',
+                'price' => 15,
+            ])
+            ->assertSessionHasNoErrors();
+
+        $this->actingAs($admin)
+            ->put(route('admin.exercises.update', $exercise), [
+                'title' => 'Select queries',
+                'price' => 10,
+            ])
+            ->assertSessionHasNoErrors();
+    }
 }

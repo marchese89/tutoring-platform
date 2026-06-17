@@ -8,6 +8,7 @@ use App\Models\Exercise;
 use App\Support\PrivateUploadStorage;
 use App\Support\UploadRules;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ExerciseController extends Controller
 {
@@ -107,7 +108,13 @@ class ExerciseController extends Controller
         $validated = $request->validate(
             [
                 'course_id' => 'required|exists:courses,id',
-                'title' => 'required|string|max:255',
+                'title' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('exercises', 'title')
+                        ->where(fn ($query) => $query->where('course_id', $request->input('course_id'))),
+                ],
                 'price' => 'required|numeric',
             ],
             [],
@@ -191,9 +198,18 @@ class ExerciseController extends Controller
 
     public function update(Request $request, $id)
     {
+        $exercise = Exercise::findOrFail($id);
+
         $validated = $request->validate(
             [
-                'title' => 'required|string|max:255',
+                'title' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('exercises', 'title')
+                        ->where(fn ($query) => $query->where('course_id', $exercise->course_id))
+                        ->ignore($exercise->id),
+                ],
                 'price' => 'required|numeric',
             ],
             [],
@@ -203,7 +219,7 @@ class ExerciseController extends Controller
             ]
         );
 
-        Exercise::findOrFail($id)->update($validated);
+        $exercise->update($validated);
 
         return back();
     }

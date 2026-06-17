@@ -8,6 +8,7 @@ use App\Models\Lesson;
 use App\Support\PrivateUploadStorage;
 use App\Support\UploadRules;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class LessonController extends Controller
 {
@@ -114,7 +115,12 @@ class LessonController extends Controller
         $validated = $request->validate(
             [
                 'course_id' => 'required|exists:courses,id',
-                'number' => 'required|integer',
+                'number' => [
+                    'required',
+                    'integer',
+                    Rule::unique('lessons', 'number')
+                        ->where(fn ($query) => $query->where('course_id', $request->input('course_id'))),
+                ],
                 'title' => 'required|string',
                 'price' => 'required|numeric',
             ],
@@ -200,9 +206,17 @@ class LessonController extends Controller
 
     public function update(Request $request, int $id)
     {
+        $lesson = Lesson::findOrFail($id);
+
         $validated = $request->validate(
             [
-                'number' => 'required|integer',
+                'number' => [
+                    'required',
+                    'integer',
+                    Rule::unique('lessons', 'number')
+                        ->where(fn ($query) => $query->where('course_id', $lesson->course_id))
+                        ->ignore($lesson->id),
+                ],
                 'title' => 'required|string',
                 'price' => 'required|numeric',
             ],
@@ -214,7 +228,7 @@ class LessonController extends Controller
             ]
         );
 
-        Lesson::findOrFail($id)->update($validated);
+        $lesson->update($validated);
 
         return back();
     }

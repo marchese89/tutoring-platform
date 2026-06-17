@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ThemeArea;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ThemeAreaController extends Controller
 {
@@ -29,7 +30,7 @@ class ThemeAreaController extends Controller
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', Rule::unique('theme_areas', 'name')],
         ]);
 
         ThemeArea::create([
@@ -42,7 +43,7 @@ class ThemeAreaController extends Controller
     public function update(Request $request, int $id)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', Rule::unique('theme_areas', 'name')->ignore($id)],
         ]);
 
         $themeArea = ThemeArea::findOrFail($id);
