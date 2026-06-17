@@ -372,7 +372,7 @@ Verification so far:
 
 Branch: `refactor/demo-seeders`
 
-Estimated commits: 2.
+Status: completed.
 
 Definition of Done:
 
@@ -393,6 +393,7 @@ Completed so far:
   `php artisan migrate:fresh --seed --force`.
 - Demo seeding has feature coverage for generated users, catalog content,
   orders, invoices, chats, reviews, and private demo PDFs.
+- `php artisan test` now passes with 134 tests and 672 assertions.
 
 ### Package D. Public UX and list pagination
 
@@ -444,8 +445,8 @@ Definition of Done:
 
 ### Next action
 
-Start Package C by splitting the monolithic `DatabaseSeeder` into focused demo
-seeders and verifying a fresh seeded installation.
+Start Package D by adding public UX polish and pagination on a dedicated
+`feature/public-ux-pagination` branch.
 
 ## Historical progress
 
