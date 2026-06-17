@@ -6,7 +6,7 @@
 
 @section('inner')
     <x-ui.page-section>
-        @if ($invoices->isNotEmpty())
+        @if ($invoices->count() > 0)
             <x-ui.table-card :title="__('student.invoices.available')">
                 <table class="table align-middle">
                     <thead class="table-light">
@@ -40,6 +40,12 @@
                         @endforeach
                     </tbody>
                 </table>
+
+                @if ($invoices->hasPages())
+                    <div class="mt-4">
+                        {{ $invoices->links() }}
+                    </div>
+                @endif
             </x-ui.table-card>
         @else
             <x-ui.empty-state :title="__('student.invoices.empty_title')" :text="__('student.invoices.empty_text')" />

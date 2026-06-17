@@ -39,16 +39,20 @@ class LessonRequestController extends Controller
 
     public function index()
     {
-        $lessonRequests = LessonRequest::all()->map(fn (LessonRequest $lessonRequest) => [
-            'id' => $lessonRequest->id,
-            'title' => $lessonRequest->title,
-            'date' => DateHelper::format($lessonRequest->requested_at),
-            'status_variant' => $lessonRequest->is_fulfilled ? 'success' : 'danger',
-            'status_label' => $lessonRequest->is_fulfilled
-                ? __('admin.students.request_fulfilled')
-                : __('admin.students.request_to_fulfill'),
-            'show_url' => route('admin.lesson-requests.show', $lessonRequest->id),
-        ]);
+        $lessonRequests = LessonRequest::query()
+            ->orderByDesc('requested_at')
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->through(fn (LessonRequest $lessonRequest) => [
+                'id' => $lessonRequest->id,
+                'title' => $lessonRequest->title,
+                'date' => DateHelper::format($lessonRequest->requested_at),
+                'status_variant' => $lessonRequest->is_fulfilled ? 'success' : 'danger',
+                'status_label' => $lessonRequest->is_fulfilled
+                    ? __('admin.students.request_fulfilled')
+                    : __('admin.students.request_to_fulfill'),
+                'show_url' => route('admin.lesson-requests.show', $lessonRequest->id),
+            ]);
 
         return view('admin.students.lesson-requests', compact('lessonRequests'));
     }

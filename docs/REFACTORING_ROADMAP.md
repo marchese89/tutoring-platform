@@ -415,6 +415,16 @@ Definition of Done:
   constraints.
 - Verify the homepage and about page at desktop and mobile widths.
 
+Completed so far:
+
+- Admin lesson-request lists, student direct-request lists, purchased
+  direct-request lists, and student invoice lists use paginated queries instead
+  of unbounded collections.
+- Shared lesson-request tables render paginator links when the data source is
+  paginated.
+- Feature tests cover first-page rendering, hidden overflow rows, and paginator
+  links for lesson-request and invoice lists.
+
 ### Package E. Release verification
 
 Branch: `release/final-verification`

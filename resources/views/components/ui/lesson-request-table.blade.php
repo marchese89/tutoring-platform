@@ -40,4 +40,10 @@
             @endforelse
         </tbody>
     </table>
+
+    @if (method_exists($requests, 'links') && $requests->hasPages())
+        <div class="mt-4">
+            {{ $requests->links() }}
+        </div>
+    @endif
 </x-ui.table-card>

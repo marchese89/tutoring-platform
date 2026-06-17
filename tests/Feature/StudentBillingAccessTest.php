@@ -49,6 +49,27 @@ class StudentBillingAccessTest extends TestCase
             ->assertDontSee(route('student.invoices.show', $otherInvoice->id), false);
     }
 
+    public function test_student_invoice_list_is_paginated(): void
+    {
+        $student = Student::factory()->create();
+
+        for ($index = 0; $index < 11; $index++) {
+            Invoice::factory()->create([
+                'number' => 700 + $index,
+                'issued_at' => now()->subMinutes($index),
+                'student_id' => $student->id,
+                'source' => InvoiceSource::EXTRA->value,
+            ]);
+        }
+
+        $this->actingAs($student->user)
+            ->get(route('student.invoices.index'))
+            ->assertOk()
+            ->assertSee('700')
+            ->assertDontSee('710')
+            ->assertSee('page=2', false);
+    }
+
     public function test_student_cannot_open_another_students_order_invoice(): void
     {
         $student = Student::factory()->create();

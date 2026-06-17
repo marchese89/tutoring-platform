@@ -67,4 +67,52 @@ class LessonRequestPageTest extends TestCase
             ->assertSee('data-lesson-request-table', false)
             ->assertSee('Richiesta acquistata');
     }
+
+    public function test_lesson_request_lists_are_paginated(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $student = Student::factory()->create();
+
+        for ($index = 0; $index < 11; $index++) {
+            LessonRequest::factory()->for($student)->create([
+                'title' => $index === 0 ? 'Richiesta più recente' : 'Richiesta '.$index,
+                'requested_at' => now()->subMinutes($index),
+                'is_paid' => false,
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->get(route('admin.lesson-requests.index'))
+            ->assertOk()
+            ->assertSee('Richiesta più recente')
+            ->assertDontSee('Richiesta 10')
+            ->assertSee('page=2', false);
+
+        $this->actingAs($student->user)
+            ->get(route('student.direct-requests.index'))
+            ->assertOk()
+            ->assertSee('Richiesta più recente')
+            ->assertDontSee('Richiesta 10')
+            ->assertSee('page=2', false);
+    }
+
+    public function test_purchased_lesson_request_list_is_paginated(): void
+    {
+        $student = Student::factory()->create();
+
+        for ($index = 0; $index < 11; $index++) {
+            LessonRequest::factory()->for($student)->create([
+                'title' => $index === 0 ? 'Richiesta acquistata recente' : 'Richiesta acquistata '.$index,
+                'requested_at' => now()->subMinutes($index),
+                'is_paid' => true,
+            ]);
+        }
+
+        $this->actingAs($student->user)
+            ->get(route('student.direct-requests.purchased'))
+            ->assertOk()
+            ->assertSee('Richiesta acquistata recente')
+            ->assertDontSee('Richiesta acquistata 10')
+            ->assertSee('page=2', false);
+    }
 }

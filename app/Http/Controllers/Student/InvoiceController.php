@@ -21,8 +21,8 @@ class InvoiceController extends Controller
             })
             ->orderByDesc('issued_at')
             ->orderByDesc('id')
-            ->get()
-            ->map(fn (Invoice $invoice) => [
+            ->paginate(10)
+            ->through(fn (Invoice $invoice) => [
                 'id' => $invoice->id,
                 'number' => $invoice->number,
                 'order_id' => $invoice->order_id,

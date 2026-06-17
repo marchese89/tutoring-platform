@@ -19,8 +19,9 @@ class DirectRequestController extends Controller
         $directRequests = LessonRequest::where('student_id', $request->user()->student->id)
             ->where('is_paid', 0)
             ->orderByDesc('requested_at')
-            ->get()
-            ->map(fn (LessonRequest $lessonRequest) => [
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->through(fn (LessonRequest $lessonRequest) => [
                 'id' => $lessonRequest->id,
                 'title' => $lessonRequest->title,
                 'date' => DateHelper::format($lessonRequest->requested_at),
@@ -41,11 +42,12 @@ class DirectRequestController extends Controller
         $lessons = LessonRequest::where('student_id', $studentId)
             ->where('is_paid', 1)
             ->orderByDesc('requested_at')
-            ->get();
+            ->orderByDesc('id')
+            ->paginate(10);
 
         $chats = Chat::where('product_type', ProductType::REQUESTED_LESSON->value)
             ->where('student_id', $studentId)
-            ->whereIn('product_id', $lessons->pluck('id'))
+            ->whereIn('product_id', $lessons->getCollection()->pluck('id'))
             ->get()
             ->keyBy('product_id');
 
@@ -55,7 +57,7 @@ class DirectRequestController extends Controller
             ->unique('chat_id')
             ->keyBy('chat_id');
 
-        $purchasedDirectRequests = $lessons->map(function (LessonRequest $lesson) use ($chats, $latestMessages) {
+        $purchasedDirectRequests = $lessons->through(function (LessonRequest $lesson) use ($chats, $latestMessages) {
             $chat = $chats->get($lesson->id);
             $latestMessage = $chat ? $latestMessages->get($chat->id) : null;
 
