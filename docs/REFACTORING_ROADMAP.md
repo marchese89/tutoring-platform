@@ -383,6 +383,15 @@ Definition of Done:
   orders, invoices, lessons, exercises, chats, and direct requests.
 - Run a fresh seeded database verification.
 
+Completed so far:
+
+- The monolithic `DatabaseSeeder` was split into focused seeders for demo
+  users, catalog content, direct lesson requests, reviews, orders/invoices, and
+  chats.
+- Demo PDF generation is shared through one seeder concern.
+- Fresh install verification passes with SQLite `:memory:` using
+  `php artisan migrate:fresh --seed --force`.
+
 ### Package D. Public UX and list pagination
 
 Branch: `feature/public-ux-pagination`
