@@ -34,6 +34,7 @@ class HomePageTest extends TestCase
             ->assertSee('Spiegazione chiara e metodo efficace.')
             ->assertSee('Sono laureato magistrale in Ingegneria Informatica')
             ->assertSee('images/computer-science-tutoring-hero.jpg', false)
+            ->assertSee('data-home-reveal', false)
             ->assertDontSee('Sono un ingegnere informatico')
             ->assertSee('/files/tutor.jpg', false);
     }

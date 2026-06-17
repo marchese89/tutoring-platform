@@ -407,6 +407,30 @@
             font-weight: 600;
         }
 
+        .home-reveal {
+            opacity: 1;
+            transform: none;
+        }
+
+        .home-animations-ready .home-reveal {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity .7s ease, transform .7s ease;
+        }
+
+        .home-animations-ready .home-reveal.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .home-animations-ready .home-reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+        }
+
         @media (max-width: 767.98px) {
             .home-hero {
                 min-height: 620px;
@@ -487,7 +511,7 @@
             </div>
         </section>
 
-        <section class="home-proof" aria-label="{{ __('public.home.strengths_label') }}">
+        <section class="home-proof home-reveal" aria-label="{{ __('public.home.strengths_label') }}" data-home-reveal>
             <div class="container">
                 <div class="row">
                     <div class="col-md-4">
@@ -521,7 +545,7 @@
             </div>
         </section>
 
-        <section class="home-section">
+        <section class="home-section home-reveal" data-home-reveal>
             <div class="container">
                 <p class="home-section__eyebrow">{{ __('public.home.services.eyebrow') }}</p>
                 <h2>{{ __('public.home.services.title') }}</h2>
@@ -546,7 +570,7 @@
             </div>
         </section>
 
-        <section class="home-section home-section--dark">
+        <section class="home-section home-section--dark home-reveal" data-home-reveal>
             <div class="container">
                 <div class="row g-5 align-items-start">
                     <div class="col-lg-7">
@@ -584,7 +608,7 @@
             </div>
         </section>
 
-        <section class="home-section home-section--muted">
+        <section class="home-section home-section--muted home-reveal" data-home-reveal>
             <div class="container">
                 <div class="row g-5 align-items-end mb-5">
                     <div class="col-lg-8">
@@ -611,7 +635,7 @@
             </div>
         </section>
 
-        <section class="home-section">
+        <section class="home-section home-reveal" data-home-reveal>
             <div class="container">
                 <div class="home-profile">
                     @if ($admin?->photo_path)
@@ -641,7 +665,7 @@
         </section>
 
         @if ($reviews->isNotEmpty())
-            <section class="home-section home-section--muted">
+            <section class="home-section home-section--muted home-reveal" data-home-reveal>
                 <div class="container">
                     <p class="home-section__eyebrow">{{ __('public.home.reviews.eyebrow') }}</p>
                     <h2>{{ __('public.home.reviews.title') }}</h2>
@@ -676,7 +700,7 @@
             </section>
         @endif
 
-        <section class="home-contact">
+        <section class="home-contact home-reveal" data-home-reveal>
             <div class="container">
                 <h2>{{ __('public.home.contact.title') }}</h2>
                 <p>
@@ -696,3 +720,34 @@
         </section>
     </div>
 @endsection
+
+@push('scripts')
+    <script>
+        (() => {
+            const revealItems = document.querySelectorAll('[data-home-reveal]');
+
+            if (!revealItems.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                revealItems.forEach((item) => item.classList.add('is-visible'));
+
+                return;
+            }
+
+            document.documentElement.classList.add('home-animations-ready');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+
+                    entry.target.classList.add('is-visible');
+                    observer.unobserve(entry.target);
+                });
+            }, {
+                threshold: 0.18,
+            });
+
+            revealItems.forEach((item) => observer.observe(item));
+        })();
+    </script>
+@endpush

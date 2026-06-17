@@ -424,6 +424,12 @@ Completed so far:
   paginated.
 - Feature tests cover first-page rendering, hidden overflow rows, and paginator
   links for lesson-request and invoice lists.
+- The public home page has progressive scroll reveal animations that keep
+  content visible without JavaScript and respect reduced-motion preferences.
+- The public about page now presents profile, method, certificate counts, and
+  certificate previews as a structured public page instead of only listing
+  documents.
+- Newly added Italian public-page strings were checked for mojibake sequences.
 
 ### Package E. Release verification
 

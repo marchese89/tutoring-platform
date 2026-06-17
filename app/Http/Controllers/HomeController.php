@@ -29,8 +29,10 @@ class HomeController extends Controller
 
     public function about()
     {
+        $admin = User::with('admin')->where('role', UserRole::ADMIN->value)->first()?->admin;
         $certificates = Certificate::orderBy('id')->get();
+        $certificateCount = $certificates->count();
 
-        return view('public.about', compact('certificates'));
+        return view('public.about', compact('admin', 'certificates', 'certificateCount'));
     }
 }
