@@ -2,7 +2,7 @@
     <div class="container d-flex justify-content-between small text-muted">
 
         <div>
-            © {{ date('Y') }} Lezioni Informatica
+            © {{ date('Y') }} {{ config('app.name') }}
         </div>
 
         <div class="d-flex gap-3">

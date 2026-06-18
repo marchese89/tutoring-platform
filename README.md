@@ -1,4 +1,4 @@
-# Lezioni Informatica - Laravel Project
+# Tutoring Platform
 
 Laravel application for managing students, lessons, exercises, custom lesson
 requests, payments, invoices, and teacher-student support workflows.
@@ -171,8 +171,8 @@ deployment commands with managed equivalents.
 Clone the repository:
 
 ```bash
-git clone https://github.com/marchese89/lezioni-informatica-laravel.git
-cd lezioni-informatica-laravel
+git clone https://github.com/marchese89/tutoring-platform.git
+cd tutoring-platform
 ```
 
 Install dependencies:

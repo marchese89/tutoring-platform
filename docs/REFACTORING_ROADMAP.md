@@ -530,7 +530,7 @@ Completed so far:
 - Admin and public certificate lists are paginated, while the homepage limits
   testimonials to the six most recent reviews to keep the landing page bounded.
 - Final automated verification passes with Composer validation, Pint,
-  dependency audit, and 153 tests with 797 assertions. The remaining release
+  dependency audit, and 153 tests with 799 assertions. The remaining release
   task is the seeded manual browser checklist in `docs/RELEASE_CHECKLIST.md`.
 - Admin catalog, teaching, request, chat, order, and invoice routes now use
   domain-named route model binding instead of generic integer IDs. Nested

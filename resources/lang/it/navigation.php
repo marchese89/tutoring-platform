@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'brand' => 'Lezioni Informatica',
+    'brand' => 'Tutoring Platform',
     'home' => 'Home',
     'theme_areas' => 'Aree tematiche',
     'custom_material' => 'Materiale su richiesta',

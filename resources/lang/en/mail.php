@@ -41,5 +41,5 @@ return [
         'fallback' => 'If you have trouble clicking the ":action" button, copy and paste the link below into your browser:',
     ],
 
-    'signature' => 'Lezioni Informatica',
+    'signature' => 'Tutoring Platform',
 ];

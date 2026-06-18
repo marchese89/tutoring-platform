@@ -1,10 +1,11 @@
 {
-    "name": "laravel/laravel",
+    "name": "marchese89/tutoring-platform",
     "type": "project",
-    "description": "The Laravel Framework.",
+    "description": "Tutoring platform for lessons, exercises, payments, invoices, and student support.",
     "keywords": [
-        "framework",
-        "laravel"
+        "education",
+        "laravel",
+        "tutoring"
     ],
     "license": "MIT",
     "require": {

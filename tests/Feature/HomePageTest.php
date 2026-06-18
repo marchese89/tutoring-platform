@@ -28,6 +28,8 @@ class HomePageTest extends TestCase
         $response = $this->get(route('home'));
 
         $response->assertOk()
+            ->assertSee('<title>Tutoring Platform</title>', false)
+            ->assertSee('Tutoring Platform')
             ->assertSee('Lezioni private di informatica')
             ->assertSee('rel="icon"', false)
             ->assertSee(asset('favicon.svg'), false)

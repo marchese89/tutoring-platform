@@ -1,7 +1,7 @@
 name: tutoring-platform
 
 x-app-environment: &app-environment
-  APP_NAME: "Lezioni Informatica"
+  APP_NAME: "Tutoring Platform"
   APP_ENV: local
   APP_DEBUG: "true"
   APP_URL: http://localhost:${APP_PORT:-8000}
