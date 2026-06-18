@@ -41,3 +41,19 @@ jobs:
 
       - name: Audit locked dependencies
         run: composer audit --locked --no-interaction
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build development image
+        run: docker compose build
+
+      - name: Run test suite in Docker
+        run: docker compose run --rm test
+
+      - name: Build production image
+        run: docker build --build-arg COMPOSER_NO_DEV=1 --tag tutoring-platform:ci .

@@ -45,9 +45,11 @@ class PurchasedContentAuthorizationTest extends TestCase
     {
         config([
             'broadcasting.connections.reverb.key' => 'test-reverb-key',
-            'broadcasting.connections.reverb.options.host' => 'socket.example.test',
-            'broadcasting.connections.reverb.options.port' => 9443,
-            'broadcasting.connections.reverb.options.scheme' => 'https',
+            'broadcasting.connections.reverb.options.host' => 'reverb',
+            'broadcasting.connections.reverb.options.port' => 8080,
+            'broadcasting.connections.reverb.client_options.host' => 'socket.example.test',
+            'broadcasting.connections.reverb.client_options.port' => 9443,
+            'broadcasting.connections.reverb.client_options.scheme' => 'https',
         ]);
 
         $student = Student::factory()->create();
@@ -73,6 +75,7 @@ class PurchasedContentAuthorizationTest extends TestCase
             ->assertSee('src="/protected-files/lessons/files/lesson.pdf#view=FitH"', false)
             ->assertSee('key: "test-reverb-key"', false)
             ->assertSee('wsHost: "socket.example.test"', false)
+            ->assertDontSee('wsHost: "reverb"', false)
             ->assertSee('wsPort: 9443', false)
             ->assertSee('forceTLS: true', false);
     }

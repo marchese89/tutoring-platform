@@ -72,7 +72,101 @@ Notes:
   `php --ini` to locate the loaded configuration file and `php -m` to verify
   the enabled extensions.
 
-## Installation
+## Docker Demo Installation
+
+Docker is the recommended way to run the complete demo environment. It starts
+the Laravel application, MySQL, and Laravel Reverb:
+
+```bash
+docker compose up --build -d
+```
+
+On the first start, the application generates and persists an application key,
+runs the database migrations, and seeds the demo data when the users table is
+empty.
+
+Open:
+
+* Application: `http://localhost:8000`
+* Reverb WebSocket server: `http://localhost:8080`
+
+The default demo accounts are listed below. To inspect the services or run the
+test suite inside the application container:
+
+```bash
+docker compose ps
+docker compose logs -f app
+docker compose run --rm test
+```
+
+Stop the services while preserving application and database data:
+
+```bash
+docker compose down
+```
+
+To remove all Docker-managed application and database data and start again from
+an empty installation, use `docker compose down -v`.
+
+The host ports may be changed with `APP_PORT` and `REVERB_PUBLIC_PORT`.
+Automatic demo seeding may be disabled with `DOCKER_SEED_DATABASE=false`.
+
+The demo database is separate from any existing local MySQL installation. The
+first seeded installation uses these accounts:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@example.com` | `password` |
+| Student | `student@example.com` | `password` |
+| Student | `student2@example.com` | `password` |
+
+These credentials are for local demonstration only.
+
+## Production Docker Deployment
+
+`compose.production.yaml` is a separate production-oriented configuration. It:
+
+* builds the image without development and testing dependencies;
+* does not include a database container, so it can use a managed MySQL service;
+* requires the application, database, and Reverb secrets at deployment time;
+* disables demo seeding and automatic migrations;
+* runs with `APP_ENV=production`, `APP_DEBUG=false`, and stderr logging.
+
+Create the deployment environment file:
+
+```bash
+cp .env.production.example .env.production
+```
+
+Generate an application key and set it as `APP_KEY`:
+
+```bash
+docker run --rm php:8.3-cli php -r "echo 'base64:'.base64_encode(random_bytes(32)).PHP_EOL;"
+```
+
+Fill in the database, Reverb, mail, and payment values. Never commit
+`.env.production`. Build the image and run the database migrations explicitly:
+
+```bash
+docker compose --env-file .env.production -f compose.production.yaml build
+docker compose --env-file .env.production -f compose.production.yaml run --rm app php artisan migrate --force
+docker compose --env-file .env.production -f compose.production.yaml up -d
+```
+
+Production does not create demo users. The first administrator must be created
+through an explicit deployment procedure or directly in the database with a
+securely hashed password.
+
+GitHub Actions validates both Docker variants. Pushes to `master`, version tags,
+and manual workflow runs publish the production image to GitHub Container
+Registry as `ghcr.io/<owner>/<repository>`. Set `APP_IMAGE` to that image in
+`.env.production` when deploying a prebuilt release.
+
+The production Compose file is a portable single-host deployment baseline. A
+specific cloud platform may replace its volume, ingress, secrets, database, and
+deployment commands with managed equivalents.
+
+## Local Installation
 
 Clone the repository:
 
@@ -104,7 +198,7 @@ php artisan storage:link
 The seed command creates a complete demo catalog, orders, invoices, lesson
 requests, reviews, and chats.
 
-### Demo Accounts
+### Local Seed Accounts
 
 The default credentials come from `.env` and may be changed before seeding:
 

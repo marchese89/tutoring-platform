@@ -57,6 +57,11 @@ return [
                 'scheme' => env('REVERB_SCHEME', 'http'),
                 'useTLS' => false,
             ],
+            'client_options' => [
+                'host' => env('REVERB_PUBLIC_HOST', env('REVERB_HOST', '127.0.0.3')),
+                'port' => env('REVERB_PUBLIC_PORT', env('REVERB_PORT', 6001)),
+                'scheme' => env('REVERB_PUBLIC_SCHEME', env('REVERB_SCHEME', 'http')),
+            ],
         ],
 
         'ably' => [

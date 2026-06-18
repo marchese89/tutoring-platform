@@ -530,12 +530,28 @@ Completed so far:
 - Admin and public certificate lists are paginated, while the homepage limits
   testimonials to the six most recent reviews to keep the landing page bounded.
 - Final automated verification passes with Composer validation, Pint,
-  dependency audit, and 153 tests with 794 assertions. The remaining release
+  dependency audit, and 153 tests with 797 assertions. The remaining release
   task is the seeded manual browser checklist in `docs/RELEASE_CHECKLIST.md`.
 - Admin catalog, teaching, request, chat, order, and invoice routes now use
   domain-named route model binding instead of generic integer IDs. Nested
   course content uses scoped binding, and invoice details bind explicitly by
   invoice number.
+- A Docker installation now builds one PHP 8.3/Apache image shared by the web
+  application and Reverb, with MySQL 8.4, persistent application/database
+  volumes, health checks, automatic migrations, first-run demo seeding, and a
+  persisted generated application key.
+- A separate production Compose configuration excludes the demo database and
+  seed credentials, requires deployment secrets, disables automatic migrations
+  and seeding, and builds the image without development dependencies.
+- GitHub Actions now verifies the Docker test path and production build, while
+  a dedicated workflow publishes production images to GitHub Container
+  Registry from the default branch, version tags, or manual runs.
+- Reverb uses separate internal container and public browser endpoints, and a
+  dedicated Compose test profile runs the full suite against isolated SQLite
+  and array-backed services without touching the demo database.
+- Docker verification covers a clean build, first installation, idempotent
+  restart, HTTP and favicon responses, a real WebSocket handshake, Composer
+  validation, Pint, dependency auditing, and the full test suite.
 
 ### Closed packages
 
@@ -551,8 +567,9 @@ Completed so far:
 
 ### Next action
 
-Complete the seeded manual browser checklist on `release/final-verification`,
-then mark Package F complete and prepare the final merge.
+Complete the seeded manual browser checklist, rename the repository and local
+folder to `tutoring-platform`, then mark Package F complete and prepare the
+final merge.
 
 ## Historical progress
 

@@ -113,10 +113,10 @@
             window.Echo = new Echo({
                 broadcaster: 'reverb',
                 key: @json(config('broadcasting.connections.reverb.key')),
-                wsHost: @json(config('broadcasting.connections.reverb.options.host')),
-                wsPort: @json((int) config('broadcasting.connections.reverb.options.port')),
-                wssPort: @json((int) config('broadcasting.connections.reverb.options.port')),
-                forceTLS: @json(config('broadcasting.connections.reverb.options.scheme') === 'https'),
+                wsHost: @json(config('broadcasting.connections.reverb.client_options.host')),
+                wsPort: @json((int) config('broadcasting.connections.reverb.client_options.port')),
+                wssPort: @json((int) config('broadcasting.connections.reverb.client_options.port')),
+                forceTLS: @json(config('broadcasting.connections.reverb.client_options.scheme') === 'https'),
                 enabledTransports: ['ws', 'wss'],
             });
         </script>
