@@ -29,6 +29,8 @@ class HomePageTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Lezioni private di informatica')
+            ->assertSee('rel="icon"', false)
+            ->assertSee(asset('favicon.svg'), false)
             ->assertSee('Esplora i corsi')
             ->assertSee('Richiedi materiale')
             ->assertSee('Spiegazione chiara e metodo efficace.')
