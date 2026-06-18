@@ -13,7 +13,7 @@ class ThemeAreaController extends Controller
     {
         $themeAreas = ThemeArea::withCount('subjects')
             ->orderBy('name')
-            ->get();
+            ->paginate(10);
 
         return view('admin.teaching.theme-areas', compact('themeAreas'));
     }
@@ -22,7 +22,7 @@ class ThemeAreaController extends Controller
     {
         $themeAreas = ThemeArea::whereHas('subjects')
             ->orderBy('name')
-            ->get();
+            ->paginate(12);
 
         return view('public.theme-areas', compact('themeAreas'));
     }

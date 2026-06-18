@@ -43,6 +43,8 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <x-ui.pagination :paginator="$courses" />
         </x-ui.table-card>
     </x-ui.page-section>
 @endsection

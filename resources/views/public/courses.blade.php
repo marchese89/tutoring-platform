@@ -18,5 +18,7 @@
 
         </div>
 
+        <x-ui.pagination :paginator="$courses" />
+
     </div>
 @endsection

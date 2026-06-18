@@ -25,14 +25,16 @@ class CourseController extends Controller
         $courses = Course::with('subject.themeArea')
             ->withCount(['lessons', 'exercises'])
             ->orderBy('name')
-            ->get();
+            ->paginate(10);
 
         return view('admin.teaching.create-course', compact('subjects', 'courses'));
     }
 
     public function publicIndex(Subject $subject)
     {
-        $courses = Course::where('subject_id', $subject->id)->get();
+        $courses = Course::where('subject_id', $subject->id)
+            ->orderBy('name')
+            ->paginate(12);
 
         return view('public.courses', compact('courses'));
     }
@@ -41,7 +43,7 @@ class CourseController extends Controller
     {
         $courses = Course::with('subject.themeArea')
             ->orderBy('name')
-            ->get();
+            ->paginate(10);
 
         return view('admin.teaching.courses', compact('courses'));
     }
@@ -67,7 +69,8 @@ class CourseController extends Controller
 
         $courses = Course::with('subject.themeArea')
             ->whereIn('id', $courseIds)
-            ->get();
+            ->orderBy('name')
+            ->paginate(10);
 
         return view('student.courses', compact('courses'));
     }

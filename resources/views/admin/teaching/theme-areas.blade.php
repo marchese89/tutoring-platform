@@ -100,6 +100,8 @@
                     @endforelse
                 </tbody>
             </table>
+
+            <x-ui.pagination :paginator="$themeAreas" />
         </x-ui.table-card>
     </x-ui.page-section>
 @endsection

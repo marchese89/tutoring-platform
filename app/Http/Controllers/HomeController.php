@@ -19,6 +19,7 @@ class HomeController extends Controller
             ->whereNotNull('review')
             ->where('review', '<>', '')
             ->latest()
+            ->limit(6)
             ->get();
 
         $averageRating = Review::query()
@@ -32,8 +33,8 @@ class HomeController extends Controller
     {
         $admin = User::with('admin')->where('role', UserRole::ADMIN->value)->first()?->admin;
         $adminPhotoUrl = $this->assetUrl($admin?->photo_path);
-        $certificates = Certificate::orderBy('id')->get();
-        $certificateCount = $certificates->count();
+        $certificates = Certificate::orderBy('id')->paginate(6);
+        $certificateCount = Certificate::count();
 
         return view('public.about', compact('admin', 'adminPhotoUrl', 'certificates', 'certificateCount'));
     }

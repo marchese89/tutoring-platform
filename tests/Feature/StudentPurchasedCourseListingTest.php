@@ -9,6 +9,7 @@ use App\Models\Lesson;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Student;
+use App\Models\Subject;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -86,6 +87,31 @@ class StudentPurchasedCourseListingTest extends TestCase
             ->assertOk()
             ->assertSee('Purchased course')
             ->assertDontSee('Unrelated course');
+    }
+
+    public function test_student_courses_index_is_paginated(): void
+    {
+        $student = Student::factory()->create();
+        $subject = Subject::factory()->create();
+
+        for ($index = 1; $index <= 11; $index++) {
+            $course = Course::factory()->for($subject)->create([
+                'name' => sprintf('Purchased course %02d', $index),
+            ]);
+            $lesson = Lesson::factory()->for($course)->create([
+                'number' => 1,
+                'price' => 20,
+            ]);
+
+            $this->purchase($student, $lesson->id, CartItem::LESSON, 20);
+        }
+
+        $this->actingAs($student->user)
+            ->get(route('student.courses.index'))
+            ->assertOk()
+            ->assertSee('Purchased course 01')
+            ->assertDontSee('Purchased course 11')
+            ->assertSee('page=2', false);
     }
 
     private function purchase(Student $student, int $productId, int $productType, int $price): void

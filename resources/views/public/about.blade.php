@@ -322,6 +322,8 @@
                         <x-ui.empty-state :title="__('public.about.empty_title')" :text="__('public.about.empty_text')" />
                     @endforelse
                 </div>
+
+                <x-ui.pagination :paginator="$certificates" />
             </div>
         </section>
     </div>

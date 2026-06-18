@@ -31,7 +31,10 @@ return [
         'student' => 'Studente',
         'loading' => 'Caricamento ordini...',
         'period_empty' => 'Nessun ordine per il periodo selezionato.',
-        'load_error' => 'Non e stato possibile caricare gli ordini. Riprova.',
+        'load_error' => 'Non è stato possibile caricare gli ordini. Riprova.',
+        'pagination_label' => 'Paginazione ordini',
+        'previous_page' => 'Pagina precedente',
+        'next_page' => 'Pagina successiva',
     ],
 
     'product_types' => [

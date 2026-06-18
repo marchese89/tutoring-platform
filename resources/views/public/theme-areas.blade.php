@@ -24,6 +24,8 @@
                 @endforeach
 
             </div>
+
+            <x-ui.pagination :paginator="$themeAreas" />
         @endif
 
     </div>

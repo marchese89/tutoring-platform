@@ -49,7 +49,7 @@ class AccountController extends Controller
 
     public function certificatesIndex()
     {
-        $certificates = Certificate::orderBy('id')->get();
+        $certificates = Certificate::orderBy('id')->paginate(6);
 
         return view('admin.settings.certificates', compact('certificates'));
     }

@@ -38,4 +38,20 @@ class HomePageTest extends TestCase
             ->assertDontSee('Sono un ingegnere informatico')
             ->assertSee(asset('files/tutor.jpg'), false);
     }
+
+    public function test_home_page_limits_reviews_to_the_six_most_recent(): void
+    {
+        for ($index = 1; $index <= 7; $index++) {
+            Review::factory()->create([
+                'student_id' => Student::factory(),
+                'review' => sprintf('Review %02d', $index),
+                'created_at' => now()->addMinutes($index),
+            ]);
+        }
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Review 07')
+            ->assertDontSee('Review 01');
+    }
 }

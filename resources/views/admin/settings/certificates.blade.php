@@ -89,5 +89,7 @@
                 </div>
             @endforelse
         </div>
+
+        <x-ui.pagination :paginator="$certificates" />
     </x-ui.page-section>
 @endsection

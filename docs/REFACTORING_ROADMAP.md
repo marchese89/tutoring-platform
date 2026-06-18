@@ -521,6 +521,17 @@ Completed so far:
 - Added automated coverage for rendered Reverb client settings and a manual
   release checklist for public, student, admin, upload, payment, pagination,
   localization, and realtime-chat flows.
+- Extended paginated queries to public catalog cards, purchased-course lists,
+  and admin teaching-management tables. A shared pagination component now
+  renders links consistently across old and new paginated views.
+- Admin and student monthly order endpoints now paginate server-side while
+  retaining the total for the complete selected period. The shared AJAX table
+  renders localized Bootstrap pagination controls without a page reload.
+- Admin and public certificate lists are paginated, while the homepage limits
+  testimonials to the six most recent reviews to keep the landing page bounded.
+- Final automated verification passes with Composer validation, Pint,
+  dependency audit, and 151 tests with 790 assertions. The remaining release
+  task is the seeded manual browser checklist in `docs/RELEASE_CHECKLIST.md`.
 
 ### Closed packages
 
@@ -536,7 +547,8 @@ Completed so far:
 
 ### Next action
 
-Complete Package F on `release/final-verification`.
+Complete the seeded manual browser checklist on `release/final-verification`,
+then mark Package F complete and prepare the final merge.
 
 ## Historical progress
 

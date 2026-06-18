@@ -6,6 +6,7 @@ use App\Enums\ProductType;
 use App\Helpers\DateHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderItem;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -61,28 +62,40 @@ class OrderController extends Controller
     public function table(Request $request): JsonResponse
     {
         $student = $request->user()->student;
-        $orders = Order::with('orderItems')
+        $period = $request->validate([
+            'year' => ['required', 'integer', 'min:2000', 'max:2100'],
+            'month' => ['required', 'integer', 'between:1,12'],
+        ]);
+
+        $orders = Order::query()
+            ->withSum('orderItems', 'price')
             ->where('student_id', $student->id)
-            ->whereYear('ordered_at', $request->input('year'))
-            ->whereMonth('ordered_at', $request->input('month'))
+            ->whereYear('ordered_at', $period['year'])
+            ->whereMonth('ordered_at', $period['month'])
             ->orderByDesc('ordered_at')
-            ->get();
-
-        $total = 0;
-        $mappedOrders = $orders->map(function (Order $order) use (&$total) {
-            $orderTotal = $order->orderItems->sum('price');
-            $total += $orderTotal;
-
-            return [
+            ->orderByDesc('id')
+            ->paginate(10)
+            ->through(fn (Order $order) => [
                 'id' => $order->id,
                 'date' => DateHelper::format($order->ordered_at),
-                'total' => $orderTotal,
-            ];
-        });
+                'total' => (int) $order->order_items_sum_price,
+            ]);
+
+        $total = OrderItem::whereHas('order', function ($query) use ($student, $period) {
+            $query->where('student_id', $student->id)
+                ->whereYear('ordered_at', $period['year'])
+                ->whereMonth('ordered_at', $period['month']);
+        })->sum('price');
 
         return response()->json([
-            'orders' => $mappedOrders,
-            'total' => $total,
+            'orders' => $orders->items(),
+            'total' => (int) $total,
+            'pagination' => [
+                'current_page' => $orders->currentPage(),
+                'last_page' => $orders->lastPage(),
+                'per_page' => $orders->perPage(),
+                'total' => $orders->total(),
+            ],
         ]);
     }
 

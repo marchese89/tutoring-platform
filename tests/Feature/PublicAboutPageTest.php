@@ -33,4 +33,21 @@ class PublicAboutPageTest extends TestCase
             ->assertSee('src="/storage/certificates/php.pdf#view=FitH"', false)
             ->assertSee('pdf-viewer--compact', false);
     }
+
+    public function test_about_certificate_list_is_paginated_with_complete_count(): void
+    {
+        for ($index = 1; $index <= 7; $index++) {
+            Certificate::factory()->create([
+                'name' => sprintf('Certificate %02d', $index),
+            ]);
+        }
+
+        $this->withSession(['locale' => 'en'])
+            ->get(route('about'))
+            ->assertOk()
+            ->assertSee('7 certificates published')
+            ->assertSee('Certificate 01')
+            ->assertDontSee('Certificate 07')
+            ->assertSee('page=2', false);
+    }
 }

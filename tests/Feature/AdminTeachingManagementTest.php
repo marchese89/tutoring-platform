@@ -68,6 +68,56 @@ class AdminTeachingManagementTest extends TestCase
             ->assertSee(route('admin.courses.edit', $secondCourse->id));
     }
 
+    public function test_teaching_management_lists_are_paginated(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+
+        for ($index = 1; $index <= 11; $index++) {
+            ThemeArea::factory()->create([
+                'name' => sprintf('Area %02d', $index),
+            ]);
+        }
+
+        $themeArea = ThemeArea::factory()->create(['name' => 'Subjects parent']);
+
+        for ($index = 1; $index <= 11; $index++) {
+            Subject::factory()->for($themeArea)->create([
+                'name' => sprintf('Subject %02d', $index),
+            ]);
+        }
+
+        $subject = Subject::factory()->for($themeArea)->create(['name' => 'Courses parent']);
+
+        for ($index = 1; $index <= 11; $index++) {
+            Course::factory()->for($subject)->create([
+                'name' => sprintf('Course %02d', $index),
+            ]);
+        }
+
+        $this->actingAs($admin)
+            ->get(route('admin.theme-areas.index'))
+            ->assertOk()
+            ->assertSee('Area 01')
+            ->assertDontSee('Area 11')
+            ->assertSee('page=2', false);
+
+        $this->actingAs($admin)
+            ->get(route('admin.subjects.index'))
+            ->assertOk()
+            ->assertSee('Subject 01')
+            ->assertDontSee('Subject 11')
+            ->assertSee('page=2', false);
+
+        foreach (['admin.courses.index', 'admin.courses.create'] as $routeName) {
+            $this->actingAs($admin)
+                ->get(route($routeName))
+                ->assertOk()
+                ->assertSee('Course 01')
+                ->assertDontSee('Course 11')
+                ->assertSee('page=2', false);
+        }
+    }
+
     public function test_course_edit_page_displays_content_management_actions(): void
     {
         $admin = User::factory()->create(['role' => 'admin']);

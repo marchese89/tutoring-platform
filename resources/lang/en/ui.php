@@ -32,6 +32,9 @@ return [
         'loading' => 'Loading orders...',
         'period_empty' => 'No orders were found for the selected period.',
         'load_error' => 'Orders could not be loaded. Please try again.',
+        'pagination_label' => 'Order pagination',
+        'previous_page' => 'Previous page',
+        'next_page' => 'Next page',
     ],
 
     'product_types' => [

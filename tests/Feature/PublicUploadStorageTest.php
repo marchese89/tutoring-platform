@@ -91,6 +91,24 @@ class PublicUploadStorageTest extends TestCase
             ->assertSee('pdf-viewer--compact', false);
     }
 
+    public function test_admin_certificate_list_is_paginated(): void
+    {
+        $adminUser = $this->createAdmin();
+
+        for ($index = 1; $index <= 7; $index++) {
+            Certificate::factory()->create([
+                'name' => sprintf('Admin certificate %02d', $index),
+            ]);
+        }
+
+        $this->actingAs($adminUser)
+            ->get(route('admin.account.certificates.index'))
+            ->assertOk()
+            ->assertSee('Admin certificate 01')
+            ->assertDontSee('Admin certificate 07')
+            ->assertSee('page=2', false);
+    }
+
     public function test_admin_photo_page_displays_the_current_photo(): void
     {
         $adminUser = $this->createAdmin();

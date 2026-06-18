@@ -15,16 +15,18 @@ class SubjectController extends Controller
         $subjects = Subject::with('themeArea')
             ->withCount('courses')
             ->orderBy('name')
-            ->get();
+            ->paginate(10);
 
         $themeAreas = ThemeArea::orderBy('name')->get();
 
         return view('admin.teaching.subjects', compact('subjects', 'themeAreas'));
     }
 
-    public function publicIndex(int $themeArea)
+    public function publicIndex(ThemeArea $themeArea)
     {
-        $subjects = Subject::where('theme_area_id', $themeArea)->get();
+        $subjects = Subject::where('theme_area_id', $themeArea->id)
+            ->orderBy('name')
+            ->paginate(12);
 
         return view('public.subjects', compact('subjects'));
     }
