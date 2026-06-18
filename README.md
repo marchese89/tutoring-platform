@@ -67,6 +67,10 @@ Notes:
   settings.
 * Automated tests use SQLite in memory through `phpunit.xml`.
 * The `intl` extension is not required by the current setup.
+* On Windows, enable the required extensions in the active `php.ini`. For
+  example, remove the leading semicolon from `extension=mbstring`. Use
+  `php --ini` to locate the loaded configuration file and `php -m` to verify
+  the enabled extensions.
 
 ## Installation
 
