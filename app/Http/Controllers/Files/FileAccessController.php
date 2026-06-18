@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utility\CartItem;
 use App\Models\Exercise;
 use App\Models\Invoice;
 use App\Models\Lesson;
@@ -15,6 +16,8 @@ use Illuminate\Support\Facades\Storage;
 
 class FileAccessController extends Controller
 {
+    public function __construct(private readonly PurchaseService $purchases) {}
+
     public function __invoke(Request $request, string $path)
     {
         if ($this->isUnsafePath($path)) {
@@ -97,7 +100,11 @@ class FileAccessController extends Controller
             $lessonContent
             && (
                 $lessonContent->price == 0
-                || PurchaseService::isProductPurchased($student->id, $lessonContent->id, 0)
+                || $this->purchases->isProductPurchased(
+                    $student->id,
+                    $lessonContent->id,
+                    CartItem::LESSON
+                )
             )
         ) {
             return true;
@@ -111,7 +118,11 @@ class FileAccessController extends Controller
             $exerciseSolution
             && (
                 $exerciseSolution->price == 0
-                || PurchaseService::isProductPurchased($student->id, $exerciseSolution->id, 2)
+                || $this->purchases->isProductPurchased(
+                    $student->id,
+                    $exerciseSolution->id,
+                    CartItem::EXERCISE
+                )
             )
         ) {
             return true;

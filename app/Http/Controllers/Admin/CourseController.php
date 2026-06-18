@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utility\CartItem;
 use App\Models\Course;
 use App\Models\Exercise;
 use App\Models\Lesson;
@@ -13,6 +14,8 @@ use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
 {
+    public function __construct(private readonly PurchaseService $purchases) {}
+
     public function index()
     {
         $subjects = Subject::with('themeArea')
@@ -49,12 +52,12 @@ class CourseController extends Controller
 
         $lessonCourseIds = Lesson::whereIn(
             'id',
-            PurchaseService::purchasedProductIds($studentId, 0)
+            $this->purchases->purchasedProductIds($studentId, CartItem::LESSON)
         )->pluck('course_id');
 
         $exerciseCourseIds = Exercise::whereIn(
             'id',
-            PurchaseService::purchasedProductIds($studentId, 2)
+            $this->purchases->purchasedProductIds($studentId, CartItem::EXERCISE)
         )->pluck('course_id');
 
         $courseIds = $lessonCourseIds
@@ -145,10 +148,10 @@ class CourseController extends Controller
         $studentId = $user?->student?->id;
         $isAdmin = $user?->isAdmin() ?? false;
         $purchasedLessonIds = $studentId
-            ? PurchaseService::purchasedProductIds($studentId, 0)
+            ? $this->purchases->purchasedProductIds($studentId, CartItem::LESSON)
             : collect();
         $purchasedExerciseIds = $studentId
-            ? PurchaseService::purchasedProductIds($studentId, 2)
+            ? $this->purchases->purchasedProductIds($studentId, CartItem::EXERCISE)
             : collect();
 
         $lessons = $course->lessons->map(function ($lesson) use ($purchasedLessonIds, $isAdmin) {

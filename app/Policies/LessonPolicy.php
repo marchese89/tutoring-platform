@@ -9,6 +9,8 @@ use App\Services\PurchaseService;
 
 class LessonPolicy
 {
+    public function __construct(private readonly PurchaseService $purchases) {}
+
     public function before(User $user): ?bool
     {
         return $user->isAdmin() ? true : null;
@@ -21,7 +23,7 @@ class LessonPolicy
         return $user->isStudent()
             && ((int) $lesson->price === 0
                 || ($studentId
-                    && PurchaseService::isProductPurchased(
+                    && $this->purchases->isProductPurchased(
                         $studentId,
                         $lesson->id,
                         CartItem::LESSON

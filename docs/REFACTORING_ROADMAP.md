@@ -450,6 +450,8 @@ Branch: `refactor/final-safety-pass`
 
 Estimated commits: 2-4.
 
+Status: completed.
+
 Definition of Done:
 
 - Split oversized controllers where they still mix public, admin, chat, upload,
@@ -481,6 +483,14 @@ Completed so far:
 - Public course routes and student course/detail routes now use route model
   binding for courses, lessons, exercises, subjects, and direct lesson
   requests where those parameters represent real domain models.
+- `PurchaseService` is now resolved through Laravel's container and injected
+  into controllers and policies. Its public query methods have strict integer
+  parameters, product types use shared constants instead of numeric literals,
+  and the unused order-total helper was removed.
+- Focused service coverage verifies that purchase lookups remain scoped to the
+  selected student and product type.
+- The unused static `ReviewService` was removed; review aggregation remains in
+  the home-page query where its filtering and presentation context are defined.
 
 ### Package F. Release verification
 
@@ -512,7 +522,7 @@ Definition of Done:
 
 ### Next action
 
-Start Package E on `refactor/final-safety-pass`.
+Complete Package F on `release/final-verification`.
 
 ## Historical progress
 
