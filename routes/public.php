@@ -26,10 +26,13 @@ Route::get('subjects/{subject}/courses', [CourseController::class, 'publicIndex'
 Route::get('courses/{course}', [CourseController::class, 'show'])->name('courses.show');
 
 Route::get('courses/{course}/lessons/{lesson}/presentation', [LessonController::class, 'viewPresentation'])
+    ->scopeBindings()
     ->name('lessons.presentation');
 Route::get('courses/{course}/lessons/{lesson}', [LessonController::class, 'view'])
+    ->scopeBindings()
     ->name('lessons.show');
 Route::get('courses/{course}/exercises/{exercise}/trace', [ExerciseController::class, 'viewTrace'])
+    ->scopeBindings()
     ->name('exercises.trace');
 
 Route::get('lesson-requests/create', [LessonRequestController::class, 'create'])->name('lesson-requests.create');

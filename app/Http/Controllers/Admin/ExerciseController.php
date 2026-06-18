@@ -12,9 +12,8 @@ use Illuminate\Validation\Rule;
 
 class ExerciseController extends Controller
 {
-    public function create(Request $request, int $course)
+    public function create(Request $request, Course $course)
     {
-        $course = Course::findOrFail($course);
         $id = $course->id;
         $promptPath = $request->session()->get('uploaded_exercise_prompt');
         $solutionPath = $request->session()->get('uploaded_exercise_solution');
@@ -33,19 +32,13 @@ class ExerciseController extends Controller
         ]);
     }
 
-    public function edit(int $courseId, int $exerciseId)
+    public function edit(Course $course, Exercise $exercise)
     {
-        $course = Course::findOrFail($courseId);
-        $exercise = Exercise::where('course_id', $courseId)->findOrFail($exerciseId);
-
         return view('admin.teaching.edit-exercise', compact('course', 'exercise'));
     }
 
-    public function viewTrace(int $courseId, int $exerciseId)
+    public function viewTrace(Course $course, Exercise $exercise)
     {
-        $course = Course::findOrFail($courseId);
-        $exercise = Exercise::where('course_id', $courseId)->findOrFail($exerciseId);
-
         return view('public.exercise-trace', compact('exercise', 'course'));
     }
 
@@ -140,10 +133,8 @@ class ExerciseController extends Controller
         return redirect()->route('admin.courses.edit', $validated['course_id']);
     }
 
-    public function destroy(int $id)
+    public function destroy(Exercise $exercise)
     {
-        $exercise = Exercise::findOrFail($id);
-
         PrivateUploadStorage::delete([
             $exercise->prompt_file,
             $exercise->solution_file,
@@ -154,13 +145,11 @@ class ExerciseController extends Controller
         return back();
     }
 
-    public function updateTrace(Request $request, int $id)
+    public function updateTrace(Request $request, Exercise $exercise)
     {
         $request->validate([
             'prompt_file' => UploadRules::pdf(),
         ]);
-
-        $exercise = Exercise::findOrFail($id);
 
         $oldPath = $exercise->prompt_file;
         $exercise->update([
@@ -175,13 +164,11 @@ class ExerciseController extends Controller
         return back();
     }
 
-    public function updateExecution(Request $request, int $id)
+    public function updateExecution(Request $request, Exercise $exercise)
     {
         $request->validate([
             'solution_file' => UploadRules::pdf(),
         ]);
-
-        $exercise = Exercise::findOrFail($id);
 
         $oldPath = $exercise->solution_file;
         $exercise->update([
@@ -196,10 +183,8 @@ class ExerciseController extends Controller
         return back();
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Exercise $exercise)
     {
-        $exercise = Exercise::findOrFail($id);
-
         $validated = $request->validate(
             [
                 'title' => [

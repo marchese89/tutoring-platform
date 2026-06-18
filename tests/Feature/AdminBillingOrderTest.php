@@ -96,6 +96,23 @@ class AdminBillingOrderTest extends TestCase
             ->assertSee('page=2', false);
     }
 
+    public function test_admin_invoice_detail_uses_invoice_number_binding(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $invoice = Invoice::factory()->create([
+            'number' => 9876,
+            'source' => InvoiceSource::EXTRA->value,
+        ]);
+
+        $this->actingAs($admin)
+            ->get(route('admin.invoices.show', $invoice->number))
+            ->assertOk();
+
+        $this->actingAs($admin)
+            ->get(route('admin.invoices.show', $invoice->id))
+            ->assertNotFound();
+    }
+
     private function createStudent(): Student
     {
         $user = User::factory()->create(['role' => 'student']);

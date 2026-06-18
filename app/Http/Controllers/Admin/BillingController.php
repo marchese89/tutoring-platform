@@ -12,9 +12,9 @@ use Illuminate\Http\Request;
 
 class BillingController extends Controller
 {
-    public function showOrder(int $id)
+    public function showOrder(Order $order)
     {
-        $order = Order::with('orderItems')->findOrFail($id);
+        $order->load('orderItems');
         $products = $order->orderItems->map(fn ($item) => [
             'id' => $item->product_id,
             'type_label' => $this->productTypeLabel((int) $item->product_type),
@@ -30,9 +30,9 @@ class BillingController extends Controller
         ]);
     }
 
-    public function showInvoice(int $id)
+    public function showInvoice(Order $order)
     {
-        $invoice = Invoice::where('order_id', $id)->firstOrFail();
+        $invoice = Invoice::where('order_id', $order->id)->firstOrFail();
 
         return view('admin.billing.invoice', [
             'invoice' => $invoice,

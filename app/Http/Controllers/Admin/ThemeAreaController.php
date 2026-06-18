@@ -40,13 +40,11 @@ class ThemeAreaController extends Controller
         return back()->with('success', __('admin.teaching.messages.theme_area_created'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, ThemeArea $themeArea)
     {
         $data = $request->validate([
-            'name' => ['required', 'string', 'max:255', Rule::unique('theme_areas', 'name')->ignore($id)],
+            'name' => ['required', 'string', 'max:255', Rule::unique('theme_areas', 'name')->ignore($themeArea)],
         ]);
-
-        $themeArea = ThemeArea::findOrFail($id);
 
         $themeArea->update([
             'name' => $data['name'],
@@ -55,9 +53,9 @@ class ThemeAreaController extends Controller
         return back()->with('success', __('admin.teaching.messages.theme_area_updated'));
     }
 
-    public function destroy(int $id)
+    public function destroy(ThemeArea $themeArea)
     {
-        $themeArea = ThemeArea::withCount('subjects')->findOrFail($id);
+        $themeArea->loadCount('subjects');
 
         if ($themeArea->subjects_count > 0) {
             return back()->withErrors([

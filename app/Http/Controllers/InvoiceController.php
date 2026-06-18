@@ -22,10 +22,8 @@ class InvoiceController extends Controller
         return view('admin.billing.invoices', compact('invoices'));
     }
 
-    public function show($number)
+    public function show(Invoice $invoice)
     {
-        $invoice = Invoice::where('number', $number)->firstOrFail();
-
         return view('admin.billing.invoice-details', compact('invoice'));
     }
 }

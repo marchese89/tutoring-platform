@@ -125,6 +125,23 @@ class AdminTeachingFormPageTest extends TestCase
             ->assertSee(route('admin.exercises.update', $exercise->id));
     }
 
+    public function test_nested_teaching_routes_reject_content_from_another_course(): void
+    {
+        $admin = User::factory()->create(['role' => 'admin']);
+        $course = $this->createCourse();
+        $otherCourse = $this->createCourse();
+        $lesson = Lesson::factory()->for($otherCourse)->create();
+        $exercise = Exercise::factory()->for($otherCourse)->create();
+
+        $this->actingAs($admin)
+            ->get(route('admin.lessons.edit', [$course, $lesson]))
+            ->assertNotFound();
+
+        $this->actingAs($admin)
+            ->get(route('admin.exercises.edit', [$course, $exercise]))
+            ->assertNotFound();
+    }
+
     private function createCourse(): Course
     {
         $themeArea = ThemeArea::create(['name' => fake()->unique()->word()]);

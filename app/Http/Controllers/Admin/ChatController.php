@@ -63,10 +63,8 @@ class ChatController extends Controller
         return view('admin.students.chats', compact('chats'));
     }
 
-    public function show(int $id)
+    public function show(Chat $chat)
     {
-        $chat = Chat::findOrFail($id);
-
         $presentationFile = '';
         $contentFile = '';
         $presentationLabel = __('admin.students.presentation');

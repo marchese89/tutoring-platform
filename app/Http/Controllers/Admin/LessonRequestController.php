@@ -33,20 +33,16 @@ class LessonRequestController extends Controller
         return view('admin.students.lesson-requests', compact('lessonRequests'));
     }
 
-    public function show(int $id)
+    public function show(LessonRequest $lessonRequest)
     {
-        $lessonRequest = LessonRequest::findOrFail($id);
-
         return view('admin.students.lesson-request', compact('lessonRequest'));
     }
 
-    public function storeSolution(Request $request, int $id)
+    public function storeSolution(Request $request, LessonRequest $lessonRequest)
     {
         $request->validate([
             'file' => UploadRules::pdf(),
         ]);
-
-        $lessonRequest = LessonRequest::findOrFail($id);
 
         $oldPath = $lessonRequest->solution_file;
         $path = PrivateUploadStorage::store(
@@ -63,10 +59,8 @@ class LessonRequestController extends Controller
         return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
 
-    public function destroySolution(Request $request, int $id)
+    public function destroySolution(Request $request, LessonRequest $lessonRequest)
     {
-        $lessonRequest = LessonRequest::findOrFail($id);
-
         PrivateUploadStorage::delete($lessonRequest->solution_file);
 
         $lessonRequest->update([
@@ -76,15 +70,13 @@ class LessonRequestController extends Controller
         return redirect()->route('admin.lesson-requests.show', $lessonRequest->id);
     }
 
-    public function storePrice(Request $request, int $id)
+    public function storePrice(Request $request, LessonRequest $lessonRequest)
     {
         $request->validate(
             ['price' => ['required', 'numeric', 'min:0']],
             [],
             ['price' => __('admin.students.price')]
         );
-
-        $lessonRequest = LessonRequest::findOrFail($id);
 
         $lessonRequest->update([
             'price' => $request->price,

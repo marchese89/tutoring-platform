@@ -12,30 +12,23 @@ use Illuminate\Validation\Rule;
 
 class LessonController extends Controller
 {
-    public function viewPresentation(int $courseId, int $lessonId)
+    public function viewPresentation(Course $course, Lesson $lesson)
     {
-        $course = Course::findOrFail($courseId);
-        $lesson = Lesson::where('course_id', $courseId)->findOrFail($lessonId);
-
         return view('public.lesson-presentation', compact('course', 'lesson'));
     }
 
-    public function view(int $courseId, int $lessonId)
+    public function view(Course $course, Lesson $lesson)
     {
-        $course = Course::findOrFail($courseId);
-        $lesson = Lesson::where('course_id', $courseId)->findOrFail($lessonId);
-
         return view('public.lesson-content', compact('course', 'lesson'));
     }
 
-    public function create(Request $request, int $id)
+    public function create(Request $request, Course $course)
     {
-        $course = Course::findOrFail($id);
         $presentationPath = $request->session()->get('uploaded_lesson_presentation');
         $contentPath = $request->session()->get('uploaded_lesson_content');
 
         return view('admin.teaching.create-lesson', [
-            'id' => $id,
+            'id' => $course->id,
             'course' => $course,
             'presentationUploaded' => (bool) $presentationPath,
             'presentationUrl' => $presentationPath
@@ -48,11 +41,8 @@ class LessonController extends Controller
         ]);
     }
 
-    public function edit(int $courseId, int $lessonId)
+    public function edit(Course $course, Lesson $lesson)
     {
-        $course = Course::findOrFail($courseId);
-        $lesson = Lesson::where('course_id', $courseId)->findOrFail($lessonId);
-
         return view('admin.teaching.edit-lesson', compact('course', 'lesson'));
     }
 
@@ -149,10 +139,8 @@ class LessonController extends Controller
         return redirect()->route('admin.courses.edit', $validated['course_id']);
     }
 
-    public function destroy(int $id)
+    public function destroy(Lesson $lesson)
     {
-        $lesson = Lesson::findOrFail($id);
-
         PrivateUploadStorage::delete([
             $lesson->presentation_file,
             $lesson->content_file,
@@ -164,13 +152,11 @@ class LessonController extends Controller
         return redirect()->route('admin.courses.edit', $courseId);
     }
 
-    public function updatePresentation(Request $request, int $id)
+    public function updatePresentation(Request $request, Lesson $lesson)
     {
         $request->validate([
             'presentation_file' => UploadRules::pdf(),
         ]);
-
-        $lesson = Lesson::findOrFail($id);
 
         $oldPath = $lesson->presentation_file;
         $lesson->presentation_file = PrivateUploadStorage::store(
@@ -184,13 +170,11 @@ class LessonController extends Controller
         return back();
     }
 
-    public function updateLessonFile(Request $request, int $id)
+    public function updateLessonFile(Request $request, Lesson $lesson)
     {
         $request->validate([
             'content_file' => UploadRules::pdf(),
         ]);
-
-        $lesson = Lesson::findOrFail($id);
 
         $oldPath = $lesson->content_file;
         $lesson->content_file = PrivateUploadStorage::store(
@@ -204,10 +188,8 @@ class LessonController extends Controller
         return back();
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Lesson $lesson)
     {
-        $lesson = Lesson::findOrFail($id);
-
         $validated = $request->validate(
             [
                 'number' => [

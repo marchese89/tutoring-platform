@@ -144,14 +144,14 @@ Breadcrumbs::for('admin.courses.index', function (BreadcrumbTrail $trail) {
     $trail->push(__('breadcrumbs.course_list'), route('admin.courses.index'));
 });
 
-Breadcrumbs::for('admin.courses.edit', function (BreadcrumbTrail $trail, $id) {
+Breadcrumbs::for('admin.courses.edit', function (BreadcrumbTrail $trail, $course) {
     $trail->parent('admin.courses.index');
-    $trail->push(__('breadcrumbs.edit_course'), route('admin.courses.edit', $id));
+    $trail->push(__('breadcrumbs.edit_course'), route('admin.courses.edit', $course));
 });
 
-Breadcrumbs::for('admin.lessons.create', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('admin.courses.edit', $id);
-    $trail->push(__('breadcrumbs.new_lesson'), route('admin.lessons.create', $id));
+Breadcrumbs::for('admin.lessons.create', function (BreadcrumbTrail $trail, $course) {
+    $trail->parent('admin.courses.edit', $course);
+    $trail->push(__('breadcrumbs.new_lesson'), route('admin.lessons.create', $course));
 });
 
 Breadcrumbs::for('admin.lessons.edit', function (BreadcrumbTrail $trail, $course, $lesson) {
@@ -187,9 +187,9 @@ Breadcrumbs::for('admin.lesson-requests.index', function (BreadcrumbTrail $trail
     $trail->push(__('breadcrumbs.student_requests'), route('admin.lesson-requests.index'));
 });
 
-Breadcrumbs::for('admin.lesson-requests.show', function (BreadcrumbTrail $trail, $id) {
+Breadcrumbs::for('admin.lesson-requests.show', function (BreadcrumbTrail $trail, $lessonRequest) {
     $trail->parent('admin.lesson-requests.index');
-    $trail->push(__('breadcrumbs.view_request'), route('admin.lesson-requests.show', $id));
+    $trail->push(__('breadcrumbs.view_request'), route('admin.lesson-requests.show', $lessonRequest));
 });
 
 Breadcrumbs::for('admin.chats.index', function (BreadcrumbTrail $trail) {
@@ -197,9 +197,9 @@ Breadcrumbs::for('admin.chats.index', function (BreadcrumbTrail $trail) {
     $trail->push(__('breadcrumbs.student_chats'), route('admin.chats.index'));
 });
 
-Breadcrumbs::for('admin.chats.show', function (BreadcrumbTrail $trail, $id) {
+Breadcrumbs::for('admin.chats.show', function (BreadcrumbTrail $trail, $chat) {
     $trail->parent('admin.chats.index');
-    $trail->push(__('breadcrumbs.view_chat'), route('admin.chats.show', $id));
+    $trail->push(__('breadcrumbs.view_chat'), route('admin.chats.show', $chat));
 });
 
 // Admin - billing
@@ -209,14 +209,14 @@ Breadcrumbs::for('admin.sales.index', function (BreadcrumbTrail $trail) {
     $trail->push(__('breadcrumbs.sales'), route('admin.sales.index'));
 });
 
-Breadcrumbs::for('admin.orders.show', function (BreadcrumbTrail $trail, $id) {
+Breadcrumbs::for('admin.orders.show', function (BreadcrumbTrail $trail, $order) {
     $trail->parent('admin.sales.index');
-    $trail->push(__('breadcrumbs.order'), route('admin.orders.show', $id));
+    $trail->push(__('breadcrumbs.order'), route('admin.orders.show', $order));
 });
 
-Breadcrumbs::for('admin.orders.invoice', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('admin.orders.show', $id);
-    $trail->push(__('breadcrumbs.invoice'), route('admin.orders.invoice', $id));
+Breadcrumbs::for('admin.orders.invoice', function (BreadcrumbTrail $trail, $order) {
+    $trail->parent('admin.orders.show', $order);
+    $trail->push(__('breadcrumbs.invoice'), route('admin.orders.invoice', $order));
 });
 
 Breadcrumbs::for('admin.invoices.index', function (BreadcrumbTrail $trail) {
@@ -234,9 +234,9 @@ Breadcrumbs::for('admin.invoices.created', function (BreadcrumbTrail $trail) {
     $trail->push(__('breadcrumbs.invoice_created'), route('admin.invoices.created'));
 });
 
-Breadcrumbs::for('admin.invoices.show', function (BreadcrumbTrail $trail, $id) {
+Breadcrumbs::for('admin.invoices.show', function (BreadcrumbTrail $trail, $invoice) {
     $trail->parent('admin.invoices.index');
-    $trail->push(__('breadcrumbs.view_invoice'), route('admin.invoices.show', $id));
+    $trail->push(__('breadcrumbs.view_invoice'), route('admin.invoices.show', $invoice));
 });
 
 // Student - dashboard

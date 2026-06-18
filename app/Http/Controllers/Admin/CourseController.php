@@ -75,12 +75,10 @@ class CourseController extends Controller
         return view('student.courses', compact('courses'));
     }
 
-    public function edit(int $id)
+    public function edit(Course $course)
     {
-        $course = Course::findOrFail($id);
-
-        $lessons = Lesson::where('course_id', $id)->orderBy('number')->get();
-        $exercises = Exercise::where('course_id', $id)->orderBy('id')->get();
+        $lessons = $course->lessons()->orderBy('number')->get();
+        $exercises = $course->exercises()->orderBy('id')->get();
 
         return view('admin.teaching.edit-course', compact('course', 'lessons', 'exercises'));
     }
@@ -105,10 +103,8 @@ class CourseController extends Controller
         return back()->with('success', __('admin.teaching.messages.course_created'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Course $course)
     {
-        $course = Course::findOrFail($id);
-
         $data = $request->validate([
             'name' => [
                 'required',
@@ -127,9 +123,9 @@ class CourseController extends Controller
         return back()->with('success', __('admin.teaching.messages.course_updated'));
     }
 
-    public function destroy(int $id)
+    public function destroy(Course $course)
     {
-        $course = Course::withCount(['lessons', 'exercises'])->findOrFail($id);
+        $course->loadCount(['lessons', 'exercises']);
 
         if ($course->lessons_count > 0 || $course->exercises_count > 0) {
             return back()->withErrors([

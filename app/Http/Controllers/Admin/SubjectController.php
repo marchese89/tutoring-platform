@@ -52,10 +52,8 @@ class SubjectController extends Controller
         return redirect()->back()->with('success', __('admin.teaching.messages.subject_created'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Subject $subject)
     {
-        $subject = Subject::findOrFail($id);
-
         $data = $request->validate([
             'name' => [
                 'required',
@@ -74,9 +72,9 @@ class SubjectController extends Controller
         return redirect()->back()->with('success', __('admin.teaching.messages.subject_updated'));
     }
 
-    public function destroy(int $id)
+    public function destroy(Subject $subject)
     {
-        $subject = Subject::withCount('courses')->findOrFail($id);
+        $subject->loadCount('courses');
 
         if ($subject->courses_count > 0) {
             return back()->withErrors([
