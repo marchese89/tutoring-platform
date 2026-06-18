@@ -1,0 +1,136 @@
+@extends('layouts.student-dashboard')
+
+@push('styles')
+    <style>
+        .review-stars {
+            display: inline-flex;
+            gap: .35rem;
+        }
+
+        .review-star {
+            border: 0;
+            background: transparent;
+            color: #adb5bd;
+            font-size: 2rem;
+            line-height: 1;
+            padding: .25rem;
+            transition: color .15s ease, transform .15s ease;
+        }
+
+        .review-star:hover,
+        .review-star:focus,
+        .review-star.is-active {
+            color: #ffc107;
+            transform: translateY(-1px);
+        }
+    </style>
+@endpush
+
+@section('page-title')
+    <x-ui.section-header :title="__('student.review.title')" />
+@endsection
+
+@section('inner')
+    <script>
+        let currentRating = @json($rating);
+
+        function renderStars(rating) {
+            document.querySelectorAll('[data-review-star]').forEach((star) => {
+                const value = Number(star.dataset.reviewStar);
+                star.classList.toggle('is-active', value <= rating);
+            });
+        }
+
+        async function saveRating(rating) {
+            currentRating = rating;
+            renderStars(currentRating);
+
+            await fetch("{{ route('student.feedback.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                body: `rating=${encodeURIComponent(rating)}`,
+            });
+        }
+
+        function countChar(field) {
+            document.getElementById('current').innerHTML = field.value.length;
+        }
+
+        async function storeReview(review) {
+            const response = await fetch("{{ route('student.review.store') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}",
+                },
+                body: `review=${encodeURIComponent(review)}`,
+            });
+
+            const data = await response.json();
+
+            document.getElementById('review').value = data.review;
+            countChar(document.getElementById('review'));
+            document.getElementById('review-status').classList.remove('d-none');
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const reviewField = document.getElementById('review');
+
+            renderStars(currentRating);
+            countChar(reviewField);
+        });
+    </script>
+
+    <x-ui.page-section>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <x-ui.card>
+                    <div class="mb-4 text-center">
+                        <h4 class="fw-bold mb-3">
+                            {{ __('student.review.rating') }}
+                        </h4>
+
+                        <div class="review-stars" id="stars" aria-label="{{ __('student.review.rating') }}">
+                            @for ($value = 1; $value <= 5; $value++)
+                                <button type="button" class="review-star" data-review-star="{{ $value }}"
+                                    onclick="saveRating({{ $value }})"
+                                    aria-label="{{ trans_choice('student.review.stars', $value, ['count' => $value]) }}">
+                                    <i class="bi bi-star-fill"></i>
+                                </button>
+                            @endfor
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold" for="review">
+                            {{ __('student.review.review') }}
+                        </label>
+
+                        <textarea id="review" name="review" rows="6" maxlength="500" class="form-control rounded-4"
+                            onkeyup="countChar(this)">{{ $review }}</textarea>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                        <div class="text-muted small">
+                            <span id="current">0</span><span id="maximum">/500</span>
+                        </div>
+
+                        <div class="d-flex align-items-center gap-3">
+                            <span id="review-status" class="text-success small d-none">
+                                {{ __('student.review.saved') }}
+                            </span>
+
+                            <x-ui.primary-button id="storeReview"
+                                onclick="storeReview(document.getElementById('review').value)">
+                                {{ __('student.review.submit') }}
+                            </x-ui.primary-button>
+                        </div>
+                    </div>
+                </x-ui.card>
+            </div>
+        </div>
+    </x-ui.page-section>
+@endsection

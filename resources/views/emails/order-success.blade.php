@@ -1,44 +1,44 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
-    <title>Ordine completato</title>
+    <title>{{ __('mail.order_completed.subject') }}</title>
 </head>
 
 <body style="font-family: Arial, sans-serif; font-size: 14px; color: #333;">
 
-    <h2>Gentile {{ $user->name }} {{ $user->surname }},</h2>
+    <h2>{{ __('mail.order_completed.title', ['name' => $user->name, 'surname' => $user->surname]) }}</h2>
 
     <p>
-        Il tuo ordine è stato completato con successo.
+        {{ __('mail.order_completed.body') }}
     </p>
 
     <p>
-        In allegato trovi la tua fattura in formato PDF.
+        {{ __('mail.order_completed.invoice_attached') }}
     </p>
 
     <br>
 
     <p>
-        Dettagli ordine:
+        {{ __('mail.order_completed.details') }}
     </p>
 
     <ul>
-        <li><b>Data:</b> {{ $data }}</li>
-        <li><b>Totale:</b> {{ $total }} €</li>
+        <li><b>{{ __('mail.order_completed.date') }}:</b> {{ $data }}</li>
+        <li><b>{{ __('mail.order_completed.total') }}:</b> {{ $total }} &euro;</li>
     </ul>
 
     <br>
 
     <p>
-        Grazie per aver scelto il nostro servizio.
+        {{ __('mail.order_completed.thanks') }}
         <br>
         <br>
         <br>
         <br>
         <br>
-        <b>Lezioni Informatica</b>
+        <b>{{ __('mail.signature') }}</b>
     </p>
 
 </body>

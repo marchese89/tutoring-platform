@@ -13,9 +13,22 @@ return new class extends Migration
     {
         Schema::create('invoices', function (Blueprint $table) {
             $table->id();
-            $table->integer('number')->nullable();
-            $table->timestamp('date')->nullable();
+            $table->integer('number');
+            $table->timestamp('issued_at');
+            $table->foreignId('order_id')->nullable()->unique()->constrained()->nullOnDelete();
+            $table->foreignId('student_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('payment_transaction_id')->nullable()->unique()->constrained()->nullOnDelete();
+            $table->string('source', 20)->default('order');
+            $table->unsignedInteger('total_amount');
+            $table->char('currency', 3)->default('eur');
+            $table->json('customer_snapshot');
+            $table->json('line_items');
+            $table->string('note')->nullable();
+            $table->string('file_path');
             $table->timestamps();
+
+            $table->index(['student_id', 'issued_at']);
+            $table->index(['source', 'issued_at']);
         });
     }
 

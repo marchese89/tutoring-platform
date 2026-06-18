@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('chats', function (Blueprint $table) {
 
             $table->id();
-            $table->integer('id_prodotto');
-            $table->integer('tipo_prodotto');
-            $table->integer('id_studente');
-            $table->unique(['id_prodotto', 'tipo_prodotto','id_studente']);
+            $table->unsignedBigInteger('product_id');
+            $table->unsignedTinyInteger('product_type');
+            $table->foreignId('student_id')->constrained()->cascadeOnDelete();
+            $table->unique(['product_id', 'product_type', 'student_id']);
+            $table->index(['student_id', 'product_type']);
             $table->timestamps();
         });
     }

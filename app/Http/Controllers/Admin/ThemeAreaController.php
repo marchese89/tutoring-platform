@@ -3,62 +3,68 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\ThemeArea;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ThemeAreaController extends Controller
 {
-
     public function index()
     {
-        $aree_t = ThemeArea::all();
+        $themeAreas = ThemeArea::withCount('subjects')
+            ->orderBy('name')
+            ->paginate(10);
 
-        return view('admin.teaching.aree-tem', compact('aree_t'));
+        return view('admin.teaching.theme-areas', compact('themeAreas'));
     }
 
     public function publicIndex()
     {
-        $themeAreas = ThemeArea::whereHas('matter')
+        $themeAreas = ThemeArea::whereHas('subjects')
             ->orderBy('name')
-            ->get();
-        return view('public.aree-tematiche', compact('themeAreas'));
+            ->paginate(12);
+
+        return view('public.theme-areas', compact('themeAreas'));
     }
 
-    // CREATE
     public function store(Request $request)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => ['required', 'string', 'max:255', Rule::unique('theme_areas', 'name')],
         ]);
 
         ThemeArea::create([
-            'name' => $data['name']
+            'name' => $data['name'],
         ]);
 
-        return back()->with('success', 'Area tematica creata');
+        return back()->with('success', __('admin.teaching.messages.theme_area_created'));
     }
 
-    // UPDATE
-    public function update(Request $request, int $id)
+    public function update(Request $request, ThemeArea $themeArea)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255'
+            'name' => ['required', 'string', 'max:255', Rule::unique('theme_areas', 'name')->ignore($themeArea)],
         ]);
-
-        $themeArea = ThemeArea::findOrFail($id);
 
         $themeArea->update([
-            'name' => $data['name']
+            'name' => $data['name'],
         ]);
 
-        return back()->with('success', 'Area tematica aggiornata');
+        return back()->with('success', __('admin.teaching.messages.theme_area_updated'));
     }
 
-    // DELETE
-    public function destroy(int $id)
+    public function destroy(ThemeArea $themeArea)
     {
-        ThemeArea::findOrFail($id)->delete();
+        $themeArea->loadCount('subjects');
 
-        return back()->with('success', 'Area tematica eliminata');
+        if ($themeArea->subjects_count > 0) {
+            return back()->withErrors([
+                'delete' => __('admin.teaching.messages.theme_area_has_subjects'),
+            ]);
+        }
+
+        $themeArea->delete();
+
+        return back()->with('success', __('admin.teaching.messages.theme_area_deleted'));
     }
 }

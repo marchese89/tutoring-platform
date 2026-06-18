@@ -12,13 +12,39 @@ class Invoice extends Model
 
     protected $fillable = [
         'number',
-        'date',
+        'issued_at',
         'order_id',
-        'path',
+        'student_id',
+        'payment_transaction_id',
+        'source',
+        'total_amount',
+        'currency',
+        'customer_snapshot',
+        'line_items',
+        'note',
+        'file_path',
+    ];
+
+    protected $casts = [
+        'number' => 'integer',
+        'total_amount' => 'integer',
+        'issued_at' => 'datetime',
+        'customer_snapshot' => 'array',
+        'line_items' => 'array',
     ];
 
     public function order(): BelongsTo
     {
-        return $this->belongsTo(Order::class, 'order_id', 'id');
+        return $this->belongsTo(Order::class);
+    }
+
+    public function student(): BelongsTo
+    {
+        return $this->belongsTo(Student::class);
+    }
+
+    public function paymentTransaction(): BelongsTo
+    {
+        return $this->belongsTo(PaymentTransaction::class);
     }
 }

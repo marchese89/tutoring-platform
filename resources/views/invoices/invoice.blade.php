@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
-    <title>Fattura</title>
+    <title>{{ __('invoice.title') }}</title>
 </head>
 
 <body>
@@ -13,11 +13,11 @@
 
         <tr style="height:100px">
             <td align="center" colspan="3">
-                <h1>Fattura</h1>
+                <h1>{{ __('invoice.title') }}</h1>
             </td>
         </tr>
 
-        {{-- MITTENTE --}}
+        {{-- Sender --}}
         <tr style="height:30px">
             <td align="left">
                 <font size="4">{{ $admin->name }} {{ $admin->surname }}</font>
@@ -43,23 +43,23 @@
 
         <tr style="height:30px">
             <td align="left">
-                <font size="4">PARTITA IVA: {{ $adminData->piva }}</font>
+                <font size="4">{{ __('invoice.vat_number') }}: {{ $adminData->vat_number }}</font>
             </td>
             <td></td>
         </tr>
 
         <tr style="height:30px">
             <td align="left">
-                <font size="4">COD. FISC: {{ $adminData->cf }}</font>
+                <font size="4">{{ __('invoice.tax_code') }}: {{ $adminData->tax_code }}</font>
             </td>
             <td></td>
         </tr>
 
-        {{-- CLIENTE --}}
+        {{-- Customer --}}
         <tr style="height:30px">
             <td></td>
             <td align="right">
-                <h2>Cliente</h2>
+                <h2>{{ __('invoice.customer') }}</h2>
             </td>
         </tr>
 
@@ -73,7 +73,7 @@
         <tr style="height:30px">
             <td></td>
             <td align="right">
-                <font size="4">{{ $studente->street }}, {{ $studente->house_number }}</font>
+                <font size="4">{{ $customer->street }}, {{ $customer->house_number }}</font>
             </td>
         </tr>
 
@@ -81,7 +81,7 @@
             <td></td>
             <td align="right">
                 <font size="4">
-                    {{ $studente->postal_code }} - {{ $studente->city }} ({{ $studente->province }})
+                    {{ $customer->postal_code }} - {{ $customer->city }} ({{ $customer->province }})
                 </font>
             </td>
         </tr>
@@ -89,44 +89,44 @@
         <tr style="height:30px">
             <td></td>
             <td align="right">
-                <font size="4">CF: {{ $studente->cf }}</font>
+                <font size="4">{{ __('invoice.customer_tax_code') }}: {{ $customer->tax_code }}</font>
             </td>
         </tr>
 
-        {{-- DATA / NUMERO --}}
+        {{-- Date and number --}}
         <tr style="height:30px">
             <td align="left">
-                <font size="4"><b>DATA:</b></font> {{ $dataFattura }}
+                <font size="4"><b>{{ __('invoice.date') }}:</b></font> {{ $invoiceDate }}
             </td>
             <td></td>
         </tr>
 
         <tr style="height:100px">
             <td align="left" style="vertical-align:top">
-                <font size="4"><b>FATTURA:</b></font> {{ $numeroFattura }}
+                <font size="4"><b>{{ __('invoice.invoice_number') }}:</b></font> {{ $invoiceNumber }}
             </td>
             <td></td>
         </tr>
 
-        {{-- TABELLA --}}
+        {{-- Items --}}
         <tr>
             <td colspan="2">
 
                 <table rules="all" border="1" style="width:100%">
 
                     <tr style="height:50px">
-                        <td align="center"><b>DESCRIZIONE</b></td>
-                        <td align="center"><b>PREZZO</b></td>
-                        <td align="center"><b>QTA</b></td>
-                        <td align="center"><b>IMPORTO</b></td>
+                        <td align="center"><b>{{ __('invoice.description') }}</b></td>
+                        <td align="center"><b>{{ __('invoice.price') }}</b></td>
+                        <td align="center"><b>{{ __('invoice.quantity') }}</b></td>
+                        <td align="center"><b>{{ __('invoice.amount') }}</b></td>
                     </tr>
 
-                    @foreach ($order_products as $row)
+                    @foreach ($orderItems as $row)
                         <tr>
                             <td align="center">{{ $row['description'] }}</td>
-                            <td align="center">{{ $row['price'] }} €</td>
-                            <td align="center">1</td>
-                            <td align="center"><b>{{ $row['price'] }} €</b></td>
+                            <td align="center">{{ $row['price'] }} &euro;</td>
+                            <td align="center">{{ $row['quantity'] ?? 1 }}</td>
+                            <td align="center"><b>{{ $row['total'] ?? $row['price'] }} &euro;</b></td>
                         </tr>
                     @endforeach
 
@@ -135,12 +135,12 @@
             </td>
         </tr>
 
-        {{-- TOTALI --}}
+        {{-- Totals --}}
         <tr style="height:50px">
             <td></td>
             <td align="right">
                 <font size="3">
-                    IMPONIBILE: {{ number_format($total / 1.04, 2, '.', '') }} €
+                    {{ __('invoice.taxable_amount') }}: {{ number_format($total / 1.04, 2, '.', '') }} &euro;
                 </font>
             </td>
         </tr>
@@ -149,8 +149,8 @@
             <td></td>
             <td align="right">
                 <font size="3">
-                    Rivalsa Inps 4%:
-                    {{ number_format((($total / 1.04) * 4) / 100, 2, '.', '') }} €
+                    {{ __('invoice.inps') }}:
+                    {{ number_format((($total / 1.04) * 4) / 100, 2, '.', '') }} &euro;
                 </font>
             </td>
         </tr>
@@ -158,26 +158,26 @@
         <tr style="height:50px">
             <td></td>
             <td align="right">
-                <font size="3"><b>TOTALE {{ $total }} €</b></font>
+                <font size="3"><b>{{ __('invoice.total') }} {{ $total }} &euro;</b></font>
             </td>
         </tr>
 
-        {{-- NOTE --}}
+        {{-- Notes --}}
         <tr>
             <td>
-                <font size="3">Imposta di bollo € 2,00 su originale</font>
-            </td>
-        </tr>
-
-        <tr>
-            <td>
-                <font size="3">su Importi superiori ad € 77,47</font>
+                <font size="3">{{ __('invoice.stamp_duty') }}</font>
             </td>
         </tr>
 
         <tr>
             <td>
-                <font size="3"><b>NOTE</b></font>
+                <font size="3">{{ __('invoice.stamp_duty_threshold') }}</font>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <font size="3"><b>{{ __('invoice.notes') }}</b></font>
             </td>
         </tr>
 
@@ -187,20 +187,20 @@
             </td>
         </tr>
 
-        {{-- FOOTER --}}
+        {{-- Footer --}}
         <tr align="center" style="height:200px">
             <td colspan="2"></td>
         </tr>
 
         <tr align="center">
             <td colspan="2">
-                <b>Operazione in franchigia da Iva art. 1 cc. 54-89 L. 190/2014</b>
+                <b>{{ __('invoice.vat_exemption') }}</b>
             </td>
         </tr>
 
         <tr align="center">
             <td colspan="2">
-                <b>Non soggetta a ritenuta d’acconto ai sensi del c. 67 L. 190/2014</b>
+                <b>{{ __('invoice.withholding_exemption') }}</b>
             </td>
         </tr>
 

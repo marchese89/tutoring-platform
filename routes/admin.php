@@ -1,161 +1,160 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\ModDatiAdminController;
-use App\Http\Controllers\Admin\ThemeAreaController;
-use App\Http\Controllers\Admin\MatterController;
-use App\Http\Controllers\Admin\CourseController;
-use App\Http\Controllers\Admin\LessonController;
-use App\Http\Controllers\Admin\ExerciseController;
+use App\Http\Controllers\AccountCredentialsController;
+use App\Http\Controllers\Admin\AccountController;
 use App\Http\Controllers\Admin\AjaxController;
-use App\Http\Controllers\AcquistiController;
-use App\Http\Controllers\admin\BillingController;
-use App\Http\Controllers\Public\LessonOnRequestController;
+use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Admin\ChatController;
+use App\Http\Controllers\Admin\CourseController;
+use App\Http\Controllers\Admin\ExerciseController;
+use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\LessonRequestController;
+use App\Http\Controllers\Admin\SubjectController;
+use App\Http\Controllers\Admin\ThemeAreaController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\PurchaseController;
+use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+foreach ([
+    'themeArea',
+    'subject',
+    'course',
+    'lesson',
+    'exercise',
+    'lessonRequest',
+    'order',
+    'invoice',
+    'chat',
+] as $parameter) {
+    Route::pattern($parameter, '[0-9]+');
+}
 
-    // =====================================================
-    // 🧩 UI / PAGINE ADMIN (SOLO VIEW)
-    // =====================================================
-    Route::get('dashboard-admin', fn() => view('layouts.dashboard-admin'))->name('dashboard-admin');
-    Route::get('imp-account', fn() => view('admin.settings.imp-account'))->name('imp-account');
-    Route::get('mod-dati-pers', fn() => view('admin.settings.mod-dati-pers'))->name('mod-dati-pers');
-    Route::get('mod-cred', fn() => view('admin.settings.mod-cred'))->name('mod-cred');
-    Route::get('mod-foto-admin', fn() => view('admin.settings.mod-foto'))->name('mod-foto-admin');
-    Route::get('mod-indirizzo-admin', fn() => view('admin.settings.mod-indirizzo'))->name('mod-indirizzo-admin');
-    Route::get('mod-certif', fn() => view('admin.settings.mod-certif'))->name('mod-certif');
-    Route::get('aggiungi-certif', fn() => view('admin.settings.add-certif'))->name('aggiungi-certif');
-    Route::get('insegnamento', fn() => view('admin.teaching.insegnamento'))->name('insegnamento');
-    Route::get('nuovo-corso', [CourseController::class, 'index'])->name('nuovo-corso');
-    Route::get('aree-tem', [ThemeAreaController::class, 'index'])
-        ->name('aree-tem');
-    Route::get('materie', [MatterController::class, 'index'])
-        ->name('admin.teaching.materie');
-    Route::get('elenco-corsi', [CourseController::class, 'list'])
-        ->name('elenco-corsi');
+Route::prefix('admin')
+    ->name('admin.')
+    ->middleware(['auth', 'role:admin'])
+    ->group(function () {
+        Route::view('dashboard', 'layouts.admin-dashboard')->name('dashboard');
 
-    // =====================================================
-    // 👤 ACCOUNT / PROFILO ADMIN
-    // =====================================================
-    Route::post('mod-indirizzo-admin', [ModDatiAdminController::class, 'mod_ind']);
-    Route::post('upload-foto-admin', [ModDatiAdminController::class, 'upload_foto']);
-    Route::post('mod-foto-cert-admin', [ModDatiAdminController::class, 'upload_cert']);
-    Route::post('crea-foto-cert-admin', [ModDatiAdminController::class, 'upload_cert_session']);
-    Route::post('mod-nome-cert-admin', [ModDatiAdminController::class, 'modifica_nome_cert']);
-    Route::post('elimina_certificato', [ModDatiAdminController::class, 'elimina_cert']);
-    Route::get('del_cert_admin', [ModDatiAdminController::class, 'elimina_cert_session']);
-    Route::post('add-cert-admin', [ModDatiAdminController::class, 'add_cert_admin']);
-    Route::post('mod-email-admin', [ModDatiAdminController::class, 'mod_email_admin']);
-    Route::post('mod-pass-admin', [ModDatiAdminController::class, 'mod_pass_admin']);
-    Route::post('mod-piva', [ModDatiAdminController::class, 'mod_piva']);
-    Route::get('mod-part-iva', fn() => view('admin.settings.mod-part-iva'))->name('mod-part-iva');
+        Route::view('account', 'admin.settings.account')->name('account');
+        Route::view('account/profile', 'admin.settings.profile')->name('account.profile');
+        Route::get('account/credentials', [AccountCredentialsController::class, 'showAdmin'])
+            ->name('account.credentials');
+        Route::get('account/photo', [AccountController::class, 'photo'])->name('account.photo');
+        Route::get('account/address', [AccountController::class, 'address'])->name('account.address');
+        Route::get('account/certificates', [AccountController::class, 'certificatesIndex'])
+            ->name('account.certificates.index');
+        Route::get('account/certificates/create', [AccountController::class, 'createCertificate'])
+            ->name('account.certificates.create');
+        Route::get('account/vat-number', [AccountController::class, 'vatNumber'])->name('account.vat-number');
 
-    // =====================================================
-    // 📚 CORSI / MATERIE / AREE TEMATICHE
-    // =====================================================
-    Route::post('theme-areas', [ThemeAreaController::class, 'store']);
-    Route::put('theme-areas/{id}', [ThemeAreaController::class, 'update']);
-    Route::delete('theme-areas/{id}', [ThemeAreaController::class, 'destroy']);
+        Route::post('account/address', [AccountController::class, 'updateAddress'])
+            ->name('account.address.update');
+        Route::post('account/photo', [AccountController::class, 'updatePhoto'])
+            ->name('account.photo.update');
+        Route::post('account/certificates/file', [AccountController::class, 'updateCertificateFile'])
+            ->name('account.certificates.file.update');
+        Route::post('account/certificates/uploads', [AccountController::class, 'storeCertificateUpload'])
+            ->name('account.certificates.uploads.store');
+        Route::delete('account/certificates/uploads', [AccountController::class, 'destroyCertificateUpload'])
+            ->name('account.certificates.uploads.destroy');
+        Route::post('account/certificates/name', [AccountController::class, 'updateCertificateName'])
+            ->name('account.certificates.name.update');
+        Route::delete('account/certificates', [AccountController::class, 'destroyCertificate'])
+            ->name('account.certificates.destroy');
+        Route::post('account/certificates', [AccountController::class, 'storeCertificate'])
+            ->name('account.certificates.store');
+        Route::post('account/email', [AccountCredentialsController::class, 'updateEmail'])
+            ->name('account.email.update');
+        Route::post('account/password', [AccountCredentialsController::class, 'updatePassword'])
+            ->name('account.password.update');
+        Route::post('account/vat-number', [AccountController::class, 'updateVatNumber'])
+            ->name('account.vat-number.update');
 
-    Route::post('matter', [MatterController::class, 'store']);
-    Route::put('matter/{id}', [MatterController::class, 'update']);
-    Route::delete('matter/{id}', [MatterController::class, 'destroy']);
+        Route::view('teaching', 'admin.teaching.teaching')->name('teaching.index');
 
-    Route::post('courses', [CourseController::class, 'store']);
-    Route::put('courses/{id}', [CourseController::class, 'update']);
-    Route::delete('courses/{id}', [CourseController::class, 'destroy']);
+        Route::get('theme-areas', [ThemeAreaController::class, 'index'])->name('theme-areas.index');
+        Route::post('theme-areas', [ThemeAreaController::class, 'store'])->name('theme-areas.store');
+        Route::put('theme-areas/{themeArea}', [ThemeAreaController::class, 'update'])
+            ->name('theme-areas.update');
+        Route::delete('theme-areas/{themeArea}', [ThemeAreaController::class, 'destroy'])
+            ->name('theme-areas.destroy');
 
-    Route::get('modifica-dettagli-corso/{id}', [CourseController::class, 'edit'])->name('modifica-dettagli-corso');
+        Route::get('subjects', [SubjectController::class, 'index'])->name('subjects.index');
+        Route::post('subjects', [SubjectController::class, 'store'])->name('subjects.store');
+        Route::put('subjects/{subject}', [SubjectController::class, 'update'])->name('subjects.update');
+        Route::delete('subjects/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 
-    // ===============================
-    // 🎓 LEZIONI
-    // ===============================
+        Route::get('courses', [CourseController::class, 'list'])->name('courses.index');
+        Route::get('courses/create', [CourseController::class, 'index'])->name('courses.create');
+        Route::post('courses', [CourseController::class, 'store'])->name('courses.store');
+        Route::get('courses/{course}/edit', [CourseController::class, 'edit'])->name('courses.edit');
+        Route::put('courses/{course}', [CourseController::class, 'update'])->name('courses.update');
+        Route::delete('courses/{course}', [CourseController::class, 'destroy'])->name('courses.destroy');
 
-    // UI
-    Route::get('nuova-lezione/{id}', [LessonController::class, 'create'])->name('nuova-lezione');
-    Route::post('carica-lezione', [LessonController::class, 'store']);
-    Route::get('modifica-lezione/{id_corso}/{id_lezione}', [fn($id_corso, $id_lezione) => view('admin.teaching.modifica-lezione', compact('id_corso', 'id_lezione'))])->name('modifica-lezione');
+        Route::get('courses/{course}/lessons/create', [LessonController::class, 'create'])->name('lessons.create');
+        Route::get('courses/{course}/lessons/{lesson}/edit', [LessonController::class, 'edit'])
+            ->scopeBindings()
+            ->name('lessons.edit');
+        Route::post('lessons', [LessonController::class, 'store'])->name('lessons.store');
+        Route::put('lessons/{lesson}', [LessonController::class, 'update'])->name('lessons.update');
+        Route::delete('lessons/{lesson}', [LessonController::class, 'destroy'])->name('lessons.destroy');
+        Route::post('lessons/upload-presentation', [LessonController::class, 'uploadPresentation'])
+            ->name('lessons.upload-presentation.store');
+        Route::delete('lessons/upload-presentation', [LessonController::class, 'deletePresentationSession'])
+            ->name('lessons.upload-presentation.destroy');
+        Route::post('lessons/upload-file', [LessonController::class, 'uploadLessonFile'])
+            ->name('lessons.upload-file.store');
+        Route::delete('lessons/upload-file', [LessonController::class, 'deleteLessonSession'])
+            ->name('lessons.upload-file.destroy');
+        Route::post('lessons/{lesson}/presentation', [LessonController::class, 'updatePresentation'])
+            ->name('lessons.presentation.update');
+        Route::post('lessons/{lesson}/file', [LessonController::class, 'updateLessonFile'])
+            ->name('lessons.file.update');
 
-    // Upload temporanei (sessione)
-    Route::post('lessons/upload-presentation', [LessonController::class, 'uploadPresentation']);
-    Route::delete('lessons/upload-presentation', [LessonController::class, 'deletePresentationSession']);
+        Route::get('courses/{course}/exercises/create', [ExerciseController::class, 'create'])->name('exercises.create');
+        Route::get('courses/{course}/exercises/{exercise}/edit', [ExerciseController::class, 'edit'])
+            ->scopeBindings()
+            ->name('exercises.edit');
+        Route::post('exercises', [ExerciseController::class, 'store'])->name('exercises.store');
+        Route::put('exercises/{exercise}', [ExerciseController::class, 'update'])->name('exercises.update');
+        Route::delete('exercises/{exercise}', [ExerciseController::class, 'destroy'])->name('exercises.destroy');
+        Route::post('exercises/trace/upload', [ExerciseController::class, 'uploadTrace'])
+            ->name('exercises.trace.upload.store');
+        Route::delete('exercises/trace/session', [ExerciseController::class, 'clearTraceSession'])
+            ->name('exercises.trace.session.destroy');
+        Route::post('exercises/execution/upload', [ExerciseController::class, 'uploadExecution'])
+            ->name('exercises.execution.upload.store');
+        Route::delete('exercises/execution/session', [ExerciseController::class, 'clearExecutionSession'])
+            ->name('exercises.execution.session.destroy');
+        Route::post('exercises/{exercise}/trace', [ExerciseController::class, 'updateTrace'])
+            ->name('exercises.trace.update');
+        Route::post('exercises/{exercise}/execution', [ExerciseController::class, 'updateExecution'])
+            ->name('exercises.execution.update');
 
-    Route::post('lessons/upload-file', [LessonController::class, 'uploadLessonFile']);
-    Route::delete('lessons/upload-file', [LessonController::class, 'deleteLessonSession']);
+        Route::view('students', 'admin.students.students')->name('students.index');
+        Route::get('lesson-requests', [LessonRequestController::class, 'index'])
+            ->name('lesson-requests.index');
+        Route::get('lesson-requests/{lessonRequest}', [LessonRequestController::class, 'show'])
+            ->name('lesson-requests.show');
+        Route::post('lesson-requests/{lessonRequest}/solution', [LessonRequestController::class, 'storeSolution'])
+            ->name('lesson-requests.solution.store');
+        Route::delete('lesson-requests/{lessonRequest}/solution', [LessonRequestController::class, 'destroySolution'])
+            ->name('lesson-requests.solution.destroy');
+        Route::post('lesson-requests/{lessonRequest}/price', [LessonRequestController::class, 'storePrice'])
+            ->name('lesson-requests.price.store');
 
-    // CRUD
-    Route::post('lessons', [LessonController::class, 'store']);
-    Route::put('lessons/{id}', [LessonController::class, 'update']);
-    Route::delete('lessons/{id}', [LessonController::class, 'destroy']);
+        Route::get('sales', [BillingController::class, 'sales'])->name('sales.index');
+        Route::get('orders-table', [BillingController::class, 'ordersTable'])->name('orders.table');
+        Route::get('orders/{order}', [BillingController::class, 'showOrder'])->name('orders.show');
+        Route::get('orders/{order}/invoice', [BillingController::class, 'showInvoice'])->name('orders.invoice');
 
-    // Update file definitivi
-    Route::post('lessons/{id}/presentation', [LessonController::class, 'updatePresentation']);
-    Route::post('lessons/{id}/file', [LessonController::class, 'updateLessonFile']);
+        Route::get('invoices', [InvoiceController::class, 'showAll'])->name('invoices.index');
+        Route::view('invoices/extra', 'admin.billing.extra-invoice')->name('invoices.extra');
+        Route::post('invoices/extra', [PurchaseController::class, 'createExtraInvoice'])->name('invoices.extra.store');
+        Route::view('invoices/created', 'admin.billing.invoice-created')->name('invoices.created');
+        Route::get('invoices/{invoice:number}', [InvoiceController::class, 'show'])->name('invoices.show');
 
-
-    // =====================================================
-    // 🧪 ESERCIZI
-    // =====================================================
-
-    // view
-    Route::get('exercises/create/{course}', fn() => view('admin.teaching.nuovo-esercizio'))->name('nuovo-esercizio');
-
-    Route::get('exercises/{course}/edit/{exercise}', fn() => view('admin.teaching.modifica-esercizio'))->name('modifica-esercizio');
-
-
-    // =========================
-    // UPLOAD TEMP FILE (SESSION)
-    // =========================
-    Route::post('exercises/trace/upload', [ExerciseController::class, 'uploadTrace']);
-    Route::post('exercises/execution/upload', [ExerciseController::class, 'uploadExecution']);
-
-    Route::delete('exercises/trace/session', [ExerciseController::class, 'clearTraceSession']);
-    Route::delete('exercises/execution/session', [ExerciseController::class, 'clearExecutionSession']);
-
-
-    // =========================
-    // CRUD ESERCIZI
-    // =========================
-    Route::post('exercises', [ExerciseController::class, 'store']);
-    Route::put('exercises/{id}', [ExerciseController::class, 'update']);
-    Route::delete('exercises/{id}', [ExerciseController::class, 'destroy']);
-
-
-    // =========================
-    // UPDATE FILE SINGOLI
-    // =========================
-    Route::post('exercises/{id}/trace', [ExerciseController::class, 'updateTrace']);
-    Route::post('exercises/{id}/execution', [ExerciseController::class, 'updateExecution']);
-
-    // =====================================================
-    // 👥 STUDENTI / RICHIESTE / VENDITE
-    // =====================================================
-    Route::get('studenti', fn() => view('admin.students.studenti'))->name('studenti');
-    Route::get('richieste-studenti', [LessonOnRequestController::class, 'index'])->name('richieste-studenti');
-    Route::get('visualizza-richiesta/{id}', [LessonOnRequestController::class, 'visualizzaRichiesta'])->name('visualizza-richiesta');
-    Route::post('sol-rich-upload', [LessonOnRequestController::class, 'sol_rich_upload']);
-    Route::delete('lez-rich-rem-exec-{id}', [LessonOnRequestController::class, 'lez_rich_rem_exec'])->name('lez-rich-rem-exec');
-    Route::post('carica-prezzo-lez-rich', [LessonOnRequestController::class, 'carica_prezzo_lez_rich']);
-
-    Route::get('vendite', [BillingController::class, 'vendite'])->name('vendite');
-    Route::get('/cambia_tabella_ordini', [BillingController::class, 'cambiaTabellaOrdini']);
-    Route::get('admin-ordine-{id}', [BillingController::class, 'showOrder'])->name('admin-ordine');
-    Route::get('admin-fattura-{id}', [BillingController::class, 'showInvoice'])->name('admin-fattura');
-
-    Route::post('crea_fattura_extra', [AcquistiController::class, 'crea_fattura']);
-    Route::get('extra-fattura', fn() => view('admin.billing.fattura-extra'))->name('extra-fattura');
-    Route::get('fattura-creata', fn() => view('admin.billing.fattura-creata'))->name('fattura-creata');
-    Route::get('fatture', [InvoiceController::class, 'showAll'])->name('fatture');
-    Route::get('visualizza-fattura/{id}', [InvoiceController::class, 'show'])->name('visualizza-fattura');
-
-    // =====================================================
-    // 💬 CHAT / AJAX
-    // =====================================================
-    Route::get('chat-studenti', [LessonOnRequestController::class, 'chatStudenti'])->name('chat-studenti');
-    Route::get('visualizza-chat-{id}', [LessonOnRequestController::class, 'visualizzaChat'])->name('visualizza-chat');
-
-    Route::get('cambia_tabella_ordini', [AjaxController::class, 'getOrdini']);
-    Route::post('chat/admin/invia-messaggio', [AjaxController::class, 'invia_messaggio']);
-    Route::get('leggi-messaggi-insegnante-{id_chat}', [AjaxController::class, 'leggi_messaggi']);
-});
+        Route::get('chats', [ChatController::class, 'index'])->name('chats.index');
+        Route::get('chats/{chat}', [ChatController::class, 'show'])->name('chats.show');
+        Route::post('chat/messages', [AjaxController::class, 'sendMessage'])->name('chat.messages.store');
+    });

@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('exercises', function (Blueprint $table) {
             $table->id();
-            $table->string('title')->nullable();
+            $table->string('title');
             $table->foreignId('course_id')->constrained()->cascadeOnDelete();
-            $table->string('trace')->nullable();
-            $table->string('execution')->nullable();
-            $table->integer('price')->nullable();
+            $table->string('prompt_file')->nullable();
+            $table->string('solution_file')->nullable();
+            $table->integer('price');
             $table->timestamps();
+
+            $table->unique(['course_id', 'title']);
         });
     }
 

@@ -1,0 +1,27 @@
+<?php
+
+return [
+    'title' => 'Invoice',
+    'vat_number' => 'VAT NO.',
+    'tax_code' => 'TAX CODE',
+    'customer' => 'Customer',
+    'customer_tax_code' => 'Tax code',
+    'date' => 'DATE',
+    'invoice_number' => 'INVOICE',
+    'description' => 'DESCRIPTION',
+    'price' => 'PRICE',
+    'quantity' => 'QTY',
+    'amount' => 'AMOUNT',
+    'taxable_amount' => 'TAXABLE AMOUNT',
+    'inps' => 'INPS compensation 4%',
+    'total' => 'TOTAL',
+    'stamp_duty' => 'Stamp duty EUR 2.00 on the original document',
+    'stamp_duty_threshold' => 'for amounts above EUR 77.47',
+    'notes' => 'NOTES',
+    'vat_exemption' => 'VAT-exempt transaction under art. 1 paragraphs 54-89 of Italian Law 190/2014',
+    'withholding_exemption' => 'Not subject to withholding tax under paragraph 67 of Italian Law 190/2014',
+    'document_view' => 'PDF document view',
+    'open_new_tab' => 'Open in a new tab',
+    'admin_order_title' => 'Invoice for order #:number',
+    'admin_order_heading' => 'Invoice Order #:number',
+];

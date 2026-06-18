@@ -2,20 +2,53 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Enums\UserRole;
+use App\Models\Certificate;
+use App\Models\Review;
 use App\Models\User;
-use App\Models\Feedback;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        $admin = User::where('role', 'admin')->first()->admin;
+        $admin = User::with('admin')->where('role', UserRole::ADMIN->value)->first()?->admin;
+        $adminPhotoUrl = $this->assetUrl($admin?->photo_path);
 
-        $feedbacks = Feedback::with('student.user')->get();
+        $reviews = Review::query()
+            ->with('student.user')
+            ->whereNotNull('review')
+            ->where('review', '<>', '')
+            ->latest()
+            ->limit(6)
+            ->get();
 
-        $avg = $feedbacks->avg('punteggio');
+        $averageRating = Review::query()
+            ->whereNotNull('rating')
+            ->avg('rating');
 
-        return view('index', compact('admin', 'feedbacks', 'avg'));
+        return view('index', compact('admin', 'adminPhotoUrl', 'reviews', 'averageRating'));
+    }
+
+    public function about()
+    {
+        $admin = User::with('admin')->where('role', UserRole::ADMIN->value)->first()?->admin;
+        $adminPhotoUrl = $this->assetUrl($admin?->photo_path);
+        $certificates = Certificate::orderBy('id')->paginate(6);
+        $certificateCount = Certificate::count();
+
+        return view('public.about', compact('admin', 'adminPhotoUrl', 'certificates', 'certificateCount'));
+    }
+
+    private function assetUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://') || str_starts_with($path, '//')) {
+            return $path;
+        }
+
+        return asset(ltrim($path, '/'));
     }
 }

@@ -1,5 +1,3 @@
-{{-- resources/views/components/ui/section-header.blade.php --}}
-
 @props(['title', 'description' => null])
 
 <div class="my-3 text-center container">
@@ -8,7 +6,7 @@
     </h2>
 
     @if ($description)
-        <p class="text-muted mx-auto" style="max-width: 700px;">
+        <p class="text-muted mb-0">
             {{ $description }}
         </p>
     @endif

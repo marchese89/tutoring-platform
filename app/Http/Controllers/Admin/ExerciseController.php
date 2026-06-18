@@ -3,188 +3,208 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use App\Models\Exercise;
 use App\Models\Course;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Exercise;
+use App\Support\PrivateUploadStorage;
+use App\Support\UploadRules;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class ExerciseController extends Controller
 {
-
-    public function viewTrace($id_esercizio, $id_corso)
+    public function create(Request $request, Course $course)
     {
-        $corso = Course::where('id', '=', $id_corso)->first();
-        $esercizio = Exercise::where('id', '=', $id_esercizio)->first();
+        $id = $course->id;
+        $promptPath = $request->session()->get('uploaded_exercise_prompt');
+        $solutionPath = $request->session()->get('uploaded_exercise_solution');
 
-        return view('public.traccia-esercizio', compact('esercizio', 'corso'));
+        return view('admin.teaching.create-exercise', [
+            'id' => $id,
+            'course' => $course,
+            'promptUploaded' => (bool) $promptPath,
+            'promptUrl' => $promptPath
+                ? route('protected-files.show', ['path' => $promptPath])
+                : null,
+            'solutionUploaded' => (bool) $solutionPath,
+            'solutionUrl' => $solutionPath
+                ? route('protected-files.show', ['path' => $solutionPath])
+                : null,
+        ]);
     }
 
-    // =========================
-    // UPLOAD TRACE (temporaneo)
-    // =========================
+    public function edit(Course $course, Exercise $exercise)
+    {
+        return view('admin.teaching.edit-exercise', compact('course', 'exercise'));
+    }
+
+    public function viewTrace(Course $course, Exercise $exercise)
+    {
+        return view('public.exercise-trace', compact('exercise', 'course'));
+    }
+
     public function uploadTrace(Request $request)
     {
         $request->validate([
-            'file-trace-ex' => 'required|file',
+            'prompt_file' => UploadRules::pdf(),
         ]);
 
-        if ($old = $request->session()->pull('uploaded_trace_ex')) {
-            Storage::disk('private')->delete($old);
-        }
+        $oldPath = $request->session()->get('uploaded_exercise_prompt');
+        $path = PrivateUploadStorage::store(
+            $request->file('prompt_file'),
+            'exercises/trace'
+        );
 
-        $path = $request->file('file-trace-ex')
-            ->store('exercises/trace', 'private');
-
-        $request->session()->put('uploaded_trace_ex', $path);
+        $request->session()->put('uploaded_exercise_prompt', $path);
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
 
-    // =========================
-    // DELETE TRACE SESSION
-    // =========================
     public function clearTraceSession(Request $request)
     {
-        if ($path = $request->session()->pull('uploaded_trace_ex')) {
-            Storage::disk('private')->delete($path);
+        if ($path = $request->session()->pull('uploaded_exercise_prompt')) {
+            PrivateUploadStorage::delete($path);
         }
 
         return back();
     }
 
-    // =========================
-    // UPLOAD EXECUTION (temporaneo)
-    // =========================
     public function uploadExecution(Request $request)
     {
         $request->validate([
-            'file-ex' => 'required|file',
+            'solution_file' => UploadRules::pdf(),
         ]);
 
-        if ($old = $request->session()->pull('uploaded_ex')) {
-            Storage::disk('private')->delete($old);
-        }
+        $oldPath = $request->session()->get('uploaded_exercise_solution');
+        $path = PrivateUploadStorage::store(
+            $request->file('solution_file'),
+            'exercises/execution'
+        );
 
-        $path = $request->file('file-ex')
-            ->store('exercises/execution', 'private');
-
-        $request->session()->put('uploaded_ex', $path);
+        $request->session()->put('uploaded_exercise_solution', $path);
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
 
-    // =========================
-    // DELETE EXECUTION SESSION
-    // =========================
     public function clearExecutionSession(Request $request)
     {
-        if ($path = $request->session()->pull('uploaded_ex')) {
-            Storage::disk('private')->delete($path);
+        if ($path = $request->session()->pull('uploaded_exercise_solution')) {
+            PrivateUploadStorage::delete($path);
         }
 
         return back();
     }
 
-    // =========================
-    // CREATE EXERCISE
-    // =========================
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'id' => 'required|exists:courses,id',
-            'titolo' => 'required|string|max:255',
-            'prezzo' => 'required|numeric',
-        ]);
+        $validated = $request->validate(
+            [
+                'course_id' => 'required|exists:courses,id',
+                'title' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('exercises', 'title')
+                        ->where(fn ($query) => $query->where('course_id', $request->input('course_id'))),
+                ],
+                'price' => 'required|numeric|min:0',
+            ],
+            [],
+            [
+                'title' => __('admin.teaching.validation.title'),
+                'price' => __('admin.teaching.validation.price'),
+            ]
+        );
 
         Exercise::create([
-            'title' => $data['titolo'],
-            'course_id' => $data['id'],
-            'trace' => $request->session()->get('uploaded_trace_ex'),
-            'execution' => $request->session()->get('uploaded_ex'),
-            'price' => $data['prezzo'],
+            'title' => $validated['title'],
+            'course_id' => $validated['course_id'],
+            'prompt_file' => $request->session()->get('uploaded_exercise_prompt'),
+            'solution_file' => $request->session()->get('uploaded_exercise_solution'),
+            'price' => $validated['price'],
         ]);
 
         $request->session()->forget([
-            'uploaded_trace_ex',
-            'uploaded_ex'
+            'uploaded_exercise_prompt',
+            'uploaded_exercise_solution',
         ]);
 
-        return redirect('modifica-dettagli-corso-' . $data['id']);
+        return redirect()->route('admin.courses.edit', $validated['course_id']);
     }
 
-    // =========================
-    // DELETE EXERCISE
-    // =========================
-    public function destroy(Request $request, $id)
+    public function destroy(Exercise $exercise)
     {
-        $exercise = Exercise::findOrFail($id);
+        PrivateUploadStorage::delete([
+            $exercise->prompt_file,
+            $exercise->solution_file,
+        ]);
 
-        if ($exercise->trace && Storage::disk('private')->exists($exercise->trace)) {
-            Storage::disk('private')->delete($exercise->trace);
-        }
-
-        if ($exercise->execution && Storage::disk('private')->exists($exercise->execution)) {
-            Storage::disk('private')->delete($exercise->execution);
-        }
         $exercise->delete();
 
         return back();
     }
 
-    // =========================
-    // UPDATE TRACE FILE
-    // =========================
-    public function updateTrace(Request $request, $id)
+    public function updateTrace(Request $request, Exercise $exercise)
     {
-        $exercise = Exercise::findOrFail($id);
-
-        Storage::disk('private')->delete($exercise->trace);
-
-        $path = $request->file('file-trace-ex')
-            ->store('exercises/trace', 'private');
-
-        $exercise->update([
-            'trace' => $path
+        $request->validate([
+            'prompt_file' => UploadRules::pdf(),
         ]);
+
+        $oldPath = $exercise->prompt_file;
+        $exercise->update([
+            'prompt_file' => PrivateUploadStorage::store(
+                $request->file('prompt_file'),
+                'exercises/trace'
+            ),
+        ]);
+
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
 
-    // =========================
-    // UPDATE EXECUTION FILE
-    // =========================
-    public function updateExecution(Request $request, $id)
+    public function updateExecution(Request $request, Exercise $exercise)
     {
-        $exercise = Exercise::findOrFail($id);
-
-        Storage::disk('private')->delete($exercise->execution);
-
-        $path = $request->file('file-ex')
-            ->store('exercises/execution', 'private');
-
-        $exercise->update([
-            'execution' => $path
+        $request->validate([
+            'solution_file' => UploadRules::pdf(),
         ]);
+
+        $oldPath = $exercise->solution_file;
+        $exercise->update([
+            'solution_file' => PrivateUploadStorage::store(
+                $request->file('solution_file'),
+                'exercises/execution'
+            ),
+        ]);
+
+        PrivateUploadStorage::delete($oldPath);
 
         return back();
     }
 
-    // =========================
-    // UPDATE META
-    // =========================
-    public function update(Request $request, $id)
+    public function update(Request $request, Exercise $exercise)
     {
-        $data = $request->validate([
-            'titolo' => 'required|string|max:255',
-            'prezzo' => 'required|numeric',
-        ]);
+        $validated = $request->validate(
+            [
+                'title' => [
+                    'required',
+                    'string',
+                    'max:255',
+                    Rule::unique('exercises', 'title')
+                        ->where(fn ($query) => $query->where('course_id', $exercise->course_id))
+                        ->ignore($exercise->id),
+                ],
+                'price' => 'required|numeric|min:0',
+            ],
+            [],
+            [
+                'title' => __('admin.teaching.validation.title'),
+                'price' => __('admin.teaching.validation.price'),
+            ]
+        );
 
-        $exercise = Exercise::findOrFail($id);
-
-        $exercise->update([
-            'title' => $data['titolo'],
-            'price' => $data['prezzo'],
-        ]);
+        $exercise->update($validated);
 
         return back();
     }

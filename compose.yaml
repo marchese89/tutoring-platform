@@ -1,0 +1,122 @@
+name: tutoring-platform
+
+x-app-environment: &app-environment
+  APP_NAME: "Tutoring Platform"
+  APP_ENV: local
+  APP_DEBUG: "true"
+  APP_URL: http://localhost:${APP_PORT:-8000}
+  APP_LOCALE: it
+  APP_FALLBACK_LOCALE: en
+  APP_FAKER_LOCALE: it_IT
+  LOG_CHANNEL: stderr
+  DB_CONNECTION: mysql
+  DB_HOST: db
+  DB_PORT: 3306
+  DB_DATABASE: tutoring_platform
+  DB_USERNAME: tutoring
+  DB_PASSWORD: tutoring
+  BROADCAST_DRIVER: reverb
+  CACHE_DRIVER: file
+  FILESYSTEM_DISK: local
+  QUEUE_CONNECTION: sync
+  SESSION_DRIVER: file
+  MAIL_MAILER: log
+  REVERB_APP_ID: local
+  REVERB_APP_KEY: local
+  REVERB_APP_SECRET: local-secret
+  REVERB_HOST: reverb
+  REVERB_PORT: 8080
+  REVERB_SCHEME: http
+  REVERB_SERVER_HOST: 0.0.0.0
+  REVERB_SERVER_PORT: 8080
+  REVERB_PUBLIC_HOST: localhost
+  REVERB_PUBLIC_PORT: ${REVERB_PUBLIC_PORT:-8080}
+  REVERB_PUBLIC_SCHEME: http
+
+services:
+  app:
+    image: tutoring-platform-app:local
+    build:
+      context: .
+    environment:
+      <<: *app-environment
+      DOCKER_RUN_MIGRATIONS: "true"
+      DOCKER_SEED_DATABASE: ${DOCKER_SEED_DATABASE:-true}
+    ports:
+      - "${APP_PORT:-8000}:80"
+    volumes:
+      - app-storage:/var/www/html/storage
+    depends_on:
+      db:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "--silent", "http://localhost/"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+      start_period: 30s
+    restart: unless-stopped
+
+  reverb:
+    image: tutoring-platform-app:local
+    command: ["php", "artisan", "reverb:start", "--host=0.0.0.0", "--port=8080"]
+    environment:
+      <<: *app-environment
+    ports:
+      - "${REVERB_PUBLIC_PORT:-8080}:8080"
+    volumes:
+      - app-storage:/var/www/html/storage
+    depends_on:
+      app:
+        condition: service_healthy
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "php",
+          "-r",
+          "$$socket = @fsockopen('127.0.0.1', 8080); exit($$socket ? 0 : 1);",
+        ]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+
+  test:
+    image: tutoring-platform-app:local
+    profiles: ["tools"]
+    command: ["php", "artisan", "test", "--compact"]
+    environment:
+      <<: *app-environment
+      APP_ENV: testing
+      APP_DEBUG: "false"
+      APP_KEY: "base64:MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTIzNDU2Nzg5MDE="
+      BROADCAST_DRIVER: log
+      CACHE_DRIVER: array
+      DB_CONNECTION: sqlite
+      DB_DATABASE: ":memory:"
+      MAIL_MAILER: array
+      QUEUE_CONNECTION: sync
+      SESSION_DRIVER: array
+
+  db:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: tutoring_platform
+      MYSQL_USER: tutoring
+      MYSQL_PASSWORD: tutoring
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - db-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+
+volumes:
+  app-storage:
+  db-data:

@@ -3,158 +3,177 @@
 namespace App\Http\Controllers\Files;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\Auth;
-
-use App\Models\Lesson;
+use App\Http\Utility\CartItem;
 use App\Models\Exercise;
-use App\Models\LessonOnRequest;
 use App\Models\Invoice;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
 use App\Models\Student;
-use App\Services\AcquistiService;
+use App\Services\PurchaseService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class FileAccessController extends Controller
 {
+    public function __construct(private readonly PurchaseService $purchases) {}
+
     public function __invoke(Request $request, string $path)
     {
-        // 🔒 Protezione base path traversal
-        if (str_contains($path, '..')) {
+        if ($this->isUnsafePath($path)) {
             abort(403);
         }
 
-        $fullPath = "private/$path";
-
-        if (!Storage::exists($fullPath)) {
+        if (! Storage::disk('private')->exists($path)) {
             abort(404);
         }
 
-        // 🔍 Pre-carico tutto una sola volta
-        $lessonPresentation = Lesson::where('presentation', $path)->first();
-        $lessonFile = Lesson::where('lesson', $path)->first();
-        $exerciseTrace = Exercise::where('trace', $path)->first();
-        $exerciseExecution = Exercise::where('execution', $path)->first();
+        $lessonPresentation = Lesson::where('presentation_file', $path)->first();
+        $lessonContent = Lesson::where('content_file', $path)->first();
+        $exercisePrompt = Exercise::where('prompt_file', $path)->first();
+        $exerciseSolution = Exercise::where('solution_file', $path)->first();
 
-        // 👤 GUEST
-        if (!Auth::check()) {
-            if ($this->canAccessGuest($lessonPresentation, $lessonFile, $exerciseTrace, $exerciseExecution)) {
-                return $this->serve($fullPath);
+        if (! Auth::check()) {
+            if ($this->canAccessGuest(
+                $lessonPresentation,
+                $lessonContent,
+                $exercisePrompt,
+                $exerciseSolution
+            )) {
+                return $this->serve($path);
             }
 
             abort(404);
         }
 
-        // 👤 USER
-        $user = auth()->user();
+        $user = $request->user();
 
-        // 🟢 ADMIN
-        if ($user->role === 'admin') {
-            return $this->serve($fullPath);
+        if ($user->isAdmin()) {
+            return $this->serve($path);
         }
 
-        // 🟡 STUDENT
-        if ($user->role === 'student') {
-            if ($this->canAccessStudent(
+        if (
+            $user->isStudent()
+            && $this->canAccessStudent(
                 $request,
                 $user->student,
                 $path,
                 $lessonPresentation,
-                $lessonFile,
-                $exerciseTrace,
-                $exerciseExecution
-            )) {
-                return $this->serve($fullPath);
-            }
+                $lessonContent,
+                $exercisePrompt,
+                $exerciseSolution
+            )
+        ) {
+            return $this->serve($path);
         }
 
         abort(404);
     }
 
-    // =========================
-    // 🔓 ACCESS LOGIC
-    // =========================
-
-    private function canAccessGuest($lessonPresentation, $lessonFile, $exerciseTrace, $exerciseExecution)
-    {
+    private function canAccessGuest(
+        ?Lesson $lessonPresentation,
+        ?Lesson $lessonContent,
+        ?Exercise $exercisePrompt,
+        ?Exercise $exerciseSolution
+    ): bool {
         return
-            $lessonPresentation !== null ||
-            ($lessonFile !== null && $lessonFile->price === 0) ||
-            $exerciseTrace !== null ||
-            ($exerciseExecution !== null && $exerciseExecution->price === 0);
+            $lessonPresentation !== null
+            || ($lessonContent !== null && $lessonContent->price == 0)
+            || $exercisePrompt !== null
+            || ($exerciseSolution !== null && $exerciseSolution->price == 0);
     }
 
     private function canAccessStudent(
-        $request,
-        $studente,
-        $path,
-        $lessonPresentation,
-        $lessonFile,
-        $exerciseTrace,
-        $exerciseExecution
-    ) {
-        // 📘 Lezioni
+        Request $request,
+        Student $student,
+        string $path,
+        ?Lesson $lessonPresentation,
+        ?Lesson $lessonContent,
+        ?Exercise $exercisePrompt,
+        ?Exercise $exerciseSolution
+    ): bool {
         if ($lessonPresentation) {
             return true;
         }
 
-        if ($lessonFile) {
-            if ($lessonFile->price === 0) {
-                return true;
-            }
-
-            if (AcquistiService::prodotto_acquistato($studente->id, $lessonFile->id, 0)) {
-                return true;
-            }
-        }
-
-        // 🧪 Esercizi
-        if ($exerciseTrace) {
+        if (
+            $lessonContent
+            && (
+                $lessonContent->price == 0
+                || $this->purchases->isProductPurchased(
+                    $student->id,
+                    $lessonContent->id,
+                    CartItem::LESSON
+                )
+            )
+        ) {
             return true;
         }
 
-        if ($exerciseExecution) {
-            if ($exerciseExecution->price === 0) {
-                return true;
-            }
-
-            if (AcquistiService::prodotto_acquistato($studente->id, $exerciseExecution->id, 2)) {
-                return true;
-            }
-        }
-
-        // 📥 Upload temporaneo (sessione)
-        if ($request->session()->exists('uploaded_lez_rich')) {
+        if ($exercisePrompt) {
             return true;
         }
 
-        // 📚 Lezioni su richiesta
-        $lezRichTrace = LessonOnRequest::where('trace', $path)->first();
-        if ($lezRichTrace) {
+        if (
+            $exerciseSolution
+            && (
+                $exerciseSolution->price == 0
+                || $this->purchases->isProductPurchased(
+                    $student->id,
+                    $exerciseSolution->id,
+                    CartItem::EXERCISE
+                )
+            )
+        ) {
             return true;
         }
 
-        $lezRichExec = LessonOnRequest::where('execution', $path)->first();
-        if ($lezRichExec && $lezRichExec->paid == 1) {
+        if ($request->session()->get('uploaded_lesson_request_file') === $path) {
             return true;
         }
 
-        // 🧾 Fatture
-        // $fattura = InvoiceSheet::where('file', $path)->first();
-        $fattura = Invoice::where('path', $path)->first();
-
-        if ($fattura) {
+        if (
+            LessonRequest::where('student_id', $student->id)
+                ->where('request_file', $path)
+                ->exists()
+        ) {
             return true;
         }
 
-        return false;
+        if (
+            LessonRequest::where('student_id', $student->id)
+                ->where('solution_file', $path)
+                ->where('is_paid', true)
+                ->exists()
+        ) {
+            return true;
+        }
+
+        return Invoice::where('file_path', $path)
+            ->where(function ($query) use ($student) {
+                $query->where('student_id', $student->id)
+                    ->orWhereHas('order', fn ($order) => $order->where('student_id', $student->id));
+            })
+            ->exists();
     }
-
-    // =========================
-    // 📁 FILE RESPONSE
-    // =========================
 
     private function serve(string $path)
     {
-        return Storage::response($path);
+        return Storage::disk('private')->response($path);
+    }
+
+    private function isUnsafePath(string $path): bool
+    {
+        if ($path === '' || str_contains($path, "\0") || str_contains($path, '\\')) {
+            return true;
+        }
+
+        foreach (explode('/', $path) as $segment) {
+            if ($segment === '.' || $segment === '..') {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

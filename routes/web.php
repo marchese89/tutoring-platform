@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Files\FileAccessController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -10,25 +10,18 @@ use App\Http\Controllers\Files\FileAccessController;
 */
 
 // =========================
-// ROUTE MODULARI
+// Modular routes
 // =========================
 
-require __DIR__ . '/public.php';
-require __DIR__ . '/auth.php';
-require __DIR__ . '/student.php';
+require __DIR__.'/public.php';
+require __DIR__.'/auth.php';
+require __DIR__.'/student.php';
+require __DIR__.'/admin.php';
 
 // =========================
-// ADMIN (protetto)
+// Protected files
 // =========================
 
-Route::middleware(['auth', 'role:admin'])
-    ->group(function () {
-        require __DIR__ . '/admin.php';
-    });
-
-// =========================
-// FILE PROTETTI
-// =========================
-
-Route::get('/protected_file/{path}', FileAccessController::class)
+Route::get('/protected-files/{path}', FileAccessController::class)
+    ->name('protected-files.show')
     ->where('path', '.*');

@@ -6,44 +6,31 @@ use Carbon\Carbon;
 
 class DateHelper
 {
-    public static function parse($data): array
+    public static function parse($value): array
     {
-        $date = Carbon::parse($data);
+        $date = Carbon::parse($value);
 
         return [
-            'anno' => $date->year,
-            'mese' => $date->month,
-            'giorno' => $date->day,
-            'ora' => $date->format('H:i'),
+            'year' => $date->year,
+            'month' => $date->month,
+            'day' => $date->day,
+            'time' => $date->format('H:i'),
         ];
     }
 
-    public static function format($data): string
+    public static function format($value): string
     {
-        return Carbon::parse($data)->format('d-m-Y H:i');
+        return Carbon::parse($value)->format('d-m-Y H:i');
     }
 
-    public static function formatItalianDate($data): string
+    public static function monthName(int $month): string
     {
-        return Carbon::parse($data)->format('d/m/Y');
-    }
+        if ($month < 1 || $month > 12) {
+            return '';
+        }
 
-    public static function monthName(int $mese): string
-    {
-        return match ($mese) {
-            1 => 'Gennaio',
-            2 => 'Febbraio',
-            3 => 'Marzo',
-            4 => 'Aprile',
-            5 => 'Maggio',
-            6 => 'Giugno',
-            7 => 'Luglio',
-            8 => 'Agosto',
-            9 => 'Settembre',
-            10 => 'Ottobre',
-            11 => 'Novembre',
-            12 => 'Dicembre',
-            default => '',
-        };
+        return ucfirst(Carbon::create(2000, $month, 1)
+            ->locale(app()->getLocale())
+            ->translatedFormat('F'));
     }
 }

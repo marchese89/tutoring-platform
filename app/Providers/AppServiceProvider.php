@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Payments\CashierPaymentGateway;
+use App\Payments\PaymentGateway;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Cashier\Cashier;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -12,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(PaymentGateway::class, CashierPaymentGateway::class);
     }
 
     /**
@@ -20,6 +22,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
+        Paginator::useBootstrapFive();
     }
 }

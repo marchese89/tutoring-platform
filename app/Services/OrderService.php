@@ -2,50 +2,69 @@
 
 namespace App\Services;
 
-use App\Http\Utility\Carrello;
-use App\Http\Utility\ElementoC;
-use App\Models\Order;
-use App\Models\OrderProduct;
-use App\Models\Lesson;
-use App\Models\Exercise;
-use App\Models\LessonOnRequest;
+use App\Enums\ProductType;
+use App\Http\Utility\Cart;
+use App\Http\Utility\CartItem;
 use App\Models\Chat;
+use App\Models\Exercise;
+use App\Models\Lesson;
+use App\Models\LessonRequest;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Student;
-
 
 class OrderService
 {
-    public function process(Student $studente, Carrello $carrello): int
+    public function process(Student $student, Cart $cart): int
     {
+        $items = array_map(fn (CartItem $item) => [
+            'id' => $item->id(),
+            'type' => $item->type(),
+            'price' => $item->price(),
+        ], $cart->items());
 
+        return $this->processSnapshot($student, $items);
+    }
+
+    public function processSnapshot(Student $student, array $items): int
+    {
         $order = Order::create([
-            'student_id' => $studente->id,
+            'student_id' => $student->id,
         ]);
 
-        $items = $carrello->contenuto();
-
         foreach ($items as $item) {
-            $this->handleItem($item, $order->id, $studente->id);
+            $this->handleItem(
+                (int) $item['id'],
+                (int) $item['type'],
+                (int) $item['price'],
+                $order->id,
+                $student->id
+            );
         }
 
         return $order->id;
     }
 
-    private function handleItem(ElementoC $item, int $orderId, int $studentId)
-    {
-        return match ($item->getTipo()) {
+    private function handleItem(
+        int $productId,
+        int $type,
+        int $price,
+        int $orderId,
+        int $studentId
+    ) {
+        return match ($type) {
 
-            ElementoC::LEZIONE => $this->handleLesson($item->getId(), $orderId, $studentId),
+            CartItem::LESSON => $this->handleLesson($productId, $price, $orderId, $studentId),
 
-            ElementoC::ESERCIZIO => $this->handleExercise($item->getId(), $orderId, $studentId),
+            CartItem::EXERCISE => $this->handleExercise($productId, $price, $orderId, $studentId),
 
-            ElementoC::LEZIONE_RICHIESTA => $this->handleRequest($item->getId(), $orderId, $studentId),
+            CartItem::REQUESTED_LESSON => $this->handleRequest($productId, $price, $orderId, $studentId),
 
-            ElementoC::LEZIONI_CORSO => $this->handleLessonsOfCourse($item->getId(), $orderId, $studentId),
+            CartItem::COURSE_LESSONS => $this->handleLessonsOfCourse($productId, $orderId, $studentId),
 
-            ElementoC::ESERCIZI_CORSO => $this->handleExercisesOfCourse($item->getId(), $orderId, $studentId),
+            CartItem::COURSE_EXERCISES => $this->handleExercisesOfCourse($productId, $orderId, $studentId),
 
-            ElementoC::CORSO_COMPLETO => $this->handleFullCourse($item->getId(), $orderId, $studentId),
+            CartItem::FULL_COURSE => $this->handleFullCourse($productId, $orderId, $studentId),
 
             default => null,
         };
@@ -55,7 +74,7 @@ class OrderService
     {
         $lessons = Lesson::where('course_id', $courseId)->get();
         foreach ($lessons as $l) {
-            $this->handleLesson($l->id, $orderId, $studentId);
+            $this->handleLesson($l->id, $l->price, $orderId, $studentId);
         }
     }
 
@@ -63,7 +82,7 @@ class OrderService
     {
         $exs = Exercise::where('course_id', $courseId)->get();
         foreach ($exs as $e) {
-            $this->handleExercise($e->id, $orderId, $studentId);
+            $this->handleExercise($e->id, $e->price, $orderId, $studentId);
         }
     }
 
@@ -73,50 +92,50 @@ class OrderService
         $this->handleExercisesOfCourse($courseId, $orderId, $studentId);
     }
 
-    private function handleLesson(int $id, int  $orderId, int $studentId)
+    private function handleLesson(int $id, int $price, int $orderId, int $studentId)
     {
-        $lesson = Lesson::find($id);
-        $this->createOrderProduct($orderId, $id, 0, $lesson->price);
-        $this->createChat($id, 0, $studentId);
+        Lesson::findOrFail($id);
+        $this->createOrderItem($orderId, $id, CartItem::LESSON, $price);
+        $this->createChat($id, ProductType::LESSON->value, $studentId);
     }
 
-    private function handleExercise(int $id, int $orderId, int $studentId)
+    private function handleExercise(int $id, int $price, int $orderId, int $studentId)
     {
-        $ex = Exercise::find($id);
-        $this->createOrderProduct($orderId, $id, 2, $ex->price);
-        $this->createChat($id, 2, $studentId);
+        Exercise::findOrFail($id);
+        $this->createOrderItem($orderId, $id, CartItem::EXERCISE, $price);
+        $this->createChat($id, ProductType::EXERCISE->value, $studentId);
     }
 
-    private function handleRequest(int $id, int $orderId, int $studentId)
+    private function handleRequest(int $id, int $price, int $orderId, int $studentId)
     {
-        $req = LessonOnRequest::find($id);
-        $req->update(['paid' => 1]);
-        $this->createOrderProduct($orderId, $id, 5, $req->price);
-        $this->createChat($id, 5, $studentId);
+        $req = LessonRequest::where('student_id', $studentId)->findOrFail($id);
+        $req->update(['is_paid' => 1]);
+        $this->createOrderItem($orderId, $id, CartItem::REQUESTED_LESSON, $price);
+        $this->createChat($id, ProductType::REQUESTED_LESSON->value, $studentId);
     }
 
-    private function createOrderProduct(int $orderId, int $productId, int  $type, int  $price)
+    private function createOrderItem(int $orderId, int $productId, int $type, int $price)
     {
-        OrderProduct::create([
-            'id_ordine' => $orderId,
-            'id_prodotto' => $productId,
-            'tipo_prodotto' => $type,
+        OrderItem::create([
+            'order_id' => $orderId,
+            'product_id' => $productId,
+            'product_type' => $type,
             'price' => $price,
             'description' => match ($type) {
-                0 => 'Lezione: ' . Lesson::find($productId)->title,
-                2 => 'Esercizio: ' . Exercise::find($productId)->title,
-                5 => 'Richiesta: ' . LessonOnRequest::find($productId)->title,
-                default => 'Prodotto sconosciuto',
-            }
+                CartItem::LESSON => 'Lesson: '.Lesson::findOrFail($productId)->title,
+                CartItem::EXERCISE => 'Exercise: '.Exercise::findOrFail($productId)->title,
+                CartItem::REQUESTED_LESSON => 'Request: '.LessonRequest::findOrFail($productId)->title,
+                default => 'Unknown product',
+            },
         ]);
     }
 
     private function createChat(int $productId, int $type, int $studentId)
     {
-        Chat::create([
-            'id_prodotto' => $productId,
-            'tipo_prodotto' => $type,
-            'id_studente' => $studentId
+        Chat::firstOrCreate([
+            'product_id' => $productId,
+            'product_type' => $type,
+            'student_id' => $studentId,
         ]);
     }
 }

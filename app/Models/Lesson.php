@@ -5,7 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use App\Models\Course;
 
 class Lesson extends Model
 {
@@ -15,13 +14,18 @@ class Lesson extends Model
         'title',
         'number',
         'course_id',
-        'presentation',
-        'lesson',
-        'price'
+        'presentation_file',
+        'content_file',
+        'price',
+    ];
+
+    protected $casts = [
+        'number' => 'integer',
+        'price' => 'integer',
     ];
 
     public function course(): BelongsTo
-    {                                      // foreign_key     owner_key
-        return $this->belongsTo(Course::class, 'course_id', 'id');
+    {
+        return $this->belongsTo(Course::class);
     }
 }

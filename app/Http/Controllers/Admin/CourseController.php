@@ -3,169 +3,175 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Utility\CartItem;
 use App\Models\Course;
-use App\Models\Matter;
-use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Models\Order;
-use App\Models\OrderProduct;
-use App\Services\AcquistiService;
+use App\Models\Lesson;
+use App\Models\Subject;
+use App\Services\PurchaseService;
+use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
 {
+    public function __construct(private readonly PurchaseService $purchases) {}
+
     public function index()
     {
-        $materie = Matter::with('theme_area')->get();
-        $corsi = Course::with('matter.theme_area')->get();
-        return view('admin.teaching.nuovo-corso', compact('materie', 'corsi'));
+        $subjects = Subject::with('themeArea')
+            ->orderBy('name')
+            ->get();
+
+        $courses = Course::with('subject.themeArea')
+            ->withCount(['lessons', 'exercises'])
+            ->orderBy('name')
+            ->paginate(10);
+
+        return view('admin.teaching.create-course', compact('subjects', 'courses'));
     }
 
-    public function publicIndex(int $id_materia)
+    public function publicIndex(Subject $subject)
     {
-        $corsi = Course::where('matter_id', $id_materia)->get();
+        $courses = Course::where('subject_id', $subject->id)
+            ->orderBy('name')
+            ->paginate(12);
 
-        return view('public.corsi', compact('corsi'));
+        return view('public.courses', compact('courses'));
     }
 
     public function list()
     {
-        $corsi = Course::with('matter.theme_area')->get();
+        $courses = Course::with('subject.themeArea')
+            ->orderBy('name')
+            ->paginate(10);
 
-        return view('admin.teaching.elenco-corsi', compact('corsi'));
+        return view('admin.teaching.courses', compact('courses'));
     }
 
-    public function mieiCorsi(Request $request)
+    public function purchasedCourses(Request $request)
     {
-        $userId = $request->user()->id;
+        $studentId = $request->user()->student->id;
 
-        $orderIds = Order::where('student_id', $userId)->pluck('id');
+        $lessonCourseIds = Lesson::whereIn(
+            'id',
+            $this->purchases->purchasedProductIds($studentId, CartItem::LESSON)
+        )->pluck('course_id');
 
-        $productRows = OrderProduct::whereIn('id_ordine', $orderIds)->get();
+        $exerciseCourseIds = Exercise::whereIn(
+            'id',
+            $this->purchases->purchasedProductIds($studentId, CartItem::EXERCISE)
+        )->pluck('course_id');
 
-        $courseIds = [];
+        $courseIds = $lessonCourseIds
+            ->merge($exerciseCourseIds)
+            ->unique()
+            ->values();
 
-        foreach ($productRows as $row) {
-            if ($row->tipo_prodotto == 0) {
-                $lesson = Lesson::find($row->id_prodotto);
-                if ($lesson) {
-                    $courseIds[] = $lesson->course_id;
-                }
-            }
-
-            if ($row->tipo_prodotto == 2) {
-                $exercise = Exercise::find($row->id_prodotto);
-                if ($exercise) {
-                    $courseIds[] = $exercise->course_id;
-                }
-            }
-        }
-
-        $courseIds = array_unique($courseIds);
-
-        $courses = Course::with('matter.theme_area')
+        $courses = Course::with('subject.themeArea')
             ->whereIn('id', $courseIds)
-            ->get();
+            ->orderBy('name')
+            ->paginate(10);
 
-        return view('studente.elenco-corsi', compact('courses'));
+        return view('student.courses', compact('courses'));
     }
 
-    public function edit(int $id)
+    public function edit(Course $course)
     {
-        $corso = Course::findOrFail($id);
+        $lessons = $course->lessons()->orderBy('number')->get();
+        $exercises = $course->exercises()->orderBy('id')->get();
 
-        $lezioni = Lesson::where('course_id', $id)->orderBy('number')->get();
-        $esercizi = Exercise::where('course_id', $id)->orderBy('id')->get();
-
-        return view('admin.teaching.modifica-corso', compact('corso', 'lezioni', 'esercizi'));
+        return view('admin.teaching.edit-course', compact('course', 'lessons', 'exercises'));
     }
 
     public function store(Request $request)
     {
         $data = $request->validate([
-            'matter_id' => 'required|exists:matters,id',
-            'name' => 'required|string|max:255',
+            'subject_id' => 'required|exists:subjects,id',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('courses', 'name')
+                    ->where(fn ($query) => $query->where('subject_id', $request->input('subject_id'))),
+            ],
         ]);
         Course::create([
             'name' => $data['name'],
-            'matter_id' => $data['matter_id'],
+            'subject_id' => $data['subject_id'],
         ]);
 
-        return back()->with('success', 'Corso creato');
+        return back()->with('success', __('admin.teaching.messages.course_created'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Request $request, Course $course)
     {
         $data = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('courses', 'name')
+                    ->where(fn ($query) => $query->where('subject_id', $course->subject_id))
+                    ->ignore($course->id),
+            ],
         ]);
-
-        $course = Course::findOrFail($id);
 
         $course->update([
             'name' => $data['name'],
         ]);
 
-        return back()->with('success', 'Corso aggiornato');
+        return back()->with('success', __('admin.teaching.messages.course_updated'));
     }
 
-    public function destroy(int $id)
+    public function destroy(Course $course)
     {
-        Course::findOrFail($id)->delete();
+        $course->loadCount(['lessons', 'exercises']);
 
-        return back()->with('success', 'Corso eliminato');
+        if ($course->lessons_count > 0 || $course->exercises_count > 0) {
+            return back()->withErrors([
+                'delete' => __('admin.teaching.messages.course_has_content'),
+            ]);
+        }
+
+        $course->delete();
+
+        return back()->with('success', __('admin.teaching.messages.course_deleted'));
     }
 
-    public function show(int $id)
+    public function show(Course $course)
     {
-        $course = Course::with(['lessons', 'exercises'])->findOrFail($id);
+        $course->load(['lessons', 'exercises']);
 
         $user = auth()->user();
 
         $studentId = $user?->student?->id;
-        $isAdmin = $user?->role === 'admin';
+        $isAdmin = $user?->isAdmin() ?? false;
+        $purchasedLessonIds = $studentId
+            ? $this->purchases->purchasedProductIds($studentId, CartItem::LESSON)
+            : collect();
+        $purchasedExerciseIds = $studentId
+            ? $this->purchases->purchasedProductIds($studentId, CartItem::EXERCISE)
+            : collect();
 
-        $lessons = $course->lessons->map(function ($lesson) use ($studentId, $isAdmin) {
-
-            $purchased = false;
-
-            if ($studentId) {
-                $purchased = AcquistiService::prodotto_acquistato(
-                    $studentId,
-                    $lesson->id,
-                    0
-                );
-            }
-
+        $lessons = $course->lessons->map(function ($lesson) use ($purchasedLessonIds, $isAdmin) {
             $lesson->can_show =
                 $lesson->price == 0 ||
-                $purchased ||
+                $purchasedLessonIds->contains($lesson->id) ||
                 $isAdmin;
 
             return $lesson;
         });
 
-        $exercises = $course->exercises->map(function ($exercise) use ($studentId, $isAdmin) {
-
-            $purchased = false;
-
-            if ($studentId) {
-                $purchased = AcquistiService::prodotto_acquistato(
-                    $studentId,
-                    $exercise->id,
-                    2
-                );
-            }
-
+        $exercises = $course->exercises->map(function ($exercise) use ($purchasedExerciseIds, $isAdmin) {
             $exercise->can_show =
                 $exercise->price == 0 ||
-                $purchased ||
+                $purchasedExerciseIds->contains($exercise->id) ||
                 $isAdmin;
 
             return $exercise;
         });
 
-        return view('public.corso', compact(
+        return view('public.course', compact(
             'course',
             'lessons',
             'exercises'

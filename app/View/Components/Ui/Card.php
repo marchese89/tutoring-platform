@@ -1,4 +1,5 @@
 <?php
+
 // app/View/Components/Ui/Card.php
 
 namespace App\View\Components\Ui;

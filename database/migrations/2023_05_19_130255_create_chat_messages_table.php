@@ -2,8 +2,8 @@
 
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
-use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
@@ -13,11 +13,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('chat_messages', function (Blueprint $table) {
+            $table->id();
             $table->foreignId('chat_id')->constrained()->cascadeOnDelete();
             $table->mediumText('message')->nullable();
-            $table->integer('author');
-            $table->timestamp('date')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->primary(['chat_id', 'author', 'date']);
+            $table->unsignedTinyInteger('sender_role');
+            $table->timestamp('sent_at')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->timestamps();
         });
     }

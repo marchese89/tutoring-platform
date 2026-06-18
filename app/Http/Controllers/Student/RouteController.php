@@ -3,40 +3,46 @@
 namespace App\Http\Controllers\Student;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utility\CartItem;
 use App\Models\Course;
-use App\Models\Lesson;
 use App\Models\Exercise;
-use App\Services\AcquistiService;
-
+use App\Models\Lesson;
+use App\Services\PurchaseService;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class RouteController extends Controller
 {
-    public function show(int $id)
+    public function __construct(private readonly PurchaseService $purchases) {}
+
+    public function show(Request $request, Course $course): View
     {
-        $corso = Course::findOrFail($id);
+        $student = $request->user()->student;
+        $purchasedLessonIds = $this->purchases->purchasedProductIds(
+            $student->id,
+            CartItem::LESSON
+        );
+        $purchasedExerciseIds = $this->purchases->purchasedProductIds(
+            $student->id,
+            CartItem::EXERCISE
+        );
 
-        $student = request()->user()->student;
-
-        $lezioni = Lesson::where('course_id', $corso->id)
+        $lessons = Lesson::query()
+            ->where('course_id', $course->id)
+            ->whereIn('id', $purchasedLessonIds)
             ->orderBy('number')
-            ->get()
-            ->filter(function ($lezione) use ($student) {
-                return AcquistiService::prodotto_acquistato($student->id, $lezione->id, 0);
-            })
-            ->values();
+            ->get();
 
-        $esercizi = Exercise::where('course_id', $corso->id)
+        $exercises = Exercise::query()
+            ->where('course_id', $course->id)
+            ->whereIn('id', $purchasedExerciseIds)
             ->orderBy('id')
-            ->get()
-            ->filter(function ($esercizio) use ($student) {
-                return AcquistiService::prodotto_acquistato($student->id, $esercizio->id, 2);
-            })
-            ->values();
+            ->get();
 
-        return view('studente.corso', compact(
-            'corso',
-            'lezioni',
-            'esercizi'
+        return view('student.course', compact(
+            'course',
+            'lessons',
+            'exercises'
         ));
     }
 }

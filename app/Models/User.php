@@ -3,28 +3,27 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Enums\UserRole;
+use Illuminate\Auth\Notifications\ResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
-use App\Models\Student;
-use App\Models\Admin;
-use Laravel\Cashier\Billable;
-use Illuminate\Notifications\Messages\MailMessage;
-
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Messages\MailMessage;
+use Illuminate\Notifications\Notifiable;
+use Laravel\Cashier\Billable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, Billable;
+    use Billable, HasApiTokens, HasFactory, Notifiable;
 
     protected $table = 'users';
 
-
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new class($token) extends \Illuminate\Auth\Notifications\ResetPassword {
-
+        $this->notify(new class($token) extends ResetPassword
+        {
             public function __construct($token)
             {
                 parent::__construct($token);
@@ -32,16 +31,15 @@ class User extends Authenticatable
 
             public function toMail($notifiable)
             {
-                return (new \Illuminate\Notifications\Messages\MailMessage)
-                    ->subject('Reimpostazione Password')
+                return (new MailMessage)
+                    ->subject(__('mail.reset_password.subject'))
                     ->view('emails.reset-password', [
                         'url' => $this->resetUrl($notifiable),
-                        'user' => $notifiable
+                        'user' => $notifiable,
                     ]);
             }
         });
     }
-
 
     /**
      * The attributes that are mass assignable.
@@ -52,10 +50,13 @@ class User extends Authenticatable
         'name',
         'surname',
         'activation_code',
-        'registration_date',
-        'last_access',
+        'registered_at',
+        'last_login_at',
         'email',
+        'email_verified_at',
         'password',
+        'role',
+        'status',
     ];
 
     /**
@@ -74,16 +75,33 @@ class User extends Authenticatable
      * @var array<string, string>
      */
     protected $casts = [
+        'registered_at' => 'datetime',
+        'last_login_at' => 'datetime',
         'email_verified_at' => 'datetime',
     ];
 
     public function student(): HasOne
     {
-        return $this->hasOne(Student::class, 'user_id', 'id');
+        return $this->hasOne(Student::class);
     }
 
     public function admin(): HasOne
     {
-        return $this->hasOne(Admin::class, 'user_id', 'id');
+        return $this->hasOne(Admin::class);
+    }
+
+    public function paymentTransactions(): HasMany
+    {
+        return $this->hasMany(PaymentTransaction::class);
+    }
+
+    public function isAdmin(): bool
+    {
+        return $this->role === UserRole::ADMIN->value;
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->role === UserRole::STUDENT->value;
     }
 }

@@ -3,15 +3,20 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Http\Utility\Cart;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Utility\Carrello;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Password;
-
 
 class LoginController extends Controller
 {
+    public function show(Request $request)
+    {
+        return view('auth.login', [
+            'returnToLessonRequest' => $request->boolean('back'),
+        ]);
+    }
+
     /**
      * Handle the incoming request.
      */
@@ -23,41 +28,43 @@ class LoginController extends Controller
             'password' => ['required'],
         ]);
 
-
-
         if (Auth::guard('web')->attempt($credentials)) {
 
             $request->session()->regenerate();
 
-            if ($request->user()->role === 'admin') {
-                return redirect('dashboard-admin');
-            } elseif ($request->user()->role === 'student') {
-                Session::put('carrello', new Carrello());
-                if (request('return') === '1') {
-                    return redirect('lezione-su-richiesta');
+            if ($request->user()->isAdmin()) {
+                return redirect()->route('admin.dashboard');
+            } elseif ($request->user()->isStudent()) {
+                $request->session()->put('cart', new Cart);
+                if ($request->boolean('return')) {
+                    return redirect()->route('lesson-requests.create');
                 } else {
-                    return redirect('dashboard-studente');
+                    return redirect()->route('student.dashboard');
                 }
             }
         }
 
         return back()->withErrors([
-            'email' => 'Credenziali non corrette',
+            'email' => __('auth.failed'),
         ])->onlyInput('email');
     }
 
-    public function recupera_password()
+    public function sendPasswordResetLink(Request $request)
     {
+        $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
         $status = Password::sendResetLink(
-            request()->only('email')
+            $request->only('email')
         );
 
         if ($status == Password::RESET_LINK_SENT) {
-            return back()->withSuccess('Link di reset inviato via email');
+            return back()->withSuccess(__($status));
         }
 
         return back()->withErrors([
-            'email' => 'Email non valida o non presente'
+            'email' => __($status),
         ]);
     }
 }

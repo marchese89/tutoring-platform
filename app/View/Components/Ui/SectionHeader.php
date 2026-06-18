@@ -7,6 +7,7 @@ use Illuminate\View\Component;
 class SectionHeader extends Component
 {
     public string $title;
+
     public ?string $description;
 
     public function __construct(string $title, ?string $description = null)

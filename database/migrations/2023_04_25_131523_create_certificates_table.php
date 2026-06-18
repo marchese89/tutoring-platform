@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('certificates', function (Blueprint $table) {
             $table->id();
-            $table->string('nome')->nullable();
-            $table->string('percorso_file')->nullable();
+            $table->string('name');
+            $table->string('file_path');
             $table->timestamps();
         });
     }

@@ -1,0 +1,61 @@
+<?php
+
+namespace Tests\Feature;
+
+use App\Models\Admin;
+use App\Models\Review;
+use App\Models\Student;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
+
+class HomePageTest extends TestCase
+{
+    use RefreshDatabase;
+
+    public function test_home_page_presents_primary_services_and_review_data(): void
+    {
+        Admin::factory()->create([
+            'photo_path' => '/files/tutor.jpg',
+        ]);
+
+        $student = Student::factory()->create();
+        Review::factory()->create([
+            'student_id' => $student->id,
+            'rating' => 5,
+            'review' => 'Spiegazione chiara e metodo efficace.',
+        ]);
+
+        $response = $this->get(route('home'));
+
+        $response->assertOk()
+            ->assertSee('<title>Tutoring Platform</title>', false)
+            ->assertSee('Tutoring Platform')
+            ->assertSee('Lezioni private di informatica')
+            ->assertSee('rel="icon"', false)
+            ->assertSee(asset('favicon.svg'), false)
+            ->assertSee('Esplora i corsi')
+            ->assertSee('Richiedi materiale')
+            ->assertSee('Spiegazione chiara e metodo efficace.')
+            ->assertSee('Sono laureato magistrale in Ingegneria Informatica')
+            ->assertSee('images/computer-science-tutoring-hero.jpg', false)
+            ->assertSee('data-home-reveal', false)
+            ->assertDontSee('Sono un ingegnere informatico')
+            ->assertSee(asset('files/tutor.jpg'), false);
+    }
+
+    public function test_home_page_limits_reviews_to_the_six_most_recent(): void
+    {
+        for ($index = 1; $index <= 7; $index++) {
+            Review::factory()->create([
+                'student_id' => Student::factory(),
+                'review' => sprintf('Review %02d', $index),
+                'created_at' => now()->addMinutes($index),
+            ]);
+        }
+
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Review 07')
+            ->assertDontSee('Review 01');
+    }
+}

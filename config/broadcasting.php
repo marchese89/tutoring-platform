@@ -36,7 +36,7 @@ return [
             'secret' => env('PUSHER_APP_SECRET'),
             'app_id' => env('PUSHER_APP_ID'),
             'options' => [
-                'host' => env('PUSHER_HOST') ?: 'api-' . env('PUSHER_APP_CLUSTER', 'mt1') . '.pusher.com',
+                'host' => env('PUSHER_HOST') ?: 'api-'.env('PUSHER_APP_CLUSTER', 'mt1').'.pusher.com',
                 'port' => env('PUSHER_PORT', 443),
                 'scheme' => env('PUSHER_SCHEME', 'https'),
                 'encrypted' => true,
@@ -56,6 +56,11 @@ return [
                 'port' => env('REVERB_PORT', 6001),
                 'scheme' => env('REVERB_SCHEME', 'http'),
                 'useTLS' => false,
+            ],
+            'client_options' => [
+                'host' => env('REVERB_PUBLIC_HOST', env('REVERB_HOST', '127.0.0.3')),
+                'port' => env('REVERB_PUBLIC_PORT', env('REVERB_PORT', 6001)),
+                'scheme' => env('REVERB_PUBLIC_SCHEME', env('REVERB_SCHEME', 'http')),
             ],
         ],
 

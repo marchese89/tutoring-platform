@@ -1,249 +1,357 @@
 <?php
 
+use App\Models\Course;
+use App\Models\LessonRequest;
+use App\Models\Subject;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 
+// Public
 
-Breadcrumbs::for('dashboard-admin', function (BreadcrumbTrail $trail) {
-
-    $trail->push('Dashboard', route('dashboard-admin'));
-});
-Breadcrumbs::for('imp-account', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-admin');
-    $trail->push('Impostazioni account', route('imp-account'));
-});
-Breadcrumbs::for('mod-dati-pers', function (BreadcrumbTrail $trail) {
-    $trail->parent('imp-account');
-    $trail->push('Modifica dati personali', route('mod-dati-pers'));
-});
-Breadcrumbs::for('mod-cred', function (BreadcrumbTrail $trail) {
-    $trail->parent('imp-account');
-    $trail->push('Modifica credenziali', route('mod-cred'));
-});
-Breadcrumbs::for('mod-foto-admin', function (BreadcrumbTrail $trail) {
-    $trail->parent('mod-dati-pers');
-    $trail->push('Modifica foto', route('mod-foto-admin'));
-});
-Breadcrumbs::for('mod-indirizzo-admin', function (BreadcrumbTrail $trail) {
-    $trail->parent('mod-dati-pers');
-    $trail->push('Modifica indirizzo', route('mod-indirizzo-admin'));
-});
-Breadcrumbs::for('mod-certif', function (BreadcrumbTrail $trail) {
-    $trail->parent('mod-dati-pers');
-    $trail->push('Modifica certificati', route('mod-certif'));
+Breadcrumbs::for('home', function (BreadcrumbTrail $trail) {
+    $trail->push(__('breadcrumbs.home'), route('home'));
 });
 
-Breadcrumbs::for('aggiungi-certif', function (BreadcrumbTrail $trail) {
-    $trail->parent('mod-certif');
-    $trail->push('Aggiungi certificato', route('aggiungi-certif'));
+Breadcrumbs::for('theme-areas.index', function (BreadcrumbTrail $trail) {
+    $trail->push(__('breadcrumbs.theme_areas'), route('theme-areas.index'));
 });
 
-Breadcrumbs::for('extra-fattura', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-admin');
-    $trail->push('Fattura extra', route('extra-fattura'));
+Breadcrumbs::for('subjects.index', function (BreadcrumbTrail $trail, $themeArea) {
+    $trail->parent('theme-areas.index');
+    $trail->push(__('breadcrumbs.subjects'), route('subjects.index', $themeArea));
 });
 
-Breadcrumbs::for('fatture', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-admin');
-    $trail->push('Fatture', route('fatture'));
+Breadcrumbs::for('courses.index', function (BreadcrumbTrail $trail, $subject) {
+    $subject = $subject instanceof Subject ? $subject : Subject::find($subject);
+
+    if ($subject) {
+        $trail->parent('subjects.index', $subject->theme_area_id);
+    } else {
+        $trail->parent('theme-areas.index');
+    }
+
+    $trail->push(__('breadcrumbs.courses'), route('courses.index', $subject));
 });
 
-Breadcrumbs::for('visualizza-fattura', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('fatture');
-    $trail->push('Visualizza fattura', route('visualizza-fattura', $id));
+Breadcrumbs::for('courses.show', function (BreadcrumbTrail $trail, $course) {
+    $course = $course instanceof Course ? $course : Course::find($course);
+
+    if ($course) {
+        $trail->parent('courses.index', $course->subject_id);
+    } else {
+        $trail->parent('theme-areas.index');
+    }
+
+    $trail->push(__('breadcrumbs.course'), route('courses.show', $course));
 });
 
-Breadcrumbs::for('vendite', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-admin');
-    $trail->push('Vendite', route('vendite'));
+Breadcrumbs::for('lessons.presentation', function (BreadcrumbTrail $trail, $course, $lesson) {
+    $trail->parent('courses.show', $course);
+    $trail->push(__('breadcrumbs.lesson_presentation'), route('lessons.presentation', [
+        'course' => $course,
+        'lesson' => $lesson,
+    ]));
 });
 
-Breadcrumbs::for('mod-part-iva', function (BreadcrumbTrail $trail) {
-    $trail->parent('mod-dati-pers');
-    $trail->push('Modifica Partita IVA', route('mod-part-iva'));
+Breadcrumbs::for('lessons.show', function (BreadcrumbTrail $trail, $course, $lesson) {
+    $trail->parent('courses.show', $course);
+    $trail->push(__('breadcrumbs.view_lesson'), route('lessons.show', [
+        'course' => $course,
+        'lesson' => $lesson,
+    ]));
 });
 
-Breadcrumbs::for('insegnamento', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-admin');
-    $trail->push('Insegnamento', route('insegnamento'));
-});
-Breadcrumbs::for('nuovo-corso', function (BreadcrumbTrail $trail) {
-    $trail->parent('insegnamento');
-    $trail->push('Nuovo corso', route('nuovo-corso'));
-});
-Breadcrumbs::for('aree-tem', function (BreadcrumbTrail $trail) {
-    $trail->parent('insegnamento');
-    $trail->push('Aree tematiche', route('aree-tem'));
+Breadcrumbs::for('exercises.trace', function (BreadcrumbTrail $trail, $course, $exercise) {
+    $trail->parent('courses.show', $course);
+    $trail->push(__('breadcrumbs.exercise_trace'), route('exercises.trace', [
+        'course' => $course,
+        'exercise' => $exercise,
+    ]));
 });
 
-Breadcrumbs::for('admin.teaching.materie', function (BreadcrumbTrail $trail) {
-    $trail->parent('insegnamento');
-    $trail->push('Materie', route('admin.teaching.materie'));
-});
-Breadcrumbs::for('elenco-corsi', function (BreadcrumbTrail $trail) {
-    $trail->parent('insegnamento');
-    $trail->push('Elenco corsi', route('elenco-corsi'));
+// Admin - dashboard
+
+Breadcrumbs::for('admin.dashboard', function (BreadcrumbTrail $trail) {
+    $trail->push(__('breadcrumbs.dashboard'), route('admin.dashboard'));
 });
 
-Breadcrumbs::for('modifica-dettagli-corso', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('elenco-corsi');
-    $trail->push('Modifica dettagli corso', route('modifica-dettagli-corso', $id));
+// Admin - account
+
+Breadcrumbs::for('admin.account', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.account_settings'), route('admin.account'));
 });
 
-Breadcrumbs::for('nuova-lezione', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('modifica-dettagli-corso', $id);
-    $trail->push('Nuova lezione', route('nuova-lezione', $id));
+Breadcrumbs::for('admin.account.profile', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account');
+    $trail->push(__('breadcrumbs.personal_details'), route('admin.account.profile'));
 });
 
-Breadcrumbs::for('studenti', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-admin');
-    $trail->push('Studenti', route('studenti'));
+Breadcrumbs::for('admin.account.credentials', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account');
+    $trail->push(__('breadcrumbs.credentials'), route('admin.account.credentials'));
 });
 
-Breadcrumbs::for('richieste-studenti', function (BreadcrumbTrail $trail) {
-    $trail->parent('studenti');
-    $trail->push('Richieste studenti', route('richieste-studenti'));
+Breadcrumbs::for('admin.account.photo', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account.profile');
+    $trail->push(__('breadcrumbs.photo'), route('admin.account.photo'));
 });
 
-Breadcrumbs::for('chat-studenti', function (BreadcrumbTrail $trail) {
-    $trail->parent('studenti');
-    $trail->push('Chat studenti', route('chat-studenti'));
+Breadcrumbs::for('admin.account.address', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account.profile');
+    $trail->push(__('breadcrumbs.address'), route('admin.account.address'));
 });
 
-Breadcrumbs::for('visualizza-richiesta', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('richieste-studenti');
-    $trail->push('Visualizza richiesta', route('visualizza-richiesta', $id));
+Breadcrumbs::for('admin.account.certificates.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account.profile');
+    $trail->push(__('breadcrumbs.certificates'), route('admin.account.certificates.index'));
 });
 
-Breadcrumbs::for('visualizza-chat', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('chat-studenti');
-    $trail->push('Visualizza chat', route('visualizza-chat', $id));
+Breadcrumbs::for('admin.account.certificates.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account.certificates.index');
+    $trail->push(__('breadcrumbs.add_certificate'), route('admin.account.certificates.create'));
 });
 
-Breadcrumbs::for('dashboard-studente', function (BreadcrumbTrail $trail) {
-    $trail->push('Dashboard', route('dashboard-studente'));
+Breadcrumbs::for('admin.account.vat-number', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.account.profile');
+    $trail->push(__('breadcrumbs.vat_number'), route('admin.account.vat-number'));
 });
 
-Breadcrumbs::for('imp-account-studente', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-studente');
-    $trail->push('Impostazioni account', route('imp-account-studente'));
+// Admin - teaching
+
+Breadcrumbs::for('admin.teaching.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.teaching'), route('admin.teaching.index'));
 });
 
-Breadcrumbs::for('recensione', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-studente');
-    $trail->push('Recensione', route('recensione'));
+Breadcrumbs::for('admin.theme-areas.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.teaching.index');
+    $trail->push(__('breadcrumbs.theme_areas'), route('admin.theme-areas.index'));
 });
 
-Breadcrumbs::for('extra-payment', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-studente');
-    $trail->push('Pagamento Extra', route('extra-payment'));
+Breadcrumbs::for('admin.subjects.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.teaching.index');
+    $trail->push(__('breadcrumbs.subjects'), route('admin.subjects.index'));
 });
 
-Breadcrumbs::for('fatture-studente', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-studente');
-    $trail->push('Fatture', route('fatture-studente'));
+Breadcrumbs::for('admin.courses.create', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.teaching.index');
+    $trail->push(__('breadcrumbs.new_course'), route('admin.courses.create'));
 });
 
-Breadcrumbs::for('fattura0-studente', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('fatture-studente', $id);
-    $trail->push('Fattura', route('fattura0-studente', $id));
+Breadcrumbs::for('admin.courses.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.teaching.index');
+    $trail->push(__('breadcrumbs.course_list'), route('admin.courses.index'));
 });
 
-Breadcrumbs::for('mod-dati-pers-stud', function (BreadcrumbTrail $trail) {
-    $trail->parent('imp-account-studente');
-    $trail->push('Modifica dati personali', route('mod-dati-pers-stud'));
+Breadcrumbs::for('admin.courses.edit', function (BreadcrumbTrail $trail, $course) {
+    $trail->parent('admin.courses.index');
+    $trail->push(__('breadcrumbs.edit_course'), route('admin.courses.edit', $course));
 });
 
-Breadcrumbs::for('mod-cred-stud', function (BreadcrumbTrail $trail) {
-    $trail->parent('imp-account-studente');
-    $trail->push('Modifica credenziali', route('mod-cred-stud'));
+Breadcrumbs::for('admin.lessons.create', function (BreadcrumbTrail $trail, $course) {
+    $trail->parent('admin.courses.edit', $course);
+    $trail->push(__('breadcrumbs.new_lesson'), route('admin.lessons.create', $course));
 });
 
-Breadcrumbs::for('studente.corsi', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-studente');
-    $trail->push('Corsi', route('studente.corsi'));
+Breadcrumbs::for('admin.lessons.edit', function (BreadcrumbTrail $trail, $course, $lesson) {
+    $trail->parent('admin.courses.edit', $course);
+    $trail->push(__('breadcrumbs.edit_lesson'), route('admin.lessons.edit', [
+        'course' => $course,
+        'lesson' => $lesson,
+    ]));
 });
 
-Breadcrumbs::for('course', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('studente.corsi', $id);
-    $trail->push('Corso', route('course', $id));
+Breadcrumbs::for('admin.exercises.create', function (BreadcrumbTrail $trail, $course) {
+    $trail->parent('admin.courses.edit', $course);
+    $trail->push(__('breadcrumbs.new_exercise'), route('admin.exercises.create', $course));
 });
 
-Breadcrumbs::for('lezione', function (BreadcrumbTrail $trail, $id_corso, $id_lezione) {
-    $trail->parent('course', $id_corso);
-    $trail->push('Lezione', route('lezione', ['id_corso' => $id_corso, 'id_lezione' => $id_lezione]));
+Breadcrumbs::for('admin.exercises.edit', function (BreadcrumbTrail $trail, $course, $exercise) {
+    $trail->parent('admin.courses.edit', $course);
+    $trail->push(__('breadcrumbs.edit_exercise'), route('admin.exercises.edit', [
+        'course' => $course,
+        'exercise' => $exercise,
+    ]));
 });
 
-Breadcrumbs::for('esercizio', function (BreadcrumbTrail $trail, $id_corso, $id_esercizio) {
-    $trail->parent('course', $id_corso);
-    $trail->push('Esercizio', route('esercizio', ['id_corso' => $id_corso, 'id_esercizio' => $id_esercizio]));
+// Admin - students
+
+Breadcrumbs::for('admin.students.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.students'), route('admin.students.index'));
 });
 
-Breadcrumbs::for('aree-tematiche', function (BreadcrumbTrail $trail) {
-    $trail->push('Aree tematiche', route('aree-tematiche'));
+Breadcrumbs::for('admin.lesson-requests.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.students.index');
+    $trail->push(__('breadcrumbs.student_requests'), route('admin.lesson-requests.index'));
 });
 
-Breadcrumbs::for('materie', function (BreadcrumbTrail $trail, $id_at) {
-    $trail->parent('aree-tematiche');
-    $trail->push('Materie', route('materie', $id_at));
+Breadcrumbs::for('admin.lesson-requests.show', function (BreadcrumbTrail $trail, $lessonRequest) {
+    $trail->parent('admin.lesson-requests.index');
+    $trail->push(__('breadcrumbs.view_request'), route('admin.lesson-requests.show', $lessonRequest));
 });
 
-Breadcrumbs::for('corsi', function (BreadcrumbTrail $trail, $id_materia) {
-    $trail->parent('materie', $id_materia);
-    $trail->push('Corsi', route('corsi', $id_materia));
+Breadcrumbs::for('admin.chats.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.students.index');
+    $trail->push(__('breadcrumbs.student_chats'), route('admin.chats.index'));
 });
 
-Breadcrumbs::for('corso', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('corsi', $id);
-    $trail->push('Corso', route('corso', $id));
+Breadcrumbs::for('admin.chats.show', function (BreadcrumbTrail $trail, $chat) {
+    $trail->parent('admin.chats.index');
+    $trail->push(__('breadcrumbs.view_chat'), route('admin.chats.show', $chat));
 });
 
-Breadcrumbs::for('presentazione-lezione', function (BreadcrumbTrail $trail, $id_lezione, $id_corso) {
-    $trail->parent('corso', $id_corso);
-    $trail->push('Presentazione lezione', route('presentazione-lezione', ['id_lezione' => $id_lezione, 'id_corso' => $id_corso]));
+// Admin - billing
+
+Breadcrumbs::for('admin.sales.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.sales'), route('admin.sales.index'));
 });
 
-Breadcrumbs::for('traccia-esercizio', function (BreadcrumbTrail $trail, $id_esercizio, $id_corso) {
-    $trail->parent('corso', $id_corso);
-    $trail->push('Traccia esercizio', route('traccia-esercizio', ['id_esercizio' => $id_esercizio, 'id_corso' => $id_corso]));
+Breadcrumbs::for('admin.orders.show', function (BreadcrumbTrail $trail, $order) {
+    $trail->parent('admin.sales.index');
+    $trail->push(__('breadcrumbs.order'), route('admin.orders.show', $order));
 });
 
-Breadcrumbs::for('modifica-lezione', function (BreadcrumbTrail $trail, $id_corso, $id_lezione) {
-    $trail->parent('modifica-dettagli-corso', $id_corso);
-    $trail->push('Modifica lezione', route('modifica-lezione', ['id_corso' => $id_corso, 'id_lezione' => $id_lezione]));
+Breadcrumbs::for('admin.orders.invoice', function (BreadcrumbTrail $trail, $order) {
+    $trail->parent('admin.orders.show', $order);
+    $trail->push(__('breadcrumbs.invoice'), route('admin.orders.invoice', $order));
 });
 
-Breadcrumbs::for('visualizza-lezione', function (BreadcrumbTrail $trail, $id_lezione, $id_corso) {
-    $trail->parent('corso', $id_corso);
-    $trail->push('Visualizza lezione', route('visualizza-lezione', ['id_lezione' => $id_lezione, 'id_corso' => $id_corso,]));
+Breadcrumbs::for('admin.invoices.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.invoices'), route('admin.invoices.index'));
 });
 
-Breadcrumbs::for('nuovo-esercizio', function (BreadcrumbTrail $trail, $id_corso) {
-    $trail->parent('modifica-dettagli-corso', $id_corso);
-    $trail->push('Nuovo esercizio', route('nuovo-esercizio', $id_corso));
+Breadcrumbs::for('admin.invoices.extra', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.dashboard');
+    $trail->push(__('breadcrumbs.extra_invoice'), route('admin.invoices.extra'));
 });
 
-Breadcrumbs::for('modifica-esercizio', function (BreadcrumbTrail $trail, $course, $exercise) {
-    $trail->parent('modifica-dettagli-corso', $course);
-    $trail->push('Modifica esercizio', route('modifica-esercizio', ['course' => $course, 'exercise' => $exercise]));
+Breadcrumbs::for('admin.invoices.created', function (BreadcrumbTrail $trail) {
+    $trail->parent('admin.invoices.extra');
+    $trail->push(__('breadcrumbs.invoice_created'), route('admin.invoices.created'));
 });
 
-Breadcrumbs::for('admin-ordine', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('vendite');
-    $trail->push('Ordine', route('admin-ordine', ['id' => $id]));
+Breadcrumbs::for('admin.invoices.show', function (BreadcrumbTrail $trail, $invoice) {
+    $trail->parent('admin.invoices.index');
+    $trail->push(__('breadcrumbs.view_invoice'), route('admin.invoices.show', $invoice));
 });
 
-Breadcrumbs::for('admin-fattura', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('admin-ordine', $id);
-    $trail->push('Fattura', route('admin-fattura', ['id' => $id]));
+// Student - dashboard
+
+Breadcrumbs::for('student.dashboard', function (BreadcrumbTrail $trail) {
+    $trail->push(__('breadcrumbs.dashboard'), route('student.dashboard'));
 });
 
-Breadcrumbs::for('richieste-dirette', function (BreadcrumbTrail $trail) {
-    $trail->parent('dashboard-studente');
-    $trail->push('Richieste Dirette', route('richieste-dirette'));
+// Student - account
+
+Breadcrumbs::for('student.account', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.account_settings'), route('student.account'));
 });
 
-Breadcrumbs::for('visualizza-richiesta-studente', function (BreadcrumbTrail $trail, $id) {
-    $trail->parent('richieste-dirette', $id);
-    $trail->push('Visualizza Richiesta', route('visualizza-richiesta-studente', ['id' => $id]));
+Breadcrumbs::for('student.account.profile', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.account');
+    $trail->push(__('breadcrumbs.personal_details'), route('student.account.profile'));
+});
+
+Breadcrumbs::for('student.account.credentials', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.account');
+    $trail->push(__('breadcrumbs.credentials'), route('student.account.credentials'));
+});
+
+// Student - courses
+
+Breadcrumbs::for('student.courses.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.courses'), route('student.courses.index'));
+});
+
+Breadcrumbs::for('student.courses.show', function (BreadcrumbTrail $trail, $course) {
+    $trail->parent('student.courses.index');
+    $trail->push(__('breadcrumbs.course'), route('student.courses.show', $course));
+});
+
+Breadcrumbs::for('student.lessons.show', function (BreadcrumbTrail $trail, $course, $lesson) {
+    $trail->parent('student.courses.show', $course);
+    $trail->push(__('breadcrumbs.lesson'), route('student.lessons.show', [
+        'course' => $course,
+        'lesson' => $lesson,
+    ]));
+});
+
+Breadcrumbs::for('student.exercises.show', function (BreadcrumbTrail $trail, $course, $exercise) {
+    $trail->parent('student.courses.show', $course);
+    $trail->push(__('breadcrumbs.exercise'), route('student.exercises.show', [
+        'course' => $course,
+        'exercise' => $exercise,
+    ]));
+});
+
+// Student - orders and payments
+
+Breadcrumbs::for('student.orders.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.orders'), route('student.orders.index'));
+});
+
+Breadcrumbs::for('student.orders.show', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('student.orders.index');
+    $trail->push(__('breadcrumbs.order'), route('student.orders.show', $id));
+});
+
+Breadcrumbs::for('student.invoices.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.invoices'), route('student.invoices.index'));
+});
+
+Breadcrumbs::for('student.invoices.show', function (BreadcrumbTrail $trail, $id) {
+    $trail->parent('student.invoices.index');
+    $trail->push(__('breadcrumbs.invoice'), route('student.invoices.show', $id));
+});
+
+Breadcrumbs::for('payment.extra', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.extra_payment'), route('payment.extra'));
+});
+
+Breadcrumbs::for('payment.pay', function (BreadcrumbTrail $trail) {
+    $trail->parent('payment.extra');
+    $trail->push(__('breadcrumbs.purchase'), route('payment.pay'));
+});
+
+Breadcrumbs::for('payment.ok', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.invoice_created'), route('payment.ok'));
+});
+
+// Student - requests and review
+
+Breadcrumbs::for('student.direct-requests.index', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.direct_requests'), route('student.direct-requests.index'));
+});
+
+Breadcrumbs::for('student.direct-requests.purchased', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.requested_lessons'), route('student.direct-requests.purchased'));
+});
+
+Breadcrumbs::for('student.direct-requests.show', function (BreadcrumbTrail $trail, $lessonRequest) {
+    $request = $lessonRequest instanceof LessonRequest ? $lessonRequest : LessonRequest::find($lessonRequest);
+
+    if ($request?->is_paid) {
+        $trail->parent('student.direct-requests.purchased');
+    } else {
+        $trail->parent('student.direct-requests.index');
+    }
+
+    $trail->push(__('breadcrumbs.view_request'), route('student.direct-requests.show', $request ?? $lessonRequest));
+});
+
+Breadcrumbs::for('student.review', function (BreadcrumbTrail $trail) {
+    $trail->parent('student.dashboard');
+    $trail->push(__('breadcrumbs.review'), route('student.review'));
 });

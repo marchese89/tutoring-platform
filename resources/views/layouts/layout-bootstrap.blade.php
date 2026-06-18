@@ -5,10 +5,11 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="theme-color" content="#077a9f">
 
-    <title>Lezioni Informatica</title>
+    <title>{{ config('app.name') }}</title>
 
-
+    <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
     {{-- Bootstrap 5 --}}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,45 +42,46 @@
         }
 
         :root {
-            /* 1. Definisci qui i tuoi colori personalizzati una sola volta */
-            --my-primary: #22c4ff;
-            --my-primary-rgb: 255, 87, 34;
-            --my-primary-hover: #19e3e6;
-            /* Tono più scuro per l'effetto hover */
-            --my-primary-active: #15d8c8;
-            /* Tono ancora più scuro per il click */
+            --app-primary: #077a9f;
+            --app-primary-rgb: 7, 122, 159;
+            --app-primary-hover: #076b8c;
+            --app-primary-active: #05556f;
 
-            /* 2. Mappa le variabili globali di Bootstrap */
-            --bs-primary: var(--my-primary);
-            --bs-primary-rgb: var(--my-primary-rgb);
-            --bs-link-color: var(--my-primary);
-            --bs-link-hover-color: var(--my-primary-hover);
+            --bs-primary: var(--app-primary);
+            --bs-primary-rgb: var(--app-primary-rgb);
+            --bs-link-color: var(--app-primary);
+            --bs-link-hover-color: var(--app-primary-hover);
         }
 
-        /* 3. Aggiorna il bottone pieno (.btn-primary) */
         .btn-primary {
-            --bs-btn-bg: var(--my-primary);
-            --bs-btn-border-color: var(--my-primary);
-            --bs-btn-hover-bg: var(--my-primary-hover);
-            --bs-btn-hover-border-color: var(--my-primary-hover);
-            --bs-btn-active-bg: var(--my-primary-active);
-            --bs-btn-active-border-color: var(--my-primary-active);
-            --bs-btn-focus-shadow-rgb: var(--my-primary-rgb);
-            --bs-btn-disabled-bg: var(--my-primary);
-            --bs-btn-disabled-border-color: var(--my-primary);
+            --bs-btn-color: #fff;
+            --bs-btn-bg: var(--app-primary);
+            --bs-btn-border-color: var(--app-primary);
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: var(--app-primary-hover);
+            --bs-btn-hover-border-color: var(--app-primary-hover);
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: var(--app-primary-active);
+            --bs-btn-active-border-color: var(--app-primary-active);
+            --bs-btn-disabled-color: #fff;
+            --bs-btn-disabled-bg: var(--app-primary);
+            --bs-btn-disabled-border-color: var(--app-primary);
+            --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
         }
 
-        /* 4. Aggiorna il bottone outline (.btn-outline-primary) */
         .btn-outline-primary {
-            --bs-btn-color: var(--my-primary);
-            --bs-btn-border-color: var(--my-primary);
-            --bs-btn-hover-bg: var(--my-primary);
-            --bs-btn-hover-border-color: var(--my-primary);
-            --bs-btn-active-bg: var(--my-primary);
-            --bs-btn-active-border-color: var(--my-primary);
-            --bs-btn-focus-shadow-rgb: var(--my-primary-rgb);
+            --bs-btn-color: var(--app-primary);
+            --bs-btn-border-color: var(--app-primary);
+            --bs-btn-hover-color: #fff;
+            --bs-btn-hover-bg: var(--app-primary);
+            --bs-btn-hover-border-color: var(--app-primary);
+            --bs-btn-active-color: #fff;
+            --bs-btn-active-bg: var(--app-primary-active);
+            --bs-btn-active-border-color: var(--app-primary-active);
+            --bs-btn-focus-shadow-rgb: var(--app-primary-rgb);
         }
     </style>
+    @stack('styles')
 
 </head>
 
@@ -89,7 +91,7 @@
 
         <x-navbar />
 
-        <main class="container pb-4">
+        <main class="@yield('main-class', 'container pb-4')">
             @yield('content')
         </main>
 
@@ -98,9 +100,9 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('custom_javascript/utility.js') }}"></script>
+    @stack('scripts')
 
-    {{-- Echo (solo se serve) --}}
+    {{-- Load Echo only when required. --}}
     @if (isset($enableEcho) && $enableEcho)
         <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
         <script src="https://unpkg.com/laravel-echo@1.16.1/dist/echo.iife.js"></script>
@@ -110,10 +112,11 @@
 
             window.Echo = new Echo({
                 broadcaster: 'reverb',
-                key: 'local',
-                wsHost: window.location.hostname,
-                wsPort: 8080,
-                forceTLS: false,
+                key: @json(config('broadcasting.connections.reverb.key')),
+                wsHost: @json(config('broadcasting.connections.reverb.client_options.host')),
+                wsPort: @json((int) config('broadcasting.connections.reverb.client_options.port')),
+                wssPort: @json((int) config('broadcasting.connections.reverb.client_options.port')),
+                forceTLS: @json(config('broadcasting.connections.reverb.client_options.scheme') === 'https'),
                 enabledTransports: ['ws', 'wss'],
             });
         </script>
