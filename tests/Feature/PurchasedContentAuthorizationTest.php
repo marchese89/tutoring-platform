@@ -43,6 +43,13 @@ class PurchasedContentAuthorizationTest extends TestCase
 
     public function test_student_can_open_a_purchased_lesson(): void
     {
+        config([
+            'broadcasting.connections.reverb.key' => 'test-reverb-key',
+            'broadcasting.connections.reverb.options.host' => 'socket.example.test',
+            'broadcasting.connections.reverb.options.port' => 9443,
+            'broadcasting.connections.reverb.options.scheme' => 'https',
+        ]);
+
         $student = Student::factory()->create();
         $course = Course::factory()->create([
             'name' => 'Purchased course',
@@ -63,7 +70,11 @@ class PurchasedContentAuthorizationTest extends TestCase
             ->assertSee('title="Presentazione"', false)
             ->assertSee('title="Contenuto"', false)
             ->assertSee('src="/protected-files/lessons/presentations/lesson.pdf#view=FitH"', false)
-            ->assertSee('src="/protected-files/lessons/files/lesson.pdf#view=FitH"', false);
+            ->assertSee('src="/protected-files/lessons/files/lesson.pdf#view=FitH"', false)
+            ->assertSee('key: "test-reverb-key"', false)
+            ->assertSee('wsHost: "socket.example.test"', false)
+            ->assertSee('wsPort: 9443', false)
+            ->assertSee('forceTLS: true', false);
     }
 
     public function test_student_cannot_open_an_unpurchased_exercise(): void

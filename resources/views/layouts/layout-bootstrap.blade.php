@@ -111,10 +111,11 @@
 
             window.Echo = new Echo({
                 broadcaster: 'reverb',
-                key: 'local',
-                wsHost: window.location.hostname,
-                wsPort: 8080,
-                forceTLS: false,
+                key: @json(config('broadcasting.connections.reverb.key')),
+                wsHost: @json(config('broadcasting.connections.reverb.options.host')),
+                wsPort: @json((int) config('broadcasting.connections.reverb.options.port')),
+                wssPort: @json((int) config('broadcasting.connections.reverb.options.port')),
+                forceTLS: @json(config('broadcasting.connections.reverb.options.scheme') === 'https'),
                 enabledTransports: ['ws', 'wss'],
             });
         </script>

@@ -93,8 +93,25 @@ php artisan key:generate
 Configure the database and service credentials in `.env`, then run:
 
 ```bash
-php artisan migrate --seed
+php artisan migrate:fresh --seed
+php artisan storage:link
 ```
+
+The seed command creates a complete demo catalog, orders, invoices, lesson
+requests, reviews, and chats.
+
+### Demo Accounts
+
+The default credentials come from `.env` and may be changed before seeding:
+
+| Role | Email | Password |
+| --- | --- | --- |
+| Admin | `admin@example.com` | `password` |
+| Student | `student@example.com` | `password` |
+| Student | `student2@example.com` | `password` |
+
+The corresponding variables are `SEED_ADMIN_*`, `SEED_STUDENT_*`, and
+`SEED_STUDENT_2_*`.
 
 ## Testing
 
@@ -105,23 +122,30 @@ database.
 php artisan test
 ```
 
-Run Laravel Pint:
+Run the complete local verification sequence before opening a pull request:
 
 ```bash
+composer validate --strict
 vendor/bin/pint --test
+php artisan test
+composer audit --locked --no-interaction
 ```
+
+The same commands run automatically through GitHub Actions.
 
 ## Realtime Chat
 
-Realtime chat uses Laravel Reverb. Start the WebSocket server when testing
-realtime behavior locally:
+Realtime chat uses Laravel Reverb. Set `BROADCAST_DRIVER=reverb` in `.env`,
+keep the `REVERB_*` application and server values aligned, then start the
+WebSocket server:
 
 ```bash
 php artisan reverb:start
 ```
 
-The application still works without Reverb for non-realtime page rendering and
-standard feature tests.
+The example environment uses port `8080`. With the default
+`BROADCAST_DRIVER=log`, the application remains usable without a WebSocket
+server, but messages will not update in real time.
 
 ## Payments
 

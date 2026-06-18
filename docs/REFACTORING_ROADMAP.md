@@ -498,6 +498,8 @@ Branch: `release/final-verification`
 
 Estimated commits: 1-2.
 
+Status: in progress.
+
 Definition of Done:
 
 - Add or document CI commands for tests, Pint, and Composer audit.
@@ -507,6 +509,18 @@ Definition of Done:
   localization flows.
 - Update README/setup documentation with installation, seeding, demo accounts,
   and verification commands.
+
+Completed so far:
+
+- Added a GitHub Actions workflow for Composer validation, Pint, the full test
+  suite, and locked-dependency auditing on PHP 8.2 with SQLite.
+- Documented fresh installation, seeded demo accounts, local verification, and
+  Reverb startup in the README.
+- Normalized the example Reverb variables and made the browser client consume
+  server-side broadcast configuration instead of hard-coded local values.
+- Added automated coverage for rendered Reverb client settings and a manual
+  release checklist for public, student, admin, upload, payment, pagination,
+  localization, and realtime-chat flows.
 
 ### Closed packages
 
